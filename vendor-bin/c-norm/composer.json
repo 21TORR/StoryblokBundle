@@ -1,0 +1,10 @@
+{
+	"require": {
+		"ergebnis/composer-normalize": "^2.28.3"
+	},
+	"config": {
+		"allow-plugins": {
+			"ergebnis/composer-normalize": true
+		}
+	}
+}

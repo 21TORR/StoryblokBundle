@@ -1,0 +1,49 @@
+name: CI
+
+on: [ push ]
+
+env:
+    SYMFONY_PHPUNIT_DIR: "$HOME/symfony-bridge/.phpunit"
+
+jobs:
+    build-test:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                php: ['8.1']
+
+        steps:
+            -   name: Checkout Code
+                uses: actions/checkout@v3
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    coverage: "none"
+                    ini-values: "memory_limit=-1"
+                    php-version: "${{ matrix.php }}"
+                    tools: "composer, composer-normalize"
+
+            -   name: Display versions
+                run: |
+                    php --version
+                    php -r 'foreach (get_loaded_extensions() as $extension) echo $extension . " " . phpversion($extension) . PHP_EOL;'
+                    php -i
+
+            -   name: Install Composer
+                run: composer install --optimize-autoloader --classmap-authoritative --no-interaction
+
+            -   name: Composer Normalize
+                run: composer-normalize --indent-style tab --indent-size 1 --dry-run --ansi
+
+            -   name: PHP CS Fixer
+                run: "./vendor/bin/php-cs-fixer fix --diff --config vendor-bin/cs-fixer/vendor/21torr/php-cs-fixer/.php-cs-fixer.dist.php --dry-run --no-interaction --ansi --format=checkstyle"
+                env:
+                    PHP_CS_FIXER_IGNORE_ENV: 1
+
+            -   name: PHPStan
+                run: "./vendor/bin/phpstan analyze -c phpstan.neon . --ansi"
+
+            -   name: PHPUnit
+                run: "./vendor/bin/phpunit"

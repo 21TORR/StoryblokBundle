@@ -1,0 +1,11 @@
+{
+    "require": {
+        "21torr/php-cs": "^4.0.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "ergebnis/composer-normalize": true
+        }
+    }
+}
