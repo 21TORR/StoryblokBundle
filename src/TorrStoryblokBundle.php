@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\BundleHelpers\Bundle\BundleExtension;
 
-final class StoryblokBundle extends Bundle
+final class TorrStoryblokBundle extends Bundle
 {
 	/**
 	 * @inheritDoc
