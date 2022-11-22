@@ -9,3 +9,9 @@ services:
              - ../src/Exception
              - ../src/Field
              - ../src/TorrStoryblokBundle.php
+
+    Torr\Storyblok\Config\StoryblokConfig:
+        $spaceId: !abstract set via config
+        $managementToken: !abstract set via config
+        $contentToken: !abstract set via config
+
