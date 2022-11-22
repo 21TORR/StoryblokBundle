@@ -19,7 +19,7 @@ final class MarkdownField extends AbstractField
 		private readonly bool $isRightToLeft = false,
 	)
 	{
-		parent::__construct($label, $defaultValue, $description);
+		parent::__construct($label, $defaultValue);
 	}
 
 	/**

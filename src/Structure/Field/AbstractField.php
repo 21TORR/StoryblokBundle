@@ -21,12 +21,29 @@ abstract class AbstractField implements FieldDefinitionInterface
 	protected bool $required = false;
 	protected ?string $regexp = null;
 	protected bool $translatable = false;
+	protected ?string $description = null;
+	protected bool $descriptionAsTooltip = false;
 
 	public function __construct (
 		protected readonly string $label,
 		protected readonly mixed $defaultValue = null,
-		protected readonly ?string $description = null,
 	) {}
+
+	/**
+	 * Add a description to this field
+	 *
+	 * @return $this
+	 */
+	public function addDescription (
+		string $description,
+		bool $showAsTooltip = false,
+	) : static
+	{
+		$this->description = $description;
+		$this->descriptionAsTooltip = $showAsTooltip;
+
+		return $this;
+	}
 
 	/**
 	 * Makes this field translatable
@@ -91,6 +108,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 			"pos" => $position,
 			"default_value" => $this->defaultValue,
 			"description" => $this->description,
+			"tooltip" => $this->descriptionAsTooltip,
 			"translatable" => $this->translatable,
 			"required" => $this->required,
 			"regexp" => $this->regexp,

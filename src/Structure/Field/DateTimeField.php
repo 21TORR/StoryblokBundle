@@ -14,10 +14,9 @@ final class DateTimeField extends AbstractField
 		string $label,
 		private readonly bool $withTimeSelection = true,
 		mixed $defaultValue = null,
-		?string $description = null,
 	)
 	{
-		parent::__construct($label, $defaultValue, $description);
+		parent::__construct($label, $defaultValue);
 	}
 
 	/**

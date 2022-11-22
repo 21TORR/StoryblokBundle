@@ -16,10 +16,9 @@ final class AssetField extends AbstractField
 		private readonly ?array $fileTypes,
 		private readonly bool $allowMultiple = false,
 		mixed $defaultValue = null,
-		?string $description = null,
 	)
 	{
-		parent::__construct($label, $defaultValue, $description);
+		parent::__construct($label, $defaultValue);
 	}
 
 	/**
