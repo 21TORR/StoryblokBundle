@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field;
+namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Data\AssetFileType;
-use Torr\Storyblok\Data\FieldType;
+use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
 
-final class AssetField extends AbstractField
+final class MarkdownField extends AbstractField
 {
 	/**
 	 * @inheritDoc
 	 */
 	public function __construct (
 		string $label,
-		private readonly ?array $fileTypes,
-		private readonly bool $allowMultiple = false,
 		mixed $defaultValue = null,
+		private readonly bool $hasRichMarkdown = true,
+		private readonly ?int $maxLength = null,
+		private readonly bool $isRightToLeft = false,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -26,9 +26,7 @@ final class AssetField extends AbstractField
 	 */
 	protected function getInternalStoryblokType () : FieldType
 	{
-		return $this->allowMultiple
-			? FieldType::MultiAsset
-			: FieldType::Asset;
+		return FieldType::Markdown;
 	}
 
 	/**
@@ -39,10 +37,9 @@ final class AssetField extends AbstractField
 		return \array_replace(
 			parent::toManagementApiData($position),
 			[
-				"filetypes" => \array_map(
-					static fn (AssetFileType $fileType) => $fileType->value,
-					$this->fileTypes ?? AssetFileType::cases(),
-				),
+				"rich_markdown" => $this->hasRichMarkdown,
+				"rtl" => $this->isRightToLeft,
+				"max_length" => $this->maxLength,
 			],
 		);
 	}

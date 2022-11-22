@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field\Option;
+namespace Torr\Storyblok\Field\Option;
 
 interface ChoiceSourceInterface
 {

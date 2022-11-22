@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field;
+namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Data\FieldType;
+use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
 
 final class TextField extends AbstractField

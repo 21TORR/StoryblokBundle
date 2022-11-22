@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field;
+namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Data\FieldType;
+use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
 
-final class NumberField extends AbstractField
+final class BooleanField extends AbstractField
 {
 	/**
 	 * @inheritDoc
 	 */
 	protected function getInternalStoryblokType () : FieldType
 	{
-		return FieldType::Number;
+		return FieldType::Boolean;
 	}
 
 	/**
@@ -20,5 +20,6 @@ final class NumberField extends AbstractField
 	 */
 	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
+		// @todo add implementation
 	}
 }

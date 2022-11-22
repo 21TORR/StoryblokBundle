@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field;
+namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraint;
-use Torr\Storyblok\Data\FieldType;
-use Torr\Storyblok\Structure\DataVisitorInterface;
-use Torr\Storyblok\Structure\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
  * Base class for any field that is used in the app
@@ -16,17 +16,17 @@ use Torr\Storyblok\Validator\DataValidator;
  */
 abstract class AbstractField implements FieldDefinitionInterface
 {
-	protected ?bool $canSync = false;
-	protected ?bool $isPreviewField = false;
-	protected bool $required = false;
-	protected ?string $regexp = null;
-	protected bool $translatable = false;
-	protected ?string $description = null;
-	protected bool $descriptionAsTooltip = false;
+	private ?bool $canSync = false;
+	private ?bool $isPreviewField = false;
+	private bool $required = false;
+	private ?string $regexp = null;
+	private bool $translatable = false;
+	private ?string $description = null;
+	private bool $descriptionAsTooltip = false;
 
 	public function __construct (
-		protected readonly string $label,
-		protected readonly mixed $defaultValue = null,
+		private readonly string $label,
+		private readonly mixed $defaultValue = null,
 	) {}
 
 	/**

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field;
+namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Data\FieldType;
-use Torr\Storyblok\Structure\Field\Option\ChoiceSourceInterface;
+use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Field\Option\ChoiceSourceInterface;
 use Torr\Storyblok\Validator\DataValidator;
 
 final class ChoiceField extends AbstractField

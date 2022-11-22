@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure;
+namespace Torr\Storyblok\Visitor;
+
+use Torr\Storyblok\Field\FieldDefinitionInterface;
 
 interface DataVisitorInterface
 {

@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure;
+namespace Torr\Storyblok\Field;
 
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 interface FieldDefinitionInterface
 {

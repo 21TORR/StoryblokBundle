@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Component;
+namespace Torr\Storyblok\Component;
 
-interface ComponentTypeDefinition
+interface ComponentDefinitionInterface
 {
 	public static function getTechnicalName () : string;
 }

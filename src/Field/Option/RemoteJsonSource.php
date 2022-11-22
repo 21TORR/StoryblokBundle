@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field\Option;
+namespace Torr\Storyblok\Field\Option;
 
-final class LanguagesSource implements ChoiceSourceInterface
+final class RemoteJsonSource implements ChoiceSourceInterface
 {
 	/**
 	 */
 	public function __construct (
+		private readonly string $url,
 		private readonly bool $showEmptyOption = true,
 	) {}
 
@@ -16,8 +17,10 @@ final class LanguagesSource implements ChoiceSourceInterface
 	public function toManagementApiData () : array
 	{
 		return [
-			"source" => "internal_languages",
+			"source" => "external",
 			"exclude_empty_option" => !$this->showEmptyOption,
+			"external_datasource" => $this->url,
 		];
 	}
+
 }

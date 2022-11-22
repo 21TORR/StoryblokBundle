@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Data;
+namespace Torr\Storyblok\Field;
 
 /**
  * A list of all available, non-deprecated built-in Storyblok field types.

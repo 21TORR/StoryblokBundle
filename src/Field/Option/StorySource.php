@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field\Option;
+namespace Torr\Storyblok\Field\Option;
 
-use Torr\Storyblok\Structure\Component\ComponentTypeDefinition;
+use Torr\Storyblok\Component\ComponentDefinitionInterface;
 
 final class StorySource implements ChoiceSourceInterface
 {
 	/**
-	 * @param array<class-string<ComponentTypeDefinition>> $restrictContentTypes
+	 * @param array<class-string<ComponentDefinitionInterface>> $restrictContentTypes
 	 */
 	public function __construct (
 		private readonly array $restrictContentTypes = [],
