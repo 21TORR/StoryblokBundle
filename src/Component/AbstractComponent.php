@@ -43,6 +43,14 @@ abstract class AbstractComponent
 	abstract public function getDisplayName () : string;
 
 	/**
+	 * Returns the component group display name
+	 */
+	public function getComponentGroup () : ?string
+	{
+		return null;
+	}
+
+	/**
 	 * Normalizes the fields for usage in the management API
 	 */
 	private function normalizeFields () : array

@@ -32,12 +32,17 @@ final class ManagementApi
 
 	/**
 	 */
-	public function syncComponent (array $config) : ApiActionPerformed
+	public function syncComponent (
+		array $config,
+		?string $componentGroupLabel = null,
+	) : ApiActionPerformed
 	{
-		$componentIdMap = $this->getComponentMap();
+		$componentIdMap = $this->getComponentIdMap();
 
 		try
 		{
+			$config["component_group_uuid"] = $this->getOrCreatedComponentGroupUuid($componentGroupLabel);
+
 			$options = (new HttpOptions())
 				->setHeaders([
 					"Authorization" => $this->config->getManagementToken(),
@@ -46,7 +51,7 @@ final class ManagementApi
 					"component" => $config,
 				])
 				->toArray();
-			$componentId = $this->getComponentMap()->getComponentId($config["name"]);
+			$componentId = $this->getComponentIdMap()->getComponentId($config["name"]);
 
 			$response = null !== $componentId
 				? $this->client->request("PUT", "components/{$componentId}", $options)
@@ -70,13 +75,61 @@ final class ManagementApi
 	}
 
 	/**
+	 * Gets or creates a component group uuid
+	 */
+	private function getOrCreatedComponentGroupUuid (?string $name) : ?string
+	{
+		if (null === $name)
+		{
+			return null;
+		}
+
+		$idMap = $this->getComponentIdMap();
+
+		if (null !== ($existingUuid = $idMap->getGroupUuid($name)))
+		{
+			return $existingUuid;
+		}
+
+		try
+		{
+			$response = $this->client->request(
+				"POST",
+				"component_groups",
+				$this->generateBaseOptions()
+					->setJson([
+						"component_group" => [
+							"name" => $name,
+						],
+					])
+					->toArray(),
+			);
+
+			$data = $response->toArray();
+			$uuid = $data["component_group"]["uuid"];
+			$idMap->registerComponentGroup($name, $uuid);
+
+			return $uuid;
+		}
+		catch (ExceptionInterface $e)
+		{
+			throw new ApiRequestFailedException(\sprintf(
+				"Failed to fetch create component group '%s': %s",
+				$name,
+				$e->getMessage(),
+			), previous: $e);
+		}
+	}
+
+
+	/**
 	 *
 	 */
-	private function getComponentMap () : ComponentIdMap
+	private function getComponentIdMap () : ComponentIdMap
 	{
 		if (null === $this->componentIdMap)
 		{
-			$this->componentIdMap = $this->fetchComponentIdMap();
+			$this->componentIdMap = $this->fetchFreshComponentIdMap();
 		}
 
 		return $this->componentIdMap;
@@ -85,18 +138,14 @@ final class ManagementApi
 	/**
 	 * Fetches the component ID mapping
 	 */
-	private function fetchComponentIdMap () : ComponentIdMap
+	private function fetchFreshComponentIdMap () : ComponentIdMap
 	{
 		try
 		{
 			$response = $this->client->request(
 				"GET",
 				"components",
-				(new HttpOptions())
-					->setHeaders([
-						"Authorization" => $this->config->getManagementToken(),
-					])
-					->toArray(),
+				$this->generateBaseOptions()->toArray(),
 			);
 
 			return new ComponentIdMap($response->toArray());
@@ -108,5 +157,16 @@ final class ManagementApi
 				$e->getMessage(),
 			), previous: $e);
 		}
+	}
+
+	/**
+	 *
+	 */
+	private function generateBaseOptions () : HttpOptions
+	{
+		return (new HttpOptions())
+			->setHeaders([
+				"Authorization" => $this->config->getManagementToken(),
+			]);
 	}
 }
