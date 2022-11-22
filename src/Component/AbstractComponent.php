@@ -129,6 +129,7 @@ abstract class AbstractComponent
 	 * If passed a data validator, the data is automatically validated.
 	 *
 	 * @internal
+	 *
 	 * @return TStory
 	 */
 	final public function createStory (
@@ -143,7 +144,7 @@ abstract class AbstractComponent
 		{
 			throw new StoryHydrationFailed(\sprintf(
 				"Could not hydrate story of type '%s': story class does not extend %s",
-				self::getKey(),
+				static::getKey(),
 				Story::class,
 			));
 		}

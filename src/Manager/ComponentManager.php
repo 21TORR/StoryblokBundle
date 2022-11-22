@@ -62,7 +62,7 @@ final class ComponentManager
 		{
 			throw new UnknownComponentKeyException(\sprintf(
 				"Unknown component type: %s",
-				$key
+				$key,
 			), previous: $exception);
 		}
 	}

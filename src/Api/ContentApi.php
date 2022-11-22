@@ -36,9 +36,9 @@ final class ContentApi
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
 	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
 	 *
-	 * @return Story[]
-	 *
 	 * @throws ContentRequestFailedException
+	 *
+	 * @return Story[]
 	 */
 	private function fetchStories (
 		?string $language,
@@ -65,7 +65,7 @@ final class ContentApi
 				"stories",
 				(new HttpOptions())
 					->setQuery($query)
-					->toArray()
+					->toArray(),
 			);
 
 			$data = $response->toArray();
@@ -94,9 +94,9 @@ final class ContentApi
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
 	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
 	 *
-	 * @return Story[]
-	 *
 	 * @throws ContentRequestFailedException
+	 *
+	 * @return Story[]
 	 */
 	public function fetchAllStories (
 		?string $language,
