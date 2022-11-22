@@ -3,7 +3,7 @@
 namespace Torr\Storyblok\Validator;
 
 use Symfony\Component\Validator\Constraint;
-use Torr\Storyblok\Structure\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinitionInterface;
 
 final class DataValidator
 {

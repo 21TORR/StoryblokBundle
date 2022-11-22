@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Structure\Field;
+namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraint;
-use Torr\Storyblok\Data\FieldType;
-use Torr\Storyblok\Structure\DataVisitorInterface;
-use Torr\Storyblok\Structure\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
  * Base class for any field that is used in the app
@@ -16,18 +16,34 @@ use Torr\Storyblok\Validator\DataValidator;
  */
 abstract class AbstractField implements FieldDefinitionInterface
 {
-	protected ?bool $canSync = false;
-	protected ?bool $isPreviewField = false;
-	protected bool $required = false;
-	protected ?string $regexp = null;
-	protected bool $translatable = false;
+	private ?bool $canSync = false;
+	private ?bool $isPreviewField = false;
+	private bool $required = false;
+	private ?string $regexp = null;
+	private bool $translatable = false;
+	private ?string $description = null;
+	private bool $descriptionAsTooltip = false;
 
 	public function __construct (
-		protected readonly string $label,
-		protected readonly mixed $defaultValue = null,
-		protected readonly ?string $description = null,
-		protected readonly array $additionalFieldData = [],
+		private readonly string $label,
+		private readonly mixed $defaultValue = null,
 	) {}
+
+	/**
+	 * Add a description to this field
+	 *
+	 * @return $this
+	 */
+	public function addDescription (
+		string $description,
+		bool $showAsTooltip = false,
+	) : static
+	{
+		$this->description = $description;
+		$this->descriptionAsTooltip = $showAsTooltip;
+
+		return $this;
+	}
 
 	/**
 	 * Makes this field translatable
@@ -92,12 +108,12 @@ abstract class AbstractField implements FieldDefinitionInterface
 			"pos" => $position,
 			"default_value" => $this->defaultValue,
 			"description" => $this->description,
+			"tooltip" => $this->descriptionAsTooltip,
 			"translatable" => $this->translatable,
 			"required" => $this->required,
 			"regexp" => $this->regexp,
 			"can_sync" => $this->canSync,
 			"preview_field" => $this->isPreviewField,
-			...$this->additionalFieldData,
 		];
 	}
 
