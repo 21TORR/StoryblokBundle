@@ -12,7 +12,7 @@ enum RichTextStyling : string
 
 	case Components = "blok";
 
-	case underline = "underline";
+	case Underline = "underline";
 
 	case InlineCode = "inlinecode";
 
