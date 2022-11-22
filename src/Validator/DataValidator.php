@@ -3,7 +3,7 @@
 namespace Torr\Storyblok\Validator;
 
 use Symfony\Component\Validator\Constraint;
-use Torr\Storyblok\Data\FieldType;
+use Torr\Storyblok\Structure\FieldDefinitionInterface;
 
 final class DataValidator
 {
@@ -16,7 +16,7 @@ final class DataValidator
 	 */
 	public function ensureDataIsValid (
 		array $contentPath,
-		FieldType $fieldType,
+		FieldDefinitionInterface $field,
 		mixed $data,
 		array $constraints,
 	) : void
