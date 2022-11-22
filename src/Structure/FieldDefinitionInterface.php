@@ -9,8 +9,12 @@ interface FieldDefinitionInterface
 {
 	/**
 	 * Transforms the type to the type definition required for the Storyblok API
+	 *
+	 * @internal
 	 */
-	public function toManagementApiData () : array;
+	public function toManagementApiData (
+		int $position,
+	) : array;
 
 	/**
 	 * Validates the data for this field, as it was sent by Storyblok.
