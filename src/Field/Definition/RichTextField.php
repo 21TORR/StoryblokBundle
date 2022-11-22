@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\RichText\RichTextStyling;
@@ -13,16 +13,16 @@ final class RichTextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 *
-	 * @param array<class-string<AbstractComponent>> $filterComponents
-	 * @param array<string>                          $filterComponentGroups
-	 * @param array<RichTextStyling>                 $toolbarOptions
-	 * @param array<array<string, string>>           $styleOptions
+	 * @param array<string>|ComponentsWithTags $filterComponents
+	 * @param array<string>                    $filterComponentGroups
+	 * @param array<RichTextStyling>           $toolbarOptions
+	 * @param array<array<string, string>>     $styleOptions
 	 */
 	public function __construct (
 		string $label,
 		mixed $defaultValue = null,
 		private readonly ?int $maxLength = null,
-		private readonly array $filterComponents = [],
+		private readonly array|ComponentsWithTags $filterComponents = [],
 		private readonly array $filterComponentGroups = [],
 		private readonly array $toolbarOptions = [],
 		private readonly array $styleOptions = [],

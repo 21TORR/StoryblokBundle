@@ -5,6 +5,7 @@ namespace Torr\Storyblok\Manager\Sync;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Api\ManagementApi;
+use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
@@ -53,7 +54,7 @@ final class ComponentSync
 			$io->write("Normalizing {$key} ");
 
 			$normalized[$key] = new ComponentImport(
-				$component->toManagementApiData(),
+				$this->resolveComponentConfig($component->toManagementApiData()),
 				$component->getComponentGroup(),
 			);
 
@@ -67,5 +68,27 @@ final class ComponentSync
 			$performedAction = $this->managementApi->syncComponent($config->config, $config->groupLabel);
 			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
 		}
+	}
+
+	/**
+	 * Resolves the given component config.
+	 *
+	 * This means resolving all {@see ComponentsWithTags} to their keys.
+	 */
+	private function resolveComponentConfig (array $config) : array
+	{
+		$resolved = [];
+
+		foreach ($config as $key => $value)
+		{
+			$resolved[$key] = match (true)
+			{
+				$value instanceof ComponentsWithTags => $this->componentManager->getComponentKeysForTags($value->tags),
+				\is_array($value) => $this->resolveComponentConfig($value),
+				default => $value,
+			};
+		}
+
+		return $resolved;
 	}
 }

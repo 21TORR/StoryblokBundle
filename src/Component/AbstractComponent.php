@@ -51,6 +51,16 @@ abstract class AbstractComponent
 	}
 
 	/**
+	 * Returns the tags of this component
+	 *
+	 * @return string[]
+	 */
+	public function getTags () : array
+	{
+		return [];
+	}
+
+	/**
 	 * Normalizes the fields for usage in the management API
 	 */
 	private function normalizeFields () : array
