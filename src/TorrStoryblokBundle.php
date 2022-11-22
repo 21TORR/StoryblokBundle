@@ -27,6 +27,7 @@ final class TorrStoryblokBundle extends Bundle
 					->setArgument('$managementToken', $config["management_token"])
 					->setArgument('$contentToken', $config["content_token"]);
 			},
+			"storyblok",
 		);
 	}
 

@@ -6,6 +6,7 @@ services:
     Torr\Storyblok\:
         resource: ../src/*
         exclude:
+             - ../src/Api/Data
              - ../src/Exception
              - ../src/Field
              - ../src/TorrStoryblokBundle.php
@@ -15,3 +16,6 @@ services:
         $managementToken: !abstract set via config
         $contentToken: !abstract set via config
 
+
+    Torr\Storyblok\Manager\ComponentManager:
+        $components: !tagged_locator 'storyblok.component.definition'

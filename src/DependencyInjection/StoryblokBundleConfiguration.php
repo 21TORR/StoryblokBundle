@@ -10,7 +10,7 @@ final class StoryblokBundleConfiguration implements ConfigurationInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getConfigTreeBuilder ()
+	public function getConfigTreeBuilder () : TreeBuilder
 	{
 		$treeBuilder = new TreeBuilder("storyblok");
 

@@ -48,6 +48,15 @@ abstract class AbstractComponent
 	private function normalizeFields () : array
 	{
 		$normalized = [];
+		$fields = $this->configureFields();
+
+		if (empty($fields))
+		{
+			throw new InvalidComponentConfigurationException(\sprintf(
+				"Invalid component '%s': can't have a component without fields",
+				static::class,
+			));
+		}
 
 		foreach ($this->configureFields() as $key => $field)
 		{
