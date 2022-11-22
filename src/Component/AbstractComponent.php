@@ -6,6 +6,7 @@ use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Component\Definition\ComponentDefinition;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 
 /**
  * Base class for all components registered in the system
@@ -62,12 +63,15 @@ abstract class AbstractComponent
 
 	/**
 	 * Normalizes the fields for usage in the management API
+	 *
+	 * @param array<FieldDefinitionInterface> $fields
+	 * @param array<string, mixed>            $normalizedFields
 	 */
-	private function normalizeFields () : array
+	private function normalizeFields (
+		array $fields,
+		array $normalizedFields = [],
+	) : array
 	{
-		$normalized = [];
-		$fields = $this->configureFields();
-
 		if (empty($fields))
 		{
 			throw new InvalidComponentConfigurationException(\sprintf(
@@ -76,7 +80,7 @@ abstract class AbstractComponent
 			));
 		}
 
-		foreach ($this->configureFields() as $key => $field)
+		foreach ($fields as $key => $field)
 		{
 			if (ComponentHelper::isReservedKey($key))
 			{
@@ -87,10 +91,24 @@ abstract class AbstractComponent
 				));
 			}
 
-			$normalized[$key] = $field->toManagementApiData(\count($normalized));
+			if (\array_key_exists($key, $normalizedFields))
+			{
+				throw new InvalidComponentConfigurationException(\sprintf(
+					"Invalid component configuration '%s': field key '%s' used more than once",
+					static::class,
+					$key,
+				));
+			}
+
+			$normalizedFields[$key] = $field->toManagementApiData(\count($normalizedFields));
+
+			if ($field instanceof NestedFieldDefinitionInterface)
+			{
+				$normalizedFields = $this->normalizeFields($field->getNestedFields(), $normalizedFields);
+			}
 		}
 
-		return $normalized;
+		return $normalizedFields;
 	}
 
 	/**
@@ -114,7 +132,7 @@ abstract class AbstractComponent
 		return [
 			"name" => static::getKey(),
 			"display_name" => $this->getDisplayName(),
-			"schema" => $this->normalizeFields(),
+			"schema" => $this->normalizeFields($this->configureFields()),
 			"image" => $definition->previewScreenshotUrl,
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,
