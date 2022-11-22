@@ -4,4 +4,18 @@ namespace Torr\Storyblok\Transformer;
 
 final class DataTransformer
 {
+	/**
+	 * @template T
+	 *
+	 * @param T $data The transformed data of the component
+	 * @returns T|null
+	 */
+	public function transformValue (
+		mixed $data,
+		mixed $component,
+	) : mixed
+	{
+		// @todo add real implementation
+		return $data;
+	}
 }
