@@ -23,4 +23,25 @@ final class ComponentManager
 			\array_keys($this->components->getProvidedServices()),
 		);
 	}
+
+
+	/**
+	 * Returns the component keys for all components with any of the given tags
+	 */
+	public function getComponentKeysForTags (array $tags) : array
+	{
+		$matches = [];
+
+		foreach ($this->getAllComponents() as $component)
+		{
+			$componentTags = $component->getTags();
+
+			if (!empty(\array_intersect($tags, $componentTags)))
+			{
+				$matches[] = $component::getKey();
+			}
+		}
+
+		return $matches;
+	}
 }

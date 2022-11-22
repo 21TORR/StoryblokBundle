@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
 
@@ -19,7 +20,8 @@ final class LinkField extends AbstractField
 		private readonly bool $restrictInternalLinksToSameFolder = false,
 		private readonly bool $allowMultiple = false,
 		private readonly ?string $internalLinkScope = null,
-		private readonly ?array $restrictToContentTypes = null,
+		/** @var array<string>|ComponentsWithTags|null $restrictToContentTypes */
+		private readonly array|ComponentsWithTags|null $restrictToContentTypes = null,
 	)
 	{
 		parent::__construct($label, $defaultValue);
