@@ -2,8 +2,10 @@
 
 namespace Torr\Storyblok\Manager;
 
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 
 final class ComponentManager
 {
@@ -43,5 +45,25 @@ final class ComponentManager
 		}
 
 		return $matches;
+	}
+
+	/**
+	 * Gets the component by key
+	 *
+	 * @throws UnknownComponentKeyException
+	 */
+	public function getComponent (string $key) : AbstractComponent
+	{
+		try
+		{
+			return $this->components->get($key);
+		}
+		catch (ServiceNotFoundException $exception)
+		{
+			throw new UnknownComponentKeyException(\sprintf(
+				"Unknown component type: %s",
+				$key
+			), previous: $exception);
+		}
 	}
 }
