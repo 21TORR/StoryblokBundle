@@ -74,7 +74,7 @@ abstract class FieldDefinition implements FieldDefinitionInterface
 	{
 		$validator->ensureDataIsValid(
 			$path,
-			static::class,
+			$this->type,
 			$data,
 			$constraints,
 		);
