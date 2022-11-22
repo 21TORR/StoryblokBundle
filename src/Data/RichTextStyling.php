@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Data;
 
-enum RichTextToolbarOption : string
+enum RichTextStyling : string
 {
 	case Bold = "bold";
 

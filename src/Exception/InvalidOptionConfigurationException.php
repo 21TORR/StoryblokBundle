@@ -5,6 +5,6 @@ namespace Torr\Storyblok\Exception;
 /**
  * The option configured has not been properly configured.
  */
-class InvalidOptionConfigurationException extends \RuntimeException implements StoryblokExceptionInterface
+class InvalidOptionConfigurationException extends \RuntimeException implements StoryblokException
 {
 }

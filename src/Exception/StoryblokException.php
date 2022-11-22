@@ -2,6 +2,6 @@
 
 namespace Torr\Storyblok\Exception;
 
-interface StoryblokExceptionInterface
+interface StoryblokException extends \Throwable
 {
 }
