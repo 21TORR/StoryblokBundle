@@ -54,7 +54,7 @@ final class AssetFieldDefinition extends FieldDefinition
 	}
 
 	// @inheritDoc
-	public function validateData (DataValidator $validator, array $path, mixed $data, ) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data) : void
 	{
 		// @todo add implementation
 	}
