@@ -2,12 +2,12 @@
 
 namespace Torr\Storyblok\Field\Option;
 
-use Torr\Storyblok\Component\ComponentDefinitionInterface;
+use Torr\Storyblok\Component\AbstractComponent;
 
 final class StorySource implements ChoiceSourceInterface
 {
 	/**
-	 * @param array<class-string<ComponentDefinitionInterface>> $restrictContentTypes
+	 * @param array<class-string<AbstractComponent>> $restrictContentTypes
 	 */
 	public function __construct (
 		private readonly array $restrictContentTypes = [],
