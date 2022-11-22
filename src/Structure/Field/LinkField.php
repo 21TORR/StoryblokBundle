@@ -21,6 +21,7 @@ final class LinkField extends AbstractField
 		private readonly bool $allowAssetLinks = false,
 		private readonly bool $allowAnchors = true,
 		private readonly bool $restrictInternalLinksToSameFolder = false,
+		private readonly bool $allowMultiple = false,
 		private readonly ?string $internalLinkScope = null,
 		private readonly ?array $restrictToContentTypes = null,
 	)
@@ -33,7 +34,9 @@ final class LinkField extends AbstractField
 	 */
 	protected function getInternalStoryblokType () : FieldType
 	{
-		return FieldType::Link;
+		return $this->allowMultiple
+			? FieldType::MultiLink
+			: FieldType::Link;
 	}
 
 	/**
