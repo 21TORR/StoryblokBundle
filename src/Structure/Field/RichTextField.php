@@ -2,7 +2,6 @@
 
 namespace Torr\Storyblok\Structure\Field;
 
-use Torr\Storyblok\Data\ComponentGroups;
 use Torr\Storyblok\Data\FieldType;
 use Torr\Storyblok\Data\RichTextStyling;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
@@ -15,9 +14,9 @@ final class RichTextField extends AbstractField
 	 * @inheritDoc
 	 *
 	 * @param array<class-string<ComponentTypeDefinition>> $filterComponents
-	 * @param array<string> $filterComponentGroups
-	 * @param array<RichTextStyling> $toolbarOptions
-	 * @param array<array<string, string>> $styleOptions
+	 * @param array<string>                                $filterComponentGroups
+	 * @param array<RichTextStyling>                       $toolbarOptions
+	 * @param array<array<string, string>>                 $styleOptions
 	 */
 	public function __construct (
 		string $label,
@@ -69,12 +68,12 @@ final class RichTextField extends AbstractField
 					static fn (RichTextStyling $option) => $option->value,
 					$this->toolbarOptions,
 				),
-				"restrict_type" => !empty($this->filterComponentGroups) ? "groups": "",
+				"restrict_type" => !empty($this->filterComponentGroups) ? "groups" : "",
 				"restrict_components" => !empty($this->filterComponents) || !empty($this->filterComponentGroups),
 				"component_whitelist" => $this->filterComponents,
 				"component_group_whitelist" => $this->filterComponentGroups,
 				"style_options" => $formattedStyleOptions,
-			]
+			],
 		);
 	}
 

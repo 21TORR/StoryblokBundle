@@ -2,19 +2,16 @@
 
 namespace Torr\Storyblok\Structure\Field;
 
-use Torr\Storyblok\Data\AssetFileType;
 use Torr\Storyblok\Data\FieldType;
+use Torr\Storyblok\Structure\Field\Option\ChoiceSourceInterface;
 use Torr\Storyblok\Validator\DataValidator;
 
-final class AssetField extends AbstractField
+final class ChoiceField extends AbstractField
 {
-	/**
-	 * @inheritDoc
-	 */
 	public function __construct (
 		string $label,
-		private readonly ?array $fileTypes,
-		private readonly bool $allowMultiple = false,
+		private readonly ChoiceSourceInterface $source,
+		private readonly bool $allowMultiselect = false,
 		mixed $defaultValue = null,
 	)
 	{
@@ -26,9 +23,9 @@ final class AssetField extends AbstractField
 	 */
 	protected function getInternalStoryblokType () : FieldType
 	{
-		return $this->allowMultiple
-			? FieldType::MultiAsset
-			: FieldType::Asset;
+		return $this->allowMultiselect
+			? FieldType::Options
+			: FieldType::Option;
 	}
 
 	/**
@@ -38,20 +35,15 @@ final class AssetField extends AbstractField
 	{
 		return \array_replace(
 			parent::toManagementApiData($position),
-			[
-				"filetypes" => \array_map(
-					static fn (AssetFileType $fileType) => $fileType->value,
-					$this->fileTypes ?? AssetFileType::cases(),
-				),
-			],
+			$this->source->toManagementApiData(),
 		);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $path, mixed $data) : void
+	public function validateData (DataValidator $validator, array $path, mixed $data, ) : void
 	{
-		// @todo add implementation
 	}
+
 }

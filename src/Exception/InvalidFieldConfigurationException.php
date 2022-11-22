@@ -4,5 +4,4 @@ namespace Torr\Storyblok\Exception;
 
 final class InvalidFieldConfigurationException extends \InvalidArgumentException implements StoryblokException
 {
-
 }

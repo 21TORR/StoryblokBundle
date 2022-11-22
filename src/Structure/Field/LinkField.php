@@ -3,16 +3,12 @@
 namespace Torr\Storyblok\Structure\Field;
 
 use Torr\Storyblok\Data\FieldType;
-use Torr\Storyblok\Data\LinkType;
-use Torr\Storyblok\Structure\Component\ComponentTypeDefinition;
 use Torr\Storyblok\Validator\DataValidator;
 
 final class LinkField extends AbstractField
 {
 	/**
 	 * @inheritDoc
-	 *
-	 * @param array<class-string<ComponentTypeDefinition>>|null $restrictToContentTypes,
 	 */
 	public function __construct (
 		string $label,

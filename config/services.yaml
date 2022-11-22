@@ -6,4 +6,7 @@ services:
     Torr\Storyblok\:
         resource: ../src/*
         exclude:
+             - ../src/Data
+             - ../src/Exception
+             - ../src/Structure/Field/Option
              - ../src/TorrStoryblokBundle.php

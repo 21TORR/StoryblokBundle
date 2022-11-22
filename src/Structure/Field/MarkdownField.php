@@ -13,7 +13,6 @@ final class MarkdownField extends AbstractField
 	public function __construct (
 		string $label,
 		mixed $defaultValue = null,
-		?string $description = null,
 		private readonly bool $hasRichMarkdown = true,
 		private readonly ?int $maxLength = null,
 		private readonly bool $isRightToLeft = false,
@@ -33,7 +32,7 @@ final class MarkdownField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position,) : array
+	public function toManagementApiData (int $position, ) : array
 	{
 		return \array_replace(
 			parent::toManagementApiData($position),
