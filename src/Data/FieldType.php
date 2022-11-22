@@ -10,8 +10,6 @@ namespace Torr\Storyblok\Data;
  */
 enum FieldType : string
 {
-	case Asset = "asset";
-
 	case Bloks = "bloks";
 
 	case Boolean = "boolean";

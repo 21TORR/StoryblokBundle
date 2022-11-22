@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Data;
 
-enum FileType : string
+enum AssetFileType : string
 {
 	case Image = "images";
 
