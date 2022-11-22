@@ -3,8 +3,9 @@
 namespace Torr\Storyblok\Manager\Sync;
 
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Api\ManagementApi;
-use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
+use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Manager\ComponentManager;
@@ -25,11 +26,9 @@ final class ComponentSync
 	{
 		try
 		{
-			$io->section("Sync Component Groups");
-			$io->section("Sync Components");
 			$this->syncComponents($io);
 		}
-		catch (InvalidComponentConfigurationException|ApiRequestFailedException $exception)
+		catch (InvalidComponentConfigurationException|ApiRequestException $exception)
 		{
 			throw new SyncFailedException($exception->getMessage(), previous: $exception);
 		}
@@ -42,6 +41,7 @@ final class ComponentSync
 	{
 		$normalized = [];
 
+		// first: normalize everything to check if normalization fails
 		foreach ($this->componentManager->getAllComponents() as $component)
 		{
 			$key = \sprintf(
@@ -52,15 +52,19 @@ final class ComponentSync
 
 			$io->write("Normalizing {$key} ");
 
-			$normalized[$key] = $component->toManagementApiData();
+			$normalized[$key] = new ComponentImport(
+				$component->toManagementApiData(),
+				$component->getComponentGroup(),
+			);
 
 			$io->writeln("done <fg=green>✓</>");
 		}
 
+		// then import
 		foreach ($normalized as $key => $config)
 		{
 			$io->write("Syncing {$key} ");
-			$performedAction = $this->managementApi->syncComponent($config);
+			$performedAction = $this->managementApi->syncComponent($config->config, $config->groupLabel);
 			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
 		}
 	}

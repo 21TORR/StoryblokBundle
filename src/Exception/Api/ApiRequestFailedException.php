@@ -2,8 +2,6 @@
 
 namespace Torr\Storyblok\Exception\Api;
 
-use Torr\Storyblok\Exception\StoryblokException;
-
-final class ApiRequestFailedException extends \RuntimeException implements StoryblokException
+final class ApiRequestFailedException extends \RuntimeException implements ApiRequestException
 {
 }
