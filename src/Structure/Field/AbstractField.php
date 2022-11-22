@@ -26,7 +26,6 @@ abstract class AbstractField implements FieldDefinitionInterface
 		protected readonly string $label,
 		protected readonly mixed $defaultValue = null,
 		protected readonly ?string $description = null,
-		protected readonly array $additionalFieldData = [],
 	) {}
 
 	/**
@@ -97,7 +96,6 @@ abstract class AbstractField implements FieldDefinitionInterface
 			"regexp" => $this->regexp,
 			"can_sync" => $this->canSync,
 			"preview_field" => $this->isPreviewField,
-			...$this->additionalFieldData,
 		];
 	}
 
