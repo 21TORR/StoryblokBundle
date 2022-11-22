@@ -9,10 +9,10 @@ use Torr\Storyblok\Structure\FieldDefinitionInterface;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
 
-abstract class FieldDefinition implements FieldDefinitionInterface
+abstract class AbstractFieldDefinition implements FieldDefinitionInterface
 {
 	public function __construct (
-		public readonly FieldType $type,
+		public readonly FieldType $storyblokFieldType,
 		public readonly ?string $label = null,
 		public readonly ?int $position = null,
 		public readonly mixed $defaultValue = null,
@@ -25,10 +25,15 @@ abstract class FieldDefinition implements FieldDefinitionInterface
 		public readonly array $additionalFieldData = [],
 	) {}
 
-	public function getFieldDefinition () : array
+	/**
+	 * Returns the field definition for usage with the management api.
+	 *
+	 * @internal
+	 */
+	public function toManagementApiData () : array
 	{
 		return [
-			"type" => $this->type->value,
+			"type" => $this->storyblokFieldType->value,
 			"display_name" => $this->label,
 			"pos" => $this->position,
 			"default_value" => $this->defaultValue,
@@ -36,7 +41,7 @@ abstract class FieldDefinition implements FieldDefinitionInterface
 			"translatable" => $this->translatable,
 			"required" => $this->required,
 			"regexp" => $this->regexp,
-			"can_async" => $this->canSync,
+			"can_sync" => $this->canSync,
 			"preview_field" => $this->isPreviewField,
 			...$this->additionalFieldData,
 		];
@@ -74,7 +79,7 @@ abstract class FieldDefinition implements FieldDefinitionInterface
 	{
 		$validator->ensureDataIsValid(
 			$path,
-			$this->type,
+			$this->storyblokFieldType,
 			$data,
 			$constraints,
 		);

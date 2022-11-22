@@ -10,7 +10,7 @@ interface FieldDefinitionInterface
 	/**
 	 * Transforms the type to the type definition required for the Storyblok API
 	 */
-	public function getFieldDefinition () : array;
+	public function toManagementApiData () : array;
 
 	/**
 	 * Validates the data for this field, as it was sent by Storyblok.

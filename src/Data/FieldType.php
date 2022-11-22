@@ -2,7 +2,12 @@
 
 namespace Torr\Storyblok\Data;
 
-// A list of all available, non-deprecated built-in Storyblok field types
+/**
+ * A list of all available, non-deprecated built-in Storyblok field types.
+ * This list is internally used as a unification for speaking to the API.
+ *
+ * @internal
+ */
 enum FieldType : string
 {
 	case Asset = "asset";

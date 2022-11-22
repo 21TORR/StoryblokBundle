@@ -10,8 +10,9 @@ final class DataValidator
 	/**
 	 * Ensures that the given data is valid
 	 *
-	 * @param string[] $contentPath The path to the given content element
+	 * @param string[]               $contentPath The path to the given content element
 	 * @param array<Constraint|null> $constraints
+	 *
 	 * @return void|never
 	 */
 	public function ensureDataIsValid (

@@ -8,6 +8,7 @@ final class DataTransformer
 	 * @template T
 	 *
 	 * @param T $data The transformed data of the component
+	 *
 	 * @returns T|null
 	 */
 	public function transformValue (
