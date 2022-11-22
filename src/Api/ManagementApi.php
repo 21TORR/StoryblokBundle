@@ -64,7 +64,7 @@ final class ManagementApi
 		{
 			throw new ApiRequestFailedException(\sprintf(
 				"Management API request failed: %s",
-				$e->getMessage()
+				$e->getMessage(),
 			), previous: $e);
 		}
 	}
@@ -96,7 +96,7 @@ final class ManagementApi
 					->setHeaders([
 						"Authorization" => $this->config->getManagementToken(),
 					])
-					->toArray()
+					->toArray(),
 			);
 
 			return new ComponentIdMap($response->toArray());
@@ -105,7 +105,7 @@ final class ManagementApi
 		{
 			throw new ApiRequestFailedException(\sprintf(
 				"Failed to fetch existing components: %s",
-				$e->getMessage()
+				$e->getMessage(),
 			), previous: $e);
 		}
 	}

@@ -4,14 +4,10 @@ namespace Torr\Storyblok\Api\Data;
 
 final class ComponentIdMap
 {
-	/**
-	 * @var array<string, string>
-	 */
+	/** @var array<string, string> */
 	private array $componentGroups;
 
-	/**
-	 * @var array<string, int>
-	 */
+	/** @var array<string, int> */
 	private array $components;
 
 	/**
