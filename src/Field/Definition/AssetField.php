@@ -34,7 +34,7 @@ final class AssetField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position, ) : array
+	public function toManagementApiData (int $position) : array
 	{
 		return \array_replace(
 			parent::toManagementApiData($position),
