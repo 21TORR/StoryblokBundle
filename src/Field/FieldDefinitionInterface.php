@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Field;
 
-use Torr\Storyblok\Transformer\DataTransformer;
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
@@ -31,7 +31,7 @@ interface FieldDefinitionInterface
 	 */
 	public function transformValue (
 		mixed $data,
-		DataTransformer $dataTransformer,
+		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed;
 }

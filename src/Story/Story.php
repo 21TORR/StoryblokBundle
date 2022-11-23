@@ -2,9 +2,10 @@
 
 namespace Torr\Storyblok\Story;
 
-use Torr\Storyblok\Field\FieldDefinitionInterface;
-use Torr\Storyblok\Transformer\DataTransformer;
+use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 abstract class Story
 {
@@ -15,9 +16,8 @@ abstract class Story
 	 */
 	final public function __construct (
 		array $data,
-		/** @var array<string, FieldDefinitionInterface> $fieldDefinitions */
-		protected readonly array $fieldDefinitions,
-		protected readonly DataTransformer $dataTransformer,
+		protected readonly AbstractComponent $rootComponent,
+		protected readonly StoryblokContext $dataContext,
 	)
 	{
 		$this->content = $data["content"];
@@ -35,5 +35,19 @@ abstract class Story
 	public function validate (DataValidator $validator) : void
 	{
 
+	}
+
+	/**
+	 * Returns the base transformed data
+	 */
+	public function getTransformedData (
+		?DataVisitorInterface $dataVisitor = null,
+	) : array
+	{
+		return $this->rootComponent->transformValue(
+			$this->content,
+			$this->dataContext,
+			$dataVisitor,
+		);
 	}
 }

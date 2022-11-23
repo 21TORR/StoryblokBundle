@@ -4,13 +4,12 @@ namespace Torr\Storyblok\Component;
 
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Component\Definition\ComponentDefinition;
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
-use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 use Torr\Storyblok\Story\Story;
-use Torr\Storyblok\Transformer\DataTransformer;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
  * Base class for all components registered in the system
@@ -19,6 +18,9 @@ use Torr\Storyblok\Validator\DataValidator;
  */
 abstract class AbstractComponent
 {
+	/** @var array<string, FieldDefinitionInterface>|null */
+	private ?array $fields = null;
+
 	/**
 	 * Returns the unique key for this component
 	 */
@@ -73,6 +75,47 @@ abstract class AbstractComponent
 	abstract public function getStoryClass () : string;
 
 	/**
+	 * Receives the Storyblok data for the given field and transforms it for better usage
+	 */
+	public function transformValue (
+		mixed $data,
+		StoryblokContext $dataContext,
+		?DataVisitorInterface $dataVisitor = null,
+	) : array
+	{
+		$transformedData = [];
+
+		foreach ($this->getFieldCollection() as $name => $field)
+		{
+			$fieldData = $field instanceof NestedFieldDefinitionInterface
+				? $data
+				: ($data[$name] ?? null);
+
+			$transformedData[$name] = $field->transformValue(
+				$fieldData,
+				$dataContext,
+				$dataVisitor,
+			);
+		}
+
+		return $transformedData;
+	}
+
+	/**
+	 * @return array<string, FieldDefinitionInterface>
+	 */
+	final protected function getFieldCollection () : array
+	{
+		if (null === $this->fields)
+		{
+			$this->fields = $this->configureFields();
+		}
+
+		return $this->fields;
+	}
+
+
+	/**
 	 * Normalizes the fields for usage in the management API
 	 *
 	 * @param array<FieldDefinitionInterface> $fields
@@ -124,43 +167,6 @@ abstract class AbstractComponent
 
 
 	/**
-	 * Creates a new story.
-	 *
-	 * If passed a data validator, the data is automatically validated.
-	 *
-	 * @internal
-	 *
-	 * @return TStory
-	 */
-	final public function createStory (
-		array $data,
-		DataTransformer $dataTransformer,
-		?DataValidator $dataValidator = null,
-	) : Story
-	{
-		$storyClass = $this->getStoryClass();
-
-		if (!\is_a($storyClass, Story::class, true))
-		{
-			throw new StoryHydrationFailed(\sprintf(
-				"Could not hydrate story of type '%s': story class does not extend %s",
-				static::getKey(),
-				Story::class,
-			));
-		}
-
-		$story = new $storyClass($data, $this->configureFields(), $dataTransformer);
-
-		if (null !== $dataValidator)
-		{
-			$story->validate($dataValidator);
-		}
-
-		return $story;
-	}
-
-
-	/**
 	 * Transforms the data for the component
 	 *
 	 * @internal
@@ -181,7 +187,7 @@ abstract class AbstractComponent
 		return [
 			"name" => static::getKey(),
 			"display_name" => $this->getDisplayName(),
-			"schema" => $this->normalizeFields($this->configureFields()),
+			"schema" => $this->normalizeFields($this->getFieldCollection()),
 			"image" => $definition->previewScreenshotUrl,
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,

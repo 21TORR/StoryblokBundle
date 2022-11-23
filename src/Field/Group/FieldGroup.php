@@ -2,11 +2,11 @@
 
 namespace Torr\Storyblok\Field\Group;
 
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Field\Definition\AbstractField;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
-use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
@@ -62,7 +62,7 @@ final class FieldGroup extends AbstractField implements NestedFieldDefinitionInt
 	 */
 	public function transformValue (
 		mixed $data,
-		DataTransformer $dataTransformer,
+		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
