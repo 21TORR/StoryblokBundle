@@ -34,7 +34,7 @@ abstract class Story
 
 	public function validate (DataValidator $validator) : void
 	{
-
+		$this->rootComponent->validateData($validator, $this->content);
 	}
 
 	/**
