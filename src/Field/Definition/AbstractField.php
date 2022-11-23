@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraint;
 use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
@@ -139,6 +140,8 @@ abstract class AbstractField implements FieldDefinitionInterface
 	 * Ensures that the value is valid
 	 *
 	 * @param array<Constraint|null> $constraints
+	 *
+	 * @throws InvalidDataException
 	 */
 	protected function ensureDataIsValid (
 		DataValidator $validator,

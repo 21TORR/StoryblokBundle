@@ -6,9 +6,11 @@ use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Component\Definition\ComponentDefinition;
 use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
+use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
@@ -99,6 +101,28 @@ abstract class AbstractComponent
 		}
 
 		return $transformedData;
+	}
+
+	/**
+	 * @throws InvalidDataException
+	 */
+	public function validateData (DataValidator $validator, $data) : void
+	{
+		foreach ($this->getFieldCollection() as $name => $field)
+		{
+			$fieldData = $field instanceof NestedFieldDefinitionInterface
+				? $data
+				: ($data[$name] ?? null);
+
+			$field->validateData(
+				$validator,
+				[
+					\sprintf("Component(%s)", static::getKey()),
+					\sprintf("Field(%s)", $name),
+				],
+				$fieldData,
+			);
+		}
 	}
 
 	/**
