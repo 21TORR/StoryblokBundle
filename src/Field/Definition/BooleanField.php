@@ -2,11 +2,21 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
 
 final class BooleanField extends AbstractField
 {
+	/**
+	 * @inheritDoc
+	 */
+	public function __construct (string $label, bool $defaultValue = false)
+	{
+		parent::__construct($label, $defaultValue);
+	}
+
 	/**
 	 * @inheritDoc
 	 */
@@ -20,6 +30,14 @@ final class BooleanField extends AbstractField
 	 */
 	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
 	{
-		// @todo add implementation
+		$validator->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new NotNull(),
+				new Type("bool"),
+			],
+		);
 	}
 }
