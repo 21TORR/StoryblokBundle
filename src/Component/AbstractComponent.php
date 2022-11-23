@@ -19,6 +19,9 @@ use Torr\Storyblok\Validator\DataValidator;
  */
 abstract class AbstractComponent
 {
+	/** @var array<string, FieldDefinitionInterface>|null */
+	private ?array $fields = null;
+
 	/**
 	 * Returns the unique key for this component
 	 */
@@ -71,6 +74,19 @@ abstract class AbstractComponent
 	 * @return class-string<TStory>
 	 */
 	abstract public function getStoryClass () : string;
+
+	/**
+	 */
+	final public function getFields () : array
+	{
+		if (null === $this->fields)
+		{
+			$this->fields = $this->configureFields();
+		}
+
+		return $this->fields;
+	}
+
 
 	/**
 	 * Normalizes the fields for usage in the management API
@@ -149,7 +165,7 @@ abstract class AbstractComponent
 			));
 		}
 
-		$story = new $storyClass($data, $this->configureFields(), $dataTransformer);
+		$story = new $storyClass($data, $this->getFields(), $dataTransformer);
 
 		if (null !== $dataValidator)
 		{
@@ -181,7 +197,7 @@ abstract class AbstractComponent
 		return [
 			"name" => static::getKey(),
 			"display_name" => $this->getDisplayName(),
-			"schema" => $this->normalizeFields($this->configureFields()),
+			"schema" => $this->normalizeFields($this->getFields()),
 			"image" => $definition->previewScreenshotUrl,
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,
