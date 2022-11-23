@@ -53,7 +53,7 @@ final class EditorTab extends AbstractField implements NestedFieldDefinitionInte
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $path, mixed $data, ) : void
+	public function validateData (DataValidator $validator, array $contentPath, mixed $data, ) : void
 	{
 	}
 

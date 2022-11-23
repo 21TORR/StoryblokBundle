@@ -48,7 +48,7 @@ final class TextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $path, mixed $data) : void
+	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
 	{
 		// @todo add implementation
 	}

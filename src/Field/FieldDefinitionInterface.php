@@ -22,7 +22,7 @@ interface FieldDefinitionInterface
 	 */
 	public function validateData (
 		DataValidator $validator,
-		array $path,
+		array $contentPath,
 		mixed $data,
 	) : void;
 
