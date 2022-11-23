@@ -60,7 +60,7 @@ final class FieldGroup extends AbstractField implements NestedFieldDefinitionInt
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (
+	public function transformData (
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,

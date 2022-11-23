@@ -79,7 +79,7 @@ abstract class AbstractComponent
 	/**
 	 * Receives the Storyblok data for the given field and transforms it for better usage
 	 */
-	public function transformValue (
+	public function transformData (
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
@@ -93,7 +93,7 @@ abstract class AbstractComponent
 				? $data
 				: ($data[$name] ?? null);
 
-			$transformedData[$name] = $field->transformValue(
+			$transformedData[$name] = $field->transformData(
 				$fieldData,
 				$dataContext,
 				$dataVisitor,

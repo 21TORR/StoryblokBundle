@@ -60,7 +60,7 @@ final class EditorTab extends AbstractField implements NestedFieldDefinitionInte
 	/**
 	 * @inheritDoc
 	 */
-	public function transformValue (
+	public function transformData (
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,

@@ -44,7 +44,7 @@ abstract class Story
 		?DataVisitorInterface $dataVisitor = null,
 	) : array
 	{
-		return $this->rootComponent->transformValue(
+		return $this->rootComponent->transformData(
 			$this->content,
 			$this->dataContext,
 			$dataVisitor,

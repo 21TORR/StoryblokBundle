@@ -125,7 +125,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 	 *
 	 * @return T
 	 */
-	public function transformValue (
+	public function transformData (
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
