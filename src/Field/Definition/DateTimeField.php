@@ -71,6 +71,8 @@ final class DateTimeField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
+		\assert(null === $data || \is_string($data));
+
 		$transformed = null !== $data
 			? \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data)
 			: null;

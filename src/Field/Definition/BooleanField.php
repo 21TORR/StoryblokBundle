@@ -4,8 +4,10 @@ namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class BooleanField extends AbstractField
 {
@@ -40,4 +42,19 @@ final class BooleanField extends AbstractField
 			],
 		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformData (
+		mixed $data,
+		StoryblokContext $dataContext,
+		?DataVisitorInterface $dataVisitor = null,
+	) : mixed
+	{
+		\assert(\is_bool($data));
+
+		return parent::transformData($data, $dataContext, $dataVisitor);
+	}
+
 }

@@ -74,10 +74,12 @@ final class TextField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
+		\assert(\is_string($data) || null === $data);
+
 		$transformed = match ($data)
 		{
 			"", null => null,
-			default => (string) $data,
+			default => $data,
 		};
 
 		return parent::transformData($transformed, $dataContext, $dataVisitor);

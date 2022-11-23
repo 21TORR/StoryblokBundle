@@ -71,6 +71,8 @@ final class MarkdownField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
+		\assert(null === $data || \is_string($data));
+
 		// Normalize to null. Trim for checking, but don't trim data if is not empty, just to be sure.
 		$transformed = "" !== \trim($data)
 			? $data

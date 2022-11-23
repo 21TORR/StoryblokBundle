@@ -53,7 +53,9 @@ final class NumberField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
-		if (\is_string($data) && "" !== $data)
+		\assert(null === $data || \is_string($data));
+
+		if (null !== $data && "" !== $data)
 		{
 			$transformed = \str_contains($data, ".")
 				? (float) $data
