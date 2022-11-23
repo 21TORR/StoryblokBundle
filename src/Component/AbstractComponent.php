@@ -91,7 +91,7 @@ abstract class AbstractComponent
 				? $data
 				: ($data[$name] ?? null);
 
-			$field->transformValue(
+			$transformedData[$name] = $field->transformValue(
 				$fieldData,
 				$dataContext,
 				$dataVisitor,

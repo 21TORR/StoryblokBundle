@@ -36,4 +36,18 @@ abstract class Story
 	{
 
 	}
+
+	/**
+	 * Returns the base transformed data
+	 */
+	public function getTransformedData (
+		?DataVisitorInterface $dataVisitor = null,
+	) : array
+	{
+		return $this->rootComponent->transformValue(
+			$this->content,
+			$this->dataContext,
+			$dataVisitor,
+		);
+	}
 }
