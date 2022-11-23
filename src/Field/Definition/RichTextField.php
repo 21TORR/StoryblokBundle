@@ -111,7 +111,7 @@ final class RichTextField extends AbstractField
 		if (null !== $data
 			&& 1 === \count($data["content"])
 			// fetch the first (and only) content and check if it is empty
-			&& "" === \trim($data["content"][0]["content"][0]["text"] ?? "")
+			&& null === $dataContext->dataTransformer->normalizeOptionalString($data["content"][0]["content"][0]["text"] ?? null)
 		)
 		{
 			$transformed = null;

@@ -73,10 +73,7 @@ final class MarkdownField extends AbstractField
 	{
 		\assert(null === $data || \is_string($data));
 
-		// Normalize to null. Trim for checking, but don't trim data if is not empty, just to be sure.
-		$transformed = "" !== \trim($data)
-			? $data
-			: null;
+		$transformed = $dataContext->dataTransformer->normalizeOptionalString($data);
 
 		return parent::transformData($transformed, $dataContext, $dataVisitor);
 	}
