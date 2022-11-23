@@ -89,6 +89,48 @@ final class ContentApi
 	}
 
 	/**
+	 * Loads a single story.
+	 *
+	 * @param string|int $identifier Can be the full slug, id or uuid
+	 */
+	public function fetchSingleStory (
+		string|int $identifier,
+	) : ?Story
+	{
+		try
+		{
+			$identifier = \ltrim((string) $identifier, "/");
+
+			$response = $this->client->request(
+				"GET",
+				"stories/{$identifier}",
+				(new HttpOptions())
+					->setQuery([
+						"token" => $this->config->getContentToken(),
+					])
+					->toArray(),
+			);
+
+			if (404 === $response->getStatusCode())
+			{
+				return null;
+			}
+
+			$data = $response->toArray();
+			return $this->storyFactory->createFromApiData($data["story"]);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			throw new ContentRequestFailedException(\sprintf(
+				"Content request failed for single story '%s': %s",
+				$identifier,
+				$exception->getMessage(),
+			), previous: $exception);
+		}
+
+	}
+
+	/**
 	 * Fetches all stories and automatically resolves pagination.
 	 *
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
