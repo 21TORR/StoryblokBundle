@@ -51,7 +51,7 @@ final class NumberField extends AbstractField
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
-	) : mixed
+	) : int|float|null
 	{
 		\assert(null === $data || \is_string($data));
 

@@ -50,7 +50,7 @@ final class BooleanField extends AbstractField
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
-	) : mixed
+	) : bool
 	{
 		\assert(\is_bool($data));
 

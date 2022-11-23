@@ -102,7 +102,7 @@ final class RichTextField extends AbstractField
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
-	) : mixed
+	) : ?string
 	{
 		\assert(null === $data || \is_array($data));
 

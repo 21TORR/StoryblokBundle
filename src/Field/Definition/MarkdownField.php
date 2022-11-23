@@ -69,7 +69,7 @@ final class MarkdownField extends AbstractField
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
-	) : mixed
+	) : ?string
 	{
 		\assert(null === $data || \is_string($data));
 

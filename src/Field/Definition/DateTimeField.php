@@ -69,7 +69,7 @@ final class DateTimeField extends AbstractField
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
-	) : mixed
+	) : ?\DateTimeImmutable
 	{
 		\assert(null === $data || \is_string($data));
 
