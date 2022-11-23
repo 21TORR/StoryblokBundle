@@ -2,12 +2,9 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Symfony\Component\Validator\Constraint;
 use Torr\Storyblok\Context\StoryblokContext;
-use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
