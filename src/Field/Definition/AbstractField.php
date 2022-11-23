@@ -135,26 +135,4 @@ abstract class AbstractField implements FieldDefinitionInterface
 
 		return $data;
 	}
-
-	/**
-	 * Ensures that the value is valid
-	 *
-	 * @param array<Constraint|null> $constraints
-	 *
-	 * @throws InvalidDataException
-	 */
-	protected function ensureDataIsValid (
-		DataValidator $validator,
-		array $path,
-		mixed $data,
-		array $constraints,
-	) : void
-	{
-		$validator->ensureDataIsValid(
-			$path,
-			$this,
-			$data,
-			$constraints,
-		);
-	}
 }
