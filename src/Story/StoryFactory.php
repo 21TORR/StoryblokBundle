@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Story;
 
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
@@ -36,7 +37,22 @@ final class StoryFactory
 		try
 		{
 			$component = $this->componentManager->getComponent($type);
-			return $component->createStory($data, $this->dataTransformer, $this->dataValidator);
+			$storyClass = $component->getStoryClass();
+
+			if (!\is_a($storyClass, Story::class, true))
+			{
+				throw new StoryHydrationFailed(\sprintf(
+					"Could not hydrate story of type '%s': story class does not extend %s",
+					$component::getKey(),
+					Story::class,
+				));
+			}
+
+			$context = new StoryblokContext($this->componentManager, $this->dataTransformer);
+			$story = new $storyClass($data, $component, $context);
+			$story->validate($this->dataValidator);
+
+			return $story;
 		}
 		catch (UnknownComponentKeyException $exception)
 		{
