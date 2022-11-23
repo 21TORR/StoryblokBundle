@@ -5,11 +5,17 @@ namespace Torr\Storyblok\Component;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Component\Definition\ComponentDefinition;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
+use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
+use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Transformer\DataTransformer;
+use Torr\Storyblok\Validator\DataValidator;
 
 /**
  * Base class for all components registered in the system
+ *
+ * @template TStory of Story
  */
 abstract class AbstractComponent
 {
@@ -62,6 +68,11 @@ abstract class AbstractComponent
 	}
 
 	/**
+	 * @return class-string<TStory>
+	 */
+	abstract public function getStoryClass () : string;
+
+	/**
 	 * Normalizes the fields for usage in the management API
 	 *
 	 * @param array<FieldDefinitionInterface> $fields
@@ -110,6 +121,44 @@ abstract class AbstractComponent
 
 		return $normalizedFields;
 	}
+
+
+	/**
+	 * Creates a new story.
+	 *
+	 * If passed a data validator, the data is automatically validated.
+	 *
+	 * @internal
+	 *
+	 * @return TStory
+	 */
+	final public function createStory (
+		array $data,
+		DataTransformer $dataTransformer,
+		?DataValidator $dataValidator = null,
+	) : Story
+	{
+		$storyClass = $this->getStoryClass();
+
+		if (!\is_a($storyClass, Story::class, true))
+		{
+			throw new StoryHydrationFailed(\sprintf(
+				"Could not hydrate story of type '%s': story class does not extend %s",
+				static::getKey(),
+				Story::class,
+			));
+		}
+
+		$story = new $storyClass($data, $this->configureFields(), $dataTransformer);
+
+		if (null !== $dataValidator)
+		{
+			$story->validate($dataValidator);
+		}
+
+		return $story;
+	}
+
 
 	/**
 	 * Transforms the data for the component

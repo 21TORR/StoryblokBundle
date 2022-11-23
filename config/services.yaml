@@ -18,4 +18,4 @@ services:
 
 
     Torr\Storyblok\Manager\ComponentManager:
-        $components: !tagged_locator 'storyblok.component.definition'
+        $components: !tagged_locator { tag: 'storyblok.component.definition', default_index_method: 'getKey' }
