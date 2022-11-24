@@ -72,6 +72,9 @@ final class DateTimeField extends AbstractField
 	{
 		\assert(null === $data || \is_string($data));
 
+		// empty fields are also passed as ""
+		$data = $context->normalizeOptionalString($data);
+
 		$transformed = null !== $data
 			? \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data)
 			: null;
