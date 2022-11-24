@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Context;
 
 use Psr\Log\LoggerInterface;
+use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Transformer\DataTransformer;
@@ -19,7 +20,6 @@ final class ComponentContext
 		public readonly DataValidator $validator,
 	) {}
 
-
 	/**
 	 * @see DataValidator::ensureDataIsValid()
 	 */
@@ -31,6 +31,14 @@ final class ComponentContext
 	) : void
 	{
 		$this->validator->ensureDataIsValid($contentPath, $field, $data, $constraints);
+	}
+
+	/**
+	 * @see ComponentManager::getComponent()
+	 */
+	public function getComponentByKey (string $key) : AbstractComponent
+	{
+		return $this->componentManager->getComponent($key);
 	}
 
 	/**
