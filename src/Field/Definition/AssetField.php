@@ -84,10 +84,6 @@ final class AssetField extends AbstractField
 						"fieldtype" => [
 							new IdenticalTo("asset"),
 						],
-						"is_external_url" => [
-							new NotNull(),
-							new Type("bool"),
-						],
 					],
 					allowExtraFields: true,
 					allowMissingFields: false,
@@ -112,6 +108,10 @@ final class AssetField extends AbstractField
 						],
 						"copyright" => [
 							new Type("string"),
+						],
+						"is_external_url" => [
+							new NotNull(),
+							new Type("bool"),
 						],
 					],
 					allowExtraFields: true,
@@ -149,7 +149,7 @@ final class AssetField extends AbstractField
 				title: $dataTransformer->normalizeOptionalString($data["title"] ?? null),
 				source: $dataTransformer->normalizeOptionalString($data["source"] ?? null),
 				copyright: $dataTransformer->normalizeOptionalString($data["copyright"] ?? null),
-				isExternal: $data["is_external_url"],
+				isExternal: $data["is_external_url"] ?? false,
 			);
 		}
 
