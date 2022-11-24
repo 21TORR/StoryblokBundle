@@ -8,7 +8,7 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 abstract class Story
 {
-	protected readonly StoryAttributes $attributes;
+	protected readonly StoryMetaData $metaData;
 	protected readonly array $content;
 
 	/**
@@ -20,15 +20,15 @@ abstract class Story
 	)
 	{
 		$this->content = $data["content"];
-		$this->attributes = new StoryAttributes($data);
+		$this->metaData = new StoryMetaData($data, $this->rootComponent::getKey());
 	}
 
 
 	/**
 	 */
-	public function getAttributes () : StoryAttributes
+	public function getMetaData () : StoryMetaData
 	{
-		return $this->attributes;
+		return $this->metaData;
 	}
 
 	public function validate (ComponentContext $context) : void

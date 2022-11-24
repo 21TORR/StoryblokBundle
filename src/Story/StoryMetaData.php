@@ -4,13 +4,19 @@ namespace Torr\Storyblok\Story;
 
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 
-final class StoryAttributes
+final class StoryMetaData
 {
 	private readonly array $data;
 
 	/**
 	 */
-	public function __construct (array $data)
+	public function __construct (
+		array $data,
+		/**
+		 * The component type of the story's component
+		 */
+		private readonly string $type,
+	)
 	{
 		unset($data["content"]);
 		$this->data = $data;
@@ -88,6 +94,13 @@ final class StoryAttributes
 	public function getLocale () : string
 	{
 		return $this->data["lang"];
+	}
+
+	/**
+	 */
+	public function getType () : string
+	{
+		return $this->type;
 	}
 
 
