@@ -2,10 +2,9 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\Option\ChoiceSourceInterface;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class ChoiceField extends AbstractField
@@ -44,7 +43,7 @@ final class ChoiceField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $contentPath, mixed $data, ) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, ) : void
 	{
 		// nothing to validate
 	}
@@ -54,7 +53,7 @@ final class ChoiceField extends AbstractField
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
@@ -63,6 +62,6 @@ final class ChoiceField extends AbstractField
 			? null
 			: $data;
 
-		return parent::transformData($transformed, $dataContext, $dataVisitor);
+		return parent::transformData($transformed, $context, $dataVisitor);
 	}
 }

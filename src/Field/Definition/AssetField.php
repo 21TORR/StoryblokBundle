@@ -6,11 +6,10 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Asset\AssetFileType;
 use Torr\Storyblok\Field\Data\AssetData;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
@@ -64,9 +63,9 @@ final class AssetField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
-		$validator->ensureDataIsValid(
+		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
@@ -128,7 +127,7 @@ final class AssetField extends AbstractField
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?AssetData
 	{
@@ -138,21 +137,19 @@ final class AssetField extends AbstractField
 
 		if (\is_array($data) && null !== $data["filename"])
 		{
-			$dataTransformer = $dataContext->dataTransformer;
-
 			$transformed = new AssetData(
 				url: $data["filename"],
 				id: $data["id"],
-				alt: $dataTransformer->normalizeOptionalString($data["alt"] ?? null),
-				name: $dataTransformer->normalizeOptionalString($data["name"] ?? null),
-				focus: $dataTransformer->normalizeOptionalString($data["focus"] ?? null),
-				title: $dataTransformer->normalizeOptionalString($data["title"] ?? null),
-				source: $dataTransformer->normalizeOptionalString($data["source"] ?? null),
-				copyright: $dataTransformer->normalizeOptionalString($data["copyright"] ?? null),
+				alt: $context->normalizeOptionalString($data["alt"] ?? null),
+				name: $context->normalizeOptionalString($data["name"] ?? null),
+				focus: $context->normalizeOptionalString($data["focus"] ?? null),
+				title: $context->normalizeOptionalString($data["title"] ?? null),
+				source: $context->normalizeOptionalString($data["source"] ?? null),
+				copyright: $context->normalizeOptionalString($data["copyright"] ?? null),
 				isExternal: $data["is_external_url"] ?? false,
 			);
 		}
 
-		return parent::transformData($transformed, $dataContext, $dataVisitor);
+		return parent::transformData($transformed, $context, $dataVisitor);
 	}
 }

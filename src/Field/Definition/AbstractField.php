@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -124,7 +124,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{

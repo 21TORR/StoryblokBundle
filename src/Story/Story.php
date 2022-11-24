@@ -3,8 +3,7 @@
 namespace Torr\Storyblok\Story;
 
 use Torr\Storyblok\Component\AbstractComponent;
-use Torr\Storyblok\Context\StoryblokContext;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 abstract class Story
@@ -17,7 +16,7 @@ abstract class Story
 	final public function __construct (
 		array $data,
 		protected readonly AbstractComponent $rootComponent,
-		protected readonly StoryblokContext $dataContext,
+		protected readonly ComponentContext $dataContext,
 	)
 	{
 		$this->content = $data["content"];
@@ -32,9 +31,9 @@ abstract class Story
 		return $this->attributes;
 	}
 
-	public function validate (DataValidator $validator) : void
+	public function validate (ComponentContext $context) : void
 	{
-		$this->rootComponent->validateData($validator, $this->content);
+		$this->rootComponent->validateData($context, $this->content);
 	}
 
 	/**

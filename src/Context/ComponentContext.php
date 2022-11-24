@@ -1,0 +1,43 @@
+<?php declare(strict_types=1);
+
+namespace Torr\Storyblok\Context;
+
+use Psr\Log\LoggerInterface;
+use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Transformer\DataTransformer;
+use Torr\Storyblok\Validator\DataValidator;
+
+final class ComponentContext
+{
+	/**
+	 */
+	public function __construct (
+		public readonly ComponentManager $componentManager,
+		public readonly DataTransformer $dataTransformer,
+		public readonly LoggerInterface $logger,
+		public readonly DataValidator $validator,
+	) {}
+
+
+	/**
+	 * @see DataValidator::ensureDataIsValid()
+	 */
+	public function ensureDataIsValid (
+		array $contentPath,
+		FieldDefinitionInterface $field,
+		mixed $data,
+		array $constraints,
+	) : void
+	{
+		$this->validator->ensureDataIsValid($contentPath, $field, $data, $constraints);
+	}
+
+	/**
+	 * @see DataTransformer::normalizeOptionalString()
+	 */
+	public function normalizeOptionalString (?string $value) : ?string
+	{
+		return $this->dataTransformer->normalizeOptionalString($value);
+	}
+}
