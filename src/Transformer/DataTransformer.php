@@ -19,4 +19,20 @@ final class DataTransformer
 		// @todo add real implementation
 		return $data;
 	}
+
+	/**
+	 *
+	 */
+	public function normalizeOptionalString (?string $value) : ?string
+	{
+		if (null === $value)
+		{
+			return null;
+		}
+
+		// Normalize to null. Trim for checking, but don't trim data if is not empty, just to be sure.
+		return "" !== \trim($value)
+			? $value
+			: null;
+	}
 }

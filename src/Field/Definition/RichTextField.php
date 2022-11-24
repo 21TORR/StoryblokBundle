@@ -2,11 +2,14 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\RichText\RichTextStyling;
 use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class RichTextField extends AbstractField
 {
@@ -80,8 +83,41 @@ final class RichTextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $path, mixed $data) : void
+	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
 	{
-		// @todo add implementation
+		$validator->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new Type("array"),
+			],
+		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformData (
+		mixed $data,
+		StoryblokContext $dataContext,
+		?DataVisitorInterface $dataVisitor = null,
+	) : ?string
+	{
+		\assert(null === $data || \is_array($data));
+
+		$transformed = $data;
+
+		if (null !== $data
+			&& 1 === \count($data["content"])
+			// fetch the first (and only) content and check if it is empty
+			&& null === $dataContext->dataTransformer->normalizeOptionalString($data["content"][0]["content"][0]["text"] ?? null)
+		)
+		{
+			$transformed = null;
+		}
+
+		return parent::transformData($transformed, $dataContext, $dataVisitor);
+	}
+
 }

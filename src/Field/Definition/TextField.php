@@ -2,8 +2,11 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\Type;
+use Torr\Storyblok\Context\StoryblokContext;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class TextField extends AbstractField
 {
@@ -12,7 +15,7 @@ final class TextField extends AbstractField
 	 */
 	public function __construct (
 		string $label,
-		mixed $defaultValue = null,
+		?string $defaultValue = null,
 		private readonly bool $multiline = false,
 		private readonly ?int $maxLength = null,
 		private readonly bool $isRightToLeft = false,
@@ -48,8 +51,38 @@ final class TextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $path, mixed $data) : void
+	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
 	{
-		// @todo add implementation
+		$validator->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new Type("string"),
+				// We can't validate the length here, as it is not guaranteed if you add
+				// the max-length after content was added.
+			],
+		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformData (
+		mixed $data,
+		StoryblokContext $dataContext,
+		?DataVisitorInterface $dataVisitor = null,
+	) : ?string
+	{
+		\assert(\is_string($data) || null === $data);
+
+		$transformed = match ($data)
+		{
+			"", null => null,
+			default => $data,
+		};
+
+		return parent::transformData($transformed, $dataContext, $dataVisitor);
+	}
+
 }

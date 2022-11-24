@@ -2,12 +2,9 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Symfony\Component\Validator\Constraint;
 use Torr\Storyblok\Context\StoryblokContext;
-use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
@@ -125,7 +122,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 	 *
 	 * @return T
 	 */
-	public function transformValue (
+	public function transformData (
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
@@ -134,27 +131,5 @@ abstract class AbstractField implements FieldDefinitionInterface
 		$dataVisitor?->onDataVisit($this, $data);
 
 		return $data;
-	}
-
-	/**
-	 * Ensures that the value is valid
-	 *
-	 * @param array<Constraint|null> $constraints
-	 *
-	 * @throws InvalidDataException
-	 */
-	protected function ensureDataIsValid (
-		DataValidator $validator,
-		array $path,
-		mixed $data,
-		array $constraints,
-	) : void
-	{
-		$validator->ensureDataIsValid(
-			$path,
-			$this,
-			$data,
-			$constraints,
-		);
 	}
 }

@@ -22,14 +22,14 @@ interface FieldDefinitionInterface
 	 */
 	public function validateData (
 		DataValidator $validator,
-		array $path,
+		array $contentPath,
 		mixed $data,
 	) : void;
 
 	/**
 	 * Receives the Storyblok data for the given field and transforms it for better usage
 	 */
-	public function transformValue (
+	public function transformData (
 		mixed $data,
 		StoryblokContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,

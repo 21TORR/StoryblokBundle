@@ -32,6 +32,14 @@ final class DataValidator
 		array $constraints,
 	) : void
 	{
+		// filter all disabled constraints
+		$constraints = \array_filter($constraints);
+
+		if (empty($constraints))
+		{
+			return;
+		}
+
 		$violations = $this->validator->validate($data, $constraints);
 
 		if (\count($violations) > 0)
