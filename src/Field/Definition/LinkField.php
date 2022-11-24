@@ -3,8 +3,8 @@
 namespace Torr\Storyblok\Field\Definition;
 
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Validator\DataValidator;
 
 final class LinkField extends AbstractField
 {
@@ -58,7 +58,7 @@ final class LinkField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
 		// @todo add implementation
 	}

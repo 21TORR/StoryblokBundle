@@ -4,9 +4,8 @@ namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Type;
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class DateTimeField extends AbstractField
@@ -49,9 +48,9 @@ final class DateTimeField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
-		$validator->ensureDataIsValid(
+		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
@@ -67,11 +66,14 @@ final class DateTimeField extends AbstractField
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?\DateTimeImmutable
 	{
 		\assert(null === $data || \is_string($data));
+
+		// empty fields are also passed as ""
+		$data = $context->normalizeOptionalString($data);
 
 		$transformed = null !== $data
 			? \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data)
@@ -79,7 +81,7 @@ final class DateTimeField extends AbstractField
 
 		if (false === $transformed)
 		{
-			$dataContext->logger->error("Encountered invalid date time: {value}", [
+			$context->logger->error("Encountered invalid date time: {value}", [
 				"value" => $data,
 			]);
 			$transformed = null;
@@ -91,6 +93,6 @@ final class DateTimeField extends AbstractField
 			$transformed = $transformed->setTime(0, 0);
 		}
 
-		return parent::transformData($transformed, $dataContext, $dataVisitor);
+		return parent::transformData($transformed, $context, $dataVisitor);
 	}
 }

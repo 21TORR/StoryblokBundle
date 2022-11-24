@@ -4,13 +4,12 @@ namespace Torr\Storyblok\Component;
 
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Component\Definition\ComponentDefinition;
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 use Torr\Storyblok\Story\Story;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
@@ -81,7 +80,7 @@ abstract class AbstractComponent
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
 	) : array
 	{
@@ -106,7 +105,11 @@ abstract class AbstractComponent
 	/**
 	 * @throws InvalidDataException
 	 */
-	public function validateData (DataValidator $validator, $data) : void
+	public function validateData (
+		ComponentContext $context,
+		$data,
+		array $contentPath = [],
+	) : void
 	{
 		foreach ($this->getFieldCollection() as $name => $field)
 		{
@@ -115,8 +118,9 @@ abstract class AbstractComponent
 				: ($data[$name] ?? null);
 
 			$field->validateData(
-				$validator,
+				$context,
 				[
+					...$contentPath,
 					\sprintf("Component(%s)", static::getKey()),
 					\sprintf("Field(%s)", $name),
 				],

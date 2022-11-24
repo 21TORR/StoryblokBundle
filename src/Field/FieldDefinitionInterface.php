@@ -2,8 +2,7 @@
 
 namespace Torr\Storyblok\Field;
 
-use Torr\Storyblok\Context\StoryblokContext;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 interface FieldDefinitionInterface
@@ -21,7 +20,7 @@ interface FieldDefinitionInterface
 	 * Validates the data for this field, as it was sent by Storyblok.
 	 */
 	public function validateData (
-		DataValidator $validator,
+		ComponentContext $context,
 		array $contentPath,
 		mixed $data,
 	) : void;
@@ -31,7 +30,7 @@ interface FieldDefinitionInterface
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed;
 }

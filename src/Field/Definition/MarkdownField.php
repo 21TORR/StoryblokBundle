@@ -3,9 +3,8 @@
 namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\Type;
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class MarkdownField extends AbstractField
@@ -50,9 +49,9 @@ final class MarkdownField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
-		$validator->ensureDataIsValid(
+		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
@@ -67,15 +66,15 @@ final class MarkdownField extends AbstractField
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?string
 	{
 		\assert(null === $data || \is_string($data));
 
-		$transformed = $dataContext->dataTransformer->normalizeOptionalString($data);
+		$transformed = $context->dataTransformer->normalizeOptionalString($data);
 
-		return parent::transformData($transformed, $dataContext, $dataVisitor);
+		return parent::transformData($transformed, $context, $dataVisitor);
 	}
 
 }

@@ -2,12 +2,11 @@
 
 namespace Torr\Storyblok\Field\Group;
 
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Definition\AbstractField;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class EditorTab extends AbstractField implements NestedFieldDefinitionInterface
@@ -53,7 +52,7 @@ final class EditorTab extends AbstractField implements NestedFieldDefinitionInte
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $contentPath, mixed $data, ) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, ) : void
 	{
 	}
 
@@ -62,7 +61,7 @@ final class EditorTab extends AbstractField implements NestedFieldDefinitionInte
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{

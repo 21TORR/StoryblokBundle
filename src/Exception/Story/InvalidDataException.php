@@ -12,8 +12,8 @@ final class InvalidDataException extends \RuntimeException implements StoryblokE
 	 */
 	public function __construct (
 		string $message,
-		/** @var array<string> $path */
-		public readonly ?array $path = null,
+		/** @var array<string> $contentPath */
+		public readonly ?array $contentPath = null,
 		public readonly ?FieldDefinitionInterface $field = null,
 		public readonly mixed $data = null,
 		public readonly ?ConstraintViolationListInterface $violations = null,

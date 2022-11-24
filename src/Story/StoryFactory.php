@@ -2,11 +2,10 @@
 
 namespace Torr\Storyblok\Story;
 
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
-use Torr\Storyblok\Validator\DataValidator;
 
 final class StoryFactory
 {
@@ -14,8 +13,7 @@ final class StoryFactory
 	 */
 	public function __construct (
 		private readonly ComponentManager $componentManager,
-		private readonly StoryblokContext $storyblokContext,
-		private readonly DataValidator $dataValidator,
+		private readonly ComponentContext $storyblokContext,
 	) {}
 
 	/**
@@ -48,7 +46,7 @@ final class StoryFactory
 			}
 
 			$story = new $storyClass($data, $component, $this->storyblokContext);
-			$story->validate($this->dataValidator);
+			$story->validate($this->storyblokContext);
 
 			return $story;
 		}

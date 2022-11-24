@@ -4,9 +4,8 @@ namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
-use Torr\Storyblok\Context\StoryblokContext;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Validator\DataValidator;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class NumberField extends AbstractField
@@ -30,9 +29,9 @@ final class NumberField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (DataValidator $validator, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
-		$validator->ensureDataIsValid(
+		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
@@ -49,7 +48,7 @@ final class NumberField extends AbstractField
 	 */
 	public function transformData (
 		mixed $data,
-		StoryblokContext $dataContext,
+		ComponentContext $context,
 		?DataVisitorInterface $dataVisitor = null,
 	) : int|float|null
 	{
@@ -66,6 +65,6 @@ final class NumberField extends AbstractField
 			$transformed = null;
 		}
 
-		return parent::transformData($transformed, $dataContext, $dataVisitor);
+		return parent::transformData($transformed, $context, $dataVisitor);
 	}
 }
