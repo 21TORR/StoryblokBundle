@@ -75,13 +75,10 @@ final class TextField extends AbstractField
 	{
 		\assert(\is_string($data) || null === $data);
 
-		$transformed = match ($data)
-		{
-			"", null => null,
-			default => $data,
-		};
-
-		return parent::transformData($transformed, $context, $dataVisitor);
+		return parent::transformData(
+			$context->normalizeOptionalString($data),
+			$context,
+			$dataVisitor,
+		);
 	}
-
 }
