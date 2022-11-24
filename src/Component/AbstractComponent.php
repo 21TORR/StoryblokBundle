@@ -7,6 +7,7 @@ use Torr\Storyblok\Component\Definition\ComponentDefinition;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
+use Torr\Storyblok\Field\Collection\FieldCollection;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 use Torr\Storyblok\Story\Story;
@@ -19,8 +20,7 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
  */
 abstract class AbstractComponent
 {
-	/** @var array<string, FieldDefinitionInterface>|null */
-	private ?array $fields = null;
+	private ?FieldCollection $fields = null;
 
 	/**
 	 * Returns the unique key for this component
@@ -86,14 +86,10 @@ abstract class AbstractComponent
 	{
 		$transformedData = [];
 
-		foreach ($this->getFieldCollection() as $name => $field)
+		foreach ($this->getFieldCollection()->getTransformableFields() as $name => $field)
 		{
-			$fieldData = $field instanceof NestedFieldDefinitionInterface
-				? $data
-				: ($data[$name] ?? null);
-
 			$transformedData[$name] = $field->transformData(
-				$fieldData,
+				$data[$name] ?? null,
 				$dataContext,
 				$dataVisitor,
 			);
@@ -111,11 +107,9 @@ abstract class AbstractComponent
 		array $contentPath = [],
 	) : void
 	{
-		foreach ($this->getFieldCollection() as $name => $field)
+		foreach ($this->getFieldCollection()->getTransformableFields() as $name => $field)
 		{
-			$fieldData = $field instanceof NestedFieldDefinitionInterface
-				? $data
-				: ($data[$name] ?? null);
+			$fieldData = $data[$name] ?? null;
 
 			$field->validateData(
 				$context,
@@ -130,13 +124,12 @@ abstract class AbstractComponent
 	}
 
 	/**
-	 * @return array<string, FieldDefinitionInterface>
 	 */
-	final protected function getFieldCollection () : array
+	final protected function getFieldCollection () : FieldCollection
 	{
 		if (null === $this->fields)
 		{
-			$this->fields = $this->configureFields();
+			$this->fields = new FieldCollection($this->configureFields());
 		}
 
 		return $this->fields;
@@ -215,7 +208,7 @@ abstract class AbstractComponent
 		return [
 			"name" => static::getKey(),
 			"display_name" => $this->getDisplayName(),
-			"schema" => $this->normalizeFields($this->getFieldCollection()),
+			"schema" => $this->normalizeFields($this->getFieldCollection()->getRootFields()),
 			"image" => $definition->previewScreenshotUrl,
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,
