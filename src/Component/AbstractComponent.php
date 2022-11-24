@@ -105,7 +105,11 @@ abstract class AbstractComponent
 	/**
 	 * @throws InvalidDataException
 	 */
-	public function validateData (ComponentContext $context, $data) : void
+	public function validateData (
+		ComponentContext $context,
+		$data,
+		array $contentPath = [],
+	) : void
 	{
 		foreach ($this->getFieldCollection() as $name => $field)
 		{
@@ -116,6 +120,7 @@ abstract class AbstractComponent
 			$field->validateData(
 				$context,
 				[
+					...$contentPath,
 					\sprintf("Component(%s)", static::getKey()),
 					\sprintf("Field(%s)", $name),
 				],
