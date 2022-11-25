@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Collection;
 
+use Torr\Storyblok\Exception\Story\UnknownFieldException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 
@@ -50,5 +51,23 @@ final class FieldCollection
 	public function getRootFields () : array
 	{
 		return $this->rootFields;
+	}
+
+	/**
+	 * Returns a single transformable field
+	 */
+	public function getField (string $key) : FieldDefinitionInterface
+	{
+		$field = $this->getTransformableFields()[$key] ?? null;
+
+		if (null === $field)
+		{
+			throw new UnknownFieldException(\sprintf(
+				"Unknown field %s",
+				$key,
+			));
+		}
+
+		return $field;
 	}
 }
