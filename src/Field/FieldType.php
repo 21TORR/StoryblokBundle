@@ -18,8 +18,6 @@ enum FieldType : string
 
 	case DateTime = "datetime";
 
-	case Link = "link";
-
 	case Markdown = "markdown";
 
 	case MultiAsset = "multiasset";
