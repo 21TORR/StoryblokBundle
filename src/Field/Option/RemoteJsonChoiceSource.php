@@ -2,12 +2,15 @@
 
 namespace Torr\Storyblok\Field\Option;
 
-final class DatasourceSource implements ChoiceSourceInterface
+/**
+ * Connects the choice field to a JSON in a remote service
+ */
+final class RemoteJsonChoiceSource implements ChoiceSourceInterface
 {
 	/**
 	 */
 	public function __construct (
-		private readonly string $datasourceSlug,
+		private readonly string $url,
 		private readonly bool $showEmptyOption = true,
 	) {}
 
@@ -17,9 +20,10 @@ final class DatasourceSource implements ChoiceSourceInterface
 	public function toManagementApiData () : array
 	{
 		return [
-			"source" => "internal",
-			"datasource_slug" => $this->datasourceSlug,
+			"source" => "external",
 			"exclude_empty_option" => !$this->showEmptyOption,
+			"external_datasource" => $this->url,
 		];
 	}
+
 }

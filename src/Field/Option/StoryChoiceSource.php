@@ -4,7 +4,11 @@ namespace Torr\Storyblok\Field\Option;
 
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 
-final class StorySource implements ChoiceSourceInterface
+
+/**
+ * Makes a story selectable
+ */
+final class StoryChoiceSource implements ChoiceSourceInterface
 {
 	/**
 	 * @param array<string>|ComponentsWithTags $restrictContentTypes

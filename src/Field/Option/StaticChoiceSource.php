@@ -2,7 +2,10 @@
 
 namespace Torr\Storyblok\Field\Option;
 
-final class StaticSource implements ChoiceSourceInterface
+/**
+ * Defines the choice list items statically.
+ */
+final class StaticChoiceSource implements ChoiceSourceInterface
 {
 	/**
 	 * @param array<string, string> $choices Mapping of choice label to value

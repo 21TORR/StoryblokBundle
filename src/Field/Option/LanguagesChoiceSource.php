@@ -2,12 +2,14 @@
 
 namespace Torr\Storyblok\Field\Option;
 
-final class RemoteJsonSource implements ChoiceSourceInterface
+/**
+ * Choice list that lists all configured languages in storyblok
+ */
+final class LanguagesChoiceSource implements ChoiceSourceInterface
 {
 	/**
 	 */
 	public function __construct (
-		private readonly string $url,
 		private readonly bool $showEmptyOption = true,
 	) {}
 
@@ -17,10 +19,8 @@ final class RemoteJsonSource implements ChoiceSourceInterface
 	public function toManagementApiData () : array
 	{
 		return [
-			"source" => "external",
+			"source" => "internal_languages",
 			"exclude_empty_option" => !$this->showEmptyOption,
-			"external_datasource" => $this->url,
 		];
 	}
-
 }

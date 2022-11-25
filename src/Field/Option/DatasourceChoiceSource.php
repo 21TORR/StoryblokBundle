@@ -2,11 +2,15 @@
 
 namespace Torr\Storyblok\Field\Option;
 
-final class LanguagesSource implements ChoiceSourceInterface
+/**
+ * Connects the choice field to a datasource in storyblok
+ */
+final class DatasourceChoiceSource implements ChoiceSourceInterface
 {
 	/**
 	 */
 	public function __construct (
+		private readonly string $datasourceSlug,
 		private readonly bool $showEmptyOption = true,
 	) {}
 
@@ -16,7 +20,8 @@ final class LanguagesSource implements ChoiceSourceInterface
 	public function toManagementApiData () : array
 	{
 		return [
-			"source" => "internal_languages",
+			"source" => "internal",
+			"datasource_slug" => $this->datasourceSlug,
 			"exclude_empty_option" => !$this->showEmptyOption,
 		];
 	}
