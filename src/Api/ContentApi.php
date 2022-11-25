@@ -7,6 +7,9 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
+use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
+use Torr\Storyblok\Exception\Story\InvalidDataException;
+use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Story\StoryFactory;
 
@@ -18,9 +21,10 @@ final class ContentApi
 	/**
 	 */
 	public function __construct (
-		private readonly StoryblokConfig $config,
 		HttpClientInterface $client,
+		private readonly StoryblokConfig $config,
 		private readonly StoryFactory $storyFactory,
+		private readonly ComponentManager $componentManager,
 	)
 	{
 		$this->client = $client->withOptions(
@@ -40,22 +44,10 @@ final class ContentApi
 	 *
 	 * @return Story[]
 	 */
-	private function fetchStories (
-		?string $language,
-		?string $type = null,
+	private function fetchStoriesResultPage (
 		array $query = [],
 	) : array
 	{
-		if (null !== $type)
-		{
-			$query["content_type"] = $type;
-		}
-
-		if (null !== $language)
-		{
-			$query["language"] = $language;
-		}
-
 		$query["token"] = $this->config->getContentToken();
 
 		try
@@ -127,28 +119,84 @@ final class ContentApi
 				$exception->getMessage(),
 			), previous: $exception);
 		}
-
 	}
 
 	/**
-	 * Fetches all stories and automatically resolves pagination.
+	 * Fetches all stories of a given type.
 	 *
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
 	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
 	 *
+	 * @template TStory of Story
+	 *
+	 * @param class-string<TStory> $storyType
+	 *
+	 * @throws ContentRequestFailedException
+	 * @throws UnknownStoryTypeException
+	 *
+	 * @return array<TStory>
+	 */
+	public function fetchStories (
+		string $storyType,
+		string $slug,
+		?string $locale = null,
+		array $query = [],
+	) : array
+	{
+		$component = $this->componentManager->getComponentByStoryType($storyType);
+
+		$query["content_type"] = $component::getKey();
+		$result = $this->fetchAllStories($slug, $locale, $query);
+
+		foreach ($result as $story)
+		{
+			if (!\is_a($story, $storyType))
+			{
+				throw new InvalidDataException(\sprintf(
+					"Requested stories for type '%s', but encountered story of type '%s'.",
+					$storyType,
+					\get_class($story),
+				));
+			}
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Fetches all stories (regardless of type).
+	 *
+	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
+	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
+	 *
+	 * @param string|string[]|null $slug
+	 *
 	 * @throws ContentRequestFailedException
 	 *
-	 * @return Story[]
+	 * @return array<Story>
 	 */
 	public function fetchAllStories (
-		?string $language,
-		?string $type = null,
+		string|array|null $slug,
+		?string $locale = null,
 		array $query = [],
 	) : array
 	{
 		// force per_page to the maximum to minimize pagination
 		$query["per_page"] = 100;
 
-		return $this->fetchStories($language, $type, $query);
+		if (null !== $slug)
+		{
+			$query["by_slugs"] = \is_array($slug)
+				? \implode(",", $slug)
+				: $slug;
+		}
+
+		if (null !== $locale)
+		{
+			$query["language"] = $locale;
+		}
+
+		return $this->fetchStoriesResultPage($query);
 	}
 }

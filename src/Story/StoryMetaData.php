@@ -73,11 +73,11 @@ final class StoryMetaData
 	}
 
 	/**
-	 *
+	 * The full slug of the story
 	 */
 	public function getFullSlug () : string
 	{
-		return $this->data["full_slug"];
+		return \rtrim($this->data["full_slug"], "/");
 	}
 
 	/**
@@ -101,6 +101,20 @@ final class StoryMetaData
 	public function getType () : string
 	{
 		return $this->type;
+	}
+
+	/**
+	 * Returns the slug of the parent
+	 * (without trailing slash).
+	 */
+	public function getParentSlug () : ?string
+	{
+		$slug = $this->getFullSlug();
+		$lastSlash = \mb_strrpos($slug, "/");
+
+		return false !== $lastSlash
+			? \mb_substr($slug, 0, $lastSlash)
+			: null;
 	}
 
 

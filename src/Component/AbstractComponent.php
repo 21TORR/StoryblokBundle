@@ -85,17 +85,17 @@ abstract class AbstractComponent
 	 * Receives the Storyblok data for the given field and transforms it for better usage
 	 */
 	public function transformData (
-		mixed $data,
+		array $data,
 		ComponentContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
 	) : array
 	{
 		$transformedData = [];
 
-		foreach ($this->getFieldCollection()->getTransformableFields() as $name => $field)
+		foreach ($this->getFieldCollection()->getTransformableFields() as $fieldName => $field)
 		{
-			$transformedData[$name] = $field->transformData(
-				$data[$name] ?? null,
+			$transformedData[$fieldName] = $field->transformData(
+				$data[$fieldName] ?? null,
 				$dataContext,
 				$dataVisitor,
 			);
@@ -103,6 +103,26 @@ abstract class AbstractComponent
 
 		return $transformedData;
 	}
+
+	/**
+	 * Transforms the data of a single field
+	 */
+	public function transformField (
+		array $data,
+		string $fieldName,
+		ComponentContext $dataContext,
+		?DataVisitorInterface $dataVisitor = null,
+	) : mixed
+	{
+		$field = $this->getFieldCollection()->getField($fieldName);
+
+		return $field->transformData(
+			$data[$fieldName] ?? null,
+			$dataContext,
+			$dataVisitor,
+		);
+	}
+
 
 	/**
 	 * @throws InvalidDataException

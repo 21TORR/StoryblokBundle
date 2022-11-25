@@ -36,17 +36,32 @@ abstract class Story
 		$this->rootComponent->validateData($context, $this->content);
 	}
 
+
 	/**
-	 * Returns the base transformed data
+	 * Returns the transformed data for a single field
 	 */
-	public function getTransformedData (
+	protected function getTransformedFieldData (
+		string $fieldName,
 		?DataVisitorInterface $dataVisitor = null,
-	) : array
+	) : mixed
 	{
-		return $this->rootComponent->transformData(
+		return $this->rootComponent->transformField(
 			$this->content,
+			$fieldName,
 			$this->dataContext,
 			$dataVisitor,
 		);
+	}
+
+	/**
+	 *
+	 */
+	public function __debugInfo () : ?array
+	{
+		return [
+			// hide implementations of these, as they have huge dependency trees
+			"\0*\0rootComponent" => \get_class($this->rootComponent),
+			"\0*\0dataContext" => "...",
+		];
 	}
 }

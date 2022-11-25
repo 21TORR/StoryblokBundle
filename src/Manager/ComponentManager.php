@@ -6,6 +6,8 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
+use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
+use Torr\Storyblok\Story\Story;
 
 final class ComponentManager
 {
@@ -24,6 +26,33 @@ final class ComponentManager
 			fn (string $key) => $this->components->get($key),
 			\array_keys($this->components->getProvidedServices()),
 		);
+	}
+
+	/**
+	 * Returns the first component that creates a story of the given type
+	 *
+	 * @template TStory of Story
+	 *
+	 * @param class-string<TStory> $storyType
+	 *
+	 * @throws UnknownStoryTypeException
+	 *
+	 * @return AbstractComponent<TStory>
+	 */
+	public function getComponentByStoryType (string $storyType) : AbstractComponent
+	{
+		foreach ($this->getAllComponents() as $component)
+		{
+			if ($component->getStoryClass() === $storyType)
+			{
+				return $component;
+			}
+		}
+
+		throw new UnknownStoryTypeException(\sprintf(
+			"Found no component generating a story of type '%s'",
+			$storyType,
+		));
 	}
 
 
@@ -46,6 +75,7 @@ final class ComponentManager
 
 		return $matches;
 	}
+
 
 	/**
 	 * Gets the component by key
