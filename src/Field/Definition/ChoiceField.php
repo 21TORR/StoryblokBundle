@@ -13,6 +13,8 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class ChoiceField extends AbstractField
 {
+	/**
+	 */
 	public function __construct (
 		string $label,
 		private readonly ChoicesInterface $choices,
