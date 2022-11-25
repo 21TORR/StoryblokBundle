@@ -49,4 +49,16 @@ abstract class Story
 			$dataVisitor,
 		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __debugInfo () : ?array
+	{
+		return [
+			// hide implementations of these, as they have huge dependency trees
+			"\0*\0rootComponent" => \get_class($this->rootComponent),
+			"\0*\0dataContext" => "...",
+		];
+	}
 }
