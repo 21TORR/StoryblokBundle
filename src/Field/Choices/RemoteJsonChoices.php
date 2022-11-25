@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Field\Option;
+namespace Torr\Storyblok\Field\Choices;
+
+use Torr\Storyblok\Context\ComponentContext;
 
 /**
  * Connects the choice field to a JSON in a remote service
  */
-final class RemoteJsonChoiceSource implements ChoiceSourceInterface
+final class RemoteJsonChoices implements ChoicesInterface
 {
 	/**
 	 */
@@ -26,4 +28,25 @@ final class RemoteJsonChoiceSource implements ChoiceSourceInterface
 		];
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function isValidData (
+		int|string $data,
+		?ComponentContext $context = null,
+	) : bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformData (
+		ComponentContext $context,
+		int|string $data,
+	) : mixed
+	{
+		return $data;
+	}
 }
