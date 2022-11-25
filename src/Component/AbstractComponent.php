@@ -118,8 +118,8 @@ abstract class AbstractComponent
 
 		return $field->transformData(
 			$data[$fieldName] ?? null,
-				$dataContext,
-				$dataVisitor,
+			$dataContext,
+			$dataVisitor,
 		);
 	}
 
