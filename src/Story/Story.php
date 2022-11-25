@@ -54,7 +54,7 @@ abstract class Story
 	}
 
 	/**
-	 * @inheritDoc
+	 *
 	 */
 	public function __debugInfo () : ?array
 	{
