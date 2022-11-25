@@ -71,9 +71,15 @@ abstract class AbstractComponent
 	}
 
 	/**
-	 * @return class-string<TStory>
+	 * Returns the class of story to create for this component.
+	 * If null is returned here, you can't create a story for that component
+	 *
+	 * @return class-string<TStory>|null
 	 */
-	abstract public function getStoryClass () : string;
+	public function getStoryClass () : ?string
+	{
+		return null;
+	}
 
 	/**
 	 * Receives the Storyblok data for the given field and transforms it for better usage

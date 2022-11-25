@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Story;
 
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
+use Torr\Storyblok\Exception\Story\ComponentWithoutStoryException;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
 
@@ -18,6 +19,8 @@ final class StoryFactory
 
 	/**
 	 * Creates a story with the given data
+	 *
+	 * @throws StoryHydrationFailed
 	 */
 	public function createFromApiData (array $data) : Story
 	{
@@ -35,6 +38,14 @@ final class StoryFactory
 		{
 			$component = $this->componentManager->getComponent($type);
 			$storyClass = $component->getStoryClass();
+
+			if (null === $storyClass)
+			{
+				throw new ComponentWithoutStoryException(\sprintf(
+					"Can't create story for component of type '%s', as no story class was defined.",
+					$component::getKey(),
+				));
+			}
 
 			if (!\is_a($storyClass, Story::class, true))
 			{

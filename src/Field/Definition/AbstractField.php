@@ -61,7 +61,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 	 * @return $this
 	 */
 	public function enableValidation (
-		bool $required = false,
+		bool $required = true,
 		?string $regexp = null,
 	) : static
 	{

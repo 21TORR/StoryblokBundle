@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Field\Option;
+namespace Torr\Storyblok\Field\Choices;
 
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
+use Torr\Storyblok\Context\ComponentContext;
 
-final class StorySource implements ChoiceSourceInterface
+/**
+ * Makes a story selectable
+ */
+final class StoryChoices implements ChoicesInterface
 {
 	/**
 	 * @param array<string>|ComponentsWithTags $restrictContentTypes
@@ -24,5 +28,27 @@ final class StorySource implements ChoiceSourceInterface
 			"filter_content_type" => $this->restrictContentTypes,
 			"folder_slug" => $this->restrictToPath,
 		];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function isValidData (
+		int|string $data,
+		?ComponentContext $context = null,
+	) : bool
+	{
+		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function transformData (
+		ComponentContext $context,
+		int|string $data,
+	) : mixed
+	{
+		return $data;
 	}
 }
