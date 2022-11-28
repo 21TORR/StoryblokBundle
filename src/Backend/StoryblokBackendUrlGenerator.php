@@ -1,0 +1,27 @@
+<?php declare(strict_types=1);
+
+namespace Torr\Storyblok\Backend;
+
+use Torr\Storyblok\Config\StoryblokConfig;
+use Torr\Storyblok\Story\Story;
+
+final class StoryblokBackendUrlGenerator
+{
+	/**
+	 */
+	public function __construct (
+		private readonly StoryblokConfig $config,
+	) {}
+
+	/**
+	 * Generates the URL to the edit screen for the given story
+	 */
+	public function generateStoryEditUrl (Story $story) : string
+	{
+		return \sprintf(
+			"https://app.storyblok.com/#/me/spaces/%s/stories/0/0/%d",
+			$this->config->getSpaceId(),
+			$story->getMetaData()->getId(),
+		);
+	}
+}
