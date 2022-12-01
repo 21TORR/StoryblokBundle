@@ -72,6 +72,7 @@ final class LinkField extends AbstractField
 			$this,
 			$data,
 			[
+				new NotNull(),
 				new Type("array"),
 				new Collection(
 					fields: [
@@ -108,6 +109,7 @@ final class LinkField extends AbstractField
 				new Collection(
 					fields: [
 						"anchor" => [
+							new NotNull(),
 							new Type("string"),
 						],
 					],

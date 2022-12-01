@@ -70,14 +70,17 @@ final class AssetField extends AbstractField
 			$this,
 			$data,
 			[
+				new NotNull(),
 				new Type("array"),
 				// required fields
 				new Collection(
 					fields: [
 						"id" => [
+							new NotNull(),
 							new Type("int"),
 						],
 						"filename" => [
+							new NotNull(),
 							new Type("string"),
 						],
 						"fieldtype" => [

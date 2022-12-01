@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
@@ -57,6 +58,7 @@ final class TextField extends AbstractField
 			$this,
 			$data,
 			[
+				new NotNull(),
 				new Type("string"),
 				// We can't validate the length here, as it is not guaranteed if you add
 				// the max-length after content was added.

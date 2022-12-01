@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Context\ComponentContext;
@@ -89,6 +90,7 @@ final class RichTextField extends AbstractField
 			$this,
 			$data,
 			[
+				new NotNull(),
 				new Type("array"),
 			],
 		);
