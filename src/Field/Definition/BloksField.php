@@ -110,7 +110,7 @@ final class BloksField extends AbstractField
 				$component = $context->getComponentByKey($componentData["component"]);
 				$component->validateData(
 					$context,
-					$data,
+					$componentData,
 					$contentPath,
 				);
 			}
