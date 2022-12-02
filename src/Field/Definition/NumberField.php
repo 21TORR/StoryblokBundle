@@ -37,7 +37,7 @@ final class NumberField extends AbstractField
 			$this,
 			$data,
 			[
-				new NotNull(),
+				!$this->allowMissingData ? new NotNull() : null,
 				// numbers are always passed as strings
 				new Type("string"),
 				new Regex("~^\\d+(\\.\\d+)?$~"),

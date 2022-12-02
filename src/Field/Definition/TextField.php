@@ -58,7 +58,7 @@ final class TextField extends AbstractField
 			$this,
 			$data,
 			[
-				new NotNull(),
+				!$this->allowMissingData ? new NotNull() : null,
 				new Type("string"),
 				// We can't validate the length here, as it is not guaranteed if you add
 				// the max-length after content was added.

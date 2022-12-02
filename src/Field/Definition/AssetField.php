@@ -65,24 +65,35 @@ final class AssetField extends AbstractField
 	 */
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
+		$idConstraints = [
+			new Type("string"),
+		];
+		$fileNameConstraints = [
+			new Type("string"),
+		];
+		$isExternalUrlConstraints = [
+			new Type("bool"),
+		];
+
+		if (!$this->allowMissingData)
+		{
+			$idConstraints[] = new NotNull();
+			$fileNameConstraints[] = new NotNull();
+			$isExternalUrlConstraints[] = new NotNull();
+		}
+
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
 			[
-				new NotNull(),
+				!$this->allowMissingData ? new NotNull() : null,
 				new Type("array"),
 				// required fields
 				new Collection(
 					fields: [
-						"id" => [
-							new NotNull(),
-							new Type("int"),
-						],
-						"filename" => [
-							new NotNull(),
-							new Type("string"),
-						],
+						"id" => $idConstraints,
+						"filename" => $fileNameConstraints,
 						"fieldtype" => [
 							new IdenticalTo("asset"),
 						],
@@ -111,10 +122,7 @@ final class AssetField extends AbstractField
 						"copyright" => [
 							new Type("string"),
 						],
-						"is_external_url" => [
-							new NotNull(),
-							new Type("bool"),
-						],
+						"is_external_url" => $isExternalUrlConstraints,
 					],
 					allowExtraFields: true,
 					allowMissingFields: true,

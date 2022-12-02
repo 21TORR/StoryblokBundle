@@ -57,7 +57,7 @@ final class MarkdownField extends AbstractField
 			$this,
 			$data,
 			[
-				new NotNull(),
+				!$this->allowMissingData ? new NotNull() : null,
 				new Type("string"),
 			],
 		);
