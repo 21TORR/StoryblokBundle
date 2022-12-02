@@ -90,7 +90,7 @@ final class RichTextField extends AbstractField
 			$this,
 			$data,
 			[
-				!$this->allowMissingData ? new NotNull() : null,
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
 			],
 		);

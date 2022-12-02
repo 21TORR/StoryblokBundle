@@ -16,7 +16,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 {
 	private ?bool $canSync = false;
 	private ?bool $isPreviewField = false;
-	private bool $required = false;
+	protected bool $required = false;
 	private ?string $regexp = null;
 	private bool $translatable = false;
 	private ?string $description = null;

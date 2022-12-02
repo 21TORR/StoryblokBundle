@@ -75,7 +75,7 @@ final class AssetField extends AbstractField
 			new Type("bool"),
 		];
 
-		if (!$this->allowMissingData)
+		if (!$this->allowMissingData && $this->required)
 		{
 			$idConstraints[] = new NotNull();
 			$fileNameConstraints[] = new NotNull();
@@ -87,7 +87,7 @@ final class AssetField extends AbstractField
 			$this,
 			$data,
 			[
-				!$this->allowMissingData ? new NotNull() : null,
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
 				// required fields
 				new Collection(

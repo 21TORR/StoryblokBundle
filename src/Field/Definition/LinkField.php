@@ -72,7 +72,7 @@ final class LinkField extends AbstractField
 			$this,
 			$data,
 			[
-				!$this->allowMissingData ? new NotNull() : null,
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
 				new Collection(
 					fields: [
