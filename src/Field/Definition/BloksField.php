@@ -81,6 +81,7 @@ final class BloksField extends AbstractField
 			$this,
 			$data,
 			[
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
 				new All(
 					constraints: [
@@ -109,7 +110,7 @@ final class BloksField extends AbstractField
 				$component = $context->getComponentByKey($componentData["component"]);
 				$component->validateData(
 					$context,
-					$data,
+					$componentData,
 					$contentPath,
 				);
 			}

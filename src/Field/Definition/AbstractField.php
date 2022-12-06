@@ -16,11 +16,12 @@ abstract class AbstractField implements FieldDefinitionInterface
 {
 	private ?bool $canSync = false;
 	private ?bool $isPreviewField = false;
-	private bool $required = false;
+	protected bool $required = false;
 	private ?string $regexp = null;
 	private bool $translatable = false;
 	private ?string $description = null;
 	private bool $descriptionAsTooltip = false;
+	protected bool $allowMissingData = false;
 
 	public function __construct (
 		private readonly string $label,
@@ -58,15 +59,21 @@ abstract class AbstractField implements FieldDefinitionInterface
 	/**
 	 * Enables validation for this field
 	 *
+	 * @param bool $allowMissingData This parameter should only be set to `true` when the given field has been added to
+	 *                               a component after it has already been published and used. Storyblok does not send
+	 *                               default values on existing Stories when a new field has been added.
+	 *
 	 * @return $this
 	 */
 	public function enableValidation (
 		bool $required = true,
 		?string $regexp = null,
+		bool $allowMissingData = false,
 	) : static
 	{
 		$this->required = $required;
 		$this->regexp = $regexp;
+		$this->allowMissingData = $allowMissingData;
 
 		return $this;
 	}

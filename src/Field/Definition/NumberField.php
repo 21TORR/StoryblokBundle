@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
@@ -36,6 +37,7 @@ final class NumberField extends AbstractField
 			$this,
 			$data,
 			[
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				// numbers are always passed as strings
 				new Type("string"),
 				new Regex("~^\\d+(\\.\\d+)?$~"),

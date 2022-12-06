@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
@@ -55,6 +56,7 @@ final class DateTimeField extends AbstractField
 			$this,
 			$data,
 			[
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("string"),
 				new DateTime(self::DATE_TIME_FORMAT),
 			],
