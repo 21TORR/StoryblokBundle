@@ -81,7 +81,7 @@ final class BloksField extends AbstractField
 			$this,
 			$data,
 			[
-				new NotNull(),
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
 				new All(
 					constraints: [

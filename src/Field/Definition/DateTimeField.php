@@ -56,7 +56,7 @@ final class DateTimeField extends AbstractField
 			$this,
 			$data,
 			[
-				new NotNull(),
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("string"),
 				new DateTime(self::DATE_TIME_FORMAT),
 			],
