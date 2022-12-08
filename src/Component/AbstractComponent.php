@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Component;
 
 use Torr\Storyblok\Component\Config\ComponentType;
+use Torr\Storyblok\Component\Data\ComponentData;
 use Torr\Storyblok\Component\Definition\ComponentDefinition;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
@@ -88,7 +89,7 @@ abstract class AbstractComponent
 		array $data,
 		ComponentContext $dataContext,
 		?DataVisitorInterface $dataVisitor = null,
-	) : array
+	) : ComponentData
 	{
 		$transformedData = [];
 
@@ -101,7 +102,10 @@ abstract class AbstractComponent
 			);
 		}
 
-		return $transformedData;
+		return new ComponentData(
+			static::getKey(),
+			$transformedData,
+		);
 	}
 
 	/**
