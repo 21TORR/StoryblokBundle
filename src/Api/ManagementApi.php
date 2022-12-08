@@ -34,7 +34,7 @@ final class ManagementApi
 	 */
 	public function syncComponent (
 		array $config,
-		?string $componentGroupLabel = null,
+		string|\BackedEnum|null $componentGroupLabel = null,
 	) : ApiActionPerformed
 	{
 		$componentIdMap = $this->getComponentIdMap();
@@ -77,11 +77,16 @@ final class ManagementApi
 	/**
 	 * Gets or creates a component group uuid
 	 */
-	private function getOrCreatedComponentGroupUuid (?string $name) : ?string
+	private function getOrCreatedComponentGroupUuid (string|\BackedEnum|null $name) : ?string
 	{
 		if (null === $name)
 		{
 			return null;
+		}
+
+		if ($name instanceof \BackedEnum)
+		{
+			$name = (string) $name->value;
 		}
 
 		$idMap = $this->getComponentIdMap();
