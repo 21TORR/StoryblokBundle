@@ -8,6 +8,6 @@ final class ComponentImport
 	 */
 	public function __construct (
 		public readonly array $config,
-		public readonly ?string $groupLabel,
+		public readonly string|\BackedEnum|null $groupLabel,
 	) {}
 }

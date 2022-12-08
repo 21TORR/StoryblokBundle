@@ -55,7 +55,7 @@ abstract class AbstractComponent
 	/**
 	 * Returns the component group display name
 	 */
-	public function getComponentGroup () : ?string
+	public function getComponentGroup () : string|\BackedEnum|null
 	{
 		return null;
 	}
