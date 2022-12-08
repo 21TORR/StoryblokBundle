@@ -23,14 +23,24 @@ abstract class Story
 		$this->metaData = new StoryMetaData($data, $this->rootComponent::getKey());
 	}
 
+	/**
+	 */
+	final public function getId () : int
+	{
+		return $this->metaData->getId();
+	}
+
 
 	/**
 	 */
-	public function getMetaData () : StoryMetaData
+	final public function getMetaData () : StoryMetaData
 	{
 		return $this->metaData;
 	}
 
+	/**
+	 *
+	 */
 	public function validate (ComponentContext $context) : void
 	{
 		$this->rootComponent->validateData($context, $this->content);
