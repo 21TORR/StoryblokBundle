@@ -25,11 +25,10 @@ abstract class Story
 
 	/**
 	 */
-	final public function getId () : int
+	final public function getUuid () : string
 	{
-		return $this->metaData->getId();
+		return $this->metaData->getUuid();
 	}
-
 
 	/**
 	 */

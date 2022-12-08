@@ -66,7 +66,7 @@ final class AssetField extends AbstractField
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
 		$idConstraints = [
-			new Type("string"),
+			new Type("int"),
 		];
 		$fileNameConstraints = [
 			new Type("string"),
