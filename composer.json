@@ -37,7 +37,8 @@
 	"config": {
 		"allow-plugins": {
 			"bamarni/composer-bin-plugin": true
-		}
+		},
+		"sort-packages": true
 	},
 	"extra": {
 		"branch-alias": {
