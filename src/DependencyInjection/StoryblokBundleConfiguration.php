@@ -16,7 +16,7 @@ final class StoryblokBundleConfiguration implements ConfigurationInterface
 
 		$treeBuilder->getRootNode()
 			->children()
-				->scalarNode("space_id")
+				->integerNode("space_id")
 					->defaultNull()
 				->end()
 				->scalarNode("management_token")

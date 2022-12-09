@@ -9,14 +9,14 @@ final class StoryblokConfig
 	/**
 	 */
 	public function __construct (
-		private readonly ?string $spaceId,
+		private readonly ?int $spaceId,
 		private readonly ?string $managementToken,
 		private readonly ?string $contentToken,
 	) {}
 
 	/**
 	 */
-	public function getSpaceId () : string
+	public function getSpaceId () : int
 	{
 		if (null === $this->spaceId)
 		{
