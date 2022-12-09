@@ -7,6 +7,7 @@ use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 final class StoryMetaData
 {
 	private readonly array $data;
+	private readonly array $slugSegments;
 
 	/**
 	 */
@@ -20,6 +21,7 @@ final class StoryMetaData
 	{
 		unset($data["content"]);
 		$this->data = $data;
+		$this->slugSegments = \explode("/", \rtrim($data["full_slug"], "/"));
 	}
 
 	/**
@@ -69,7 +71,7 @@ final class StoryMetaData
 	 */
 	public function getSlug () : string
 	{
-		return $this->data["slug"];
+		return $this->slugSegments[\count($this->slugSegments) - 1];
 	}
 
 	/**
@@ -77,7 +79,7 @@ final class StoryMetaData
 	 */
 	public function getFullSlug () : string
 	{
-		return \rtrim($this->data["full_slug"], "/");
+		return \implode("/", $this->slugSegments);
 	}
 
 	/**
@@ -109,11 +111,21 @@ final class StoryMetaData
 	 */
 	public function getParentSlug () : ?string
 	{
-		$slug = $this->getFullSlug();
-		$lastSlash = \mb_strrpos($slug, "/");
+		return \count($this->slugSegments) > 1
+			? \implode("/", \array_slice($this->slugSegments, 0, -1))
+			: null;
+	}
 
-		return false !== $lastSlash
-			? \mb_substr($slug, 0, $lastSlash)
+	/**
+	 * Tries to get the locale from the slug.
+	 * It will read the first segment in the slug and check if it syntactically could be a locale.
+	 */
+	public function getLocaleFromSlug () : ?string
+	{
+		$firstSegment = $this->slugSegments[0] ?? null;
+
+		return null !== $firstSegment && 1 === \preg_match('~^\\w+(-\\w+)?~', $firstSegment)
+			? $firstSegment
 			: null;
 	}
 
