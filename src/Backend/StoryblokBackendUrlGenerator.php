@@ -19,7 +19,7 @@ final class StoryblokBackendUrlGenerator
 	public function generateStoryEditUrl (Story $story) : string
 	{
 		return \sprintf(
-			"https://app.storyblok.com/#/me/spaces/%s/stories/0/0/%d",
+			"https://app.storyblok.com/#/me/spaces/%d/stories/0/0/%d",
 			$this->config->getSpaceId(),
 			$story->getMetaData()->getId(),
 		);
