@@ -5,10 +5,10 @@ namespace Torr\Storyblok;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Torr\BundleHelpers\Bundle\ConfigurableBundleExtension;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
+use Torr\Storyblok\DependencyInjection\StoryblokBundleExtension;
 
 final class TorrStoryblokBundle extends Bundle
 {
@@ -17,7 +17,7 @@ final class TorrStoryblokBundle extends Bundle
 	 */
 	public function getContainerExtension () : ExtensionInterface
 	{
-		return new ConfigurableBundleExtension(
+		return new StoryblokBundleExtension(
 			$this,
 			new StoryblokBundleConfiguration(),
 			static function (array $config, ContainerBuilder $container) : void
