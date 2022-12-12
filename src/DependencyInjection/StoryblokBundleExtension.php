@@ -13,6 +13,9 @@ final class StoryblokBundleExtension extends ConfigurableBundleExtension impleme
 	 */
 	public function prepend (ContainerBuilder $container) : void
 	{
+		/**
+		 * @link https://www.storyblok.com/docs/technical-limits
+		 */
 		$container->prependExtensionConfig("framework", [
 			"rate_limiter" => [
 				"storyblok_management" => [
