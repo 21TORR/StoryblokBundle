@@ -3,6 +3,8 @@
 namespace Torr\Storyblok\Api;
 
 use Symfony\Component\HttpClient\HttpOptions;
+use Symfony\Component\RateLimiter\LimiterInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Api\Data\ApiActionPerformed;
@@ -15,14 +17,17 @@ final class ManagementApi
 	private const API_URL = "https://mapi.storyblok.com/v1/spaces/%d/";
 	private readonly HttpClientInterface $client;
 	private ?ComponentIdMap $componentIdMap = null;
+	private readonly LimiterInterface $rateLimiter;
 
 	/**
 	 */
 	public function __construct (
 		private readonly StoryblokConfig $config,
 		HttpClientInterface $client,
+		RateLimiterFactory $storyblokManagementLimiter,
 	)
 	{
+		$this->rateLimiter = $storyblokManagementLimiter->create();
 		$this->client = $client->withOptions(
 			(new HttpOptions())
 				->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
@@ -41,6 +46,9 @@ final class ManagementApi
 
 		try
 		{
+			// ensure that we stay in the rate limit
+			$this->rateLimiter->consume()->wait();
+
 			$config["component_group_uuid"] = $this->getOrCreatedComponentGroupUuid($componentGroupLabel);
 
 			$options = (new HttpOptions())
@@ -98,6 +106,9 @@ final class ManagementApi
 
 		try
 		{
+			// ensure that we stay in the rate limit
+			$this->rateLimiter->consume()->wait();
+
 			$response = $this->client->request(
 				"POST",
 				"component_groups",
@@ -147,6 +158,9 @@ final class ManagementApi
 	{
 		try
 		{
+			// ensure that we stay in the rate limit
+			$this->rateLimiter->consume()->wait();
+
 			$response = $this->client->request(
 				"GET",
 				"components",

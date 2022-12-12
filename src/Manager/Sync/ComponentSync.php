@@ -67,8 +67,6 @@ final class ComponentSync
 			$io->write("Syncing {$key} ");
 			$performedAction = $this->managementApi->syncComponent($config->config, $config->groupLabel);
 			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
-
-			\usleep(80000);
 		}
 	}
 

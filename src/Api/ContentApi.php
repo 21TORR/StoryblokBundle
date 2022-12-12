@@ -3,6 +3,8 @@
 namespace Torr\Storyblok\Api;
 
 use Symfony\Component\HttpClient\HttpOptions;
+use Symfony\Component\RateLimiter\LimiterInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Config\StoryblokConfig;
@@ -17,6 +19,7 @@ final class ContentApi
 {
 	private const API_URL = "https://api.storyblok.com/v2/cdn/";
 	private readonly HttpClientInterface $client;
+	private readonly LimiterInterface $rateLimiter;
 
 	/**
 	 */
@@ -25,8 +28,10 @@ final class ContentApi
 		private readonly StoryblokConfig $config,
 		private readonly StoryFactory $storyFactory,
 		private readonly ComponentManager $componentManager,
+		RateLimiterFactory $storyblokContentDeliveryLimiter,
 	)
 	{
+		$this->rateLimiter = $storyblokContentDeliveryLimiter->create();
 		$this->client = $client->withOptions(
 			(new HttpOptions())
 				->setBaseUri(self::API_URL)
@@ -48,6 +53,9 @@ final class ContentApi
 		array $query = [],
 	) : array
 	{
+		// ensure that we stay in the rate limit
+		$this->rateLimiter->consume()->wait();
+
 		$query["token"] = $this->config->getContentToken();
 
 		try
@@ -89,6 +97,9 @@ final class ContentApi
 		string|int $identifier,
 	) : ?Story
 	{
+		// ensure that we stay in the rate limit
+		$this->rateLimiter->consume()->wait();
+
 		try
 		{
 			$identifier = \ltrim((string) $identifier, "/");
