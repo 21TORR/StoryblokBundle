@@ -114,8 +114,6 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 		bool $allowMissingData = false,
 	) : static
 	{
-		parent::enableValidation($required, $regexp, $allowMissingData);
-
 		foreach ($this->fieldCollection->getRootFields() as $rootField)
 		{
 			if ($rootField instanceof AbstractField)
