@@ -104,4 +104,26 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 			$dataVisitor,
 		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function enableValidation (
+		bool $required = true,
+		?string $regexp = null,
+		bool $allowMissingData = false,
+	) : static
+	{
+		parent::enableValidation($required, $regexp, $allowMissingData);
+
+		foreach ($this->fieldCollection->getRootFields() as $rootField)
+		{
+			if ($rootField instanceof AbstractField)
+			{
+				$rootField->enableValidation($required, $regexp, $allowMissingData);
+			}
+		}
+
+		return $this;
+	}
 }
