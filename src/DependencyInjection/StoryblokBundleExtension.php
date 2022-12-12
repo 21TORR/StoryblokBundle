@@ -20,7 +20,10 @@ final class StoryblokBundleExtension extends ConfigurableBundleExtension impleme
 			"rate_limiter" => [
 				"storyblok_management" => [
 					"policy" => "fixed_window",
-					"limit" => 6,
+					// the limit is 3 for free plans. It is likely that a debug implementation uses a free dummy space in Storyblok
+					"limit" => $container->getParameter("kernel.debug")
+						? 3
+						: 6,
 					"interval" => "1 second",
 				],
 				"storyblok_content_delivery" => [
