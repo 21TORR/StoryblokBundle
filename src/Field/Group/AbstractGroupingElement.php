@@ -31,12 +31,17 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 	 */
 	public function toManagementApiData (int $position, ) : array
 	{
-		return \array_replace(
+		$data = \array_replace(
 			parent::toManagementApiData($position),
 			[
 				"keys" => \array_keys($this->fieldCollection->getRootFields()),
 			],
 		);
+
+		unset($data["required"]);
+		unset($data["regexp"]);
+
+		return $data;
 	}
 
 	/**
