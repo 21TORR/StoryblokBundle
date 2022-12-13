@@ -27,7 +27,6 @@ final class LinkField extends AbstractField
 		private readonly bool $allowEmailLinks = true,
 		private readonly bool $allowAssetLinks = false,
 		private readonly bool $allowAnchors = true,
-		private readonly bool $restrictInternalLinksToSameFolder = false,
 		private readonly ?string $internalLinkScope = null,
 		/** @var array<string>|ComponentsWithTags|null $restrictToContentTypes */
 		private readonly array|ComponentsWithTags|null $restrictToContentTypes = null,
@@ -55,8 +54,9 @@ final class LinkField extends AbstractField
 				"asset_link_type" => $this->allowAssetLinks,
 				"email_link_type" => $this->allowEmailLinks,
 				"show_anchor" => $this->allowAnchors,
-				"force_link_scope" => $this->restrictInternalLinksToSameFolder,
+				"force_link_scope" => !empty($this->internalLinkScope),
 				"link_scope" => $this->internalLinkScope,
+				"restrict_content_types" => !empty($this->restrictToContentTypes),
 				"component_whitelist" => $this->restrictToContentTypes,
 			],
 		);
