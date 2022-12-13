@@ -38,8 +38,8 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 			],
 		);
 
-		unset($data["required"]);
-		unset($data["regexp"]);
+		unset($data["required"], $data["regexp"]);
+
 
 		return $data;
 	}
