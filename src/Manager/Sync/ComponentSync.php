@@ -97,6 +97,7 @@ final class ComponentSync
 	 * Resolves the Group's Name to their corresponding Group Uuid.
 	 *
 	 * @param array<string|\BackedEnum> $groupNames
+	 *
 	 * @return array<string>
 	 */
 	private function resolveComponentGroupWhitelist (array $groupNames) : array
