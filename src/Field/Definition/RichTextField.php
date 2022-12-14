@@ -17,7 +17,7 @@ final class RichTextField extends AbstractField
 	 * @inheritDoc
 	 *
 	 * @param array<string>|ComponentsWithTags $filterComponents
-	 * @param array<string>                    $filterComponentGroups
+	 * @param array<string|\BackedEnum>        $filterComponentGroups
 	 * @param array<RichTextStyling>           $toolbarOptions
 	 * @param array<array<string, string>>     $styleOptions
 	 */

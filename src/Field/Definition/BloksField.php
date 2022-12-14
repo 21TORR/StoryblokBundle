@@ -22,6 +22,7 @@ final class BloksField extends AbstractField
 		private readonly ?int $maximumNumberOfBloks = null,
 		/** @var array<string>|ComponentsWithTags|null $filterComponents */
 		private readonly array|ComponentsWithTags|null $filterComponents = null,
+		/** @var array<string|\BackedEnum> $filterComponentGroups */
 		private readonly array $filterComponentGroups = [],
 	)
 	{

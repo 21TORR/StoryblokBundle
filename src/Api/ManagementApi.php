@@ -85,7 +85,7 @@ final class ManagementApi
 	/**
 	 * Gets or creates a component group uuid
 	 */
-	private function getOrCreatedComponentGroupUuid (string|\BackedEnum|null $name) : ?string
+	public function getOrCreatedComponentGroupUuid (string|\BackedEnum|null $name) : ?string
 	{
 		if (null === $name)
 		{
