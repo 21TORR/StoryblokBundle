@@ -83,6 +83,7 @@ final class ComponentSync
 		{
 			$resolved[$key] = match (true)
 			{
+				"component_group_whitelist" === $key => $this->resolveComponentGroupWhitelist($value),
 				$value instanceof ComponentsWithTags => $this->componentManager->getComponentKeysForTags($value->tags),
 				\is_array($value) => $this->resolveComponentConfig($value),
 				default => $value,
@@ -90,5 +91,25 @@ final class ComponentSync
 		}
 
 		return $resolved;
+	}
+
+	/**
+	 * Resolves the Group's Name to their corresponding Group Uuid.
+	 *
+	 * @param array<string|\BackedEnum> $groupNames
+	 * @return array<string>
+	 */
+	private function resolveComponentGroupWhitelist (array $groupNames) : array
+	{
+		$resolved = [];
+
+		foreach ($groupNames as $groupName)
+		{
+			$uuid = $this->managementApi->getOrCreatedComponentGroupUuid($groupName);
+
+			$resolved[$uuid] = true;
+		}
+
+		return \array_keys($resolved);
 	}
 }
