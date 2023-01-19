@@ -12,6 +12,7 @@ use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Release\ReleaseVersion;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Story\StoryFactory;
 
@@ -95,6 +96,7 @@ final class ContentApi
 	 */
 	public function fetchSingleStory (
 		string|int $identifier,
+		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
 	) : ?Story
 	{
 		// ensure that we stay in the rate limit
@@ -110,6 +112,7 @@ final class ContentApi
 				(new HttpOptions())
 					->setQuery([
 						"token" => $this->config->getContentToken(),
+						"version" => $version->value,
 					])
 					->toArray(),
 			);
