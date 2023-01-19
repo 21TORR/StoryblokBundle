@@ -102,9 +102,27 @@ abstract class AbstractComponent
 			);
 		}
 
+		$previewData = null;
+
+		if (\is_string($data["_editable"] ?? null) && \preg_match('~^<!--#storyblok#(.*)-->$~', $data["_editable"], $matches))
+		{
+			try
+			{
+				$previewData = \json_decode(\stripslashes($matches[1]), true, flags: \JSON_THROW_ON_ERROR);
+			}
+			catch (\JsonException $exception)
+			{
+				throw new InvalidDataException(\sprintf(
+					"Encountered invalid preview data: '%s'",
+					$data["_editable"],
+				), previous: $exception);
+			}
+		}
+
 		return new ComponentData(
 			static::getKey(),
 			$transformedData,
+			previewData: $previewData,
 		);
 	}
 
