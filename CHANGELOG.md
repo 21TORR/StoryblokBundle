@@ -1,3 +1,10 @@
+1.1.1
+=====
+
+* (bug) Fix invalid handling of multi-select `ChoiceField`.
+
+
+
 1.1.0
 =====
 
