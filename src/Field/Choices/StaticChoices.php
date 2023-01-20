@@ -45,7 +45,7 @@ class StaticChoices implements ChoicesInterface
 	 */
 	public function transformData (
 		ComponentContext $context,
-		int|string $data,
+		array|int|string $data,
 	) : mixed
 	{
 		// we can just pass the value through.
@@ -56,7 +56,7 @@ class StaticChoices implements ChoicesInterface
 	 * @inheritDoc
 	 */
 	public function isValidData (
-		int|string $data,
+		array|int|string $data,
 		?ComponentContext $context = null,
 	) : bool
 	{

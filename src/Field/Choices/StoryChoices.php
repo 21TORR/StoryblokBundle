@@ -34,7 +34,7 @@ final class StoryChoices implements ChoicesInterface
 	 * @inheritDoc
 	 */
 	public function isValidData (
-		int|string $data,
+		array|int|string $data,
 		?ComponentContext $context = null,
 	) : bool
 	{
@@ -46,7 +46,7 @@ final class StoryChoices implements ChoicesInterface
 	 */
 	public function transformData (
 		ComponentContext $context,
-		int|string $data,
+		array|int|string $data,
 	) : mixed
 	{
 		return $data;
