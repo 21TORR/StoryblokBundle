@@ -15,7 +15,7 @@ interface ChoicesInterface
 	 * Validates the given data.
 	 */
 	public function isValidData (
-		int|string $data,
+		array|int|string $data,
 		?ComponentContext $context = null,
 	) : bool;
 
@@ -24,6 +24,6 @@ interface ChoicesInterface
 	 */
 	public function transformData (
 		ComponentContext $context,
-		int|string $data,
+		array|int|string $data,
 	) : mixed;
 }

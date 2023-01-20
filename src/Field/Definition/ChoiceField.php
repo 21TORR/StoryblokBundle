@@ -2,8 +2,10 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
@@ -67,15 +69,19 @@ final class ChoiceField extends AbstractField
 	 */
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
+		$allowedValueTypeConstraints = new AtLeastOneOf([
+			new Type("string"),
+			new Type("int"),
+		]);
+
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
 			[
-				new AtLeastOneOf([
-					new Type("string"),
-					new Type("int"),
-				]),
+				$this->allowMultiselect
+					? new All([new NotNull(), $allowedValueTypeConstraints])
+					: $allowedValueTypeConstraints,
 			],
 		);
 

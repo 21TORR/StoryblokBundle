@@ -50,10 +50,21 @@ class EnumChoices extends StaticChoices
 	/**
 	 * @inheritDoc
 	 *
-	 * @return T
+	 * @return T|T[]
 	 */
-	public function transformData (ComponentContext $context, int|string $data) : BackedEnumChoiceInterface
+	public function transformData (
+		ComponentContext $context,
+		array|int|string $data,
+	) : BackedEnumChoiceInterface|array
 	{
+		if (\is_array($data))
+		{
+			return \array_map(
+				fn ($value) => $this->enumType::from($value),
+				$data
+			);
+		}
+
 		return $this->enumType::from($data);
 	}
 
@@ -62,10 +73,20 @@ class EnumChoices extends StaticChoices
 	 * @inheritDoc
 	 */
 	public function isValidData (
-		int|string $data,
+		array|int|string $data,
 		?ComponentContext $context = null,
 	) : bool
 	{
-		return null !== $this->enumType::tryFrom($data);
+		$values = \is_array($data) ? $data : [$data];
+
+		foreach ($values as $value)
+		{
+			if (null === $this->enumType::tryFrom($value))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
