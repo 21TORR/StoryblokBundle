@@ -8,6 +8,7 @@ use Torr\Storyblok\Component\Definition\ComponentDefinition;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
+use Torr\Storyblok\Field\Collection\FieldCollection;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Management\ManagementApiData;
@@ -21,7 +22,7 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
  */
 abstract class AbstractComponent
 {
-	private ?array $fields = null;
+	private ?FieldCollection $fields = null;
 
 	/**
 	 * Returns the unique key for this component
@@ -149,7 +150,7 @@ abstract class AbstractComponent
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
-		$field = $this->getFields()[$fieldName];
+		$field = $this->getFields()->getField($fieldName);
 
 		return $field->transformData(
 			$data[$fieldName] ?? null,
@@ -185,14 +186,9 @@ abstract class AbstractComponent
 		}
 	}
 
-	final protected function getFields () : array
+	final protected function getFields () : FieldCollection
 	{
-		if (null === $this->fields)
-		{
-			$this->fields = $this->configureFields();
-		}
-
-		return $this->fields;
+		return $this->fields ??= new FieldCollection($this->configureFields());
 	}
 
 
@@ -254,7 +250,7 @@ abstract class AbstractComponent
 		return [
 			"name" => static::getKey(),
 			"display_name" => $this->getDisplayName(),
-			"schema" => $this->normalizeFields($this->getFields()),
+			"schema" => $this->normalizeFields($this->getFields()->getRootFields()),
 			"image" => $definition->previewScreenshotUrl,
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,
