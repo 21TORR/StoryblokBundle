@@ -6,7 +6,7 @@ use Torr\Storyblok\Exception\Story\UnknownFieldException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 
-final class FieldCollection implements \IteratorAggregate
+final class FieldCollection
 {
 	/** @var array<string, FieldDefinitionInterface> */
 	private array $allFields = [];
@@ -60,13 +60,5 @@ final class FieldCollection implements \IteratorAggregate
 		}
 
 		return $field;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getIterator () : \Traversable
-	{
-		return new \ArrayIterator($this->rootFields);
 	}
 }

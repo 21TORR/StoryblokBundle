@@ -94,7 +94,7 @@ abstract class AbstractComponent
 	{
 		$transformedData = [];
 
-		foreach ($this->getFields() as $fieldName => $field)
+		foreach ($this->getFields()->getRootFields() as $fieldName => $field)
 		{
 			$transformedFieldData = $field->transformData(
 				$data[$fieldName] ?? null,
@@ -170,7 +170,7 @@ abstract class AbstractComponent
 		array $contentPath = [],
 	) : void
 	{
-		foreach ($this->getFields() as $name => $field)
+		foreach ($this->getFields()->getRootFields() as $name => $field)
 		{
 			$fieldData = $data[$name] ?? null;
 
@@ -182,6 +182,7 @@ abstract class AbstractComponent
 					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,
+				$data,
 			);
 		}
 	}
