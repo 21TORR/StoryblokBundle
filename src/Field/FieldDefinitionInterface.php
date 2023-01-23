@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Field;
 
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Field\Data\InlinedTransformedData;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 interface FieldDefinitionInterface
@@ -33,7 +34,7 @@ interface FieldDefinitionInterface
 	 * @param T $data
 	 * @param array $fullData The full data for the component
 	 *
-	 * @return T
+	 * @return T|InlinedTransformedData
 	 */
 	public function transformData (
 		mixed $data,
