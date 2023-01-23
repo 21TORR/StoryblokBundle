@@ -3,7 +3,8 @@
 namespace Torr\Storyblok\Field;
 
 use Torr\Storyblok\Context\ComponentContext;
-use Torr\Storyblok\Field\Data\InlinedTransformedData;
+use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
+use Torr\Storyblok\Management\ManagementApiData;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 interface FieldDefinitionInterface
@@ -11,11 +12,12 @@ interface FieldDefinitionInterface
 	/**
 	 * Transforms the type to the type definition required for the Storyblok API
 	 *
-	 * @internal
+	 *@internal
 	 */
-	public function toManagementApiData (
-		int $position,
-	) : array;
+	public function registerManagementApiData (
+		string $key,
+		ManagementApiData $managementApiData,
+	) : void;
 
 	/**
 	 * Validates the data for this field, as it was sent by Storyblok.
@@ -31,7 +33,7 @@ interface FieldDefinitionInterface
 	 *
 	 * @template T
 	 *
-	 * @param T $data
+	 * @param T     $data
 	 * @param array $fullData The full data for the component
 	 *
 	 * @return T|InlinedTransformedData
