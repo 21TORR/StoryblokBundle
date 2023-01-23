@@ -121,22 +121,4 @@ abstract class AbstractField implements FieldDefinitionInterface
 			"preview_field" => $this->isPreviewField,
 		];
 	}
-
-	/**
-	 * @template T
-	 *
-	 * @param T $data
-	 *
-	 * @return T
-	 */
-	public function transformData (
-		mixed $data,
-		ComponentContext $context,
-		?DataVisitorInterface $dataVisitor = null,
-	) : mixed
-	{
-		$dataVisitor?->onDataVisit($this, $data);
-
-		return $data;
-	}
 }
