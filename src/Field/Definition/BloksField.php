@@ -152,6 +152,7 @@ final class BloksField extends AbstractField
 			}
 		}
 
-		return parent::transformData($transformed, $context, $fullData, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }
