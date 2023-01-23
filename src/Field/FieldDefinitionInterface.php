@@ -27,10 +27,18 @@ interface FieldDefinitionInterface
 
 	/**
 	 * Receives the Storyblok data for the given field and transforms it for better usage
+	 *
+	 * @template T
+	 *
+	 * @param T $data
+	 * @param array $fullData The full data for the component
+	 *
+	 * @return T
 	 */
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed;
 }
