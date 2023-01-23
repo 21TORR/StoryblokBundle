@@ -67,7 +67,7 @@ final class ChoiceField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$allowedValueTypeConstraints = new AtLeastOneOf([
 			new Type("string"),

@@ -26,6 +26,7 @@ interface FieldDefinitionInterface
 		ComponentContext $context,
 		array $contentPath,
 		mixed $data,
+		array $fullData,
 	) : void;
 
 	/**

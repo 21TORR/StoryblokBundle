@@ -73,7 +73,7 @@ final class BloksField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		// first validate structure itself
 		$context->ensureDataIsValid(

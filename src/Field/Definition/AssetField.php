@@ -63,7 +63,7 @@ final class AssetField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$idConstraints = [
 			new Type("int"),

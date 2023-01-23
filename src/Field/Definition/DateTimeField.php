@@ -49,7 +49,7 @@ final class DateTimeField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
 			$contentPath,
