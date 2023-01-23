@@ -37,10 +37,10 @@ final class TextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"rtl" => $this->isRightToLeft,
 				"max_length" => $this->maxLength,
@@ -51,7 +51,7 @@ final class TextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -72,15 +72,14 @@ final class TextField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?string
 	{
 		\assert(\is_string($data) || null === $data);
+		$transformed = $context->normalizeOptionalString($data);
 
-		return parent::transformData(
-			$context->normalizeOptionalString($data),
-			$context,
-			$dataVisitor,
-		);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }

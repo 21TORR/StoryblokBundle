@@ -9,8 +9,9 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Collection\FieldCollection;
+use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
-use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
+use Torr\Storyblok\Management\ManagementApiData;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
@@ -93,13 +94,26 @@ abstract class AbstractComponent
 	{
 		$transformedData = [];
 
-		foreach ($this->getFieldCollection()->getTransformableFields() as $fieldName => $field)
+		foreach ($this->getFields()->getRootFields() as $fieldName => $field)
 		{
-			$transformedData[$fieldName] = $field->transformData(
+			$transformedFieldData = $field->transformData(
 				$data[$fieldName] ?? null,
 				$dataContext,
+				$data,
 				$dataVisitor,
 			);
+
+			if ($transformedFieldData instanceof InlinedTransformedData)
+			{
+				$transformedData = [
+					...$transformedData,
+					...$transformedFieldData->data,
+				];
+			}
+			else
+			{
+				$transformedData[$fieldName] = $transformedFieldData;
+			}
 		}
 
 		$previewData = null;
@@ -136,11 +150,12 @@ abstract class AbstractComponent
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
-		$field = $this->getFieldCollection()->getField($fieldName);
+		$field = $this->getFields()->getField($fieldName);
 
 		return $field->transformData(
 			$data[$fieldName] ?? null,
 			$dataContext,
+			$data,
 			$dataVisitor,
 		);
 	}
@@ -155,7 +170,7 @@ abstract class AbstractComponent
 		array $contentPath = [],
 	) : void
 	{
-		foreach ($this->getFieldCollection()->getTransformableFields() as $name => $field)
+		foreach ($this->getFields()->getRootFields() as $name => $field)
 		{
 			$fieldData = $data[$name] ?? null;
 
@@ -167,20 +182,14 @@ abstract class AbstractComponent
 					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,
+				$data,
 			);
 		}
 	}
 
-	/**
-	 */
-	final protected function getFieldCollection () : FieldCollection
+	final protected function getFields () : FieldCollection
 	{
-		if (null === $this->fields)
-		{
-			$this->fields = new FieldCollection($this->configureFields());
-		}
-
-		return $this->fields;
+		return $this->fields ??= new FieldCollection($this->configureFields());
 	}
 
 
@@ -188,11 +197,9 @@ abstract class AbstractComponent
 	 * Normalizes the fields for usage in the management API
 	 *
 	 * @param array<FieldDefinitionInterface> $fields
-	 * @param array<string, mixed>            $normalizedFields
 	 */
 	private function normalizeFields (
 		array $fields,
-		array $normalizedFields = [],
 	) : array
 	{
 		if (empty($fields))
@@ -202,6 +209,8 @@ abstract class AbstractComponent
 				static::class,
 			));
 		}
+
+		$managementDataApi = new ManagementApiData();
 
 		foreach ($fields as $key => $field)
 		{
@@ -214,24 +223,10 @@ abstract class AbstractComponent
 				));
 			}
 
-			if (\array_key_exists($key, $normalizedFields))
-			{
-				throw new InvalidComponentConfigurationException(\sprintf(
-					"Invalid component configuration '%s': field key '%s' used more than once",
-					static::class,
-					$key,
-				));
-			}
-
-			$normalizedFields[$key] = $field->toManagementApiData(\count($normalizedFields));
-
-			if ($field instanceof NestedFieldDefinitionInterface)
-			{
-				$normalizedFields = $this->normalizeFields($field->getNestedFields(), $normalizedFields);
-			}
+			$field->registerManagementApiData($key, $managementDataApi);
 		}
 
-		return $normalizedFields;
+		return $managementDataApi->getFullConfig();
 	}
 
 
@@ -256,7 +251,7 @@ abstract class AbstractComponent
 		return [
 			"name" => static::getKey(),
 			"display_name" => $this->getDisplayName(),
-			"schema" => $this->normalizeFields($this->getFieldCollection()->getRootFields()),
+			"schema" => $this->normalizeFields($this->getFields()->getRootFields()),
 			"image" => $definition->previewScreenshotUrl,
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,

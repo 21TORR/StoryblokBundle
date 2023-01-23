@@ -9,7 +9,7 @@ use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 final class FieldCollection
 {
 	/** @var array<string, FieldDefinitionInterface> */
-	private array $transformableFields = [];
+	private array $allFields = [];
 
 	public function __construct (
 		/** @var array<string, FieldDefinitionInterface> $rootFields */
@@ -26,24 +26,15 @@ final class FieldCollection
 	{
 		foreach ($fields as $fieldName => $field)
 		{
+			$this->allFields[$fieldName] = $field;
+
 			if ($field instanceof NestedFieldDefinitionInterface)
 			{
 				$this->indexFields($field->getNestedFields());
 			}
-			else
-			{
-				$this->transformableFields[$fieldName] = $field;
-			}
 		}
 	}
 
-	/**
-	 * @return array<string, FieldDefinitionInterface>
-	 */
-	public function getTransformableFields () : array
-	{
-		return $this->transformableFields;
-	}
 
 	/**
 	 * @return array<string, FieldDefinitionInterface>
@@ -58,7 +49,7 @@ final class FieldCollection
 	 */
 	public function getField (string $key) : FieldDefinitionInterface
 	{
-		$field = $this->getTransformableFields()[$key] ?? null;
+		$field = $this->allFields[$key] ?? null;
 
 		if (null === $field)
 		{

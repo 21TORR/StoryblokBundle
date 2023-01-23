@@ -50,7 +50,7 @@ final class RichTextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		$formattedStyleOptions = [];
 
@@ -63,7 +63,7 @@ final class RichTextField extends AbstractField
 		}
 
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"max_length" => $this->maxLength,
 				"customize_toolbar" => !empty($this->toolbarOptions),
@@ -83,7 +83,7 @@ final class RichTextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -102,6 +102,7 @@ final class RichTextField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?array
 	{
@@ -118,7 +119,7 @@ final class RichTextField extends AbstractField
 			$transformed = null;
 		}
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
-
 }

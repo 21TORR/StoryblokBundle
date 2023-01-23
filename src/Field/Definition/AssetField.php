@@ -46,10 +46,10 @@ final class AssetField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"allow_external_url" => $this->allowExternalUrl,
 				"filetypes" => \array_map(
@@ -63,7 +63,7 @@ final class AssetField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$idConstraints = [
 			new Type("int"),
@@ -139,6 +139,7 @@ final class AssetField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?AssetData
 	{
@@ -161,6 +162,7 @@ final class AssetField extends AbstractField
 			);
 		}
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }

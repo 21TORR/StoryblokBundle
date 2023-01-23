@@ -4,44 +4,46 @@ namespace Torr\Storyblok\Field\Group;
 
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
-use Torr\Storyblok\Field\Collection\FieldCollection;
+use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\Definition\AbstractField;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
+use Torr\Storyblok\Management\ManagementApiData;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 abstract class AbstractGroupingElement extends AbstractField implements NestedFieldDefinitionInterface
 {
-	private readonly FieldCollection $fieldCollection;
-
 	/**
+	 * @param array<string, FieldDefinitionInterface> $fields
 	 */
 	public function __construct (
 		string $label,
 		/** @var array<string, FieldDefinitionInterface> $fields */
-		array $fields,
+		protected readonly array $fields,
 	)
 	{
 		parent::__construct($label);
-		$this->fieldCollection = new FieldCollection($fields);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position, ) : array
+	public function registerManagementApiData (string $key, ManagementApiData $managementApiData) : void
 	{
-		$data = \array_replace(
-			parent::toManagementApiData($position),
+		/** @var array<string, mixed> $fieldConfig */
+		$fieldConfig = \array_replace(
+			$this->toManagementApiData(),
 			[
-				"keys" => \array_keys($this->fieldCollection->getRootFields()),
+				"keys" => \array_keys($this->fields),
 			],
 		);
+		unset($fieldConfig["required"], $fieldConfig["regexp"]);
+		$managementApiData->registerField($key, $fieldConfig);
 
-		unset($data["required"], $data["regexp"]);
-
-
-		return $data;
+		foreach ($this->fields as $fieldName => $field)
+		{
+			$field->registerManagementApiData($fieldName, $managementApiData);
+		}
 	}
 
 	/**
@@ -49,13 +51,13 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 	 */
 	public function getNestedFields () : array
 	{
-		return $this->fieldCollection->getRootFields();
+		return $this->fields;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -66,9 +68,9 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 			],
 		);
 
-		foreach ($this->fieldCollection->getTransformableFields() as $name => $field)
+		foreach ($this->fields as $name => $field)
 		{
-			$fieldData = $data[$name] ?? null;
+			$fieldData = $fullData[$name] ?? null;
 
 			$field->validateData(
 				$context,
@@ -77,6 +79,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,
+				$fullData,
 			);
 		}
 	}
@@ -87,27 +90,38 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
-	) : array
+	) : array|InlinedTransformedData
 	{
 		\assert(null === $data || \is_array($data));
 		$data ??= [];
 		$transformed = [];
 
-		foreach ($this->fieldCollection->getTransformableFields() as $name => $field)
+		foreach ($this->fields as $name => $field)
 		{
-			$transformed[$name] = $field->transformData(
+			$transformedFieldData = $field->transformData(
 				$data[$name] ?? null,
 				$context,
+				$fullData,
 				$dataVisitor,
 			);
+
+			if ($transformedFieldData instanceof InlinedTransformedData)
+			{
+				$transformed = [
+					...$transformed,
+					...$transformedFieldData->data,
+				];
+			}
+			else
+			{
+				$transformed[$name] = $transformedFieldData;
+			}
 		}
 
-		return parent::transformData(
-			$transformed,
-			$context,
-			$dataVisitor,
-		);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return new InlinedTransformedData($transformed);
 	}
 
 	/**
@@ -119,7 +133,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 		bool $allowMissingData = false,
 	) : static
 	{
-		foreach ($this->fieldCollection->getRootFields() as $rootField)
+		foreach ($this->fields as $rootField)
 		{
 			if ($rootField instanceof AbstractField)
 			{

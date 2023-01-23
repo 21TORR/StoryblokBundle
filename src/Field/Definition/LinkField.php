@@ -46,10 +46,10 @@ final class LinkField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"asset_link_type" => $this->allowAssetLinks,
 				"email_link_type" => $this->allowEmailLinks,
@@ -65,7 +65,7 @@ final class LinkField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -126,6 +126,7 @@ final class LinkField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : StoryLinkData|EmailLinkData|ExternalLinkData|AssetLinkData|null
 	{
@@ -135,7 +136,8 @@ final class LinkField extends AbstractField
 			? $this->transformDataToLink($context, $data)
 			: null;
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 
 

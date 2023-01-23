@@ -51,10 +51,10 @@ final class ChoiceField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			$this->choices->toManagementApiData(),
 			[
 				"default_value" => $this->defaultValue instanceof \BackedEnum
@@ -67,7 +67,7 @@ final class ChoiceField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$allowedValueTypeConstraints = new AtLeastOneOf([
 			new Type("string"),
@@ -109,6 +109,7 @@ final class ChoiceField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
@@ -121,6 +122,7 @@ final class ChoiceField extends AbstractField
 			? $this->choices->transformData($context, $data)
 			: null;
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }

@@ -35,10 +35,10 @@ final class MarkdownField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"rich_markdown" => $this->hasRichMarkdown,
 				"rtl" => $this->isRightToLeft,
@@ -50,7 +50,7 @@ final class MarkdownField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -69,6 +69,7 @@ final class MarkdownField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?string
 	{
@@ -76,7 +77,8 @@ final class MarkdownField extends AbstractField
 
 		$transformed = $context->dataTransformer->normalizeOptionalString($data);
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 
 }

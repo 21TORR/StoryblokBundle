@@ -47,10 +47,10 @@ final class BloksField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position, ) : array
+	public function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"minimum" => $this->minimumNumberOfBloks,
 				"maximum" => $this->maximumNumberOfBloks,
@@ -73,7 +73,7 @@ final class BloksField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		// first validate structure itself
 		$context->ensureDataIsValid(
@@ -136,6 +136,7 @@ final class BloksField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : array
 	{
@@ -151,6 +152,7 @@ final class BloksField extends AbstractField
 			}
 		}
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }
