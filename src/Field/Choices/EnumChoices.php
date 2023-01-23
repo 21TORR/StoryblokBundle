@@ -61,7 +61,7 @@ class EnumChoices extends StaticChoices
 		{
 			/** @var T[] $data */
 			$data = \array_map(
-				fn ($value) => $this->enumType::from(...),
+				$this->enumType::from(...),
 				$data,
 			);
 
