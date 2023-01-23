@@ -69,6 +69,7 @@ final class MarkdownField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?string
 	{
@@ -76,7 +77,8 @@ final class MarkdownField extends AbstractField
 
 		$transformed = $context->dataTransformer->normalizeOptionalString($data);
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 
 }

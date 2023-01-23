@@ -102,6 +102,7 @@ final class RichTextField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?array
 	{
@@ -118,7 +119,7 @@ final class RichTextField extends AbstractField
 			$transformed = null;
 		}
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
-
 }

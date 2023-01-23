@@ -136,6 +136,7 @@ final class BloksField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : array
 	{
@@ -151,6 +152,6 @@ final class BloksField extends AbstractField
 			}
 		}
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		return parent::transformData($transformed, $context, $fullData, $dataVisitor);
 	}
 }

@@ -109,6 +109,7 @@ final class ChoiceField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
@@ -121,6 +122,7 @@ final class ChoiceField extends AbstractField
 			? $this->choices->transformData($context, $data)
 			: null;
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }

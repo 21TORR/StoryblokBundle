@@ -48,12 +48,13 @@ final class BooleanField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : bool
 	{
 		\assert(\is_bool($data));
 
-		return parent::transformData($data, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $data);
+		return $data;
 	}
-
 }

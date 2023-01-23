@@ -69,6 +69,7 @@ final class DateTimeField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?\DateTimeImmutable
 	{
@@ -95,6 +96,7 @@ final class DateTimeField extends AbstractField
 			$transformed = $transformed->setTime(0, 0);
 		}
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }

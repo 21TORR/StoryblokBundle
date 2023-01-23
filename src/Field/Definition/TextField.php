@@ -72,15 +72,14 @@ final class TextField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?string
 	{
 		\assert(\is_string($data) || null === $data);
+		$transformed = $context->normalizeOptionalString($data);
 
-		return parent::transformData(
-			$context->normalizeOptionalString($data),
-			$context,
-			$dataVisitor,
-		);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }

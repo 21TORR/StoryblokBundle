@@ -51,6 +51,7 @@ final class NumberField extends AbstractField
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
+		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : int|float|null
 	{
@@ -67,6 +68,7 @@ final class NumberField extends AbstractField
 			$transformed = null;
 		}
 
-		return parent::transformData($transformed, $context, $dataVisitor);
+		$dataVisitor?->onDataVisit($this, $transformed);
+		return $transformed;
 	}
 }
