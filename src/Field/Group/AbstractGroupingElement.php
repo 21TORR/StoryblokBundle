@@ -57,7 +57,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 	/**
 	 * @inheritDoc
 	 */
-	public function validateData (ComponentContext $context, array $contentPath, mixed $data) : void
+	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -70,7 +70,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 
 		foreach ($this->fields as $name => $field)
 		{
-			$fieldData = $data[$name] ?? null;
+			$fieldData = $fullData[$name] ?? null;
 
 			$field->validateData(
 				$context,
@@ -79,6 +79,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,
+				$fullData,
 			);
 		}
 	}
