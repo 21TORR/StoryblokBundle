@@ -50,7 +50,7 @@ final class RichTextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		$formattedStyleOptions = [];
 
@@ -63,7 +63,7 @@ final class RichTextField extends AbstractField
 		}
 
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"max_length" => $this->maxLength,
 				"customize_toolbar" => !empty($this->toolbarOptions),

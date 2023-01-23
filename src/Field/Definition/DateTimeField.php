@@ -28,10 +28,10 @@ final class DateTimeField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"disable_time" => !$this->withTimeSelection,
 			],

@@ -51,10 +51,10 @@ final class ChoiceField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			$this->choices->toManagementApiData(),
 			[
 				"default_value" => $this->defaultValue instanceof \BackedEnum

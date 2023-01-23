@@ -46,10 +46,10 @@ final class LinkField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"asset_link_type" => $this->allowAssetLinks,
 				"email_link_type" => $this->allowEmailLinks,

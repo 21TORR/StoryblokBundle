@@ -46,10 +46,10 @@ final class AssetField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"allow_external_url" => $this->allowExternalUrl,
 				"filetypes" => \array_map(

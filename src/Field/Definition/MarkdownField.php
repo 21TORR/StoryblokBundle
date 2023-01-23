@@ -35,10 +35,10 @@ final class MarkdownField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position) : array
+	protected function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"rich_markdown" => $this->hasRichMarkdown,
 				"rtl" => $this->isRightToLeft,

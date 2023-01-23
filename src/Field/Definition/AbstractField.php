@@ -2,10 +2,9 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Visitor\DataVisitorInterface;
+use Torr\Storyblok\Management\ManagementApiData;
 
 /**
  * Base class for any field that is used in the app
@@ -99,18 +98,21 @@ abstract class AbstractField implements FieldDefinitionInterface
 	abstract protected function getInternalStoryblokType () : FieldType;
 
 	/**
-	 * Returns the field definition for usage with the management api.
-	 *
-	 * @internal
+	 * @inheritDoc
 	 */
-	public function toManagementApiData (
-		int $position,
-	) : array
+	public function registerManagementApiData (string $key, ManagementApiData $managementApiData) : void
+	{
+		$managementApiData->registerField($key, $this->toManagementApiData());
+	}
+
+	/**
+	 * Returns the field definition for usage with the management api.
+	 */
+	protected function toManagementApiData () : array
 	{
 		return [
 			"type" => $this->getInternalStoryblokType()->value,
 			"display_name" => $this->label,
-			"pos" => $position,
 			"default_value" => $this->defaultValue,
 			"description" => $this->description,
 			"tooltip" => $this->descriptionAsTooltip,

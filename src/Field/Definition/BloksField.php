@@ -47,10 +47,10 @@ final class BloksField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function toManagementApiData (int $position, ) : array
+	public function toManagementApiData () : array
 	{
 		return \array_replace(
-			parent::toManagementApiData($position),
+			parent::toManagementApiData(),
 			[
 				"minimum" => $this->minimumNumberOfBloks,
 				"maximum" => $this->maximumNumberOfBloks,
