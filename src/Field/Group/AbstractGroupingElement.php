@@ -94,14 +94,12 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 		?DataVisitorInterface $dataVisitor = null,
 	) : array|InlinedTransformedData
 	{
-		\assert(null === $data || \is_array($data));
-		$data ??= [];
 		$transformed = [];
 
 		foreach ($this->fields as $name => $field)
 		{
 			$transformedFieldData = $field->transformData(
-				$data[$name] ?? null,
+				$fullData[$name] ?? null,
 				$context,
 				$fullData,
 				$dataVisitor,
