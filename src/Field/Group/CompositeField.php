@@ -70,7 +70,7 @@ abstract class CompositeField extends AbstractGroupingElement
 			$unprefixedName = \preg_replace("~^(" . \preg_quote($this->prefix, "~") . ")~", "", $name);
 
 			$transformed[$unprefixedName] = $fieldDefinition->transformData(
-				$fullData[$name],
+				$fullData[$name] ?? null,
 				$context,
 				$fullData,
 				$dataVisitor,
