@@ -1,3 +1,11 @@
+1.2.1
+=====
+
+* (bug) Fix invalid handling of `AbstractGroupingElement` fields.
+* (bug) Don't crash when `CompositeField` field data is not present (for `allowMissingData` cases).
+
+
+
 1.2.0
 =====
 
