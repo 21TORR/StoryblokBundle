@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Field\Choices;
 
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Field\Data\StoryReferenceData;
 
 /**
  * Makes a story selectable
@@ -12,10 +13,12 @@ final class StoryChoices implements ChoicesInterface
 {
 	/**
 	 * @param array<string>|ComponentsWithTags $restrictContentTypes
+	 * @param string|\BackedEnum|null          $referencedStoryDataMode This is a Key that will be used by the corresponding StoryNormalizer to find out which data from the referenced Story is needed by the component
 	 */
 	public function __construct (
 		private readonly array|ComponentsWithTags $restrictContentTypes = [],
 		private readonly string $restrictToPath = "",
+		private readonly string|\BackedEnum|null $referencedStoryDataMode = null,
 	) {}
 
 	/**
@@ -42,13 +45,15 @@ final class StoryChoices implements ChoicesInterface
 	}
 
 	/**
-	 * @inheritDoc
+	 * @return StoryReferenceData|array<StoryReferenceData>
 	 */
 	public function transformData (
 		ComponentContext $context,
 		array|int|string $data,
-	) : mixed
+	) : array|StoryReferenceData
 	{
-		return $data;
+		return \is_array($data)
+			? \array_map(fn (string $storyUuid) => new StoryReferenceData($storyUuid, $this->referencedStoryDataMode), $data)
+			: new StoryReferenceData($data, $this->referencedStoryDataMode);
 	}
 }
