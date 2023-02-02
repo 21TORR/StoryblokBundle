@@ -19,6 +19,7 @@ use Torr\Storyblok\Story\StoryFactory;
 final class ContentApi
 {
 	private const API_URL = "https://api.storyblok.com/v2/cdn/";
+	private const STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
 	private readonly HttpClientInterface $client;
 	private readonly LimiterInterface $rateLimiter;
 
@@ -106,14 +107,21 @@ final class ContentApi
 		{
 			$identifier = \ltrim((string) $identifier, "/");
 
+			$queryParameters = [
+				"token" => $this->config->getContentToken(),
+				"version" => $version->value,
+			];
+
+			if (\preg_match(self::STORYBLOK_UUID_REGEX, $identifier))
+			{
+				$queryParameters["find_by"] = "uuid";
+			}
+
 			$response = $this->client->request(
 				"GET",
 				"stories/{$identifier}",
 				(new HttpOptions())
-					->setQuery([
-						"token" => $this->config->getContentToken(),
-						"version" => $version->value,
-					])
+					->setQuery($queryParameters)
 					->toArray(),
 			);
 
