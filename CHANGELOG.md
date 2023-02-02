@@ -1,3 +1,12 @@
+1.3.0
+=====
+
+* (feature) Add support for fetching a Story directly via their Uuid from the Storyblok Content API. 
+* (feature) Add `StoryReferenceData`. 
+* (bc) The `StoryChoices` no longer return the Uuid(s) of the referenced Stories. Instead, it returns the `StoryReferenceData` object(s).
+* (feature) Add support for specifying a data mode key for the `StoryChoices` instance, which will be passed down to the corresponding `*StoryNormalizer`, which can conditionally return different data based on the mode key.
+
+
 1.2.1
 =====
 
