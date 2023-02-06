@@ -13,7 +13,10 @@ final class BooleanField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct (string $label, bool $defaultValue = false)
+	public function __construct (
+		string $label,
+		private readonly bool $defaultValue = false,
+	)
 	{
 		parent::__construct($label, $defaultValue);
 	}
@@ -36,7 +39,7 @@ final class BooleanField extends AbstractField
 			$this,
 			$data,
 			[
-				new NotNull(),
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("bool"),
 			],
 		);
@@ -52,6 +55,8 @@ final class BooleanField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : bool
 	{
+		$data ??= $this->defaultValue;
+
 		\assert(\is_bool($data));
 
 		$dataVisitor?->onDataVisit($this, $data);
