@@ -2,6 +2,7 @@ vNext
 =====
 
 * (bug) Fix RateLimiter configuration for Storyblok's Content API to hopefully not exceed their rate limit.
+* (improvement) Prevent automatic API redirect by sorting the query parameters pre-emptively.
 
 
 

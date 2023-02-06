@@ -60,6 +60,9 @@ final class ContentApi
 
 		$query["token"] = $this->config->getContentToken();
 
+		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
+		\ksort($query);
+
 		try
 		{
 			$response = $this->client->request(
