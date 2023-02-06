@@ -27,8 +27,8 @@ final class StoryblokBundleExtension extends ConfigurableBundleExtension impleme
 					"interval" => "1 second",
 				],
 				"storyblok_content_delivery" => [
-					"policy" => "fixed_window",
-					"limit" => 1000,
+					"policy" => "sliding_window",
+					"limit" => 50,
 					"interval" => "1 second",
 				],
 			],

@@ -1,3 +1,10 @@
+vNext
+=====
+
+* (bug) Fix RateLimiter configuration for Storyblok's Content API to hopefully not exceed their rate limit.
+
+
+
 1.3.0
 =====
 
