@@ -1,9 +1,9 @@
-vNext
+1.4.0
 =====
 
 * (bug) Fix RateLimiter configuration for Storyblok's Content API to hopefully not exceed their rate limit.
 * (improvement) Prevent automatic API redirect by sorting the query parameters pre-emptively.
-
+* (feature) Add support for fetching different `ReleaseVerion`s in `ContentApi::fetchStories()` and `::fetchAllStories()`.
 
 
 1.3.0

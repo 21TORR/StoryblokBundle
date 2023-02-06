@@ -166,12 +166,18 @@ final class ContentApi
 		string $slug,
 		?string $locale = null,
 		array $query = [],
+		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
 	) : array
 	{
 		$component = $this->componentManager->getComponentByStoryType($storyType);
 
 		$query["content_type"] = $component::getKey();
-		$result = $this->fetchAllStories($slug, $locale, $query);
+		$result = $this->fetchAllStories(
+			slug: $slug,
+			locale: $locale,
+			query: $query,
+			version: $version,
+		);
 
 		foreach ($result as $story)
 		{
@@ -205,10 +211,12 @@ final class ContentApi
 		string|array|null $slug,
 		?string $locale = null,
 		array $query = [],
+		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
 	) : array
 	{
 		// force per_page to the maximum to minimize pagination
 		$query["per_page"] = 100;
+		$query["version"] = $version->value;
 
 		if (null !== $slug)
 		{
