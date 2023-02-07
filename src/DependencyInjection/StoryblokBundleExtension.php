@@ -27,8 +27,10 @@ final class StoryblokBundleExtension extends ConfigurableBundleExtension impleme
 					"interval" => "1 second",
 				],
 				"storyblok_content_delivery" => [
-					"policy" => "fixed_window",
-					"limit" => 1000,
+					"policy" => "sliding_window",
+					// Contradicting to the Technical Limits docs, the docs of the Content API says that the rate limit is 50 requests per second,
+					// according to https://www.storyblok.com/docs/api/content-delivery/v2#topics/rate-limit
+					"limit" => 50,
 					"interval" => "1 second",
 				],
 			],
