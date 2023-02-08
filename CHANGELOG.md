@@ -1,3 +1,9 @@
+1.4.1
+=====
+
+* (improvement) Add getter for story slug segments.
+
+
 1.4.0
 =====
 
@@ -23,13 +29,11 @@
 * (bug) Don't crash when `CompositeField` field data is not present (for `allowMissingData` cases).
 
 
-
 1.2.0
 =====
 
 * (bug) Fix invalid handling of nested fields.
 * (feature) Add `CompositeField` to allow logical grouping of multiple fields.
-
 
 
 1.1.1
