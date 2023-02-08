@@ -129,6 +129,13 @@ final class StoryMetaData
 			: null;
 	}
 
+	/**
+	 * @return string[]
+	 */
+	public function getSlugSegments () : array
+	{
+		return $this->slugSegments;
+	}
 
 	/**
 	 */
