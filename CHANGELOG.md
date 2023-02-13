@@ -4,6 +4,7 @@
 * (improvement) Add `StoryInterface`. 
 * (bc) Use `fullSlug` in `StoryLinkData`. 
 * (bc) Add better support for multiple story references via `StoryReferenceList`. 
+* (improvement) Improve exception message for better tracing/debugging when hydration of a `Story` fails due to invalid data.
 
 
 1.5.0

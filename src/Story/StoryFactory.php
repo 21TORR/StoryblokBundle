@@ -5,6 +5,7 @@ namespace Torr\Storyblok\Story;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\ComponentWithoutStoryException;
+use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
 
@@ -60,6 +61,16 @@ final class StoryFactory
 			$story->validate($this->storyblokContext);
 
 			return $story;
+		}
+		catch (InvalidDataException $exception)
+		{
+			throw new StoryHydrationFailed(\sprintf(
+				"Failed to hydrate story (Id: '%s', Name: '%s') of type '%s' due to invalid data: %s",
+				$data["id"] ?? "n/a",
+				$data["name"] ?? "n/a",
+				$type,
+				$exception->getMessage(),
+			), previous: $exception);
 		}
 		catch (UnknownComponentKeyException $exception)
 		{
