@@ -1,7 +1,7 @@
 1.4.2
 =====
 
-* (improvement) Pass the component definition in `ComponentData`. 
+* (improvement) Pass the component definition in `ComponentData`.
 
 
 1.4.1
