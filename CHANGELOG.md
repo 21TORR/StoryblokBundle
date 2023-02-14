@@ -1,3 +1,9 @@
+1.4.3
+=====
+
+* (improvement) Revert adjustments from 1.4.2 to keep the codebase simpler.
+
+
 1.4.2
 =====
 
