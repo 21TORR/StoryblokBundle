@@ -136,7 +136,8 @@ abstract class AbstractComponent
 		return new ComponentData(
 			static::getKey(),
 			$transformedData,
-			previewData: $previewData,
+			$previewData,
+			$this,
 		);
 	}
 
