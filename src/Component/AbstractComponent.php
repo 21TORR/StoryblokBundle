@@ -168,6 +168,7 @@ abstract class AbstractComponent
 		ComponentContext $context,
 		$data,
 		array $contentPath = [],
+		?string $label = null,
 	) : void
 	{
 		foreach ($this->getFields()->getRootFields() as $name => $field)
@@ -178,7 +179,7 @@ abstract class AbstractComponent
 				$context,
 				[
 					...$contentPath,
-					\sprintf("Component(%s)", static::getKey()),
+					\sprintf("Component(%s, '%s')", static::getKey(), $label ?? "n/a"),
 					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,

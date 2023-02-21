@@ -42,7 +42,11 @@ abstract class Story
 	 */
 	public function validate (ComponentContext $context) : void
 	{
-		$this->rootComponent->validateData($context, $this->content);
+		$this->rootComponent->validateData(
+			$context,
+			$this->content,
+			label: $this->metaData->getFullSlug(),
+		);
 	}
 
 
