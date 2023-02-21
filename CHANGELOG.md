@@ -1,3 +1,9 @@
+1.4.4
+=====
+
+* (improvement) Add full slug as label to top-level components' validation path.
+
+
 1.4.3
 =====
 
