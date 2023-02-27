@@ -1,3 +1,9 @@
+1.4.5
+=====
+
+* (improvement) Try to use `cv` in the API client and remove the local rate limiter.
+
+
 1.4.4
 =====
 
