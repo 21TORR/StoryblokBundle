@@ -3,10 +3,9 @@
 namespace Torr\Storyblok\Api;
 
 use Symfony\Component\HttpClient\HttpOptions;
-use Symfony\Component\RateLimiter\LimiterInterface;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
@@ -16,12 +15,12 @@ use Torr\Storyblok\Release\ReleaseVersion;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Story\StoryFactory;
 
-final class ContentApi
+final class ContentApi implements ResetInterface
 {
 	private const API_URL = "https://api.storyblok.com/v2/cdn/";
 	private const STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
 	private readonly HttpClientInterface $client;
-	private readonly LimiterInterface $rateLimiter;
+	private ?int $cacheVersion = null;
 
 	/**
 	 */
@@ -30,10 +29,8 @@ final class ContentApi
 		private readonly StoryblokConfig $config,
 		private readonly StoryFactory $storyFactory,
 		private readonly ComponentManager $componentManager,
-		RateLimiterFactory $storyblokContentDeliveryLimiter,
 	)
 	{
-		$this->rateLimiter = $storyblokContentDeliveryLimiter->create();
 		$this->client = $client->withOptions(
 			(new HttpOptions())
 				->setBaseUri(self::API_URL)
@@ -55,10 +52,8 @@ final class ContentApi
 		array $query = [],
 	) : array
 	{
-		// ensure that we stay in the rate limit
-		$this->rateLimiter->consume()->wait();
-
 		$query["token"] = $this->config->getContentToken();
+		$query["cv"] = $this->getCacheVersion();
 
 		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
 		\ksort($query);
@@ -103,9 +98,6 @@ final class ContentApi
 		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
 	) : ?Story
 	{
-		// ensure that we stay in the rate limit
-		$this->rateLimiter->consume()->wait();
-
 		try
 		{
 			$identifier = \ltrim((string) $identifier, "/");
@@ -217,6 +209,7 @@ final class ContentApi
 		// force per_page to the maximum to minimize pagination
 		$query["per_page"] = 100;
 		$query["version"] = $version->value;
+		$query["cv"] = $this->getCacheVersion();
 
 		if (null !== $slug)
 		{
@@ -231,5 +224,49 @@ final class ContentApi
 		}
 
 		return $this->fetchStoriesResultPage($query);
+	}
+
+	/**
+	 * Returns the storyblok-internal cache version, which is used to increase the
+	 * cache rate in the following requests.
+	 */
+	private function getCacheVersion () : int
+	{
+		if (null !== $this->cacheVersion)
+		{
+			return $this->cacheVersion;
+		}
+
+		try
+		{
+			$response = $this->client->request(
+				"GET",
+				"stories",
+				(new HttpOptions())
+					->setQuery([
+						"per_page" => 1,
+						"token" => $this->config->getContentToken(),
+					])
+					->toArray(),
+			);
+
+			$data = $response->toArray();
+			return $this->cacheVersion = $data["cv"];
+		}
+		catch (ExceptionInterface $exception)
+		{
+			throw new ContentRequestFailedException(\sprintf(
+				"Failed to fetch cache version: %s",
+				$exception->getMessage(),
+			), previous: $exception);
+		}
+	}
+
+	/**
+	 * Resets the service
+	 */
+	public function reset () : void
+	{
+		$this->cacheVersion = null;
 	}
 }
