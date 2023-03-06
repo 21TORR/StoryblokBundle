@@ -1,3 +1,10 @@
+2.1.0
+=====
+
+* (improvement) Always sort Stories by their internal `position` field.
+* (feature) Expose internal `position` via `StoryMetaData::getPosition()`.
+
+
 2.0.1
 =====
 
