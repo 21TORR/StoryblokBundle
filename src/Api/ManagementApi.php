@@ -51,14 +51,12 @@ final class ManagementApi
 
 			$config["component_group_uuid"] = $this->getOrCreatedComponentGroupUuid($componentGroupLabel);
 
-			$options = (new HttpOptions())
-				->setHeaders([
-					"Authorization" => $this->config->getManagementToken(),
-				])
+			$options = $this->generateBaseOptions()
 				->setJson([
 					"component" => $config,
 				])
 				->toArray();
+
 			$componentId = $this->getComponentIdMap()->getComponentId($config["name"]);
 
 			$response = null !== $componentId
@@ -132,6 +130,50 @@ final class ManagementApi
 			throw new ApiRequestFailedException(\sprintf(
 				"Failed to fetch create component group '%s': %s",
 				$name,
+				$e->getMessage(),
+			), previous: $e);
+		}
+	}
+
+	/**
+	 * Fetches the map of local url to folder name
+	 *
+	 * @return array<string, string> Map of local url to title
+	 */
+	public function fetchFolderTitleMap (string $slugPrefix) : array
+	{
+		// include the trailing slash, to exclude the base directory
+		$slugPrefix = \trim($slugPrefix, "/") . "/";
+
+		$options = $this->generateBaseOptions()
+			->setQuery([
+				"folder_only" => true,
+				"starts_with" => $slugPrefix,
+				"per_page" => 100,
+			]);
+
+		try
+		{
+			$map = [];
+			$replacement = "~" . \preg_quote($slugPrefix, "~") . "~";
+
+			$response = $this->client->request("GET", "stories", $options->toArray());
+			$stories = $response->toArray()["stories"] ?? [];
+
+			// @todo paginate here
+			foreach ($stories as $entry)
+			{
+				// use heading slash to local url
+				$localSlug = "/" . \preg_replace($replacement, "", $entry["full_slug"]);
+				$map[$localSlug] = $entry["name"];
+			}
+
+			return $map;
+		}
+		catch (ExceptionInterface $e)
+		{
+			throw new ApiRequestFailedException(\sprintf(
+				"Failed to fetch folder title structure: %s",
 				$e->getMessage(),
 			), previous: $e);
 		}

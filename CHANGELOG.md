@@ -1,3 +1,9 @@
+1.5.0
+=====
+
+* (feature) Add management API method, to fetch the section title maps.
+
+
 1.4.5
 =====
 
