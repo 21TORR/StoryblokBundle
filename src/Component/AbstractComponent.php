@@ -166,7 +166,7 @@ abstract class AbstractComponent
 	 */
 	public function validateData (
 		ComponentContext $context,
-		$data,
+		mixed $data,
 		array $contentPath = [],
 		?string $label = null,
 	) : void
