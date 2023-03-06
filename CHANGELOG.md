@@ -1,7 +1,8 @@
-1.5.1 (unreleased)
+2.0.0 (unreleased)
 =====
 
 * (improvement) Add `StoryInterface`. 
+* (bc) Use `fullSlug` in `StoryLinkData`. 
 
 
 1.5.0

@@ -155,13 +155,11 @@ final class LinkField extends AbstractField
 
 			return null !== $id
 				? new StoryLinkData(
-					id: $id,
+					fullSlug: $data["cached_url"],
 					anchor: $context->normalizeOptionalString($data["anchor"] ?? null),
-					cachedUrl: $data["cached_url"],
 				)
 				: null;
 		}
-
 
 		if ("email" === $data["linktype"])
 		{
