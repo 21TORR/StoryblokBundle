@@ -4,6 +4,12 @@
 * (feature) Add management API method, to fetch the section title maps.
 
 
+1.4.6
+=====
+
+* (bug) Send correct key in order to set RegExp validation for Fields.
+
+
 1.4.5
 =====
 

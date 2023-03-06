@@ -118,7 +118,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 			"tooltip" => $this->descriptionAsTooltip,
 			"translatable" => $this->translatable,
 			"required" => $this->required,
-			"regexp" => $this->regexp,
+			"regex" => $this->regexp,
 			"can_sync" => $this->canSync,
 			"preview_field" => $this->isPreviewField,
 		];
