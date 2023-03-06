@@ -153,4 +153,9 @@ final class StoryMetaData
 
 		return $parsed;
 	}
+
+	public function getPosition () : ?int
+	{
+		return $this->data["position"] ?? null;
+	}
 }
