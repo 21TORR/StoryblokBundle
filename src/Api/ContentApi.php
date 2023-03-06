@@ -210,6 +210,7 @@ final class ContentApi implements ResetInterface
 		$query["per_page"] = 100;
 		$query["version"] = $version->value;
 		$query["cv"] = $this->getCacheVersion();
+		$query["sort_by"] ??= "position:asc";
 
 		if (null !== $slug)
 		{
