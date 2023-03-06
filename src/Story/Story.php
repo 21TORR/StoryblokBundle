@@ -6,7 +6,7 @@ use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
-abstract class Story
+abstract class Story implements StoryInterface
 {
 	protected readonly StoryMetaData $metaData;
 	protected readonly array $content;
@@ -24,6 +24,7 @@ abstract class Story
 	}
 
 	/**
+	 * @inheritDoc
 	 */
 	final public function getUuid () : string
 	{
@@ -31,10 +32,19 @@ abstract class Story
 	}
 
 	/**
+	 * @inheritDoc
 	 */
 	final public function getMetaData () : StoryMetaData
 	{
 		return $this->metaData;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	final public function getFullSlug () : string
+	{
+		return $this->metaData->getFullSlug();
 	}
 
 	/**

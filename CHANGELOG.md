@@ -1,3 +1,9 @@
+1.5.1 (unreleased)
+=====
+
+* (improvement) Add `StoryInterface`. 
+
+
 1.5.0
 =====
 
