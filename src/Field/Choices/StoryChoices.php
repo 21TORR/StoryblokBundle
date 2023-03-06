@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Field\Choices;
 
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Field\Data\Story\StoryReferenceList;
 use Torr\Storyblok\Field\Data\StoryReferenceData;
 
 /**
@@ -45,13 +46,22 @@ final class StoryChoices implements ChoicesInterface
 	}
 
 	/**
-	 * @return StoryReferenceData|array<StoryReferenceData>
 	 */
 	public function transformData (
 		ComponentContext $context,
 		array|int|string $data,
-	) : array|StoryReferenceData
+	) : StoryReferenceList|StoryReferenceData
 	{
-		return new StoryReferenceData($data, $this->referencedStoryDataMode);
+		if (!\is_array($data))
+		{
+			return new StoryReferenceData((string) $data, $this->referencedStoryDataMode);
+		}
+
+		return new StoryReferenceList(
+			\array_map(
+				fn (string $uuid) => new StoryReferenceData($uuid, $this->referencedStoryDataMode),
+				$data,
+			),
+		);
 	}
 }
