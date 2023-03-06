@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Field\Data;
 final class StoryReferenceData
 {
 	public function __construct (
-		public readonly string $uuid,
+		public readonly array $uuids,
 		public readonly string|\BackedEnum|null $dataMode,
 	) {}
 }
