@@ -3,6 +3,7 @@
 
 * (improvement) Add `StoryInterface`. 
 * (bc) Use `fullSlug` in `StoryLinkData`. 
+* (bc) Add support for multiple story ids in `StoryReferenceData`. 
 
 
 1.5.0

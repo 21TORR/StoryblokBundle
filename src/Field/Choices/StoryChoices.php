@@ -52,8 +52,10 @@ final class StoryChoices implements ChoicesInterface
 		array|int|string $data,
 	) : array|StoryReferenceData
 	{
-		return \is_array($data)
-			? \array_map(fn (string $storyUuid) => new StoryReferenceData($storyUuid, $this->referencedStoryDataMode), $data)
-			: new StoryReferenceData($data, $this->referencedStoryDataMode);
+		$uuids = \is_array($data)
+			? $data
+			: [$data];
+
+		return new StoryReferenceData($uuids, $this->referencedStoryDataMode);
 	}
 }
