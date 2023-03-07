@@ -3,7 +3,7 @@
 namespace Torr\Storyblok\Backend;
 
 use Torr\Storyblok\Config\StoryblokConfig;
-use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Story\StoryInterface;
 
 final class StoryblokBackendUrlGenerator
 {
@@ -16,7 +16,7 @@ final class StoryblokBackendUrlGenerator
 	/**
 	 * Generates the URL to the edit screen for the given story
 	 */
-	public function generateStoryEditUrl (Story $story) : string
+	public function generateStoryEditUrl (StoryInterface $story) : string
 	{
 		return \sprintf(
 			"https://app.storyblok.com/#/me/spaces/%d/stories/0/0/%d",
