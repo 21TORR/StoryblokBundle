@@ -1,3 +1,9 @@
+2.1.1
+=====
+
+* (improvement) Use `StoryInterface` instead of `Story` as parameter type in methods.
+
+
 2.1.0
 =====
 
