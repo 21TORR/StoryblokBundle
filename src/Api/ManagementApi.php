@@ -9,6 +9,7 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Api\Data\ApiActionPerformed;
 use Torr\Storyblok\Api\Data\ComponentIdMap;
+use Torr\Storyblok\Api\Data\FolderMetaData;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
 
@@ -138,7 +139,7 @@ final class ManagementApi
 	/**
 	 * Fetches the map of local url to folder name
 	 *
-	 * @return array<string, string> Map of local url to title
+	 * @return array<string, FolderMetaData> Map of local url to folder meta data
 	 */
 	public function fetchFolderTitleMap (string $slugPrefix) : array
 	{
@@ -150,6 +151,7 @@ final class ManagementApi
 				"folder_only" => true,
 				"starts_with" => $slugPrefix,
 				"per_page" => 100,
+				"sort_by" => "position:asc",
 			]);
 
 		try
@@ -165,7 +167,12 @@ final class ManagementApi
 			{
 				// use heading slash to local url
 				$localSlug = "/" . \preg_replace($replacement, "", $entry["full_slug"]);
-				$map[$localSlug] = $entry["name"];
+
+				$map[$localSlug] = new FolderMetaData(
+					$localSlug,
+					$entry["name"],
+					$entry["position"],
+				);
 			}
 
 			return $map;

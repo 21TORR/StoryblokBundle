@@ -1,3 +1,10 @@
+3.0.0
+=====
+
+* (bc) `ManagementApi::fetchFolderTitleMap()` now returns an `array<string, FolderMetaData>` instead of `array<string, string>`.
+* (feature) Add `FolderMetaData` in order to remember/store a folder's `position`. 
+
+
 2.1.1
 =====
 
