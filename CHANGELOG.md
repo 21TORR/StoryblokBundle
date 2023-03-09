@@ -1,3 +1,9 @@
+2.2.0
+=====
+
+* (feature) Add `FolderData` + `ManagementApi::fetchFoldersInPath()`.
+
+
 2.1.1
 =====
 

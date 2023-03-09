@@ -11,6 +11,7 @@ use Torr\Storyblok\Api\Data\ApiActionPerformed;
 use Torr\Storyblok\Api\Data\ComponentIdMap;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
+use Torr\Storyblok\Folder\FolderData;
 
 final class ManagementApi
 {
@@ -169,6 +170,46 @@ final class ManagementApi
 			}
 
 			return $map;
+		}
+		catch (ExceptionInterface $e)
+		{
+			throw new ApiRequestFailedException(\sprintf(
+				"Failed to fetch folder title structure: %s",
+				$e->getMessage(),
+			), previous: $e);
+		}
+	}
+
+	/**
+	 * Fetches all folders in a given slug path
+	 *
+	 * @return array<FolderData>
+	 */
+	public function fetchFoldersInPath (string $slugPrefix) : array
+	{
+		// include the trailing slash, to exclude the base directory
+		$slugPrefix = \trim($slugPrefix, "/") . "/";
+
+		$options = $this->generateBaseOptions()
+			->setQuery([
+				"folder_only" => true,
+				"starts_with" => $slugPrefix,
+				"per_page" => 100,
+			]);
+
+		try
+		{
+			$response = $this->client->request("GET", "stories", $options->toArray());
+			$stories = $response->toArray()["stories"] ?? [];
+			$result = [];
+
+			// @todo paginate here
+			foreach ($stories as $entry)
+			{
+				$result[] = new FolderData($entry);
+			}
+
+			return $result;
 		}
 		catch (ExceptionInterface $e)
 		{
