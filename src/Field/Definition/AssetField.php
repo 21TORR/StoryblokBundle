@@ -149,8 +149,11 @@ final class AssetField extends AbstractField
 
 		if (\is_array($data) && null !== $data["filename"])
 		{
+			$assetUrl = $data["filename"];
+			[$width, $height] = $context->extractImageDimensions($assetUrl);
+
 			$transformed = new AssetData(
-				url: $data["filename"],
+				url: $assetUrl,
 				id: $data["id"],
 				alt: $context->normalizeOptionalString($data["alt"] ?? null),
 				name: $context->normalizeOptionalString($data["name"] ?? null),
@@ -159,6 +162,8 @@ final class AssetField extends AbstractField
 				source: $context->normalizeOptionalString($data["source"] ?? null),
 				copyright: $context->normalizeOptionalString($data["copyright"] ?? null),
 				isExternal: $data["is_external_url"] ?? false,
+				width: $width,
+				height: $height,
 			);
 		}
 

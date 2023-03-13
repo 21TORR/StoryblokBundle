@@ -1,3 +1,9 @@
+2.3.0
+=====
+
+* (feature) Extract image dimensions from Storyblok URLs in `AssetData`.
+
+
 2.2.0
 =====
 
