@@ -5,6 +5,7 @@ namespace Torr\Storyblok\Context;
 use Psr\Log\LoggerInterface;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
@@ -18,6 +19,7 @@ final class ComponentContext
 		public readonly DataTransformer $dataTransformer,
 		public readonly LoggerInterface $logger,
 		public readonly DataValidator $validator,
+		public readonly ImageDimensionsExtractor $imageDimensionsExtractor,
 	) {}
 
 	/**
@@ -47,5 +49,13 @@ final class ComponentContext
 	public function normalizeOptionalString (?string $value) : ?string
 	{
 		return $this->dataTransformer->normalizeOptionalString($value);
+	}
+
+	/**
+	 * @return array{int|null, int|null}
+	 */
+	public function extractImageDimensions (string $imageUrl) : array
+	{
+		return $this->imageDimensionsExtractor->extractImageDimensions($imageUrl);
 	}
 }

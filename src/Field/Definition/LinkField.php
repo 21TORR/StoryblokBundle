@@ -174,9 +174,13 @@ final class LinkField extends AbstractField
 		{
 			$url = $context->normalizeOptionalString($data["url"]);
 
-			return null !== $url
-				? new AssetLinkData($url)
-				: null;
+			if (null === $url)
+			{
+				return null;
+			}
+
+			[$width, $height] = $context->extractImageDimensions($url);
+			return new AssetLinkData($url, $width, $height);
 		}
 
 		// "url" === $data["linktype"]

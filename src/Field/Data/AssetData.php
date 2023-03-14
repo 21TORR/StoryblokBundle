@@ -16,5 +16,7 @@ final class AssetData
 		public readonly ?string $source = null,
 		public readonly ?string $copyright = null,
 		public readonly bool $isExternal = false,
+		public readonly ?int $width = null,
+		public readonly ?int $height = null,
 	) {}
 }
