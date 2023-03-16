@@ -2,10 +2,13 @@
 
 namespace Torr\Storyblok\Api;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
@@ -29,6 +32,7 @@ final class ContentApi implements ResetInterface
 		private readonly StoryblokConfig $config,
 		private readonly StoryFactory $storyFactory,
 		private readonly ComponentManager $componentManager,
+		private readonly LoggerInterface $logger,
 	)
 	{
 		$this->client = $client->withOptions(
@@ -38,55 +42,6 @@ final class ContentApi implements ResetInterface
 		);
 	}
 
-	/**
-	 * Fetches stories.
-	 *
-	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
-	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
-	 *
-	 * @throws ContentRequestFailedException
-	 *
-	 * @return Story[]
-	 */
-	private function fetchStoriesResultPage (
-		array $query = [],
-	) : array
-	{
-		$query["token"] = $this->config->getContentToken();
-		$query["cv"] = $this->getCacheVersion();
-
-		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
-		\ksort($query);
-
-		try
-		{
-			$response = $this->client->request(
-				"GET",
-				"stories",
-				(new HttpOptions())
-					->setQuery($query)
-					->toArray(),
-			);
-
-			$data = $response->toArray();
-			$stories = [];
-
-			foreach ($data["stories"] as $storyData)
-			{
-				$stories[] = $this->storyFactory->createFromApiData($storyData);
-			}
-
-			// @todo return a paginated result here and automatically fetch all pages.
-			return $stories;
-		}
-		catch (ExceptionInterface $exception)
-		{
-			throw new ContentRequestFailedException(\sprintf(
-				"Content request failed: %s",
-				$exception->getMessage(),
-			), previous: $exception);
-		}
-	}
 
 	/**
 	 * Loads a single story.
@@ -224,7 +179,23 @@ final class ContentApi implements ResetInterface
 			$query["language"] = $locale;
 		}
 
-		return $this->fetchStoriesResultPage($query);
+		$result = [];
+		$page = 1;
+
+		do
+		{
+			$currentPage = $this->fetchStoriesResultPage($query, $page);
+
+			foreach ($currentPage->stories as $story)
+			{
+				$result[] = $story;
+			}
+
+			++$page;
+		}
+		while ($currentPage->totalPages >= $page);
+
+		return $result;
 	}
 
 	/**
@@ -258,6 +229,102 @@ final class ContentApi implements ResetInterface
 		{
 			throw new ContentRequestFailedException(\sprintf(
 				"Failed to fetch cache version: %s",
+				$exception->getMessage(),
+			), previous: $exception);
+		}
+	}
+
+	/**
+	 * Fetches stories.
+	 *
+	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
+	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
+	 *
+	 * @throws ContentRequestFailedException
+	 */
+	private function fetchStoriesResultPage (
+		array $query = [],
+		int $page = 1,
+		int $remainingRetries = 3,
+	) : PaginatedApiResult
+	{
+		$query["token"] = $this->config->getContentToken();
+		$query["cv"] = $this->getCacheVersion();
+		$query["page"] = $page;
+
+		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
+		\ksort($query);
+
+		try
+		{
+			$response = $this->client->request(
+				"GET",
+				"stories",
+				(new HttpOptions())
+					->setQuery($query)
+					->toArray(),
+			);
+
+			$data = $response->toArray();
+			$headers = $response->getHeaders();
+			$perPage = $headers["per-page"][0] ?? null;
+			$totalPages = $headers["total"][0] ?? null;
+			$stories = [];
+
+			if (
+				!\is_array($data["stories"])
+				|| !\ctype_digit($perPage)
+				|| !\ctype_digit($totalPages)
+			)
+			{
+				$this->logger->error("Content request failed: invalid response structure / missing headers", [
+					"query" => $query,
+					"headers" => $headers,
+					"response" => $response->getContent(false),
+				]);
+
+				throw new ContentRequestFailedException("Content request failed: invalid response structure / missing headers");
+			}
+
+			foreach ($data["stories"] as $storyData)
+			{
+				$stories[] = $this->storyFactory->createFromApiData($storyData);
+			}
+
+			return new PaginatedApiResult(
+				perPage: (int) $perPage,
+				totalPages: (int) $totalPages,
+				stories: $stories,
+			);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			// reduce number of remaining retries
+			--$remainingRetries;
+
+			if (
+				$remainingRetries > 0
+				&& $exception instanceof HttpExceptionInterface
+				&& 429 === $exception->getResponse()->getStatusCode()
+			)
+			{
+				$this->logger->debug("Encountered rate limit error, retrying", [
+					"query" => $query,
+				]);
+
+				// wait for 100ms before retrying
+				\usleep(100_000);
+
+				// retry
+				return $this->fetchStoriesResultPage(
+					$query,
+					$page,
+					$remainingRetries,
+				);
+			}
+
+			throw new ContentRequestFailedException(\sprintf(
+				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);
 		}
