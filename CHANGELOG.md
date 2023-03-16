@@ -1,3 +1,10 @@
+2.4.0
+=====
+
+* (feature) Add automatic pagination support in the content API.
+* (feature) Add automatic retry for the storyblok API.
+
+
 2.3.0
 =====
 
