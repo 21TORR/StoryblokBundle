@@ -1,3 +1,9 @@
+2.4.1
+=====
+
+* (bug) Fix validation for empty `BloksField`s.
+
+
 2.4.0
 =====
 

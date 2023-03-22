@@ -102,6 +102,13 @@ final class BloksField extends AbstractField
 			],
 		);
 
+		// Abort if the data is null. It either was catched above
+		// or otherwise it is an allowed state.
+		if (null === $data)
+		{
+			return;
+		}
+
 		// then validate nested structure
 		try
 		{
