@@ -1,14 +1,9 @@
-2.4.1
-=====
-
-* (bug) Fix validation for empty `BloksField`s.
-
-
 2.4.0
 =====
 
 * (feature) Add automatic pagination support in the content API.
 * (feature) Add automatic retry for the storyblok API.
+* (bug) Fix validation for empty `BloksField`s.
 
 
 2.3.0
