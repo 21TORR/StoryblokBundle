@@ -267,20 +267,24 @@ final class ContentApi implements ResetInterface
 
 			$data = $response->toArray();
 			$headers = $response->getHeaders();
-			$perPage = $headers["per-page"][0] ?? null;
-			$totalPages = $headers["total"][0] ?? null;
+			$perPage = $this->parseHeaderAsInt($headers, "per-page");
+			$totalNumberOfItems = $this->parseHeaderAsInt($headers, "total");
+
 			$stories = [];
 
 			if (
 				!\is_array($data["stories"])
-				|| !\ctype_digit($perPage)
-				|| !\ctype_digit($totalPages)
+				|| null === $perPage
+				|| null === $totalNumberOfItems
+				|| $perPage <= 0
 			)
 			{
 				$this->logger->error("Content request failed: invalid response structure / missing headers", [
 					"query" => $query,
 					"headers" => $headers,
 					"response" => $response->getContent(false),
+					"perPage" => $perPage,
+					"totalNumberOfItems" => $totalNumberOfItems,
 				]);
 
 				throw new ContentRequestFailedException("Content request failed: invalid response structure / missing headers");
@@ -292,8 +296,8 @@ final class ContentApi implements ResetInterface
 			}
 
 			return new PaginatedApiResult(
-				perPage: (int) $perPage,
-				totalPages: (int) $totalPages,
+				perPage: $perPage,
+				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
 				stories: $stories,
 			);
 		}
@@ -328,6 +332,20 @@ final class ContentApi implements ResetInterface
 				$exception->getMessage(),
 			), previous: $exception);
 		}
+	}
+
+	/**
+	 * Gets the first header as int/null
+	 *
+	 * @param string[][] $headers
+	 */
+	private function parseHeaderAsInt (array $headers, string $headerName) : ?int
+	{
+		$value = $headers[$headerName][0] ?? null;
+
+		return \ctype_digit($value)
+			? (int) $value
+			: null;
 	}
 
 	/**

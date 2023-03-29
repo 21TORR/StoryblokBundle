@@ -1,3 +1,9 @@
+2.4.1
+=====
+
+* (bug) Fix calculation of total number of pages of Storyblok API result.
+
+
 2.4.0
 =====
 
