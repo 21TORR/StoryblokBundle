@@ -60,6 +60,16 @@ class StaticChoices implements ChoicesInterface
 		?ComponentContext $context = null,
 	) : bool
 	{
-		return \in_array($data, $this->choices, true);
+		$values = \is_array($data) ? $data : [$data];
+
+		foreach ($values as $value)
+		{
+			if (!\in_array($value, $this->choices, true))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

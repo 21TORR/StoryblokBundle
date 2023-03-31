@@ -1,3 +1,9 @@
+2.4.2
+=====
+
+* (bug) Fix data validation in `StaticChoices`.
+
+
 2.4.1
 =====
 
