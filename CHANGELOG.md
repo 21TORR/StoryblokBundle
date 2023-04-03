@@ -1,3 +1,9 @@
+2.5.0
+=====
+
+* (feature) Add console command `storyblok:components:overview`.
+
+
 2.4.2
 =====
 
