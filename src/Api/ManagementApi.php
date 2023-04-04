@@ -220,6 +220,14 @@ final class ManagementApi
 		}
 	}
 
+	/**
+	 * Returns the ids of all registered components
+	 */
+	public function fetchAllRegisteredComponents () : array
+	{
+		return $this->getComponentIdMap()->getAllComponentKeys();
+	}
+
 
 	/**
 	 *

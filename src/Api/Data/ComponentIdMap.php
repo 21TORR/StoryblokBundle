@@ -57,4 +57,12 @@ final class ComponentIdMap
 	{
 		return $this->componentGroups[$name] ?? null;
 	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getAllComponentKeys () : array
+	{
+		return \array_keys($this->components);
+	}
 }
