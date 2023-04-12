@@ -108,18 +108,31 @@ final class RichTextField extends AbstractField
 	{
 		\assert(null === $data || \is_array($data));
 
-		$transformed = $data;
-
-		if (null !== $data
-			&& 1 === \count($data["content"])
-			// fetch the first (and only) content and check if it is empty
-			&& null === $context->dataTransformer->normalizeOptionalString($data["content"][0]["content"][0]["text"] ?? null)
-		)
-		{
-			$transformed = null;
-		}
+		$transformed = null !== $data && !$this->contentIsEmpty($data)
+			? $data
+			: null;
 
 		$dataVisitor?->onDataVisit($this, $transformed);
 		return $transformed;
+	}
+
+	/**
+	 * Checks whether the given content is empty
+	 */
+	private function contentIsEmpty (array $data) : bool
+	{
+		$paragraphs = $data["content"];
+
+		if (\count($paragraphs) > 1)
+		{
+			return false;
+		}
+
+		$firstItem = $data["content"][0] ?? [];
+		$firstItemType = $firstItem["type"] ?? null;
+		$firstItemContent = $firstItem["content"] ?? [];
+
+		return 0 === \count($firstItemContent) &&
+			\in_array($firstItemType, ["paragraph", "heading"], true);
 	}
 }
