@@ -1,3 +1,9 @@
+2.5.1
+=====
+
+* (bug) Fix empty check in `RichTextField`.
+
+
 2.5.0
 =====
 
