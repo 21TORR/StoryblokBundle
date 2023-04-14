@@ -1,3 +1,9 @@
+2.5.2
+=====
+
+* (improvement) Allow value-objects to be returned from `CompositeField::transformData()`.
+
+
 2.5.1
 =====
 

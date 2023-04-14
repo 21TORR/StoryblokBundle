@@ -61,7 +61,7 @@ abstract class CompositeField extends AbstractGroupingElement
 		ComponentContext $context,
 		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
-	) : array
+	) : mixed
 	{
 		$transformed = [];
 
