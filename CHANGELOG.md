@@ -1,3 +1,9 @@
+2.6.0
+=====
+
+* (bug) Fix invalid type definition.
+
+
 2.5.2
 =====
 

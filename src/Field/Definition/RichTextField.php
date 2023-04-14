@@ -19,7 +19,7 @@ final class RichTextField extends AbstractField
 	 * @param array<string>|ComponentsWithTags $filterComponents
 	 * @param array<string>                    $filterComponentGroups
 	 * @param array<RichTextStyling>           $toolbarOptions
-	 * @param array<array<string, string>>     $styleOptions
+	 * @param array<string, string>            $styleOptions
 	 */
 	public function __construct (
 		string $label,
