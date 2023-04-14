@@ -2,6 +2,7 @@
 =====
 
 * (bug) Fix invalid type definition.
+* (feature) Transform data of embedded blocks in RTE fields.
 
 
 2.5.2

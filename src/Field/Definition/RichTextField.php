@@ -112,8 +112,49 @@ final class RichTextField extends AbstractField
 			? $data
 			: null;
 
+		$content = $transformed["content"] ?? null;
+
+		if (\is_array($content))
+		{
+			$transformed["_bloks"] = $this->fetchBlockDataMap(
+				$transformed["content"],
+				$context,
+				$dataVisitor,
+			);
+		}
+
 		$dataVisitor?->onDataVisit($this, $transformed);
 		return $transformed;
+	}
+
+	/**
+	 * Transforms data of all embedded bloks
+	 */
+	private function fetchBlockDataMap (
+		array $content,
+		ComponentContext $context,
+		?DataVisitorInterface $dataVisitor = null,
+	) : array
+	{
+		$map = [];
+
+		foreach ($content as $section)
+		{
+			if ("blok" !== $section["type"])
+			{
+				continue;
+			}
+
+			$items = $section["attrs"]["body"] ?? [];
+
+			foreach ($items as $blok)
+			{
+				$component = $context->getComponentByKey($blok["component"]);
+				$map[$blok["_uid"]] = $component->transformData($blok, $context, $dataVisitor);
+			}
+		}
+
+		return $map;
 	}
 
 	/**
