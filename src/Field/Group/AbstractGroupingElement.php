@@ -92,7 +92,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 		ComponentContext $context,
 		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
-	) : array|InlinedTransformedData
+	) : mixed
 	{
 		$transformed = [];
 
