@@ -1,3 +1,9 @@
+2.6.1
+=====
+
+* (improvement) Also pass `uid` in `ComponentData`.
+
+
 2.6.0
 =====
 

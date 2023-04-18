@@ -5,6 +5,7 @@ namespace Torr\Storyblok\Validator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 
@@ -27,7 +28,7 @@ final class DataValidator
 	 */
 	public function ensureDataIsValid (
 		array $contentPath,
-		FieldDefinitionInterface $field,
+		FieldDefinitionInterface|AbstractComponent|null $field,
 		mixed $data,
 		array $constraints,
 	) : void

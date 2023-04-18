@@ -10,6 +10,7 @@ final class ComponentData
 	/**
 	 */
 	public function __construct (
+		public readonly string $uid,
 		public readonly string $type,
 		public readonly array $data,
 		public readonly mixed $previewData = null,

@@ -2,6 +2,9 @@
 
 namespace Torr\Storyblok\Component;
 
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Component\Data\ComponentData;
 use Torr\Storyblok\Component\Definition\ComponentDefinition;
@@ -133,7 +136,9 @@ abstract class AbstractComponent
 			}
 		}
 
+
 		return new ComponentData(
+			$data["_uid"],
 			static::getKey(),
 			$transformedData,
 			previewData: $previewData,
@@ -171,6 +176,36 @@ abstract class AbstractComponent
 		?string $label = null,
 	) : void
 	{
+		$contentPath = [
+			...$contentPath,
+			\sprintf("Component(%s, '%s')", static::getKey(), $label ?? "n/a"),
+		];
+
+		// validate base data
+		$context->validator->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new NotNull(),
+				new Type("array"),
+				new Collection(
+					fields: [
+						"_uid" => [
+							new NotNull(),
+							new Type("string"),
+						],
+						"component" => [
+							new NotNull(),
+							new Type("string"),
+						],
+					],
+					allowMissingFields: false,
+					allowExtraFields: true,
+				),
+			],
+		);
+
 		foreach ($this->getFields()->getRootFields() as $name => $field)
 		{
 			$fieldData = $data[$name] ?? null;
@@ -179,7 +214,6 @@ abstract class AbstractComponent
 				$context,
 				[
 					...$contentPath,
-					\sprintf("Component(%s, '%s')", static::getKey(), $label ?? "n/a"),
 					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,
