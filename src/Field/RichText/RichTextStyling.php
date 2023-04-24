@@ -45,4 +45,26 @@ enum RichTextStyling : string
 	case Image = "image";
 
 	case PasteMarkdown = "paste";
+
+	case Subscript = "subscript";
+
+	case Superscript = "superscript";
+
+	case Color = "color";
+
+	case Copy = "copy";
+
+	case Cut = "cut";
+
+	case Emoji = "emoji";
+
+	case Anchor = "anchor";
+
+	case Highlight = "highlight";
+
+	case Redo = "redo";
+
+	case Undo = "undo";
+
+	case PasteActions = "paste-action";
 }
