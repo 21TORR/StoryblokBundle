@@ -1,3 +1,9 @@
+2.6.2
+=====
+
+* (improvement) Add new `RichTextStyling` options.
+
+
 2.6.1
 =====
 
