@@ -21,13 +21,18 @@ final class ComponentSync
 	) {}
 
 	/**
+	 * @param bool $sync Whether the data should actually be synced to Storyblok (instead of just checking whether all could be normalized).
+	 *
 	 * @throws SyncFailedException
 	 */
-	public function syncDefinitions (TorrStyle $io) : void
+	public function syncDefinitions (
+		TorrStyle $io,
+		bool $sync = false,
+	) : void
 	{
 		try
 		{
-			$this->syncComponents($io);
+			$this->syncComponents($io, $sync);
 		}
 		catch (InvalidComponentConfigurationException|ApiRequestException $exception)
 		{
@@ -38,7 +43,10 @@ final class ComponentSync
 	/**
 	 * Syncs all components
 	 */
-	private function syncComponents (TorrStyle $io) : void
+	private function syncComponents (
+		TorrStyle $io,
+		bool $sync = false,
+	) : void
 	{
 		$normalized = [];
 
@@ -59,6 +67,11 @@ final class ComponentSync
 			);
 
 			$io->writeln("done <fg=green>✓</>");
+		}
+
+		if (!$sync)
+		{
+			return;
 		}
 
 		// then import
