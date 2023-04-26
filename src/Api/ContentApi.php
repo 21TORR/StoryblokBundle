@@ -9,6 +9,7 @@ use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
+use Torr\Storyblok\Api\Data\SpaceInfo;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
@@ -23,7 +24,7 @@ final class ContentApi implements ResetInterface
 	private const API_URL = "https://api.storyblok.com/v2/cdn/";
 	private const STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
 	private readonly HttpClientInterface $client;
-	private ?int $cacheVersion = null;
+	private ?SpaceInfo $spaceInfo = null;
 	/** @var array<string, string> */
 	private array $uuidToSlugCache = [];
 
@@ -166,7 +167,7 @@ final class ContentApi implements ResetInterface
 		// force per_page to the maximum to minimize pagination
 		$query["per_page"] = 100;
 		$query["version"] = $version->value;
-		$query["cv"] = $this->getCacheVersion();
+		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["sort_by"] ??= "position:asc";
 
 		if (null !== $slug)
@@ -223,36 +224,33 @@ final class ContentApi implements ResetInterface
 	}
 
 	/**
-	 * Returns the storyblok-internal cache version, which is used to increase the
-	 * cache rate in the following requests.
 	 */
-	private function getCacheVersion () : int
+	public function getSpaceInfo () : SpaceInfo
 	{
-		if (null !== $this->cacheVersion)
+		if (null !== $this->spaceInfo)
 		{
-			return $this->cacheVersion;
+			return $this->spaceInfo;
 		}
 
 		try
 		{
 			$response = $this->client->request(
 				"GET",
-				"stories",
+				"spaces/me/",
 				(new HttpOptions())
 					->setQuery([
-						"per_page" => 1,
 						"token" => $this->config->getContentToken(),
 					])
 					->toArray(),
 			);
 
 			$data = $response->toArray();
-			return $this->cacheVersion = $data["cv"];
+			return $this->spaceInfo = new SpaceInfo($data["space"]);
 		}
 		catch (ExceptionInterface $exception)
 		{
 			throw new ContentRequestFailedException(\sprintf(
-				"Failed to fetch cache version: %s",
+				"Failed to fetch space info: %s",
 				$exception->getMessage(),
 			), previous: $exception);
 		}
@@ -273,7 +271,7 @@ final class ContentApi implements ResetInterface
 	) : PaginatedApiResult
 	{
 		$query["token"] = $this->config->getContentToken();
-		$query["cv"] = $this->getCacheVersion();
+		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["page"] = $page;
 
 		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
@@ -377,7 +375,7 @@ final class ContentApi implements ResetInterface
 	 */
 	public function reset () : void
 	{
-		$this->cacheVersion = null;
+		$this->spaceInfo = null;
 		$this->uuidToSlugCache = [];
 	}
 }
