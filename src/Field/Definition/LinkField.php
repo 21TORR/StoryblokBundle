@@ -98,10 +98,6 @@ final class LinkField extends AbstractField
 							new NotNull(),
 							new IdenticalTo($this->getInternalStoryblokType()->value),
 						],
-						"cached_url" => [
-							new NotNull(),
-							new Type("string"),
-						],
 					],
 					allowExtraFields: true,
 					allowMissingFields: false,
@@ -152,10 +148,14 @@ final class LinkField extends AbstractField
 		if ("story" === $data["linktype"])
 		{
 			$id = $context->normalizeOptionalString($data["id"]);
+			$fullSlug = $id
+				? $context->fetchFullSlugByUuid($id)
+				: null;
 
-			return null !== $id
+			// we have the cached_url in the data here, but we can't rely on it, as it might be out of date
+			return null !== $fullSlug
 				? new StoryLinkData(
-					fullSlug: $data["cached_url"],
+					fullSlug: $fullSlug,
 					anchor: $context->normalizeOptionalString($data["anchor"] ?? null),
 				)
 				: null;

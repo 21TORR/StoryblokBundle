@@ -24,6 +24,8 @@ final class ContentApi implements ResetInterface
 	private const STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
 	private readonly HttpClientInterface $client;
 	private ?int $cacheVersion = null;
+	/** @var array<string, string> */
+	private array $uuidToSlugCache = [];
 
 	/**
 	 */
@@ -199,6 +201,28 @@ final class ContentApi implements ResetInterface
 	}
 
 	/**
+	 * Fetches the full slug of the story by its id
+	 */
+	public function fetchFullSlugByUuid (string|int $identifier) : string|null
+	{
+		if (isset($this->uuidToSlugCache[$identifier]))
+		{
+			return $this->uuidToSlugCache[$identifier];
+		}
+
+		$story = $this->fetchSingleStory($identifier, ReleaseVersion::DRAFT);
+
+		if (null === $story)
+		{
+			return null;
+		}
+
+		$this->uuidToSlugCache[$story->getUuid()] = $story->getFullSlug();
+		$this->uuidToSlugCache[$story->getMetaData()->getId()] = $story->getFullSlug();
+		return $story->getFullSlug();
+	}
+
+	/**
 	 * Returns the storyblok-internal cache version, which is used to increase the
 	 * cache rate in the following requests.
 	 */
@@ -354,5 +378,6 @@ final class ContentApi implements ResetInterface
 	public function reset () : void
 	{
 		$this->cacheVersion = null;
+		$this->uuidToSlugCache = [];
 	}
 }
