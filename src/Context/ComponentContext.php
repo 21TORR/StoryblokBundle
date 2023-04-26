@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Context;
 
 use Psr\Log\LoggerInterface;
+use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
@@ -20,6 +21,7 @@ final class ComponentContext
 		public readonly LoggerInterface $logger,
 		public readonly DataValidator $validator,
 		public readonly ImageDimensionsExtractor $imageDimensionsExtractor,
+		public readonly ContentApi $contentApi,
 	) {}
 
 	/**
@@ -57,5 +59,13 @@ final class ComponentContext
 	public function extractImageDimensions (string $imageUrl) : array
 	{
 		return $this->imageDimensionsExtractor->extractImageDimensions($imageUrl);
+	}
+
+	/**
+	 * @see ContentApi::fetchFullSlugByUuid()
+	 */
+	public function fetchFullSlugByUuid (string|int $identifier) : string|null
+	{
+		return $this->contentApi->fetchFullSlugByUuid($identifier);
 	}
 }
