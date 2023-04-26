@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Context;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
@@ -13,6 +14,8 @@ use Torr\Storyblok\Validator\DataValidator;
 
 final class ComponentContext
 {
+	public ?ContentApi $contentApi = null;
+
 	/**
 	 */
 	public function __construct (
@@ -21,8 +24,18 @@ final class ComponentContext
 		public readonly LoggerInterface $logger,
 		public readonly DataValidator $validator,
 		public readonly ImageDimensionsExtractor $imageDimensionsExtractor,
-		public readonly ContentApi $contentApi,
 	) {}
+
+	/**
+	 * This setter is only required, as we need to break a circular service definition.
+	 *
+	 * @internal
+	 */
+	#[Required]
+	public function setContentApi (ContentApi $contentApi) : void
+	{
+		$this->contentApi = $contentApi;
+	}
 
 	/**
 	 * @see DataValidator::ensureDataIsValid()
@@ -66,6 +79,8 @@ final class ComponentContext
 	 */
 	public function fetchFullSlugByUuid (string|int $identifier) : string|null
 	{
+		// the content api is already set by the DI container
+		\assert(null !== $this->contentApi);
 		return $this->contentApi->fetchFullSlugByUuid($identifier);
 	}
 }
