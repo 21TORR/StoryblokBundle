@@ -1,7 +1,7 @@
 3.0.0 (unreleased)
 =====
 
-* (improvement) Show space id when syncing definitions.
+* (improvement) Show space info when syncing definitions.
 * (feature) Add dry-run mode for component sync.
 * (bc) Enable dry run mode by default.
 * (bug) Fix `full_slug` link field, by fetching it fresh from the API. 

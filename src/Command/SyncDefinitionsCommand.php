@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
-use Torr\Storyblok\Config\StoryblokConfig;
+use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Manager\Sync\ComponentSync;
 
@@ -20,7 +20,7 @@ final class SyncDefinitionsCommand extends Command
 	 */
 	public function __construct (
 		private readonly ComponentSync $componentSync,
-		private readonly StoryblokConfig $config,
+		private readonly ContentApi $contentApi,
 	)
 	{
 		parent::__construct();
@@ -33,7 +33,7 @@ final class SyncDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Syncs the local component definitions to storyblok")
-			->addOption("sync", null, InputOption::VALUE_NONE, "Whether to actually sync");
+			->addOption("force", null, InputOption::VALUE_NONE, "Whether to force sync");
 	}
 
 	/**
@@ -44,13 +44,22 @@ final class SyncDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
+		$spaceInfo = $this->contentApi->getSpaceInfo();
+
 		$io->comment(\sprintf(
-			"Syncing components for space <fg=magenta>%d</>\n<fg=gray>%s</>",
-			$this->config->getSpaceId(),
-			$this->config->getStoryblokSpaceUrl(),
+			"Syncing components for space <fg=magenta>%s</> (<fg=yellow>%d</>)\n<fg=gray>%s</>",
+			$spaceInfo->getName(),
+			$spaceInfo->getId(),
+			$spaceInfo->getBackendDashboardUrl(),
 		));
 
-		$sync = $input->getOption("sync");
+
+		$sync = $input->getOption("force");
+
+		if (!$sync)
+		{
+			$sync = $io->confirm("Should the data really be synced?", false);
+		}
 
 		try
 		{
