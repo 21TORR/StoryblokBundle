@@ -1,5 +1,5 @@
-3.0.0 (unreleased)
-=====
+3.0.0-beta.1
+============
 
 * (improvement) Show space info when syncing definitions.
 * (feature) Add dry-run mode for component sync.
