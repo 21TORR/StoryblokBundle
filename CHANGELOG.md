@@ -1,3 +1,9 @@
+2.6.3 (unreleased)
+=====
+
+* (improvement) Show space id when syncing definitions.
+
+
 2.6.2
 =====
 
