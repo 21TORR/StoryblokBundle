@@ -1,9 +1,11 @@
-2.6.3 (unreleased)
+3.0.0 (unreleased)
 =====
 
 * (improvement) Show space id when syncing definitions.
+* (feature) Add dry-run mode for component sync.
+* (bc) Enable dry run mode by default
 
-
+ 
 2.6.2
 =====
 
