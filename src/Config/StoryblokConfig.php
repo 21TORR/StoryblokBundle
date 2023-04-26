@@ -50,5 +50,10 @@ final class StoryblokConfig
 		return $this->contentToken;
 	}
 
-
+	/**
+	 */
+	public function getStoryblokSpaceUrl () : string
+	{
+		return \sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->getSpaceId());
+	}
 }

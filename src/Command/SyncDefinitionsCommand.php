@@ -7,6 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Manager\Sync\ComponentSync;
 
@@ -18,6 +19,7 @@ final class SyncDefinitionsCommand extends Command
 	 */
 	public function __construct (
 		private readonly ComponentSync $componentSync,
+		private readonly StoryblokConfig $config,
 	)
 	{
 		parent::__construct();
@@ -30,6 +32,12 @@ final class SyncDefinitionsCommand extends Command
 	{
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
+
+		$io->comment(\sprintf(
+			"Syncing components for space <fg=blue>%d\n<fg=gray>%s</>",
+			$this->config->getSpaceId(),
+			$this->config->getStoryblokSpaceUrl(),
+		));
 
 		try
 		{
