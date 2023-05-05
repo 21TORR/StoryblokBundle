@@ -65,7 +65,12 @@ final class ComponentManager
 
 		foreach ($this->getAllComponents() as $component)
 		{
-			$componentTags = $component->getTags();
+			$componentTags = \array_map(
+				static fn (string|\BackedEnum $tag) => $tag instanceof \BackedEnum
+					? $tag->value
+					: $tag,
+				$component->getTags(),
+			);
 
 			if (!empty(\array_intersect($tags, $componentTags)))
 			{
