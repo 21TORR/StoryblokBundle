@@ -1,3 +1,9 @@
+3.0.0-beta.2
+============
+
+* (bug) Resolve inline `*LinkData` from within a `RichTextField` to their correct destination.
+
+
 3.0.0-beta.1
 ============
 
