@@ -1,3 +1,9 @@
+3.0.0-beta.1
+============
+
+* (improvement) Allow returning enums in `AbstractComponent::getTags()`.
+
+
 3.0.0-beta.0
 ============
 

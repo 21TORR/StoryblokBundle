@@ -68,7 +68,7 @@ abstract class AbstractComponent
 	/**
 	 * Returns the tags of this component
 	 *
-	 * @return string[]
+	 * @return array<string|\BackedEnum>
 	 */
 	public function getTags () : array
 	{
