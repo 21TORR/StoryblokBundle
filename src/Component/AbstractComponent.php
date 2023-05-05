@@ -200,8 +200,8 @@ abstract class AbstractComponent
 							new Type("string"),
 						],
 					],
-					allowMissingFields: false,
 					allowExtraFields: true,
+					allowMissingFields: false,
 				),
 			],
 		);
