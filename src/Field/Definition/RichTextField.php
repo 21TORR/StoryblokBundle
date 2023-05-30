@@ -7,6 +7,10 @@ use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
+use Torr\Storyblok\Field\Data\RichTextAssetLinkData;
+use Torr\Storyblok\Field\Data\RichTextEmailLinkData;
+use Torr\Storyblok\Field\Data\RichTextExternalLinkData;
+use Torr\Storyblok\Field\Data\RichTextStoryLinkData;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\RichText\RichTextStyling;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -117,10 +121,12 @@ final class RichTextField extends AbstractField
 		if (\is_array($content))
 		{
 			$transformed["_bloks"] = $this->fetchBlockDataMap(
-				$transformed["content"],
+				$content,
 				$context,
 				$dataVisitor,
 			);
+
+			$transformed["content"] = $this->transformRichTextContent($context, $content);
 		}
 
 		$dataVisitor?->onDataVisit($this, $transformed);
@@ -175,5 +181,170 @@ final class RichTextField extends AbstractField
 
 		return 0 === \count($firstItemContent) &&
 			\in_array($firstItemType, ["paragraph", "heading"], true);
+	}
+
+	private function transformRichTextContent (
+		ComponentContext $context,
+		array $richText,
+	) : array
+	{
+		$transformed = [];
+
+		foreach ($richText as $section)
+		{
+			$transformed[] = $this->transformSection($context, $section);
+		}
+
+		return $transformed;
+	}
+
+	private function transformSection (
+		ComponentContext $context,
+		array $section,
+	) : array
+	{
+		if ("paragraph" !== $section["type"])
+		{
+			return $section;
+		}
+
+		$sectionContent = $section["content"] ?? null;
+
+		if (!\is_array($sectionContent))
+		{
+			return $section;
+		}
+
+		$transformed = [];
+
+		foreach ($sectionContent as $paragraph)
+		{
+			$transformed[] = $this->transformParagraph($context, $paragraph);
+		}
+
+		$section["content"] = $transformed;
+
+		return $section;
+	}
+
+	private function transformParagraph (
+		ComponentContext $context,
+		array $paragraph,
+	) : array
+	{
+		if ("text" !== $paragraph["type"])
+		{
+			return $paragraph;
+		}
+
+		$marks = $paragraph["marks"] ?? null;
+
+		if (!\is_array($marks))
+		{
+			return $paragraph;
+		}
+
+		$paragraph["marks"] = $this->transformLinksInMarks($context, $marks);
+
+		return $paragraph;
+	}
+
+	private function transformLinksInMarks (
+		ComponentContext $context,
+		array $marks,
+	) : array
+	{
+		$transformed = [];
+
+		foreach ($marks as $mark)
+		{
+			if ("link" === $mark["type"])
+			{
+				$transformedLinkData = $this->transformLinkToLinkData($context, $mark["attrs"]);
+
+				if (null === $transformedLinkData)
+				{
+					continue;
+				}
+
+				$mark["attrs"] = $transformedLinkData;
+			}
+
+			$transformed[] = $mark;
+		}
+
+		return $transformed;
+	}
+
+	/**
+	 * Transforms the data array of a Story link to use the resolved, non-cached URL as Storyblok doesn't know
+	 * about dynamically generated URLs.
+	 */
+	private function transformLinkToLinkData (
+		ComponentContext $context,
+		array $data,
+	) : RichTextAssetLinkData|RichTextEmailLinkData|RichTextExternalLinkData|RichTextStoryLinkData|null
+	{
+		if ("story" === $data["linktype"])
+		{
+			$uuid = $context->normalizeOptionalString($data["uuid"]);
+			$fullSlug = $uuid
+				? $context->fetchFullSlugByUuid($uuid)
+				: null;
+
+			// we have the cached_url in the data here, but we can't rely on it, as it might be out of date
+			return null !== $fullSlug
+				? new RichTextStoryLinkData(
+					uuid: $data["uuid"],
+					fullSlug: $fullSlug,
+					anchor: $data["anchor"],
+					target: $data["target"],
+				)
+				: null;
+		}
+
+		if ("email" === $data["linktype"])
+		{
+			$email = $context->normalizeOptionalString($data["href"]);
+
+			return null !== $email
+				? new RichTextEmailLinkData(
+					uuid: $data["uuid"],
+					email: $email,
+					anchor: $data["anchor"],
+					target: $data["target"],
+				)
+				: null;
+		}
+
+		if ("asset" === $data["linktype"])
+		{
+			$url = $context->normalizeOptionalString($data["href"]);
+
+			if (null === $url)
+			{
+				return null;
+			}
+
+			return new RichTextAssetLinkData(
+				uuid: $data["uuid"],
+				url: $url,
+				anchor: $data["anchor"],
+				target: $data["target"],
+				custom: $data["custom"] ?? null,
+			);
+		}
+
+		// "url" === $data["linktype"]
+		$href = $context->normalizeOptionalString($data["href"]);
+
+		return null !== $href
+			? new RichTextExternalLinkData(
+				uuid: $data["uuid"],
+				href: $href,
+				anchor: $data["anchor"],
+				target: $data["target"],
+			)
+			: null;
 	}
 }
