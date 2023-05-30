@@ -1,13 +1,8 @@
-3.0.0-beta.2
-============
-
-* (bug) Resolve inline `*LinkData` from within a `RichTextField` to their correct destination.
-
-
 3.0.0-beta.1
 ============
 
 * (improvement) Allow returning enums in `AbstractComponent::getTags()`.
+* (bug) Resolve inline `*LinkData` from within a `RichTextField` to their correct destination.
 
 
 3.0.0-beta.0
