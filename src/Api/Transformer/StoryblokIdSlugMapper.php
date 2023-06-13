@@ -7,7 +7,7 @@ use Torr\Storyblok\Api\ContentApi;
 
 final class StoryblokIdSlugMapper implements ResetInterface
 {
-	/** @var array<string, string>|null */
+	/** @var array<string|int, string>|null */
 	private ?array $map = null;
 
 
@@ -19,14 +19,14 @@ final class StoryblokIdSlugMapper implements ResetInterface
 
 	/**
 	 */
-	public function getFullSlugById (string $id) : ?string
+	public function getFullSlugById (string|int $id) : ?string
 	{
 		return $this->getMap()[$id] ?? null;
 	}
 
 
 	/**
-	 * @return array<string, string>
+	 * @return array<string|int, string>
 	 */
 	private function getMap () : array
 	{
@@ -35,7 +35,7 @@ final class StoryblokIdSlugMapper implements ResetInterface
 
 
 	/**
-	 * @return array<string, string>
+	 * @return array<string|int, string>
 	 */
 	private function fetchMap () : array
 	{

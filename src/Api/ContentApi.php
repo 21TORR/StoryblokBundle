@@ -139,6 +139,7 @@ final class ContentApi implements ResetInterface
 			}
 		}
 
+		/** @var array<TStory> $result */
 		return $result;
 	}
 
