@@ -1,3 +1,9 @@
+3.0.0-beta.3
+============
+
+* (feature) Add generic `RichTextTransformer`.
+
+
 3.0.0-beta.2
 ============
 
