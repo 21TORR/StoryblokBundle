@@ -288,19 +288,13 @@ final class RichTextField extends AbstractField
 		if ("story" === $data["linktype"])
 		{
 			$uuid = $context->normalizeOptionalString($data["uuid"]);
-			$fullSlug = $uuid
-				? $context->fetchFullSlugByUuid($uuid)
-				: null;
 
 			// we have the cached_url in the data here, but we can't rely on it, as it might be out of date
-			return null !== $fullSlug
-				? new RichTextStoryLinkData(
-					uuid: $data["uuid"],
-					fullSlug: $fullSlug,
-					anchor: $data["anchor"],
-					target: $data["target"],
-				)
-				: null;
+			return new RichTextStoryLinkData(
+				uuid: $data["uuid"],
+				anchor: $data["anchor"],
+				target: $data["target"],
+			);
 		}
 
 		if ("email" === $data["linktype"])
