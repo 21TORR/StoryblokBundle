@@ -1,3 +1,10 @@
+3.0.0-beta.3
+============
+
+* (feature) Add generic `RichTextTransformer`.
+* (bug) Add `LinkMarksRichTextTransformer` and replace custom implementation, to cover more cases.
+
+
 3.0.0-beta.2
 ============
 

@@ -9,6 +9,7 @@ services:
              - ../src/Api/Data
              - ../src/Exception
              - ../src/Field
+             - ../src/RichText
              - ../src/TorrStoryblokBundle.php
 
     Torr\Storyblok\Config\StoryblokConfig:
