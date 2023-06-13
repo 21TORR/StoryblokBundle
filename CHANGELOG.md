@@ -1,3 +1,9 @@
+3.0.0-beta.2
+============
+
+* (improvement) Add a service that can bulk-transform id/uuids to full slugs.
+
+
 3.0.0-beta.1
 ============
 

@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Context;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Service\Attribute\Required;
-use Torr\Storyblok\Api\ContentApi;
+use Torr\Storyblok\Api\Transformer\StoryblokIdSlugMapper;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
@@ -14,7 +14,7 @@ use Torr\Storyblok\Validator\DataValidator;
 
 final class ComponentContext
 {
-	public ?ContentApi $contentApi = null;
+	public ?StoryblokIdSlugMapper $storyblokIdSlugMapper = null;
 
 	/**
 	 */
@@ -32,9 +32,9 @@ final class ComponentContext
 	 * @internal
 	 */
 	#[Required]
-	public function setContentApi (ContentApi $contentApi) : void
+	public function setStoryblokIdSlugMapper (StoryblokIdSlugMapper $storyblokIdSlugMapper) : void
 	{
-		$this->contentApi = $contentApi;
+		$this->storyblokIdSlugMapper = $storyblokIdSlugMapper;
 	}
 
 	/**
@@ -75,12 +75,12 @@ final class ComponentContext
 	}
 
 	/**
-	 * @see ContentApi::fetchFullSlugByUuid()
+	 * @see StoryblokIdSlugMapper::getFullSlugById()
 	 */
 	public function fetchFullSlugByUuid (string|int $identifier) : string|null
 	{
 		// the content api is already set by the DI container
-		\assert(null !== $this->contentApi);
-		return $this->contentApi->fetchFullSlugByUuid($identifier);
+		\assert(null !== $this->storyblokIdSlugMapper);
+		return $this->storyblokIdSlugMapper->getFullSlugById($identifier);
 	}
 }
