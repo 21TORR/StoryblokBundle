@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Field\Data;
 final class StoryLinkData
 {
 	public function __construct (
-		public readonly string $fullSlug,
+		public readonly string $id,
 		public readonly ?string $anchor,
 	) {}
 }
