@@ -2,6 +2,7 @@
 ============
 
 * (improvement) Add a service that can bulk-transform id/uuids to full slugs.
+* (bc) Only pass the `id` in `StoryLinkData` to improve performance of fetching Storyblok data.
 
 
 3.0.0-beta.1

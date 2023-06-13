@@ -148,17 +148,12 @@ final class LinkField extends AbstractField
 		if ("story" === $data["linktype"])
 		{
 			$id = $context->normalizeOptionalString($data["id"]);
-			$fullSlug = $id
-				? $context->fetchFullSlugByUuid($id)
-				: null;
 
 			// we have the cached_url in the data here, but we can't rely on it, as it might be out of date
-			return null !== $fullSlug
-				? new StoryLinkData(
-					fullSlug: $fullSlug,
-					anchor: $context->normalizeOptionalString($data["anchor"] ?? null),
-				)
-				: null;
+			return new StoryLinkData(
+				id: $id,
+				anchor: $context->normalizeOptionalString($data["anchor"] ?? null),
+			);
 		}
 
 		if ("email" === $data["linktype"])
