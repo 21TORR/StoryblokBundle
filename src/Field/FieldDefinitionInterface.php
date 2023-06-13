@@ -37,7 +37,7 @@ interface FieldDefinitionInterface
 	 * @param T     $data
 	 * @param array $fullData The full data for the component
 	 *
-	 * @return T|InlinedTransformedData
+	 * @return T|InlinedTransformedData|mixed
 	 */
 	public function transformData (
 		mixed $data,
