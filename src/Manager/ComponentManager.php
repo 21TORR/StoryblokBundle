@@ -23,7 +23,7 @@ final class ComponentManager
 	public function getAllComponents () : array
 	{
 		return \array_map(
-			fn (string $key) => $this->components->get($key),
+			fn (string $key) => $this->getComponent($key),
 			\array_keys($this->components->getProvidedServices()),
 		);
 	}
@@ -91,7 +91,10 @@ final class ComponentManager
 	{
 		try
 		{
-			return $this->components->get($key);
+			$component = $this->components->get($key);
+			\assert($component instanceof AbstractComponent);
+
+			return $component;
 		}
 		catch (ServiceNotFoundException $exception)
 		{

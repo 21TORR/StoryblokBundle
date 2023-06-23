@@ -109,6 +109,8 @@ final class BloksField extends AbstractField
 			return;
 		}
 
+		\assert(\is_array($data));
+
 		// then validate nested structure
 		try
 		{
@@ -154,6 +156,8 @@ final class BloksField extends AbstractField
 		{
 			foreach ($data as $componentData)
 			{
+				\assert(\is_array($componentData));
+
 				$component = $context->getComponentByKey($componentData["component"]);
 				$transformed[] = $component->transformData($componentData, $context, $dataVisitor);
 			}

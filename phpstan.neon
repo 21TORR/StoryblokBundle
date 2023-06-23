@@ -2,4 +2,4 @@ includes:
     - vendor-bin/test/vendor/21torr/php-cs/phpstan/lib.neon
 
 parameters:
-    level: 8
+    level: 9

@@ -54,7 +54,7 @@ final class SyncDefinitionsCommand extends Command
 		));
 
 
-		$sync = $input->getOption("force");
+		$sync = (bool) $input->getOption("force");
 
 		if (!$sync)
 		{
