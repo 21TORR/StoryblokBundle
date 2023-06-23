@@ -34,16 +34,10 @@ jobs:
             -   name: Install Composer
                 run: composer install --optimize-autoloader --classmap-authoritative --no-interaction
 
-            -   name: Composer Normalize
-                run: composer-normalize --indent-style tab --indent-size 1 --dry-run --ansi
+            -   name: Lint
+                run: composer run-script lint
 
-            -   name: PHP CS Fixer
-                run: "./vendor/bin/php-cs-fixer fix --diff --config vendor-bin/cs-fixer/vendor/21torr/php-cs-fixer/.php-cs-fixer.dist.php --dry-run --no-interaction --ansi --format=checkstyle"
+            -   name: Test Suite
+                run: composer run-script test
                 env:
                     PHP_CS_FIXER_IGNORE_ENV: 1
-
-            -   name: PHPStan
-                run: "./vendor/bin/phpstan analyze -c phpstan.neon . --ansi"
-
-            -   name: PHPUnit
-                run: "./vendor/bin/phpunit"
