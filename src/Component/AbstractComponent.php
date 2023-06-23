@@ -206,6 +206,8 @@ abstract class AbstractComponent
 			],
 		);
 
+		\assert(\is_array($data));
+
 		foreach ($this->getFields()->getRootFields() as $name => $field)
 		{
 			$fieldData = $data[$name] ?? null;

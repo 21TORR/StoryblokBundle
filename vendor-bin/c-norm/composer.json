@@ -1,6 +1,6 @@
 {
 	"require": {
-		"ergebnis/composer-normalize": "^2.28.3"
+		"ergebnis/composer-normalize": "^2.31.0"
 	},
 	"config": {
 		"allow-plugins": {

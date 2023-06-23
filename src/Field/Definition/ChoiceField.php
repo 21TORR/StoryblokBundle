@@ -85,6 +85,8 @@ final class ChoiceField extends AbstractField
 			],
 		);
 
+		\assert(\is_array($data) || \is_int($data) || \is_string($data));
+
 		if (\is_string($data))
 		{
 			$data = $context->normalizeOptionalString($data);
@@ -113,6 +115,8 @@ final class ChoiceField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed
 	{
+		\assert(null === $data || \is_array($data) || \is_int($data) || \is_string($data));
+
 		if (\is_string($data))
 		{
 			$data = $context->normalizeOptionalString($data);
