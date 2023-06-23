@@ -2,6 +2,7 @@
 ============
 
 * (improvement) Ignore unknown components.
+* (improvement) Ignore never saved stories.
 
 
 3.0.0-beta.3

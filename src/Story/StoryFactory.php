@@ -37,6 +37,18 @@ final class StoryFactory
 			));
 		}
 
+		// If the story was never saved, the validation rules never applied.
+		// So we just skip the whole story completely.
+		if ($this->isUnsavedStory($data["content"]))
+		{
+			$this->logger->warning("Skipping unsaved story {id} of type {type}", [
+				"id" => $data["id"] ?? "n/a",
+				"type" => $type,
+			]);
+
+			return null;
+		}
+
 		try
 		{
 			$component = $this->componentManager->getComponent($type);
@@ -85,5 +97,14 @@ final class StoryFactory
 
 			return null;
 		}
+	}
+
+	/**
+	 * Checks the content of the story to see, whether the story was saved at least once
+	 */
+	private function isUnsavedStory (array $content) : bool
+	{
+		// a story was not yet saved, if we have no additional data except for the uid, component type key and the editable HTML snippet
+		return 3 === \count($content) && isset($content["_uid"], $content["component"], $content["_editable"]);
 	}
 }
