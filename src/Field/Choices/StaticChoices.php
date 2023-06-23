@@ -2,7 +2,6 @@
 
 namespace Torr\Storyblok\Field\Choices;
 
-use Symfony\Component\Validator\Constraints\Choice;
 use Torr\Storyblok\Context\ComponentContext;
 
 /**
