@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Story;
 
+use Psr\Log\LoggerInterface;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\ComponentWithoutStoryException;
@@ -16,6 +17,7 @@ final class StoryFactory
 	public function __construct (
 		private readonly ComponentManager $componentManager,
 		private readonly ComponentContext $storyblokContext,
+		private readonly LoggerInterface $logger,
 	) {}
 
 	/**
@@ -23,7 +25,7 @@ final class StoryFactory
 	 *
 	 * @throws StoryHydrationFailed
 	 */
-	public function createFromApiData (array $data) : Story
+	public function createFromApiData (array $data) : ?Story
 	{
 		$type = $data["content"]["component"] ?? null;
 
@@ -74,12 +76,14 @@ final class StoryFactory
 		}
 		catch (UnknownComponentKeyException $exception)
 		{
-			throw new StoryHydrationFailed(\sprintf(
-				"Could not hydrate story %s of type %s: %s",
-				$data["id"] ?? "n/a",
-				$type,
-				$exception->getMessage(),
-			), previous: $exception);
+			$this->logger->warning("Could not hydrate story {id} of type {type}: {message}", [
+				"id" => $data["id"] ?? "n/a",
+				"type" => $type,
+				"message" => $exception->getMessage(),
+				"exception" => $exception,
+			]);
+
+			return null;
 		}
 	}
 }

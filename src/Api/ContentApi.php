@@ -291,7 +291,12 @@ final class ContentApi implements ResetInterface
 
 			foreach ($data["stories"] as $storyData)
 			{
-				$stories[] = $this->storyFactory->createFromApiData($storyData);
+				$hydrated = $this->storyFactory->createFromApiData($storyData);
+
+				if (null !== $hydrated)
+				{
+					$stories[] = $hydrated;
+				}
 			}
 
 			return new PaginatedApiResult(

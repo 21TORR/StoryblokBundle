@@ -1,3 +1,9 @@
+3.0.0-beta.4
+============
+
+* (improvement) Ignore unknown components.
+
+
 3.0.0-beta.3
 ============
 
