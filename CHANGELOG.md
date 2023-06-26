@@ -1,3 +1,9 @@
+3.0.0-beta.5
+============
+
+* (bug) Add missing type in assert.
+
+
 3.0.0-beta.4
 ============
 
