@@ -76,7 +76,7 @@ final class TextField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?string
 	{
-		\assert(\is_string($data) || null === $data);
+		\assert(null === $data || \is_string($data));
 		$transformed = $context->normalizeOptionalString($data);
 
 		$dataVisitor?->onDataVisit($this, $transformed);
