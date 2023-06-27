@@ -110,31 +110,45 @@ final class BloksField extends AbstractField
 		}
 
 		\assert(\is_array($data));
+		$noOfKnownContainedBloks = 0;
 
 		// then validate nested structure
-		try
+		foreach ($data as $componentData)
 		{
-			foreach ($data as $componentData)
+			try
 			{
+
 				$component = $context->getComponentByKey($componentData["component"]);
 				$component->validateData(
 					$context,
 					$componentData,
 					$contentPath,
 				);
+				++$noOfKnownContainedBloks;
+			}
+			catch (UnknownComponentKeyException)
+			{
+				// ignore the actual error, as we just want to ignore unknown components
 			}
 		}
-		catch (UnknownComponentKeyException $exception)
+
+		if (null !== $this->minimumNumberOfBloks && $noOfKnownContainedBloks < $this->minimumNumberOfBloks)
 		{
 			throw new InvalidDataException(
-				\sprintf(
-					"Validation the bloks data failed: %s",
-					$exception->getMessage(),
-				),
+				\sprintf("Found %d (known) components, but was expecting at least %d", $noOfKnownContainedBloks, $this->minimumNumberOfBloks),
 				$contentPath,
 				$this,
 				$data,
-				previous: $exception,
+			);
+		}
+
+		if (null !== $this->maximumNumberOfBloks && $noOfKnownContainedBloks > $this->maximumNumberOfBloks)
+		{
+			throw new InvalidDataException(
+				\sprintf("Found %d (known) components, but was expecting at most %d", $noOfKnownContainedBloks, $this->maximumNumberOfBloks),
+				$contentPath,
+				$this,
+				$data,
 			);
 		}
 	}
@@ -158,8 +172,15 @@ final class BloksField extends AbstractField
 			{
 				\assert(\is_array($componentData));
 
-				$component = $context->getComponentByKey($componentData["component"]);
-				$transformed[] = $component->transformData($componentData, $context, $dataVisitor);
+				try
+				{
+					$component = $context->getComponentByKey($componentData["component"]);
+					$transformed[] = $component->transformData($componentData, $context, $dataVisitor);
+				}
+				catch (UnknownComponentKeyException)
+				{
+					// ignore unknown components
+				}
 			}
 		}
 
