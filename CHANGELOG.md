@@ -8,6 +8,7 @@
 ============
 
 * (bug) Add missing type in assert.
+* (feature) Add `ComponentFilter` for fields to use for simpler component filtering.
 
 
 3.0.0-beta.4

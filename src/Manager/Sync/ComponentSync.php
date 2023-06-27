@@ -10,6 +10,7 @@ use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Manager\Sync\Data\ResolvableComponentFilter;
 
 final class ComponentSync
 {
@@ -94,11 +95,23 @@ final class ComponentSync
 
 		foreach ($config as $key => $value)
 		{
+			if ($value instanceof ResolvableComponentFilter)
+			{
+				foreach ($value->transformToManagementApiData($this->componentManager) as $nestedKey => $nestedValue)
+				{
+					$resolved[$nestedKey] = $nestedValue;
+				}
+				continue;
+			}
+
 			$resolved[$key] = match (true)
 			{
-				$value instanceof ComponentsWithTags => $this->componentManager->getComponentKeysForTags($value->tags),
 				\is_array($value) => $this->resolveComponentConfig($value),
-				default => $value,
+				\is_scalar($value) => $value,
+				default => throw new SyncFailedException(\sprintf(
+					"Invalid config value encountered: %s",
+					\get_debug_type($value),
+				)),
 			};
 		}
 
