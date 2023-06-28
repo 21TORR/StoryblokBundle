@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Manager\Sync\Data;
 
-use Torr\Storyblok\Component\Config\ComponentFilter;
+use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Manager\ComponentManager;
 
 final class ResolvableComponentFilter
@@ -19,7 +19,7 @@ final class ResolvableComponentFilter
 		 * The optional key in the management api array where it is configured whether the filter
 		 * should be applied.
 		 */
-		private readonly ?string $enableConfigKey,
+		private readonly ?string $enableConfigKey = null,
 	) {}
 
 	/**
