@@ -4,11 +4,11 @@ namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
-use Torr\Storyblok\Component\Reference\ComponentsWithTags;
+use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Context\ComponentContext;
-use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\RichText\RichTextStyling;
+use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 use Torr\Storyblok\RichText\LinkMarksRichTextTransformer;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
@@ -17,27 +17,19 @@ final class RichTextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 *
-	 * @param array<string>|ComponentsWithTags $filterComponents
-	 * @param array<string>                    $filterComponentGroups
-	 * @param array<RichTextStyling>           $toolbarOptions
-	 * @param array<string, string>            $styleOptions
+	 * @param array<RichTextStyling> $toolbarOptions
+	 * @param array<string, string>  $styleOptions
 	 */
 	public function __construct (
 		string $label,
 		mixed $defaultValue = null,
 		private readonly ?int $maxLength = null,
-		private readonly array|ComponentsWithTags $filterComponents = [],
-		private readonly array $filterComponentGroups = [],
+		private readonly ComponentFilter $components = new ComponentFilter(),
 		private readonly array $toolbarOptions = [],
 		private readonly array $styleOptions = [],
 	)
 	{
 		parent::__construct($label, $defaultValue);
-
-		if (!empty($this->filterComponents) && !empty($this->filterComponentGroups))
-		{
-			throw new InvalidFieldConfigurationException("You can't filter both component groups and components");
-		}
 	}
 
 	/**
@@ -72,10 +64,11 @@ final class RichTextField extends AbstractField
 					static fn (RichTextStyling $option) => $option->value,
 					$this->toolbarOptions,
 				),
-				"restrict_type" => !empty($this->filterComponentGroups) ? "groups" : "",
-				"restrict_components" => !empty($this->filterComponents) || !empty($this->filterComponentGroups),
-				"component_whitelist" => $this->filterComponents,
-				"component_group_whitelist" => $this->filterComponentGroups,
+				"component_whitelist" => new ResolvableComponentFilter(
+					$this->components,
+					"component_whitelist",
+					"restrict_components",
+				),
 				"style_options" => $formattedStyleOptions,
 			],
 		);

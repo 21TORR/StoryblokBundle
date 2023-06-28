@@ -7,13 +7,14 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
-use Torr\Storyblok\Component\Reference\ComponentsWithTags;
+use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Data\AssetLinkData;
 use Torr\Storyblok\Field\Data\EmailLinkData;
 use Torr\Storyblok\Field\Data\ExternalLinkData;
 use Torr\Storyblok\Field\Data\StoryLinkData;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class LinkField extends AbstractField
@@ -28,8 +29,7 @@ final class LinkField extends AbstractField
 		private readonly bool $allowAssetLinks = false,
 		private readonly bool $allowAnchors = true,
 		private readonly ?string $internalLinkScope = null,
-		/** @var array<string>|ComponentsWithTags|null $restrictToContentTypes */
-		private readonly array|ComponentsWithTags|null $restrictToContentTypes = null,
+		private readonly ComponentFilter $components = new ComponentFilter(),
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -56,8 +56,11 @@ final class LinkField extends AbstractField
 				"show_anchor" => $this->allowAnchors,
 				"force_link_scope" => !empty($this->internalLinkScope),
 				"link_scope" => $this->internalLinkScope,
-				"restrict_content_types" => !empty($this->restrictToContentTypes),
-				"component_whitelist" => $this->restrictToContentTypes,
+				"component_whitelist" => new ResolvableComponentFilter(
+					$this->components,
+					"component_whitelist",
+					"restrict_content_types",
+				),
 			],
 		);
 	}

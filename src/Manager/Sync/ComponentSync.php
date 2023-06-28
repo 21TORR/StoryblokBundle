@@ -5,12 +5,11 @@ namespace Torr\Storyblok\Manager\Sync;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Api\ManagementApi;
-use Torr\Storyblok\Component\Reference\ComponentsWithTags;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Manager\ComponentManager;
-use Torr\Storyblok\Manager\Sync\Data\ResolvableComponentFilter;
+use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 
 final class ComponentSync
 {
@@ -87,7 +86,7 @@ final class ComponentSync
 	/**
 	 * Resolves the given component config.
 	 *
-	 * This means resolving all {@see ComponentsWithTags} to their keys.
+	 * This means resolving all {@see ResolvableComponentFilter} to their keys.
 	 */
 	private function resolveComponentConfig (array $config) : array
 	{

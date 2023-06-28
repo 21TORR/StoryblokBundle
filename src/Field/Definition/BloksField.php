@@ -6,12 +6,13 @@ use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
-use Torr\Storyblok\Component\Reference\ComponentsWithTags;
+use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class BloksField extends AbstractField
@@ -20,9 +21,7 @@ final class BloksField extends AbstractField
 		string $label,
 		private readonly ?int $minimumNumberOfBloks = null,
 		private readonly ?int $maximumNumberOfBloks = null,
-		/** @var array<string>|ComponentsWithTags|null $filterComponents */
-		private readonly array|ComponentsWithTags|null $filterComponents = null,
-		private readonly array $filterComponentGroups = [],
+		private readonly ComponentFilter $components = new ComponentFilter(),
 	)
 	{
 		parent::__construct($label);
@@ -37,11 +36,6 @@ final class BloksField extends AbstractField
 				"The minimum number of blocks value can't be higher than the maximum",
 			));
 		}
-
-		if (!empty($this->filterComponents) && !empty($this->filterComponentGroups))
-		{
-			throw new InvalidFieldConfigurationException("You can't filter both component groups and components");
-		}
 	}
 
 	/**
@@ -54,10 +48,7 @@ final class BloksField extends AbstractField
 			[
 				"minimum" => $this->minimumNumberOfBloks,
 				"maximum" => $this->maximumNumberOfBloks,
-				"restrict_type" => !empty($this->filterComponentGroups) ? "groups" : "",
-				"restrict_components" => !empty($this->filterComponents) || !empty($this->filterComponentGroups),
-				"component_whitelist" => $this->filterComponents,
-				"component_group_whitelist" => $this->filterComponentGroups,
+				"component_whitelist" => new ResolvableComponentFilter($this->components, "component_whitelist", "restrict_components"),
 			],
 		);
 	}
