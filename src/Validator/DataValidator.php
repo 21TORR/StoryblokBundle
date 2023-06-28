@@ -9,7 +9,10 @@ use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 
-final class DataValidator
+/**
+ * @final
+ */
+class DataValidator
 {
 	public function __construct (
 		private readonly ValidatorInterface $validator,

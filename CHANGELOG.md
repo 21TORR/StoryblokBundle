@@ -1,3 +1,9 @@
+3.0.0-beta.6 (unreleased)
+============
+
+* (improvement) Ignore unknown bloks in `BloksField`.
+
+
 3.0.0-beta.5
 ============
 

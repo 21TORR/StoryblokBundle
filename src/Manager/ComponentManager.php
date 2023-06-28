@@ -9,7 +9,10 @@ use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Story\Story;
 
-final class ComponentManager
+/**
+ * @final
+ */
+class ComponentManager
 {
 	/**
 	 */
