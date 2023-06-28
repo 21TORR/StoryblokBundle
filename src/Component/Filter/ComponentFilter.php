@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Component\Config;
-
-use Torr\Storyblok\Manager\ComponentManager;
+namespace Torr\Storyblok\Component\Filter;
 
 final class ComponentFilter
 {
@@ -18,7 +16,7 @@ final class ComponentFilter
 
 	/**
 	 */
-	public static function tags (string|\BackedEnum ... $tags) : self
+	public static function tags (string|\BackedEnum ...$tags) : self
 	{
 		return new self(tags: $tags);
 	}

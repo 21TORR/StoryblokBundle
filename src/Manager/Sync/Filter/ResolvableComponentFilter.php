@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Manager\Sync\Data;
+namespace Torr\Storyblok\Manager\Sync\Filter;
 
 use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Manager\ComponentManager;
 
+/**
+ * @internal used to wrap the filter with the names it should be transformed to
+ */
 final class ResolvableComponentFilter
 {
 	/**
