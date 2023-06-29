@@ -24,7 +24,7 @@ final class RichTextField extends AbstractField
 		string $label,
 		mixed $defaultValue = null,
 		private readonly ?int $maxLength = null,
-		private readonly ComponentFilter $components = new ComponentFilter(),
+		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly array $toolbarOptions = [],
 		private readonly array $styleOptions = [],
 	)
@@ -65,7 +65,7 @@ final class RichTextField extends AbstractField
 					$this->toolbarOptions,
 				),
 				"component_whitelist" => new ResolvableComponentFilter(
-					$this->components,
+					$this->allowedComponents,
 					"component_whitelist",
 					"restrict_components",
 				),

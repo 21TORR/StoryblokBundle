@@ -29,7 +29,7 @@ final class LinkField extends AbstractField
 		private readonly bool $allowAssetLinks = false,
 		private readonly bool $allowAnchors = true,
 		private readonly ?string $internalLinkScope = null,
-		private readonly ComponentFilter $components = new ComponentFilter(),
+		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -57,7 +57,7 @@ final class LinkField extends AbstractField
 				"force_link_scope" => !empty($this->internalLinkScope),
 				"link_scope" => $this->internalLinkScope,
 				"component_whitelist" => new ResolvableComponentFilter(
-					$this->components,
+					$this->allowedComponents,
 					"component_whitelist",
 					"restrict_content_types",
 				),

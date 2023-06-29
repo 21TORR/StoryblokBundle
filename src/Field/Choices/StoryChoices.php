@@ -17,7 +17,7 @@ final class StoryChoices implements ChoicesInterface
 	 * @param string|\BackedEnum|null $referencedStoryDataMode This is a Key that will be used by the corresponding StoryNormalizer to find out which data from the referenced Story is needed by the component
 	 */
 	public function __construct (
-		private readonly ComponentFilter $components = new ComponentFilter(),
+		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly string $restrictToPath = "",
 		private readonly string|\BackedEnum|null $referencedStoryDataMode = null,
 	) {}
@@ -29,7 +29,7 @@ final class StoryChoices implements ChoicesInterface
 	{
 		return [
 			"source" => "internal_stories",
-			"filter_content_type" => new ResolvableComponentFilter($this->components, "filter_content_type"),
+			"filter_content_type" => new ResolvableComponentFilter($this->allowedComponents, "filter_content_type"),
 			"folder_slug" => $this->restrictToPath,
 		];
 	}

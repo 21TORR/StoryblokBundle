@@ -21,7 +21,7 @@ final class BloksField extends AbstractField
 		string $label,
 		private readonly ?int $minimumNumberOfBloks = null,
 		private readonly ?int $maximumNumberOfBloks = null,
-		private readonly ComponentFilter $components = new ComponentFilter(),
+		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 	)
 	{
 		parent::__construct($label);
@@ -48,7 +48,7 @@ final class BloksField extends AbstractField
 			[
 				"minimum" => $this->minimumNumberOfBloks,
 				"maximum" => $this->maximumNumberOfBloks,
-				"component_whitelist" => new ResolvableComponentFilter($this->components, "component_whitelist", "restrict_components"),
+				"component_whitelist" => new ResolvableComponentFilter($this->allowedComponents, "component_whitelist", "restrict_components"),
 			],
 		);
 	}
