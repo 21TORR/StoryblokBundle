@@ -63,9 +63,12 @@ final class ResolvableComponentFilter
 			}
 		}
 
-		foreach ($componentManager->getComponentKeysForTags($this->filter->tags) as $componentKey)
+		if (!empty($this->filter->tags))
 		{
-			$result[$componentKey] = true;
+			foreach ($componentManager->getComponentKeysForTags($this->filter->tags) as $componentKey)
+			{
+				$result[$componentKey] = true;
+			}
 		}
 
 		return \array_keys($result);
