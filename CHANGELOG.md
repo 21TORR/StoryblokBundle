@@ -5,6 +5,8 @@
 * (feature) Add `ComponentFilter` for fields to use for simpler component filtering.
 * (bc) Remove `ComponentsWithTags`, as it is replaced with `ComponentFilter`.
 * (bc) Remove ability to filter by component groups.
+* (improvement) Add internal `LocaleHelper` to unify locale detection.
+* (feature) Add `StoryMetaData::getTranslatedDocumentsMapping()` to fetch the required data to map hreflangs.
 
 
 3.0.0-beta.5

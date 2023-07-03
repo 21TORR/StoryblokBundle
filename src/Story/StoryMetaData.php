@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Story;
 
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
+use Torr\Storyblok\Translation\LocaleHelper;
 
 final class StoryMetaData
 {
@@ -124,7 +125,7 @@ final class StoryMetaData
 	{
 		$firstSegment = $this->slugSegments[0] ?? null;
 
-		return null !== $firstSegment && 1 === \preg_match('~^\\w+(-\\w+)?~', $firstSegment)
+		return null !== $firstSegment && LocaleHelper::isValidLocale($firstSegment)
 			? $firstSegment
 			: null;
 	}
@@ -154,8 +155,56 @@ final class StoryMetaData
 		return $parsed;
 	}
 
+	/**
+	 */
 	public function getPosition () : ?int
 	{
 		return $this->data["position"] ?? null;
+	}
+
+	/**
+	 * @return array<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int, locale: ?string}>
+	 */
+	public function getAlternateLanguages () : array
+	{
+		$result = [];
+
+		/** @var array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int} $alternate */
+		foreach (($this->data["alternates"] ?? []) as $alternate)
+		{
+			$slug = $alternate["full_slug"];
+			$locale = \mb_substr($slug, 0, \strpos($slug, "/") ?: null);
+
+			$alternate["locale"] = LocaleHelper::isValidLocale($locale)
+				? $locale
+				: null;
+
+			$result[] = $alternate;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Returns the mapping of locale to full slug for alternative translated versions of this story.
+	 *
+	 * @return array<string, string> locale => full_slug
+	 */
+	public function getTranslatedDocumentsMapping () : array
+	{
+		$mapping = [];
+
+		foreach ($this->getAlternateLanguages() as $alternateLanguage)
+		{
+			if (null !== $alternateLanguage["locale"])
+			{
+				$slug = $alternateLanguage["full_slug"];
+				$mapping[$alternateLanguage["locale"]] = $alternateLanguage["is_folder"]
+					? $slug
+					: \rtrim($slug, "/");
+			}
+		}
+
+		return $mapping;
 	}
 }
