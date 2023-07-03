@@ -2,10 +2,11 @@
 
 namespace Torr\Storyblok\Field\Choices;
 
-use Torr\Storyblok\Component\Reference\ComponentsWithTags;
+use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Data\Story\StoryReferenceList;
 use Torr\Storyblok\Field\Data\StoryReferenceData;
+use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 
 /**
  * Makes a story selectable
@@ -13,11 +14,10 @@ use Torr\Storyblok\Field\Data\StoryReferenceData;
 final class StoryChoices implements ChoicesInterface
 {
 	/**
-	 * @param array<string>|ComponentsWithTags $restrictContentTypes
-	 * @param string|\BackedEnum|null          $referencedStoryDataMode This is a Key that will be used by the corresponding StoryNormalizer to find out which data from the referenced Story is needed by the component
+	 * @param string|\BackedEnum|null $referencedStoryDataMode This is a Key that will be used by the corresponding StoryNormalizer to find out which data from the referenced Story is needed by the component
 	 */
 	public function __construct (
-		private readonly array|ComponentsWithTags $restrictContentTypes = [],
+		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly string $restrictToPath = "",
 		private readonly string|\BackedEnum|null $referencedStoryDataMode = null,
 	) {}
@@ -29,7 +29,7 @@ final class StoryChoices implements ChoicesInterface
 	{
 		return [
 			"source" => "internal_stories",
-			"filter_content_type" => $this->restrictContentTypes,
+			"filter_content_type" => new ResolvableComponentFilter($this->allowedComponents, "filter_content_type"),
 			"folder_slug" => $this->restrictToPath,
 		];
 	}

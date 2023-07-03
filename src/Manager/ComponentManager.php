@@ -61,6 +61,10 @@ class ComponentManager
 
 	/**
 	 * Returns the component keys for all components with any of the given tags
+	 *
+	 * @param array<string|\BackedEnum> $tags
+	 *
+	 * @return string[]
 	 */
 	public function getComponentKeysForTags (array $tags) : array
 	{
