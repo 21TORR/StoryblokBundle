@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Api;
 
 use Symfony\Component\HttpClient\HttpOptions;
+use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -29,10 +30,12 @@ final class ManagementApi
 	)
 	{
 		$this->rateLimiter = $storyblokManagementLimiter->create();
-		$this->client = $client->withOptions(
-			(new HttpOptions())
-				->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
-				->toArray(),
+		$this->client = new RetryableHttpClient(
+			$client->withOptions(
+				(new HttpOptions())
+					->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
+					->toArray(),
+			),
 		);
 	}
 
