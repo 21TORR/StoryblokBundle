@@ -39,7 +39,7 @@ final class ComponentConfigResolver
 			$resolved[$key] = match (true)
 			{
 				\is_array($value) => $this->resolveComponentConfig($value),
-				\is_scalar($value) => $value,
+				\is_scalar($value) || null === $value => $value,
 				default => throw new SyncFailedException(\sprintf(
 					"Invalid config value encountered: %s",
 					\get_debug_type($value),
