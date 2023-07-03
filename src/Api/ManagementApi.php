@@ -37,6 +37,7 @@ final class ManagementApi
 	}
 
 	/**
+	 * @throws ApiRequestFailedException
 	 */
 	public function syncComponent (
 		array $config,

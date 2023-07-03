@@ -20,4 +20,12 @@ final class ComponentFilter
 	{
 		return new self(tags: $tags);
 	}
+
+
+	/**
+	 */
+	public static function keys (string|\BackedEnum ...$components) : self
+	{
+		return new self(components: $components);
+	}
 }
