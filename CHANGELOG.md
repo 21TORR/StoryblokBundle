@@ -9,6 +9,7 @@
 * (feature) Add `StoryMetaData::getTranslatedDocumentsMapping()` to fetch the required data to map hreflangs.
 * (deprecation) Deprecate `AbstractField::enablePreview()` in favor of `AbstractField::useAsAdminDisplayName()`.
 * (improvement) Improve error reporting of choices values.
+* (improvement) Use retryable HTTP clients to avoid rate limit issues. 
 
 
 3.0.0-beta.5

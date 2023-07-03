@@ -4,8 +4,8 @@ namespace Torr\Storyblok\Api;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttpOptions;
+use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
@@ -36,10 +36,12 @@ final class ContentApi implements ResetInterface
 		private readonly LoggerInterface $logger,
 	)
 	{
-		$this->client = $client->withOptions(
-			(new HttpOptions())
-				->setBaseUri(self::API_URL)
-				->toArray(),
+		$this->client = new RetryableHttpClient(
+			$client->withOptions(
+				(new HttpOptions())
+					->setBaseUri(self::API_URL)
+					->toArray(),
+			),
 		);
 	}
 
@@ -244,7 +246,6 @@ final class ContentApi implements ResetInterface
 	private function fetchStoriesResultPage (
 		array $query = [],
 		int $page = 1,
-		int $remainingRetries = 3,
 	) : PaginatedApiResult
 	{
 		$query["token"] = $this->config->getContentToken();
@@ -307,36 +308,13 @@ final class ContentApi implements ResetInterface
 		}
 		catch (ExceptionInterface $exception)
 		{
-			// reduce number of remaining retries
-			--$remainingRetries;
-
-			if (
-				$remainingRetries > 0
-				&& $exception instanceof HttpExceptionInterface
-				&& 429 === $exception->getResponse()->getStatusCode()
-			)
-			{
-				$this->logger->debug("Encountered rate limit error, retrying", [
-					"query" => $query,
-				]);
-
-				// wait for 100ms before retrying
-				\usleep(100_000);
-
-				// retry
-				return $this->fetchStoriesResultPage(
-					$query,
-					$page,
-					$remainingRetries,
-				);
-			}
-
 			throw new ContentRequestFailedException(\sprintf(
 				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);
 		}
 	}
+
 
 	/**
 	 * Gets the first header as int/null
