@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Field\Collection;
 
 use Torr\Storyblok\Exception\Story\UnknownFieldException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\Helper\FieldDefinitionHelper;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 
 final class FieldCollection
@@ -17,6 +18,7 @@ final class FieldCollection
 	)
 	{
 		$this->indexFields($this->rootFields);
+		FieldDefinitionHelper::ensureMaximumOneAdminDisplayName($this->rootFields);
 	}
 
 	/**

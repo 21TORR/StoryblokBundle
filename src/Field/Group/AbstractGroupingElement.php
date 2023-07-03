@@ -7,6 +7,7 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\Definition\AbstractField;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\Helper\FieldDefinitionHelper;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 use Torr\Storyblok\Management\ManagementApiData;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -23,6 +24,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 	)
 	{
 		parent::__construct($label);
+		FieldDefinitionHelper::ensureMaximumOneAdminDisplayName($this->fields);
 	}
 
 	/**
