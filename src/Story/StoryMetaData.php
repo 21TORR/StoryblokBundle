@@ -163,11 +163,26 @@ final class StoryMetaData
 	}
 
 	/**
-	 * @return array<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int}>
+	 * @return array<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int, locale: ?string}>
 	 */
 	public function getAlternateLanguages () : array
 	{
-		return $this->data["alternates"] ?? [];
+		$result = [];
+
+		/** @var array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int} $alternate */
+		foreach (($this->data["alternates"] ?? []) as $alternate)
+		{
+			$slug = $alternate["full_slug"];
+			$locale = \mb_substr($slug, 0, \strpos($slug, "/") ?: null);
+
+			$alternate["locale"] = LocaleHelper::isValidLocale($locale)
+				? $locale
+				: null;
+
+			$result[] = $alternate;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -181,12 +196,10 @@ final class StoryMetaData
 
 		foreach ($this->getAlternateLanguages() as $alternateLanguage)
 		{
-			$slug = $alternateLanguage["full_slug"];
-			$locale = \mb_substr($slug, 0, \strpos($slug, "/") ?: null);
-
-			if (LocaleHelper::isValidLocale($locale))
+			if (null !== $alternateLanguage["locale"])
 			{
-				$mapping[$locale] = $alternateLanguage["is_folder"]
+				$slug = $alternateLanguage["full_slug"];
+				$mapping[$alternateLanguage["locale"]] = $alternateLanguage["is_folder"]
 					? $slug
 					: \rtrim($slug, "/");
 			}
