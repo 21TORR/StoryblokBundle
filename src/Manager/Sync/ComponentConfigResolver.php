@@ -20,7 +20,7 @@ final class ComponentConfigResolver
 	 *
 	 * This means resolving all {@see ResolvableComponentFilter} to their keys.
 	 */
-	public function resolveComponentConfig(array $config) : array
+	public function resolveComponentConfig (array $config) : array
 	{
 		$resolved = [];
 
