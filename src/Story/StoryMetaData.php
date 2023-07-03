@@ -155,8 +155,43 @@ final class StoryMetaData
 		return $parsed;
 	}
 
+	/**
+	 */
 	public function getPosition () : ?int
 	{
 		return $this->data["position"] ?? null;
+	}
+
+	/**
+	 * @return array<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int}>
+	 */
+	public function getAlternateLanguages () : array
+	{
+		return $this->data["alternates"] ?? [];
+	}
+
+	/**
+	 * Returns the mapping of locale to full slug for alternative translated versions of this story.
+	 *
+	 * @return array<string, string> locale => full_slug
+	 */
+	public function getTranslatedDocumentsMapping () : array
+	{
+		$mapping = [];
+
+		foreach ($this->getAlternateLanguages() as $alternateLanguage)
+		{
+			$slug = $alternateLanguage["full_slug"];
+			$locale = \mb_substr($slug, 0, \strpos($slug, "/") ?: null);
+
+			if (LocaleHelper::isValidLocale($locale))
+			{
+				$mapping[$locale] = $alternateLanguage["is_folder"]
+					? $slug
+					: \rtrim($slug, "/");
+			}
+		}
+
+		return $mapping;
 	}
 }
