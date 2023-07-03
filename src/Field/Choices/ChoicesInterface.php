@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Choices;
 
+use Symfony\Component\Validator\Constraint;
 use Torr\Storyblok\Context\ComponentContext;
 
 interface ChoicesInterface
@@ -12,12 +13,11 @@ interface ChoicesInterface
 	public function toManagementApiData () : array;
 
 	/**
-	 * Validates the given data.
+	 * Returns the constraints to validate the data.
+	 *
+	 * @return Constraint[]
 	 */
-	public function isValidData (
-		array|int|string $data,
-		?ComponentContext $context = null,
-	) : bool;
+	public function getValidationConstraints (bool $allowMultiple) : array;
 
 	/**
 	 * Transforms the storyblok data the app's representation

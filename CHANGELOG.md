@@ -8,6 +8,7 @@
 * (improvement) Add internal `LocaleHelper` to unify locale detection.
 * (feature) Add `StoryMetaData::getTranslatedDocumentsMapping()` to fetch the required data to map hreflangs.
 * (deprecation) Deprecate `AbstractField::enablePreview()` in favor of `AbstractField::useAsAdminDisplayName()`.
+* (improvement) Improve error reporting of choices values.
 
 
 3.0.0-beta.5
