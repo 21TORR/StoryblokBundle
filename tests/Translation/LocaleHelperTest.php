@@ -15,8 +15,14 @@ class LocaleHelperTest extends TestCase
 		yield "de-de" => ["de-de", true];
 		yield "de-DE" => ["de-DE", true];
 		yield "en" => ["en", true];
-		// we are not bound to 2-char locales
-		yield "abc" => ["abc", true];
+		// we allow 2 and 3 letter languages
+		yield "deu" => ["deu", true];
+		yield "deu-de" => ["deu-de", true];
+		yield "deu-international" => ["deu-international", true];
+		yield "abcd" => ["abcd", false];
+		yield "a" => ["a", false];
+		yield "a-de" => ["a-de", false];
+		yield "de-a" => ["de-a", false];
 		yield "abc-dev" => ["abc-dev", true];
 		yield "ab-ab-ab" => ["ab-ab-ab", false];
 		yield "(empty)" => ["", false];

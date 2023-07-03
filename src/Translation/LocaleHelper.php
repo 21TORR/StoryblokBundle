@@ -9,6 +9,6 @@ final class LocaleHelper
 	 */
 	public static function isValidLocale (string $value) : bool
 	{
-		return 1 === \preg_match('~^\\w+(-\\w+)?$~', $value);
+		return 1 === \preg_match('~^\\w{2,3}(-\\w{2,})?$~', $value);
 	}
 }
