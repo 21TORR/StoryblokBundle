@@ -139,9 +139,14 @@ abstract class AbstractField implements FieldDefinitionInterface
 	}
 
 	/**
+	 * This method returns whether the field is used as the storyblok default value.
+	 * It is deliberately name differently, so that it doesn't get listed in autocompletion.
 	 *
+	 * @internal
+	 *
+	 * @private
 	 */
-	public function isUsedAsAdminDisplayName() : ?bool
+	public function isStoryblokPreviewField () : ?bool
 	{
 		return $this->useAsAdminDisplayName;
 	}
