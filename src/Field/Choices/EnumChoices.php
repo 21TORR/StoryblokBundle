@@ -70,26 +70,4 @@ class EnumChoices extends StaticChoices
 
 		return $this->enumType::from($data);
 	}
-
-
-	/**
-	 * @inheritDoc
-	 */
-	public function isValidData (
-		array|int|string $data,
-		?ComponentContext $context = null,
-	) : bool
-	{
-		$values = \is_array($data) ? $data : [$data];
-
-		foreach ($values as $value)
-		{
-			if (null === $this->enumType::tryFrom($value))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
 }

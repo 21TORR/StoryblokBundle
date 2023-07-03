@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Choices;
 
+use Symfony\Component\Validator\Constraints\Choice;
 use Torr\Storyblok\Context\ComponentContext;
 
 /**
@@ -54,21 +55,13 @@ class StaticChoices implements ChoicesInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function isValidData (
-		array|int|string $data,
-		?ComponentContext $context = null,
-	) : bool
+	public function getValidationConstraints (bool $allowMultiple) : array
 	{
-		$values = \is_array($data) ? $data : [$data];
-
-		foreach ($values as $value)
-		{
-			if (!\in_array($value, $this->choices, true))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return [
+			new Choice(
+				choices: $this->choices,
+				multiple: $allowMultiple,
+			),
+		];
 	}
 }

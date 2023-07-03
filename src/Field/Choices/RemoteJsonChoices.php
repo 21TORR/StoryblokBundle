@@ -31,13 +31,12 @@ final class RemoteJsonChoices implements ChoicesInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function isValidData (
-		array|int|string $data,
-		?ComponentContext $context = null,
-	) : bool
+	public function getValidationConstraints (bool $allowMultiple) : array
 	{
-		return true;
+		// always valid
+		return [];
 	}
+
 
 	/**
 	 * @inheritDoc

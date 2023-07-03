@@ -4,11 +4,9 @@ namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
-use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
-use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\Choices\ChoicesInterface;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -25,18 +23,8 @@ final class ChoiceField extends AbstractField
 	)
 	{
 		parent::__construct($label, $this->defaultValue);
-
-		if (
-			(\is_int($this->defaultValue) || \is_string($this->defaultValue))
-			&& !$this->choices->isValidData($this->defaultValue)
-		)
-		{
-			throw new InvalidFieldConfigurationException(\sprintf(
-				"Invalid default value %s in choice",
-				\get_debug_type($this->defaultValue),
-			));
-		}
 	}
+
 
 	/**
 	 * @inheritDoc
@@ -92,15 +80,15 @@ final class ChoiceField extends AbstractField
 			$data = $context->normalizeOptionalString($data);
 		}
 
-		if (null !== $data)
+		$choicesConstraints = $this->choices->getValidationConstraints($this->allowMultiselect);
+
+		if (null !== $data && !empty($choicesConstraints))
 		{
 			$context->ensureDataIsValid(
 				$contentPath,
 				$this,
-				$this->choices->isValidData($data, $context),
-				[
-					new IsTrue(),
-				],
+				$data,
+				$choicesConstraints,
 			);
 		}
 	}
