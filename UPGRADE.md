@@ -1,3 +1,10 @@
+2.x to 4.0
+==========
+
+
+* `AbstractField::enablePreview()` is removed, use `AbstractField::useAsAdminDisplayName()` instead.
+
+
 2.x to 3.0
 ==========
 

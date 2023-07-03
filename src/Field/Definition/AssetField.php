@@ -23,6 +23,8 @@ final class AssetField extends AbstractField
 		string $label,
 		/**
 		 * The allowed file types. Empty array allows all file types.
+		 *
+		 * @var AssetFileType[]
 		 */
 		private readonly array $fileTypes = [],
 		private readonly bool $allowMultiple = false,
