@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Story;
 
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
+use Torr\Storyblok\Translation\LocaleHelper;
 
 final class StoryMetaData
 {
@@ -124,7 +125,7 @@ final class StoryMetaData
 	{
 		$firstSegment = $this->slugSegments[0] ?? null;
 
-		return null !== $firstSegment && 1 === \preg_match('~^\\w+(-\\w+)?~', $firstSegment)
+		return null !== $firstSegment && LocaleHelper::isValidLocale($firstSegment)
 			? $firstSegment
 			: null;
 	}
