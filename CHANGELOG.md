@@ -1,5 +1,5 @@
-3.0.0-beta.6 (unreleased)
-============
+3.0.0
+=====
 
 * (improvement) Ignore unknown bloks in `BloksField`.
 * (feature) Add `ComponentFilter` for fields to use for simpler component filtering.
