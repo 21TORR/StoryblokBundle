@@ -1,3 +1,9 @@
+3.0.2
+=====
+
+* (improvement) Revert to previous rate limit wait time.
+
+
 3.0.1
 =====
 
