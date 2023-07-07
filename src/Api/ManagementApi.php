@@ -3,7 +3,6 @@
 namespace Torr\Storyblok\Api;
 
 use Symfony\Component\HttpClient\HttpOptions;
-use Symfony\Component\HttpClient\Retry\GenericRetryStrategy;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
@@ -37,7 +36,6 @@ final class ManagementApi
 					->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
 					->toArray(),
 			),
-			new GenericRetryStrategy(delayMs: 2000),
 		);
 	}
 
