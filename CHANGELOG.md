@@ -1,3 +1,9 @@
+3.0.1
+=====
+
+* (improvement) Increase retry wait time for management API rate limiting.
+
+
 3.0.0
 =====
 
