@@ -1,3 +1,9 @@
+3.0.3
+=====
+
+* (bug) Normalize enums in `tags` parameter in `ComponentManager::getComponentKeysForTags()`.
+
+
 3.0.2
 =====
 
