@@ -70,16 +70,17 @@ class ComponentManager
 	{
 		$matches = [];
 
+		$normalizeTag = static fn (string|\BackedEnum $tag) => $tag instanceof \BackedEnum
+			? $tag->value
+			: $tag;
+
+		$normalizedTags = \array_map($normalizeTag, $tags);
+
 		foreach ($this->getAllComponents() as $component)
 		{
-			$componentTags = \array_map(
-				static fn (string|\BackedEnum $tag) => $tag instanceof \BackedEnum
-					? $tag->value
-					: $tag,
-				$component->getTags(),
-			);
+			$componentTags = \array_map($normalizeTag, $component->getTags());
 
-			if (!empty(\array_intersect($tags, $componentTags)))
+			if (!empty(\array_intersect($normalizedTags, $componentTags)))
 			{
 				$matches[] = $component::getKey();
 			}
