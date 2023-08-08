@@ -24,9 +24,6 @@ final class TableData
 
 	private function flattenRows (array $row) : array
 	{
-		return \array_map(
-			static fn (array $column) => $column["value"],
-			$row,
-		);
+		return \array_column($row, "value");
 	}
 }
