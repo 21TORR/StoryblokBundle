@@ -1,3 +1,9 @@
+3.2.0
+=====
+
+*   (feature) Add support for `TableField`.
+
+
 3.1.0
 =====
 
