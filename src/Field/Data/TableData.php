@@ -2,12 +2,13 @@
 
 namespace Torr\Storyblok\Field\Data;
 
-use Torr\Storyblok\Field\Data\Table\TableRowData;
+use Torr\Storyblok\Field\Data\Table\TableColumnData;
 
 final class TableData
 {
-	public readonly TableRowData $thead;
-	/** @var TableRowData[] */
+	/** @var TableColumnData[] */
+	public readonly array $thead;
+	/** @var array<TableColumnData[]> */
 	public readonly array $tbody;
 
 	public function __construct (
@@ -15,15 +16,21 @@ final class TableData
 		array $tbody,
 	)
 	{
-		$this->thead = new TableRowData($this->flattenRows($thead));
+		$this->thead = $this->flattenRows($thead);
 		$this->tbody = \array_map(
-			fn (array $row) => new TableRowData($this->flattenRows($row["body"])),
-			$tbody,
+			$this->flattenRows(...),
+			\array_column($tbody, "body"),
 		);
 	}
 
-	private function flattenRows (array $row) : array
+	/**
+	 * @return TableColumnData[]
+	 */
+	private function flattenRows (array $columnEntries) : array
 	{
-		return \array_column($row, "value");
+		return \array_map(
+			static fn (string $value) => new TableColumnData($value),
+			\array_column($columnEntries, "value"),
+		);
 	}
 }
