@@ -81,7 +81,7 @@ class BloksFieldTest extends TestCase
 			{
 				if ("valid" !== $key)
 				{
-					throw new UnknownComponentKeyException();
+					throw new UnknownComponentKeyException("test", "key");
 				}
 
 				return $this->createMock(AbstractComponent::class);

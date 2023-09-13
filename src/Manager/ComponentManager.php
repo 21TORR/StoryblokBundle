@@ -106,10 +106,14 @@ class ComponentManager
 		}
 		catch (ServiceNotFoundException $exception)
 		{
-			throw new UnknownComponentKeyException(\sprintf(
-				"Unknown component type: %s",
-				$key,
-			), previous: $exception);
+			throw new UnknownComponentKeyException(
+				message: \sprintf(
+					"Unknown component type: %s",
+					$key,
+				),
+				componentKey: $key,
+				previous: $exception,
+			);
 		}
 	}
 }

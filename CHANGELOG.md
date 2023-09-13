@@ -2,6 +2,7 @@
 =====
 
 * (bug) Normalize enums in `tags` parameter in `ComponentManager::getComponentKeysForTags()`.
+* (improvement) Properly log message about invalid component keys.
 
 
 3.0.2
