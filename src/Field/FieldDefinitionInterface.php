@@ -12,7 +12,7 @@ interface FieldDefinitionInterface
 	/**
 	 * Transforms the type to the type definition required for the Storyblok API
 	 *
-	 *@internal
+	 * @internal
 	 */
 	public function registerManagementApiData (
 		string $key,
