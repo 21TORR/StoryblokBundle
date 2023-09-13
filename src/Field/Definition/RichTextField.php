@@ -17,6 +17,9 @@ final class RichTextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 *
+	 * The style options have the format
+	 *   ui label => css class name
+	 *
 	 * @param array<RichTextStyling> $toolbarOptions
 	 * @param array<string, string>  $styleOptions
 	 */
