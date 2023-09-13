@@ -168,9 +168,13 @@ final class BloksField extends AbstractField
 					$component = $context->getComponentByKey($componentData["component"]);
 					$transformed[] = $component->transformData($componentData, $context, $dataVisitor);
 				}
-				catch (UnknownComponentKeyException)
+				catch (UnknownComponentKeyException $exception)
 				{
 					// ignore unknown components
+					$context->logger->warning("Unknown component key {key} found in BloksField, skipping.", [
+						"key" => $exception->componentKey,
+						"exception" => $exception,
+					]);
 				}
 			}
 		}
