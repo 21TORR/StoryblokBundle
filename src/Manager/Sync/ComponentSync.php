@@ -8,16 +8,15 @@ use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
-use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
 
 final class ComponentSync
 {
 	/**
 	 */
 	public function __construct (
-		private readonly ComponentManager $componentManager,
 		private readonly ManagementApi $managementApi,
-		private readonly ComponentConfigResolver $componentConfigResolver,
+		private readonly ComponentNormalizer $componentNormalizer,
 	) {}
 
 	/**
@@ -32,7 +31,14 @@ final class ComponentSync
 	{
 		try
 		{
-			$this->syncComponents($io, $sync);
+			$normalized = $this->componentNormalizer->normalize($io);
+
+			if (!$sync)
+			{
+				return;
+			}
+
+			$this->syncComponents($io, $normalized);
 		}
 		catch (InvalidComponentConfigurationException|ApiRequestException $exception)
 		{
@@ -40,42 +46,18 @@ final class ComponentSync
 		}
 	}
 
+
 	/**
 	 * Syncs all components
+	 *
+	 * @param ComponentImport[] $normalizedComponents
 	 */
 	private function syncComponents (
 		TorrStyle $io,
-		bool $sync = false,
+		array $normalizedComponents,
 	) : void
 	{
-		$normalized = [];
-
-		// first: normalize everything to check if normalization fails
-		foreach ($this->componentManager->getAllComponents() as $component)
-		{
-			$key = \sprintf(
-				"<fg=blue>%s</> (<fg=yellow>%s</>) ... ",
-				$component->getDisplayName(),
-				$component::getKey(),
-			);
-
-			$io->write("Normalizing {$key} ");
-
-			$normalized[$key] = new ComponentImport(
-				$this->componentConfigResolver->resolveComponentConfig($component->toManagementApiData()),
-				$component->getComponentGroup(),
-			);
-
-			$io->writeln("done <fg=green>✓</>");
-		}
-
-		if (!$sync)
-		{
-			return;
-		}
-
-		// then import
-		foreach ($normalized as $key => $config)
+		foreach ($normalizedComponents as $key => $config)
 		{
 			$io->write("Syncing {$key} ");
 			$performedAction = $this->managementApi->syncComponent($config->config, $config->groupLabel);

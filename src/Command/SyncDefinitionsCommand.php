@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
+use Torr\Storyblok\Exception\Sync\ValidationFailedException;
 use Torr\Storyblok\Manager\Sync\ComponentSync;
 
 #[AsCommand("storyblok:definitions:sync")]
@@ -73,13 +74,22 @@ final class SyncDefinitionsCommand extends Command
 
 			$io->newLine(2);
 			$io->success("All done");
-			return 0;
+
+			return self::SUCCESS;
+		}
+		catch (ValidationFailedException $exception)
+		{
+			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
+			$io->error("Validation failed");
+
+			return self::FAILURE;
 		}
 		catch (SyncFailedException $exception)
 		{
 			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
 			$io->error("Sync failed");
-			return 1;
+
+			return self::FAILURE;
 		}
 	}
 }
