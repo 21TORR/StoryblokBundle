@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Manager\Sync;
 
-use Torr\Storyblok\Exception\Sync\SyncFailedException;
+use Torr\Storyblok\Exception\Sync\ValidationFailedException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 
@@ -40,7 +40,7 @@ final class ComponentConfigResolver
 			{
 				\is_array($value) => $this->resolveComponentConfig($value),
 				\is_scalar($value) || null === $value => $value,
-				default => throw new SyncFailedException(\sprintf(
+				default => throw new ValidationFailedException(\sprintf(
 					"Invalid config value encountered: %s",
 					\get_debug_type($value),
 				)),

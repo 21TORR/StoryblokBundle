@@ -1,3 +1,9 @@
+3.1.0
+=====
+
+* (feature) Add new command `storyblok:definitions:validate` to validate whether the components can be normalized.
+
+
 3.0.3
 =====
 
