@@ -2,6 +2,8 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
@@ -42,8 +44,11 @@ final class TableField extends AbstractField
 			[
 				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
-				// We can't validate the length here, as it is not guaranteed if you add
-				// the max-length after content was added.
+				new Collection([
+					"thead" => new Type("array"),
+					"tbody" => new Type("array"),
+					"fieldtype" => new Choice(["table"]),
+				]),
 			],
 		);
 	}
