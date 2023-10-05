@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
-use Torr\Storyblok\Exception\Sync\ValidationFailedException;
+use Torr\Storyblok\Exception\Validation\ValidationFailedException;
 use Torr\Storyblok\Manager\Sync\ComponentSync;
 
 #[AsCommand("storyblok:definitions:sync")]

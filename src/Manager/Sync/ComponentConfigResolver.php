@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Manager\Sync;
 
-use Torr\Storyblok\Exception\Sync\ValidationFailedException;
+use Torr\Storyblok\Exception\Validation\ValidationFailedException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 

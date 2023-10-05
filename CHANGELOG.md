@@ -1,3 +1,9 @@
+3.2.1
+=====
+
+*   (bug) Fix wrong namespace import of `ValidationFailedException` being used.
+
+
 3.2.0
 =====
 
