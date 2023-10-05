@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Exception\Sync;
+namespace Torr\Storyblok\Exception\Validation;
 
 use Torr\Storyblok\Exception\StoryblokException;
 

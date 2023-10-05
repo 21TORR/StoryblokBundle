@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\ContentApi;
-use Torr\Storyblok\Exception\Sync\ValidationFailedException;
+use Torr\Storyblok\Exception\Validation\ValidationFailedException;
 use Torr\Storyblok\Manager\Validator\ComponentValidator;
 
 #[AsCommand(name: "storyblok:definitions:validate", description: "Validates the local component definitions against Storyblok")]

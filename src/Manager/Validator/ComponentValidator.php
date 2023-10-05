@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Manager\Validator;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
-use Torr\Storyblok\Exception\Sync\ValidationFailedException;
+use Torr\Storyblok\Exception\Validation\ValidationFailedException;
 use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
 
 final class ComponentValidator
