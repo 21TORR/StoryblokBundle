@@ -1,3 +1,9 @@
+3.2.2 (unreleased)
+=====
+
+* (improvement) Add helper `ReleaseVersion::createFromPreviewFlag()`.
+
+
 3.2.1
 =====
 
