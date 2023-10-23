@@ -1,7 +1,8 @@
-3.2.2 (unreleased)
+3.2.2
 =====
 
 * (improvement) Add helper `ReleaseVersion::createFromPreviewFlag()`.
+* (feature) Add `ComponentDataVisitorInterface` to also be able to visit components.
 
 
 3.2.1
