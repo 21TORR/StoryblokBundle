@@ -16,6 +16,7 @@ use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Management\ManagementApiData;
 use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Visitor\ComponentDataVisitorInterface;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
@@ -136,13 +137,19 @@ abstract class AbstractComponent
 			}
 		}
 
-
-		return new ComponentData(
+		$componentData = new ComponentData(
 			$data["_uid"],
 			static::getKey(),
 			$transformedData,
 			previewData: $previewData,
 		);
+
+		if ($dataVisitor instanceof ComponentDataVisitorInterface)
+		{
+			$dataVisitor->onDataVisit($this, $componentData);
+		}
+
+		return $componentData;
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 namespace Tests\Torr\Storyblok\Field\Definition;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Torr\Storyblok\Context\ComponentContextTestHelperTrait;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
@@ -60,8 +61,8 @@ class BloksFieldTest extends TestCase
 
 
 	/**
-	 * @dataProvider provideIgnoredComponentsCount
 	 */
+	#[DataProvider("provideIgnoredComponentsCount")]
 	public function testIgnoredComponentsCount (
 		array $data,
 		string $message,

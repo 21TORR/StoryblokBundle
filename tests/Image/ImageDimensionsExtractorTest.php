@@ -2,6 +2,7 @@
 
 namespace Tests\Torr\Storyblok\Image;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use PHPUnit\Framework\TestCase;
 
@@ -10,7 +11,7 @@ class ImageDimensionsExtractorTest extends TestCase
 	/**
 	 *
 	 */
-	public function provideExtraction () : iterable
+	public static function provideExtraction () : iterable
 	{
 		yield [
 			"https://a.storyblok.com/f/space/1157x1143/hash/filename.png",
@@ -39,8 +40,8 @@ class ImageDimensionsExtractorTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider provideExtraction
 	 */
+	#[DataProvider("provideExtraction")]
 	public function testExtraction (string $url, array $expected) : void
 	{
 		$extractor = new ImageDimensionsExtractor();
