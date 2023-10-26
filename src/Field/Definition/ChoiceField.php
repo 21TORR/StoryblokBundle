@@ -81,35 +81,20 @@ final class ChoiceField extends AbstractField
 	 */
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
-		$valueConstraints = [
-			new AtLeastOneOf([
-				new Type("string"),
-				new Type("int"),
-			]),
-		];
-
-		if ($this->allowMultiselect)
-		{
-			$valueConstraints[] = new NotNull();
-
-			if (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
-			{
-				$valueConstraints[] = new Count(
-					min: $this->minimumNumberOfOptions,
-					max: $this->maximumNumberOfOptions,
-					minMessage: "At least {{ limit }} option(s) must be selected.",
-					maxMessage: "You cannot specify more than {{ limit }} options.",
-				);
-			}
-		}
+		$allowedValueTypeConstraints = new AtLeastOneOf([
+			new Type("string"),
+			new Type("int"),
+		]);
 
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
-			$this->allowMultiselect
-				? [new All($valueConstraints)]
-				: $valueConstraints,
+			[
+				$this->allowMultiselect
+					? new All([new NotNull(), $allowedValueTypeConstraints])
+					: $allowedValueTypeConstraints,
+			],
 		);
 
 		\assert(null === $data || \is_array($data) || \is_int($data) || \is_string($data));
@@ -117,6 +102,23 @@ final class ChoiceField extends AbstractField
 		if (\is_string($data))
 		{
 			$data = $context->normalizeOptionalString($data);
+		}
+
+		if (\is_array($data) && $this->allowMultiselect && (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions))
+		{
+			$context->ensureDataIsValid(
+				$contentPath,
+				$this,
+				$data,
+				[
+					new Count(
+						min: $this->minimumNumberOfOptions,
+						max: $this->maximumNumberOfOptions,
+						minMessage: "At least {{ limit }} option(s) must be selected.",
+						maxMessage: "You cannot specify more than {{ limit }} options.",
+					),
+				],
+			);
 		}
 
 		$choicesConstraints = $this->choices->getValidationConstraints($this->allowMultiselect);
