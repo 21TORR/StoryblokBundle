@@ -4,9 +4,11 @@ namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\Choices\ChoicesInterface;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -20,9 +22,29 @@ final class ChoiceField extends AbstractField
 		private readonly ChoicesInterface $choices,
 		private readonly bool $allowMultiselect = false,
 		private readonly int|string|\BackedEnum|null $defaultValue = null,
+		private readonly ?int $minimumNumberOfOptions = null,
+		private readonly ?int $maximumNumberOfOptions = null,
 	)
 	{
 		parent::__construct($label, $this->defaultValue);
+
+		if (!$this->allowMultiselect && (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions))
+		{
+			throw new InvalidFieldConfigurationException(\sprintf(
+				"Can't configure minimum or maximum amount of options for single-select choice.",
+			));
+		}
+
+		if (
+			null !== $this->minimumNumberOfOptions
+			&& null !== $this->maximumNumberOfOptions
+			&& $this->minimumNumberOfOptions > $this->maximumNumberOfOptions
+		)
+		{
+			throw new InvalidFieldConfigurationException(\sprintf(
+				"The minimum number of options value can't be higher than the maximum",
+			));
+		}
 	}
 
 
@@ -48,6 +70,8 @@ final class ChoiceField extends AbstractField
 				"default_value" => $this->defaultValue instanceof \BackedEnum
 					? $this->defaultValue->value
 					: $this->defaultValue,
+				"min_options" => $this->minimumNumberOfOptions,
+				"max_options" => $this->maximumNumberOfOptions,
 			],
 		);
 	}
@@ -57,20 +81,35 @@ final class ChoiceField extends AbstractField
 	 */
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
-		$allowedValueTypeConstraints = new AtLeastOneOf([
-			new Type("string"),
-			new Type("int"),
-		]);
+		$valueConstraints = [
+			new AtLeastOneOf([
+				new Type("string"),
+				new Type("int"),
+			]),
+		];
+
+		if ($this->allowMultiselect)
+		{
+			$valueConstraints[] = new NotNull();
+
+			if (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
+			{
+				$valueConstraints[] = new Count(
+					min: $this->minimumNumberOfOptions,
+					max: $this->maximumNumberOfOptions,
+					minMessage: "At least {{ limit }} option(s) must be selected.",
+					maxMessage: "You cannot specify more than {{ limit }} options.",
+				);
+			}
+		}
 
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
-			[
-				$this->allowMultiselect
-					? new All([new NotNull(), $allowedValueTypeConstraints])
-					: $allowedValueTypeConstraints,
-			],
+			$this->allowMultiselect
+				? [new All($valueConstraints)]
+				: $valueConstraints,
 		);
 
 		\assert(null === $data || \is_array($data) || \is_int($data) || \is_string($data));

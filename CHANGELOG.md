@@ -4,6 +4,7 @@
 * (feature) Extract parsing of `_editable` data into `PreviewDataParser`.
 * (internal) Expose `_editable` data via `StoryMetaData::getPreviewData()`.
 * (feature) Add `ComponentPreviewData` helper to easily render component meta and preview data.
+* (feature) Add support for setting minimum and maximum count of selected `ChoiceField` options.
 
 
 3.2.2
