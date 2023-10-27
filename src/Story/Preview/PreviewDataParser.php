@@ -8,17 +8,17 @@ final class PreviewDataParser
 {
 	public static function parse (mixed $editableData) : ?array
 	{
-		if (!\is_string($editableData) && null !== $editableData)
+		if (null === $editableData)
+		{
+			return null;
+		}
+		
+		if (!\is_string($editableData))
 		{
 			throw new InvalidDataException(\sprintf(
 				"Encountered invalid preview data of type '%s'. Expected string or null.",
 				\get_debug_type($editableData),
 			));
-		}
-
-		if (null === $editableData)
-		{
-			return null;
 		}
 
 		$previewData = null;
