@@ -15,7 +15,7 @@ final class ComponentPreviewData
 			return [
 				"_uid" => $metaData->uid,
 				"_type" => $metaData->type,
-				"_preview" => $metaData->previewData,
+				"_preview" => PreviewDataParser::parse($metaData->previewData),
 			];
 		}
 

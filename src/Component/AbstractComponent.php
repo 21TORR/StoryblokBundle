@@ -15,7 +15,6 @@ use Torr\Storyblok\Field\Collection\FieldCollection;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Management\ManagementApiData;
-use Torr\Storyblok\Story\Preview\PreviewDataParser;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Visitor\ComponentDataVisitorInterface;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -125,7 +124,7 @@ abstract class AbstractComponent
 			$data["_uid"],
 			static::getKey(),
 			$transformedData,
-			previewData: PreviewDataParser::parse($data["_editable"] ?? null),
+			previewData: $data["_editable"] ?? null,
 		);
 
 		if ($dataVisitor instanceof ComponentDataVisitorInterface)
