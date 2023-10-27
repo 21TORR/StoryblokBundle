@@ -110,7 +110,7 @@ final class ChoiceField extends AbstractField
 			],
 		);
 
-		\assert(null === $data || \is_int($data) || \is_string($data));
+		\assert(\is_int($data) || \is_string($data));
 
 		if (\is_string($data))
 		{
@@ -138,7 +138,7 @@ final class ChoiceField extends AbstractField
 			$this,
 			$data,
 			[
-				new Type("Array"),
+				new Type("array"),
 				new All([
 					new NotNull(),
 					new AtLeastOneOf([
@@ -149,9 +149,9 @@ final class ChoiceField extends AbstractField
 			],
 		);
 
-		\assert(null === $data || \is_array($data));
+		\assert(\is_array($data));
 
-		if (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
+		if ($this->required || null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
 		{
 			$context->ensureDataIsValid(
 				$contentPath,
@@ -159,7 +159,7 @@ final class ChoiceField extends AbstractField
 				$data,
 				[
 					new Count(
-						min: $this->minimumNumberOfOptions,
+						min: $this->minimumNumberOfOptions ?? ($this->required ? 1 : null),
 						max: $this->maximumNumberOfOptions,
 						minMessage: "At least {{ limit }} option(s) must be selected.",
 						maxMessage: "You cannot specify more than {{ limit }} options.",
@@ -170,7 +170,7 @@ final class ChoiceField extends AbstractField
 
 		$choicesConstraints = $this->choices->getValidationConstraints(true);
 
-		if (null !== $data && !empty($choicesConstraints))
+		if (!empty($choicesConstraints))
 		{
 			$context->ensureDataIsValid(
 				$contentPath,
