@@ -1,3 +1,9 @@
+3.3.0
+=====
+
+* (feature) Extract parsing of `_editable` data into `PreviewDataParser`.
+
+
 3.2.2
 =====
 

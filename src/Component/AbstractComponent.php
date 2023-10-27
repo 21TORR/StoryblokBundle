@@ -15,6 +15,7 @@ use Torr\Storyblok\Field\Collection\FieldCollection;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Management\ManagementApiData;
+use Torr\Storyblok\Story\Preview\PreviewDataParser;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Visitor\ComponentDataVisitorInterface;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -120,28 +121,11 @@ abstract class AbstractComponent
 			}
 		}
 
-		$previewData = null;
-
-		if (\is_string($data["_editable"] ?? null) && \preg_match('~^<!--#storyblok#(.*)-->$~', $data["_editable"], $matches))
-		{
-			try
-			{
-				$previewData = \json_decode(\stripslashes($matches[1]), true, flags: \JSON_THROW_ON_ERROR);
-			}
-			catch (\JsonException $exception)
-			{
-				throw new InvalidDataException(\sprintf(
-					"Encountered invalid preview data: '%s'",
-					$data["_editable"],
-				), previous: $exception);
-			}
-		}
-
 		$componentData = new ComponentData(
 			$data["_uid"],
 			static::getKey(),
 			$transformedData,
-			previewData: $previewData,
+			previewData: PreviewDataParser::parse($data["_editable"] ?? null),
 		);
 
 		if ($dataVisitor instanceof ComponentDataVisitorInterface)
