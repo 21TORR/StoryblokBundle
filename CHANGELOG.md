@@ -2,6 +2,7 @@
 =====
 
 * (feature) Extract parsing of `_editable` data into `PreviewDataParser`.
+* (improvement) Expose `_editable` data via `StoryMetaData::getPreviewData()`.
 
 
 3.2.2
