@@ -6,9 +6,17 @@ use Torr\Storyblok\Exception\Story\InvalidDataException;
 
 final class PreviewDataParser
 {
-	public static function parse (?string $editableData) : ?array
+	public static function parse (mixed $editableData) : ?array
 	{
-		if (!\is_string($editableData))
+		if (!\is_string($editableData) && null !== $editableData)
+		{
+			throw new InvalidDataException(\sprintf(
+				"Encountered invalid preview data of type '%s'. Expected string or null.",
+				\get_debug_type($editableData),
+			));
+		}
+
+		if (null === $editableData)
 		{
 			return null;
 		}
