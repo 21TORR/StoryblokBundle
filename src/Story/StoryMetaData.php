@@ -9,6 +9,7 @@ final class StoryMetaData
 {
 	private readonly array $data;
 	private readonly array $slugSegments;
+	private readonly ?string $previewData;
 
 	/**
 	 */
@@ -20,6 +21,7 @@ final class StoryMetaData
 		private readonly string $type,
 	)
 	{
+		$this->previewData = $data["content"]["_editable"] ?? null;
 		unset($data["content"]);
 		$this->data = $data;
 		$this->slugSegments = \explode("/", \rtrim($data["full_slug"], "/"));
@@ -206,5 +208,10 @@ final class StoryMetaData
 		}
 
 		return $mapping;
+	}
+
+	public function getPreviewData () : ?string
+	{
+		return $this->previewData;
 	}
 }
