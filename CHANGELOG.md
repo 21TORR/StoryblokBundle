@@ -2,7 +2,7 @@
 =====
 
 * (feature) Extract parsing of `_editable` data into `PreviewDataParser`.
-* (improvement) Expose `_editable` data via `StoryMetaData::getPreviewData()`.
+* (internal) Expose `_editable` data via `StoryMetaData::getPreviewData()`.
 * (feature) Add `ComponentPreviewData` helper to easily render component meta and preview data.
 
 
