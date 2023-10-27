@@ -5,6 +5,7 @@ namespace Torr\Storyblok\Field\Definition;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
@@ -81,30 +82,76 @@ final class ChoiceField extends AbstractField
 	 */
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
-		$allowedValueTypeConstraints = new AtLeastOneOf([
-			new Type("string"),
-			new Type("int"),
-		]);
+		if ($this->allowMultiselect)
+		{
+			$this->validateMultiSelect($context, $contentPath, $data);
+		}
+		else
+		{
+			$this->validateSingleSelect($context, $contentPath, $data);
+		}
+	}
 
+
+	private function validateSingleSelect (ComponentContext $context, array $contentPath, mixed $data) : void
+	{
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
 			[
-				$this->allowMultiselect
-					? new All([new NotNull(), $allowedValueTypeConstraints])
-					: $allowedValueTypeConstraints,
+				new AtLeastOneOf([
+					new Type("string"),
+					new Type("int"),
+				]),
+				$this->required
+					? new NotBlank()
+					: null,
 			],
 		);
 
-		\assert(null === $data || \is_array($data) || \is_int($data) || \is_string($data));
+		\assert(null === $data || \is_int($data) || \is_string($data));
 
 		if (\is_string($data))
 		{
 			$data = $context->normalizeOptionalString($data);
 		}
 
-		if (\is_array($data) && $this->allowMultiselect && (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions))
+		$choicesConstraints = $this->choices->getValidationConstraints(false);
+
+		if (null !== $data && !empty($choicesConstraints))
+		{
+			$context->ensureDataIsValid(
+				$contentPath,
+				$this,
+				$data,
+				$choicesConstraints,
+			);
+		}
+	}
+
+
+	private function validateMultiSelect (ComponentContext $context, array $contentPath, mixed $data) : void
+	{
+		$context->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new Type("Array"),
+				new All([
+					new NotNull(),
+					new AtLeastOneOf([
+						new Type("string"),
+						new Type("int"),
+					]),
+				]),
+			],
+		);
+
+		\assert(null === $data || \is_array($data));
+
+		if (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
 		{
 			$context->ensureDataIsValid(
 				$contentPath,
@@ -121,7 +168,7 @@ final class ChoiceField extends AbstractField
 			);
 		}
 
-		$choicesConstraints = $this->choices->getValidationConstraints($this->allowMultiselect);
+		$choicesConstraints = $this->choices->getValidationConstraints(true);
 
 		if (null !== $data && !empty($choicesConstraints))
 		{
