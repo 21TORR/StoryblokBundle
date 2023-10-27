@@ -12,7 +12,7 @@ final class PreviewDataParser
 		{
 			return null;
 		}
-		
+
 		if (!\is_string($editableData))
 		{
 			throw new InvalidDataException(\sprintf(
