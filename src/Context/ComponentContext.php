@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Context;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Contracts\Service\Attribute\Required;
 use Torr\Storyblok\Api\Transformer\StoryblokIdSlugMapper;
 use Torr\Storyblok\Component\AbstractComponent;
@@ -12,7 +13,10 @@ use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
 
-final class ComponentContext
+/**
+ * @final
+ */
+class ComponentContext
 {
 	public ?StoryblokIdSlugMapper $storyblokIdSlugMapper = null;
 
@@ -39,6 +43,9 @@ final class ComponentContext
 
 	/**
 	 * @see DataValidator::ensureDataIsValid()
+	 *
+	 * @param string[]               $contentPath
+	 * @param array<Constraint|null> $constraints
 	 */
 	public function ensureDataIsValid (
 		array $contentPath,
