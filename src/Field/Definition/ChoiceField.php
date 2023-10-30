@@ -107,8 +107,6 @@ final class ChoiceField extends AbstractField
 			return;
 		}
 
-		\assert(\is_string($data));
-
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
@@ -144,8 +142,6 @@ final class ChoiceField extends AbstractField
 		{
 			return;
 		}
-
-		\assert(\is_array($data));
 
 		$data = \array_map(
 			static fn (mixed $value) => $context->normalizeOptionalString((string) $value),
