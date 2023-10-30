@@ -3,7 +3,6 @@
 namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\All;
-use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -95,31 +94,30 @@ final class ChoiceField extends AbstractField
 
 	private function validateSingleSelect (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
+		$data = $context->normalizeOptionalString($data);
+
+		if (null === $data)
+		{
+			return;
+		}
+
+		\assert(\is_string($data));
+
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
 			[
-				new AtLeastOneOf([
-					new Type("string"),
-					new Type("int"),
-				]),
+				new Type("string"),
 				$this->required
 					? new NotBlank()
 					: null,
 			],
 		);
 
-		\assert(\is_int($data) || \is_string($data));
-
-		if (\is_string($data))
-		{
-			$data = $context->normalizeOptionalString($data);
-		}
-
 		$choicesConstraints = $this->choices->getValidationConstraints(false);
 
-		if (null !== $data && !empty($choicesConstraints))
+		if (!empty($choicesConstraints))
 		{
 			$context->ensureDataIsValid(
 				$contentPath,
@@ -138,6 +136,13 @@ final class ChoiceField extends AbstractField
 			return;
 		}
 
+		\assert(\is_array($data));
+
+		$data = \array_map(
+			$context->normalizeOptionalString(...),
+			$data,
+		);
+
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
@@ -146,15 +151,10 @@ final class ChoiceField extends AbstractField
 				new Type("array"),
 				new All([
 					new NotNull(),
-					new AtLeastOneOf([
-						new Type("string"),
-						new Type("int"),
-					]),
+					new Type("string"),
 				]),
 			],
 		);
-
-		\assert(\is_array($data));
 
 		if ($this->required || null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
 		{
