@@ -143,6 +143,15 @@ final class ChoiceField extends AbstractField
 			return;
 		}
 
+		$context->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new Type("array"),
+			],
+		);
+
 		$data = \array_map(
 			static fn (mixed $value) => $context->normalizeOptionalString((string) $value),
 			$data,
@@ -153,7 +162,6 @@ final class ChoiceField extends AbstractField
 			$this,
 			$data,
 			[
-				new Type("array"),
 				new All([
 					new NotNull(),
 					new Type("string"),
