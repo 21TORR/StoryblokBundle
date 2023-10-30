@@ -5,6 +5,7 @@
 * (internal) Expose `_editable` data via `StoryMetaData::getPreviewData()`.
 * (feature) Add `ComponentPreviewData` helper to easily render component meta and preview data.
 * (improvement) Add support for setting minimum and maximum count of selected `ChoiceField` options.
+* (bug) Add missing `symfony/lock` dependency.
 
 
 3.2.2
