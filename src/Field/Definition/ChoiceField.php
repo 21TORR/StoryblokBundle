@@ -133,6 +133,11 @@ final class ChoiceField extends AbstractField
 
 	private function validateMultiSelect (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
+		if (null === $data)
+		{
+			return;
+		}
+
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
