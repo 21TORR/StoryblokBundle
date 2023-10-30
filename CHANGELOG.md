@@ -6,6 +6,7 @@
 * (feature) Add `ComponentPreviewData` helper to easily render component meta and preview data.
 * (improvement) Add support for setting minimum and maximum count of selected `ChoiceField` options.
 * (bug) Add missing `symfony/lock` dependency.
+* (improvement) Sort components alphabetically when syncing/validating.
 
 
 3.2.2

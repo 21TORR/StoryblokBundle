@@ -25,10 +25,17 @@ class ComponentManager
 	 */
 	public function getAllComponents () : array
 	{
-		return \array_map(
+		$components = \array_map(
 			fn (string $key) => $this->getComponent($key),
 			\array_keys($this->components->getProvidedServices()),
 		);
+
+		\usort(
+			$components,
+			static fn (AbstractComponent $left, AbstractComponent $right) => \strnatcmp($left->getDisplayName(), $right->getDisplayName()),
+		);
+
+		return $components;
 	}
 
 	/**
