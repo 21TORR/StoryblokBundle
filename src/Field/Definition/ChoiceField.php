@@ -78,23 +78,29 @@ final class ChoiceField extends AbstractField
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @param string|int|null|array<string|int|null> $data
 	 */
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		if ($this->allowMultiselect)
 		{
+			\assert(null === $data || \is_array($data));
+
 			$this->validateMultiSelect($context, $contentPath, $data);
 		}
 		else
 		{
+			\assert(null === $data || \is_string($data) || \is_int($data));
+
 			$this->validateSingleSelect($context, $contentPath, $data);
 		}
 	}
 
 
-	private function validateSingleSelect (ComponentContext $context, array $contentPath, mixed $data) : void
+	private function validateSingleSelect (ComponentContext $context, array $contentPath, string|int|null $data) : void
 	{
-		$data = $context->normalizeOptionalString($data);
+		$data = $context->normalizeOptionalString((string) $data);
 
 		if (null === $data)
 		{
@@ -129,7 +135,10 @@ final class ChoiceField extends AbstractField
 	}
 
 
-	private function validateMultiSelect (ComponentContext $context, array $contentPath, mixed $data) : void
+	/**
+	 * @param array<int|string|null>|null $data
+	 */
+	private function validateMultiSelect (ComponentContext $context, array $contentPath, array|null $data) : void
 	{
 		if (null === $data)
 		{
@@ -139,7 +148,7 @@ final class ChoiceField extends AbstractField
 		\assert(\is_array($data));
 
 		$data = \array_map(
-			$context->normalizeOptionalString(...),
+			static fn (mixed $value) => $context->normalizeOptionalString((string) $value),
 			$data,
 		);
 
