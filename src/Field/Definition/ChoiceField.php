@@ -3,7 +3,9 @@
 namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\IsNull;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
@@ -78,34 +80,52 @@ final class ChoiceField extends AbstractField
 
 	/**
 	 * @inheritDoc
-	 *
-	 * @param string|int|null|array<string|int|null> $data
 	 */
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
+		$context->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new AtLeastOneOf([
+					new Type("string"),
+					new Type("int"),
+					new Type("array"),
+					new IsNull(),
+				]),
+			],
+		);
+
 		if ($this->allowMultiselect)
 		{
-			\assert(null === $data || \is_array($data));
-
 			$this->validateMultiSelect($context, $contentPath, $data);
 		}
 		else
 		{
-			\assert(null === $data || \is_string($data) || \is_int($data));
-
 			$this->validateSingleSelect($context, $contentPath, $data);
 		}
 	}
 
 
-	private function validateSingleSelect (ComponentContext $context, array $contentPath, string|int|null $data) : void
+	private function validateSingleSelect (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
-		$data = $context->normalizeOptionalString((string) $data);
+		$context->ensureDataIsValid(
+			$contentPath,
+			$this,
+			$data,
+			[
+				new AtLeastOneOf([
+					new Type("string"),
+					new Type("int"),
+					new IsNull(),
+				]),
+			],
+		);
 
-		if (null === $data)
-		{
-			return;
-		}
+		\assert(null === $data || \is_string($data) || \is_int($data));
+
+		$data = $context->normalizeOptionalString((string) $data);
 
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -118,6 +138,11 @@ final class ChoiceField extends AbstractField
 					: null,
 			],
 		);
+
+		if (null === $data)
+		{
+			return;
+		}
 
 		$choicesConstraints = $this->choices->getValidationConstraints(false);
 
@@ -136,21 +161,26 @@ final class ChoiceField extends AbstractField
 	/**
 	 * @param array<int|string|null>|null $data
 	 */
-	private function validateMultiSelect (ComponentContext $context, array $contentPath, array|null $data) : void
+	private function validateMultiSelect (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
-		if (null === $data)
-		{
-			return;
-		}
-
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
 			[
-				new Type("array"),
+				new AtLeastOneOf([
+					new Type("array"),
+					new IsNull(),
+				]),
 			],
 		);
+
+		\assert(null === $data || \is_array($data));
+
+		if (null === $data)
+		{
+			return;
+		}
 
 		$data = \array_map(
 			static fn (mixed $value) => $context->normalizeOptionalString((string) $value),
@@ -163,7 +193,6 @@ final class ChoiceField extends AbstractField
 			$data,
 			[
 				new All([
-					new NotNull(),
 					new Type("string"),
 				]),
 			],
