@@ -2,16 +2,16 @@
 
 namespace Torr\Storyblok\Api\Data;
 
-use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Datasource\DatasourceEntry;
 
-final class PaginatedApiResult
+final class PaginatedDatasourceApiResult
 {
 	/**
-	 * @param array<Story> $stories
+	 * @param DatasourceEntry[] $entries
 	 */
 	public function __construct (
 		public readonly int $perPage,
 		public readonly int $totalPages,
-		public readonly array $stories,
+		public readonly array $entries,
 	) {}
 }

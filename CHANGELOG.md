@@ -1,3 +1,9 @@
+3.4.0
+=====
+
+* (feature) Add support for fetching `DatasourceEntry`s via `ContentApi`.
+
+
 3.3.0
 =====
 

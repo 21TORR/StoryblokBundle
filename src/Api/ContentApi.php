@@ -8,9 +8,11 @@ use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
-use Torr\Storyblok\Api\Data\PaginatedApiResult;
+use Torr\Storyblok\Api\Data\PaginatedDatasourceApiResult;
+use Torr\Storyblok\Api\Data\PaginatedStoryApiResult;
 use Torr\Storyblok\Api\Data\SpaceInfo;
 use Torr\Storyblok\Config\StoryblokConfig;
+use Torr\Storyblok\Datasource\DatasourceEntry;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
@@ -246,7 +248,7 @@ final class ContentApi implements ResetInterface
 	private function fetchStoriesResultPage (
 		array $query = [],
 		int $page = 1,
-	) : PaginatedApiResult
+	) : PaginatedStoryApiResult
 	{
 		$query["token"] = $this->config->getContentToken();
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
@@ -300,7 +302,7 @@ final class ContentApi implements ResetInterface
 				}
 			}
 
-			return new PaginatedApiResult(
+			return new PaginatedStoryApiResult(
 				perPage: $perPage,
 				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
 				stories: $stories,
@@ -328,6 +330,130 @@ final class ContentApi implements ResetInterface
 		return \ctype_digit($value)
 			? (int) $value
 			: null;
+	}
+
+
+	/**
+	 * Fetches all entry for the given datasource.
+	 *
+	 * @param string|string[]|null $slug The slug of the datasource.
+	 *
+	 * @throws ContentRequestFailedException
+	 *
+	 * @return array<string, DatasourceEntry> DatasourceEntry value to DatasourceEntry
+	 */
+	public function fetchDatasourceEntries (
+		string|array|null $slug,
+		?string $dimension = null,
+		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
+	) : array
+	{
+		$query = [
+			"datasource" => $slug,
+			"per_page" => 100,
+			"version" => $version->value,
+		];
+
+		if (null !== $dimension)
+		{
+			$query["dimension"] = $dimension;
+		}
+
+		$result = [];
+		$page = 1;
+
+		do
+		{
+			$currentPage = $this->fetchDatasourceEntriesResultPage($query, $page);
+
+			foreach ($currentPage->entries as $value => $datasourceEntry)
+			{
+				$result[$value] = $datasourceEntry;
+			}
+
+			++$page;
+		}
+		while ($currentPage->totalPages >= $page);
+
+		return $result;
+	}
+
+
+	/**
+	 * Fetches datasource entries.
+	 *
+	 * @throws ContentRequestFailedException
+	 */
+	private function fetchDatasourceEntriesResultPage (
+		array $query = [],
+		int $page = 1,
+	) : PaginatedDatasourceApiResult
+	{
+		$query["token"] = $this->config->getContentToken();
+		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
+		$query["page"] = $page;
+
+		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
+		\ksort($query);
+
+		try
+		{
+			$response = $this->client->request(
+				"GET",
+				"datasource_entries",
+				(new HttpOptions())
+					->setQuery($query)
+					->toArray(),
+			);
+
+			$data = $response->toArray();
+			$headers = $response->getHeaders();
+			$perPage = $this->parseHeaderAsInt($headers, "per-page");
+			$totalNumberOfItems = $this->parseHeaderAsInt($headers, "total");
+
+			$entries = [];
+
+			if (
+				!\is_array($data["datasource_entries"])
+				|| null === $perPage
+				|| null === $totalNumberOfItems
+				|| $perPage <= 0
+			)
+			{
+				$this->logger->error("Content request failed: invalid response structure / missing headers", [
+					"query" => $query,
+					"headers" => $headers,
+					"response" => $response->getContent(false),
+					"perPage" => $perPage,
+					"totalNumberOfItems" => $totalNumberOfItems,
+				]);
+
+				throw new ContentRequestFailedException("Content request failed: invalid response structure / missing headers");
+			}
+
+			foreach ($data["datasource_entries"] as $entryData)
+			{
+				$entry = new DatasourceEntry(
+					$entryData["name"],
+					$entryData["dimension_value"] ?? $entryData["value"],
+				);
+
+				$entries[$entry->value] = $entry;
+			}
+
+			return new PaginatedDatasourceApiResult(
+				perPage: $perPage,
+				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
+				entries: $entries,
+			);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			throw new ContentRequestFailedException(\sprintf(
+				"Content request failed: %s",
+				$exception->getMessage(),
+			), previous: $exception);
+		}
 	}
 
 	/**
