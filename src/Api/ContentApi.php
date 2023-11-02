@@ -9,7 +9,7 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Torr\Storyblok\Api\Data\PaginatedDatasourceApiResult;
-use Torr\Storyblok\Api\Data\PaginatedStoryApiResult;
+use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Api\Data\SpaceInfo;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Datasource\DatasourceEntry;
@@ -192,7 +192,7 @@ final class ContentApi implements ResetInterface
 		{
 			$currentPage = $this->fetchStoriesResultPage($query, $page);
 
-			foreach ($currentPage->stories as $story)
+			foreach ($currentPage->entries as $story)
 			{
 				$result[] = $story;
 			}
@@ -243,12 +243,14 @@ final class ContentApi implements ResetInterface
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
 	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
 	 *
+	 * @return PaginatedApiResult<Story>
+	 *
 	 * @throws ContentRequestFailedException
 	 */
 	private function fetchStoriesResultPage (
 		array $query = [],
 		int $page = 1,
-	) : PaginatedStoryApiResult
+	) : PaginatedApiResult
 	{
 		$query["token"] = $this->config->getContentToken();
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
@@ -302,10 +304,10 @@ final class ContentApi implements ResetInterface
 				}
 			}
 
-			return new PaginatedStoryApiResult(
+			return new PaginatedApiResult(
 				perPage: $perPage,
 				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
-				stories: $stories,
+				entries: $stories,
 			);
 		}
 		catch (ExceptionInterface $exception)
@@ -382,12 +384,14 @@ final class ContentApi implements ResetInterface
 	/**
 	 * Fetches datasource entries.
 	 *
+	 * @return PaginatedApiResult<DatasourceEntry>
+	 *
 	 * @throws ContentRequestFailedException
 	 */
 	private function fetchDatasourceEntriesResultPage (
 		array $query = [],
 		int $page = 1,
-	) : PaginatedDatasourceApiResult
+	) : PaginatedApiResult
 	{
 		$query["token"] = $this->config->getContentToken();
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
@@ -441,7 +445,7 @@ final class ContentApi implements ResetInterface
 				$entries[$entry->value] = $entry;
 			}
 
-			return new PaginatedDatasourceApiResult(
+			return new PaginatedApiResult(
 				perPage: $perPage,
 				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
 				entries: $entries,
