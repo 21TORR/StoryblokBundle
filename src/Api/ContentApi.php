@@ -8,7 +8,6 @@ use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
-use Torr\Storyblok\Api\Data\PaginatedDatasourceApiResult;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Api\Data\SpaceInfo;
 use Torr\Storyblok\Config\StoryblokConfig;
@@ -243,9 +242,9 @@ final class ContentApi implements ResetInterface
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
 	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
 	 *
-	 * @return PaginatedApiResult<Story>
-	 *
 	 * @throws ContentRequestFailedException
+	 *
+	 * @return PaginatedApiResult<Story>
 	 */
 	private function fetchStoriesResultPage (
 		array $query = [],
@@ -384,9 +383,9 @@ final class ContentApi implements ResetInterface
 	/**
 	 * Fetches datasource entries.
 	 *
-	 * @return PaginatedApiResult<DatasourceEntry>
-	 *
 	 * @throws ContentRequestFailedException
+	 *
+	 * @return PaginatedApiResult<DatasourceEntry>
 	 */
 	private function fetchDatasourceEntriesResultPage (
 		array $query = [],
