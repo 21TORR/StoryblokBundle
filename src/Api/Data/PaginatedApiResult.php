@@ -2,16 +2,18 @@
 
 namespace Torr\Storyblok\Api\Data;
 
-use Torr\Storyblok\Story\Story;
-
+/**
+ * @template T
+ */
 final class PaginatedApiResult
 {
 	/**
-	 * @param array<Story> $stories
+	 * @param array<T> $entries
 	 */
 	public function __construct (
 		public readonly int $perPage,
 		public readonly int $totalPages,
-		public readonly array $stories,
+		/** @var array<T> */
+		public readonly array $entries,
 	) {}
 }
