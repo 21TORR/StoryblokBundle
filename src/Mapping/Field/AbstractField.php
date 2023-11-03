@@ -7,10 +7,12 @@ use Torr\Storyblok\Field\FieldType;
 abstract class AbstractField
 {
 	public function __construct (
+		public readonly FieldType $internalStoryblokType,
 		public readonly string $key,
 		public readonly string $label,
 		public readonly mixed $defaultValue = null,
 	) {}
+
 
 	/**
 	 *
@@ -18,14 +20,9 @@ abstract class AbstractField
 	public function generateManagementApiData () : array
 	{
 		return [
-			"type" => $this->getInternalStoryblokType()->value,
+			"type" => $this->internalStoryblokType->value,
 			"display_name" => $this->label,
 			"default_value" => $this->defaultValue,
 		];
 	}
-
-	/**
-	 * Returns the internal storyblok type
-	 */
-	abstract protected function getInternalStoryblokType () : FieldType;
 }

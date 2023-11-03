@@ -16,17 +16,14 @@ final class TextField extends AbstractField
 		private readonly bool $isRightToLeft = false,
 	)
 	{
-		parent::__construct($key, $label, $defaultValue);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	protected function getInternalStoryblokType () : FieldType
-	{
-		return $this->multiline
-			? FieldType::TextArea
-			: FieldType::Text;
+		parent::__construct(
+			internalStoryblokType: $this->multiline
+				? FieldType::TextArea
+				: FieldType::Text,
+			key: $key,
+			label: $label,
+			defaultValue: $defaultValue,
+		);
 	}
 
 	/**
