@@ -63,6 +63,23 @@ final class NumberField extends AbstractField
 		]);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function normalizeData (mixed $data) : int|float|null
+	{
+		if (null === $data)
+		{
+			return null;
+		}
+
+		\assert(\is_string($data));
+
+		return 0 === $this->numberOfDecimals
+			? (int) $data
+			: (float) $data;
+	}
+
 
 	/**
 	 * @inheritDoc

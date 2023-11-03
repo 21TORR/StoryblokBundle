@@ -113,7 +113,11 @@ final class StoryFactory
 			);
 
 			// map data
-			$this->accessor->setValue($story, $field->property, $data);
+			$this->accessor->setValue(
+				$story,
+				$field->property,
+				$field->field->normalizeData($data),
+			);
 		}
 
 		return $story;

@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Mapping\Field;
 
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
@@ -28,6 +29,17 @@ final class TextField extends AbstractField
 			defaultValue: $defaultValue,
 		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function normalizeData (mixed $data) : ?string
+	{
+		\assert(null === $data || \is_string($data));
+
+		return DataTransformer::normalizeOptionalString($data);
+	}
+
 
 	/**
 	 * @inheritDoc
