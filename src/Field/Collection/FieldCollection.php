@@ -3,17 +3,17 @@
 namespace Torr\Storyblok\Field\Collection;
 
 use Torr\Storyblok\Exception\Story\UnknownFieldException;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 use Torr\Storyblok\Field\Helper\FieldDefinitionHelper;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 
 final class FieldCollection
 {
-	/** @var array<string, FieldDefinitionInterface> */
+	/** @var array<string, FieldDefinition> */
 	private array $allFields = [];
 
 	public function __construct (
-		/** @var array<string, FieldDefinitionInterface> $rootFields */
+		/** @var array<string, FieldDefinition> $rootFields */
 		private readonly array $rootFields,
 	)
 	{
@@ -22,7 +22,7 @@ final class FieldCollection
 	}
 
 	/**
-	 * @param array<string, FieldDefinitionInterface> $fields
+	 * @param array<string, FieldDefinition> $fields
 	 */
 	private function indexFields (array $fields) : void
 	{
@@ -39,7 +39,7 @@ final class FieldCollection
 
 
 	/**
-	 * @return array<string, FieldDefinitionInterface>
+	 * @return array<string, FieldDefinition>
 	 */
 	public function getRootFields () : array
 	{
@@ -49,7 +49,7 @@ final class FieldCollection
 	/**
 	 * Returns a single transformable field
 	 */
-	public function getField (string $key) : FieldDefinitionInterface
+	public function getField (string $key) : FieldDefinition
 	{
 		$field = $this->allFields[$key] ?? null;
 

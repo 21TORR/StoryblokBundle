@@ -4,14 +4,14 @@ namespace Torr\Storyblok\Field\Helper;
 
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Field\Definition\AbstractField;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 
 final class FieldDefinitionHelper
 {
 	/**
 	 * Ensures that there is a only a single field with an admin display preview
 	 *
-	 * @param iterable<FieldDefinitionInterface> $fields
+	 * @param iterable<FieldDefinition> $fields
 	 */
 	public static function ensureMaximumOneAdminDisplayName (iterable $fields) : void
 	{

@@ -1,0 +1,57 @@
+<?php declare(strict_types=1);
+
+namespace Torr\Storyblok\Definition\Component;
+
+final readonly class ComponentDefinitionRegistry
+{
+	/** @var array<string, ComponentDefinition[]> */
+	private array $componentsByTags;
+
+
+	public function __construct (
+		/** @var array<string, ComponentDefinition> */
+		private array $definitions,
+	)
+	{
+		$this->componentsByTags = $this->indexTags($this->definitions);
+	}
+
+
+	/**
+	 * @param ComponentDefinition[] $definitions
+	 */
+	private function indexTags (array $definitions) : array
+	{
+		$index = [];
+
+		foreach ($definitions as $definition)
+		{
+			foreach ($definition->definition->tags as $tag)
+			{
+				$tag = $tag instanceof \BackedEnum
+					? $tag->value
+					: $tag;
+				$index[$tag][] = $definition;
+			}
+		}
+
+		return $index;
+	}
+
+
+	/**
+	 * @return ComponentDefinition[]
+	 */
+	public function getComponentsByTag (string $tag) : array
+	{
+		return $this->componentsByTags[$tag] ?? [];
+	}
+
+	/**
+	 * @return ComponentDefinition[]
+	 */
+	public function getComponents () : array
+	{
+		return $this->definitions;
+	}
+}

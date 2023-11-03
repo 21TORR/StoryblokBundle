@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Field\Group;
 
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Torr\Storyblok\Context\ComponentContext;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
@@ -41,7 +41,7 @@ abstract class CompositeField extends AbstractGroupingElement
 	/**
 	 * Configures the fields
 	 *
-	 * @return array<string, FieldDefinitionInterface>
+	 * @return array<string, FieldDefinition>
 	 */
 	abstract protected function configureFields () : array;
 

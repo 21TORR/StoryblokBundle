@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Contracts\Service\Attribute\Required;
 use Torr\Storyblok\Api\Transformer\StoryblokIdSlugMapper;
 use Torr\Storyblok\Component\AbstractComponent;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Transformer\DataTransformer;
@@ -49,7 +49,7 @@ class ComponentContext
 	 */
 	public function ensureDataIsValid (
 		array $contentPath,
-		FieldDefinitionInterface $field,
+		FieldDefinition $field,
 		mixed $data,
 		array $constraints,
 	) : void

@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\Definition\AbstractField;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 use Torr\Storyblok\Field\Helper\FieldDefinitionHelper;
 use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 use Torr\Storyblok\Management\ManagementApiData;
@@ -15,11 +15,11 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 abstract class AbstractGroupingElement extends AbstractField implements NestedFieldDefinitionInterface
 {
 	/**
-	 * @param array<string, FieldDefinitionInterface> $fields
+	 * @param array<string, FieldDefinition> $fields
 	 */
 	public function __construct (
 		string $label,
-		/** @var array<string, FieldDefinitionInterface> $fields */
+		/** @var array<string, FieldDefinition> $fields */
 		protected readonly array $fields,
 	)
 	{

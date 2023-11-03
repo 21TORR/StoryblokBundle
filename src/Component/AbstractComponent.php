@@ -13,7 +13,7 @@ use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Collection\FieldCollection;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 use Torr\Storyblok\Management\ManagementApiData;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Visitor\ComponentDataVisitorInterface;
@@ -44,7 +44,7 @@ abstract class AbstractComponent
 	/**
 	 * Configures the fields in this component
 	 *
-	 * @return array<string, FieldDefinitionInterface>
+	 * @return array<string, FieldDefinition>
 	 */
 	abstract protected function configureFields () : array;
 
@@ -223,7 +223,7 @@ abstract class AbstractComponent
 	/**
 	 * Normalizes the fields for usage in the management API
 	 *
-	 * @param array<FieldDefinitionInterface> $fields
+	 * @param array<FieldDefinition> $fields
 	 */
 	private function normalizeFields (
 		array $fields,
@@ -285,7 +285,7 @@ abstract class AbstractComponent
 			"real_name" => static::getKey(),
 			"color" => $definition->iconBackgroundColor,
 			"icon" => $definition->icon?->value,
-			...$this->getComponentType()->toManagementApiData(),
+			...$this->getComponentType()->generateManagementApiData(),
 		];
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Management\ManagementApiData;
 
@@ -11,7 +11,7 @@ use Torr\Storyblok\Management\ManagementApiData;
  *
  * @internal
  */
-abstract class AbstractField implements FieldDefinitionInterface
+abstract class AbstractField implements FieldDefinition
 {
 	private ?bool $canSync = false;
 	private ?bool $useAsAdminDisplayName = false;

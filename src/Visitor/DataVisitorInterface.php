@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Visitor;
 
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Torr\Storyblok\Field\FieldDefinition;
 
 interface DataVisitorInterface
 {
@@ -10,7 +10,7 @@ interface DataVisitorInterface
 	 * If a data visitor is given, it will be called for every field with the field definition and data.
 	 */
 	public function onDataVisit (
-		FieldDefinitionInterface $field,
+		FieldDefinition $field,
 		mixed $data,
 	) : void;
 }

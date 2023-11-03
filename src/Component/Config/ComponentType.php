@@ -10,7 +10,7 @@ enum ComponentType
 
 	case Universal;
 
-	public function toManagementApiData () : array
+	public function generateManagementApiData () : array
 	{
 		return match ($this)
 		{

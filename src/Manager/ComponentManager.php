@@ -3,10 +3,17 @@
 namespace Torr\Storyblok\Manager;
 
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Contracts\Cache\CacheInterface;
+use Torr\Storyblok\Cache\DebugCache;
+use Torr\Storyblok\Cache\DebugCacheFactory;
 use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Definition\Component\ComponentDefinition;
+use Torr\Storyblok\Definition\Component\ComponentDefinitionFactory;
+use Torr\Storyblok\Definition\Component\ComponentDefinitionRegistry;
+use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
+use Torr\Storyblok\Mapping\Storyblok;
 use Torr\Storyblok\Story\Story;
 
 /**
@@ -14,11 +21,28 @@ use Torr\Storyblok\Story\Story;
  */
 class ComponentManager
 {
+	private const CACHE_KEY = "storyblok.definitions";
+
+	/** @var DebugCache<ComponentDefinitionRegistry> */
+	private DebugCache $definitionCache;
+
 	/**
 	 */
 	public function __construct (
-		private readonly ServiceLocator $components,
-	) {}
+		/** @var array<string, class-string> */
+		array $storyComponents,
+		ComponentDefinitionFactory $definitionFactory,
+		DebugCacheFactory $debugCacheFactory,
+	)
+	{
+		$this->definitionCache = $debugCacheFactory->createCache(
+			self::CACHE_KEY,
+			fn () => $definitionFactory->generateAllDefinitions($storyComponents),
+		);
+	}
+
+
+
 
 	/**
 	 * @return array<AbstractComponent>
@@ -123,4 +147,59 @@ class ComponentManager
 			);
 		}
 	}
+
+	/**
+	 */
+	public function getDefinitions () : ComponentDefinitionRegistry
+	{
+		return $this->definitionCache->get();
+	}
+
+	/**
+	 * Returns the definition of the component
+	 */
+	public function getDefinition (string $key) : ComponentDefinition
+	{
+		if (\array_key_exists($key, $this->definitions))
+		{
+			return $this->definitions[$key];
+		}
+
+		if (!\array_key_exists($key, $this->storyComponents))
+		{
+			throw new UnknownComponentKeyException(
+				message: \sprintf(
+					"Unknown component type: %s",
+					$key,
+				),
+				componentKey: $key,
+			);
+		}
+
+		try
+		{
+			$reflectionClass = new \ReflectionClass($this->storyComponents[$key]);
+			$attribute = $reflectionClass->getAttributes(Storyblok::class)[0] ?? null;
+
+			\assert(null !== $attribute);
+			$definition = $attribute->newInstance();
+			\assert($definition instanceof Storyblok);
+
+			return $this->definitions[$key] = new ComponentDefinition(
+				$definition,
+				$this->storyComponents[$key],
+			);
+		}
+		catch (\ReflectionException $exception)
+		{
+			throw new InvalidComponentDefinitionException(
+				message: \sprintf(
+					"Invalid component definition: %s",
+					$exception->getMessage(),
+				),
+				previous: $exception,
+			);
+		}
+	}
+
 }

@@ -7,7 +7,7 @@ interface NestedFieldDefinitionInterface
 	/**
 	 * Returns the nested fields
 	 *
-	 * @return FieldDefinitionInterface[]
+	 * @return FieldDefinition[]
 	 */
 	public function getNestedFields () : array;
 }
