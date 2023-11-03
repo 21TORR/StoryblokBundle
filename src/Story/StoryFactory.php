@@ -3,12 +3,14 @@
 namespace Torr\Storyblok\Story;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
-use Torr\Storyblok\Exception\Story\ComponentWithoutStoryException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Validator\DataValidator;
 
 final class StoryFactory
 {
@@ -18,6 +20,8 @@ final class StoryFactory
 		private readonly ComponentManager $componentManager,
 		private readonly ComponentContext $storyblokContext,
 		private readonly LoggerInterface $logger,
+		private readonly PropertyAccessorInterface $accessor,
+		private readonly DataValidator $dataValidator,
 	) {}
 
 	/**
@@ -25,7 +29,7 @@ final class StoryFactory
 	 *
 	 * @throws StoryHydrationFailed
 	 */
-	public function createFromApiData (array $data) : ?Story
+	public function createFromApiData (array $data) : ?object
 	{
 		$type = $data["content"]["component"] ?? null;
 
@@ -51,30 +55,17 @@ final class StoryFactory
 
 		try
 		{
-			$component = $this->componentManager->getComponent($type);
-			$storyClass = $component->getStoryClass();
+			$definition = $this->componentManager->getDefinition($type);
+			$storyClass = $definition->storyClass;
 
-			if (null === $storyClass)
-			{
-				throw new ComponentWithoutStoryException(\sprintf(
-					"Can't create story for component of type '%s', as no story class was defined.",
-					$component::getKey(),
-				));
-			}
+			$metaData = new StoryMetaData($data, $type);
 
-			if (!\is_a($storyClass, Story::class, true))
-			{
-				throw new StoryHydrationFailed(\sprintf(
-					"Could not hydrate story of type '%s': story class does not extend %s",
-					$component::getKey(),
-					Story::class,
-				));
-			}
-
-			$story = new $storyClass($data, $component, $this->storyblokContext);
-			$story->validate($this->storyblokContext);
-
-			return $story;
+			return $this->mapDataToFields(
+				[\sprintf("%s (%s)", $storyClass, $type)],
+				new $storyClass($metaData),
+				$definition->fields,
+				$data["content"],
+			);
 		}
 		catch (InvalidDataException $exception)
 		{
@@ -98,6 +89,36 @@ final class StoryFactory
 			return null;
 		}
 	}
+
+
+	/**
+	 * @param FieldDefinition[] $fields
+	 */
+	private function mapDataToFields (
+		array $contentPath,
+		object $story,
+		array $fields,
+		array $completeData,
+	) : object
+	{
+		foreach ($fields as $field)
+		{
+			$data = $completeData[$field->field->key] ?? null;
+
+			// validate data
+			$field->validateData(
+				$contentPath,
+				$this->dataValidator,
+				$data,
+			);
+
+			// map data
+			$this->accessor->setValue($story, $field->property, $data);
+		}
+
+		return $story;
+	}
+
 
 	/**
 	 * Checks the content of the story to see, whether the story was saved at least once

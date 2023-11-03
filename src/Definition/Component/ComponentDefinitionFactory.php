@@ -9,12 +9,12 @@ use Torr\Storyblok\Mapping\Field\AbstractField;
 use Torr\Storyblok\Mapping\FieldAttribute\FieldAttributeInterface;
 use Torr\Storyblok\Mapping\Storyblok;
 
-final class ComponentDefinitionFactory
+final readonly class ComponentDefinitionFactory
 {
 	/**
 	 */
 	public function __construct (
-		private readonly ReflectionHelper $helper,
+		private ReflectionHelper $helper,
 	) {}
 
 
@@ -89,6 +89,7 @@ final class ComponentDefinitionFactory
 
 			$definitions[$fieldDefinition->key] = new FieldDefinition(
 				$fieldDefinition,
+				$reflectionProperty->getName(),
 				$this->helper->getAttributes($reflectionProperty, FieldAttributeInterface::class),
 			);
 		}

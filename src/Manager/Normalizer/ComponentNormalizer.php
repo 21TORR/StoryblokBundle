@@ -5,13 +5,11 @@ namespace Torr\Storyblok\Manager\Normalizer;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Manager\ComponentManager;
-use Torr\Storyblok\Manager\Sync\ComponentConfigResolver;
 
 final class ComponentNormalizer
 {
 	public function __construct (
 		private readonly ComponentManager $componentManager,
-		private readonly ComponentConfigResolver $componentConfigResolver,
 	) {}
 
 
@@ -23,21 +21,24 @@ final class ComponentNormalizer
 	public function normalize (TorrStyle $io) : array
 	{
 		$normalized = [];
+		$definitions = $this->componentManager->getDefinitions();
 
 		// normalize everything to check if normalization fails
-		foreach ($this->componentManager->getAllComponents() as $component)
+		foreach ($definitions->getComponents() as $component)
 		{
+			$definition = $component->definition;
+
 			$key = \sprintf(
 				"<fg=blue>%s</> (<fg=yellow>%s</>) ... ",
-				$component->getDisplayName(),
-				$component::getKey(),
+				$definition->name,
+				$definition->key,
 			);
 
 			$io->write("Normalizing {$key} ");
 
 			$normalized[$key] = new ComponentImport(
-				$this->componentConfigResolver->resolveComponentConfig($component->toManagementApiData()),
-				$component->getComponentGroup(),
+				$component->generateManagementApiData(),
+				$definition->group,
 			);
 
 			$io->writeln("done <fg=green>✓</>");

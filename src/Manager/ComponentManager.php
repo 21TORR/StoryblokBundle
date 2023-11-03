@@ -160,46 +160,6 @@ class ComponentManager
 	 */
 	public function getDefinition (string $key) : ComponentDefinition
 	{
-		if (\array_key_exists($key, $this->definitions))
-		{
-			return $this->definitions[$key];
-		}
-
-		if (!\array_key_exists($key, $this->storyComponents))
-		{
-			throw new UnknownComponentKeyException(
-				message: \sprintf(
-					"Unknown component type: %s",
-					$key,
-				),
-				componentKey: $key,
-			);
-		}
-
-		try
-		{
-			$reflectionClass = new \ReflectionClass($this->storyComponents[$key]);
-			$attribute = $reflectionClass->getAttributes(Storyblok::class)[0] ?? null;
-
-			\assert(null !== $attribute);
-			$definition = $attribute->newInstance();
-			\assert($definition instanceof Storyblok);
-
-			return $this->definitions[$key] = new ComponentDefinition(
-				$definition,
-				$this->storyComponents[$key],
-			);
-		}
-		catch (\ReflectionException $exception)
-		{
-			throw new InvalidComponentDefinitionException(
-				message: \sprintf(
-					"Invalid component definition: %s",
-					$exception->getMessage(),
-				),
-				previous: $exception,
-			);
-		}
+		return $this->getDefinitions()->get($key);
 	}
-
 }

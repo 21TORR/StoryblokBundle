@@ -2,7 +2,9 @@
 
 namespace Torr\Storyblok\Mapping\Field;
 
+use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Validator\DataValidator;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class TextField extends AbstractField
@@ -14,6 +16,7 @@ final class TextField extends AbstractField
 		private readonly bool $multiline = false,
 		private readonly ?int $maxLength = null,
 		private readonly bool $isRightToLeft = false,
+		private readonly bool $excludeFromTranslationExport = false,
 	)
 	{
 		parent::__construct(
@@ -29,6 +32,17 @@ final class TextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
+	public function validateData (array $contentPath, DataValidator $validator, mixed $data) : void
+	{
+		$validator->ensureDataIsValid($contentPath, $data, [
+			new Type("string"),
+		]);
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
 	public function generateManagementApiData () : array
 	{
 		return \array_replace(
@@ -36,6 +50,7 @@ final class TextField extends AbstractField
 			[
 				"rtl" => $this->isRightToLeft,
 				"max_length" => $this->maxLength,
+				"no_translate" => $this->excludeFromTranslationExport,
 			],
 		);
 	}

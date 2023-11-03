@@ -5,8 +5,10 @@ namespace Torr\Storyblok\DependencyInjection;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Torr\Storyblok\Exception\Component\DuplicateComponentKeyException;
+use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Mapping\Storyblok;
+use Torr\Storyblok\Story\Story;
 
 final class CollectComponentDefinitionsCompilerPass implements CompilerPassInterface
 {
@@ -34,11 +36,22 @@ final class CollectComponentDefinitionsCompilerPass implements CompilerPassInter
 				continue;
 			}
 
+			if (!\is_a($class, Story::class, true))
+			{
+				throw new InvalidComponentDefinitionException(\sprintf(
+					"Story '%s' must extend %s.",
+					$class,
+					Story::class,
+				));
+			}
+
 			if (\array_key_exists($attribute->key, $definitions))
 			{
 				throw new DuplicateComponentKeyException(\sprintf(
-					"Found multiple story definitions for key '%s'",
+					"Found multiple story definitions for key '%s'. One in '%s' and one in '%s'",
 					$attribute->key,
+					$definitions[$attribute->key],
+					$definition->getClass(),
 				));
 			}
 

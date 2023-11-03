@@ -5,6 +5,7 @@ namespace Torr\Storyblok\Definition\Component;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Mapping\Storyblok;
+use Torr\Storyblok\Story\Story;
 
 final readonly class ComponentDefinition
 {
@@ -12,6 +13,7 @@ final readonly class ComponentDefinition
 	 */
 	public function __construct (
 		public Storyblok $definition,
+		/** @type class-string<Story> */
 		public string $storyClass,
 		/** @type array<string, FieldDefinition> */
 		public array $fields,
@@ -27,6 +29,20 @@ final readonly class ComponentDefinition
 		}
 	}
 
+	/**
+	 */
+	public function getDisplayName () : string
+	{
+		return $this->definition->name;
+	}
+
+	/**
+	 */
+	public function getKey () : string
+	{
+		return $this->definition->key;
+	}
+
 
 	public function generateManagementApiData () : array
 	{
@@ -35,8 +51,6 @@ final readonly class ComponentDefinition
 		foreach ($this->fields as $field)
 		{
 			$fieldData = $field->generateManagementApiData();
-			$fieldData["preview_field"] = $field->field->key === $this->definition->previewField;
-
 			$fields[$field->field->key] = $fieldData;
 		}
 
@@ -45,6 +59,7 @@ final readonly class ComponentDefinition
 			"real_name" => $this->definition->key,
 			"display_name" => $this->definition->name,
 			"schema" => $fields,
+			"preview_field" => $this->definition->previewField,
 			...$this->definition->type->generateManagementApiData(),
 		];
 	}

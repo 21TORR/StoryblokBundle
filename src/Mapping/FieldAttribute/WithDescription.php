@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Mapping\FieldAttribute;
 
+
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final readonly class WithDescription extends FieldAttributeInterface
 {

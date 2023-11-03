@@ -2,6 +2,8 @@
 
 namespace Torr\Storyblok\Mapping\FieldAttribute;
 
+use Symfony\Component\Validator\Constraint;
+
 abstract readonly class FieldAttributeInterface
 {
 	/**
@@ -9,4 +11,14 @@ abstract readonly class FieldAttributeInterface
 	public function __construct (
 		public array $managementApiData,
 	) {}
+
+	/**
+	 * Validates the given data
+	 *
+	 * @return Constraint[]
+	 */
+	public function getValidationConstraints () : array
+	{
+		return [];
+	}
 }

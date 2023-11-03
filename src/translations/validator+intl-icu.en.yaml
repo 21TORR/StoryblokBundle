@@ -1,0 +1,5 @@
+storyblok:
+    field:
+        number:
+            must-be-integer: "This value must be an integer."
+            must-be-float: "This value must be a float."

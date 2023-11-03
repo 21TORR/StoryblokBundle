@@ -2,6 +2,8 @@
 
 namespace Torr\Storyblok\Definition\Component;
 
+use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
+
 final readonly class ComponentDefinitionRegistry
 {
 	/**
@@ -49,6 +51,25 @@ final readonly class ComponentDefinitionRegistry
 		}
 
 		return $index;
+	}
+
+
+	public function get (string $key) : ComponentDefinition
+	{
+		$definition = $this->definitions[$key] ?? null;
+
+		if (null === $definition)
+		{
+			throw new UnknownComponentKeyException(
+				message: \sprintf(
+					"Could not find component with key '%s'",
+					$key
+				),
+				componentKey: $key,
+			);
+		}
+
+		return $definition;
 	}
 
 

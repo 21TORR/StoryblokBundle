@@ -18,6 +18,7 @@
 		"symfony/console": "^6.1",
 		"symfony/http-client": "^6.1",
 		"symfony/lock": "^6.2",
+		"symfony/property-access": "^6.3",
 		"symfony/rate-limiter": "^6.2",
 		"symfony/string": "^6.2",
 		"symfony/validator": "^6.1"

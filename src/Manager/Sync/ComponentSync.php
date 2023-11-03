@@ -8,6 +8,7 @@ use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
+use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
 
 final class ComponentSync

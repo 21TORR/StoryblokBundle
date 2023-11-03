@@ -31,7 +31,6 @@ class DataValidator
 	 */
 	public function ensureDataIsValid (
 		array $contentPath,
-		FieldDefinition|AbstractComponent|null $field,
 		mixed $data,
 		array $constraints,
 	) : void
@@ -57,7 +56,6 @@ class DataValidator
 						: "n/a",
 				),
 				$contentPath,
-				$field,
 				$data,
 				$violations,
 			);

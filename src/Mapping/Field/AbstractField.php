@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Mapping\Field;
 
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Validator\DataValidator;
 
 abstract class AbstractField
 {
@@ -24,5 +25,25 @@ abstract class AbstractField
 			"display_name" => $this->label,
 			"default_value" => $this->defaultValue,
 		];
+	}
+
+	/**
+	 * Normalizes the data from Storyblok to be more strict
+	 */
+	public function normalizeData (mixed $data) : mixed
+	{
+		return $data;
+	}
+
+
+	/**
+	 * Validates the given data
+	 */
+	public function validateData (
+		array $contentPath,
+		DataValidator $validator,
+		mixed $data,
+	) : void
+	{
 	}
 }

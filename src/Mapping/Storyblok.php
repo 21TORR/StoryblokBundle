@@ -14,5 +14,6 @@ final readonly class Storyblok
 		/** @var array<string|\BackedEnum> */
 		public array $tags = [],
 		public ?string $previewField = null,
+		public string|\BackedEnum|null $group = null,
 	) {}
 }

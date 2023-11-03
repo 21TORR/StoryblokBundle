@@ -10,6 +10,7 @@ use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\DependencyInjection\CollectComponentDefinitionsCompilerPass;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleExtension;
+use Torr\Storyblok\Story\Story;
 
 final class TorrStoryblokBundle extends Bundle
 {
