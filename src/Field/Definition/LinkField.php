@@ -15,6 +15,7 @@ use Torr\Storyblok\Field\Data\ExternalLinkData;
 use Torr\Storyblok\Field\Data\StoryLinkData;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
+use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class LinkField extends AbstractField
@@ -150,18 +151,18 @@ final class LinkField extends AbstractField
 	{
 		if ("story" === $data["linktype"])
 		{
-			$id = $context->normalizeOptionalString($data["id"]);
+			$id = DataTransformer::normalizeOptionalString($data["id"]);
 
 			// we have the cached_url in the data here, but we can't rely on it, as it might be out of date
 			return new StoryLinkData(
 				id: $id,
-				anchor: $context->normalizeOptionalString($data["anchor"] ?? null),
+				anchor: DataTransformer::normalizeOptionalString($data["anchor"] ?? null),
 			);
 		}
 
 		if ("email" === $data["linktype"])
 		{
-			$email = $context->normalizeOptionalString($data["email"]);
+			$email = DataTransformer::normalizeOptionalString($data["email"]);
 
 			return null !== $email
 				? new EmailLinkData($email)
@@ -170,7 +171,7 @@ final class LinkField extends AbstractField
 
 		if ("asset" === $data["linktype"])
 		{
-			$url = $context->normalizeOptionalString($data["url"]);
+			$url = DataTransformer::normalizeOptionalString($data["url"]);
 
 			if (null === $url)
 			{
@@ -182,7 +183,7 @@ final class LinkField extends AbstractField
 		}
 
 		// "url" === $data["linktype"]
-		$url = $context->normalizeOptionalString($data["url"]);
+		$url = DataTransformer::normalizeOptionalString($data["url"]);
 
 		return null !== $url
 			? new ExternalLinkData($url)

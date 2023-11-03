@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class DateTimeField extends AbstractField
@@ -76,7 +77,7 @@ final class DateTimeField extends AbstractField
 		\assert(null === $data || \is_string($data));
 
 		// empty fields are also passed as ""
-		$data = $context->normalizeOptionalString($data);
+		$data = DataTransformer::normalizeOptionalString($data);
 
 		$transformed = null !== $data
 			? \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data)

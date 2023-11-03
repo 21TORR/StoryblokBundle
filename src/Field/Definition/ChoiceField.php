@@ -12,6 +12,7 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\Choices\ChoicesInterface;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class ChoiceField extends AbstractField
@@ -125,7 +126,7 @@ final class ChoiceField extends AbstractField
 
 		\assert(null === $data || \is_string($data) || \is_int($data));
 
-		$data = $context->normalizeOptionalString((string) $data);
+		$data = DataTransformer::normalizeOptionalString((string) $data);
 
 		$context->ensureDataIsValid(
 			$contentPath,
@@ -180,7 +181,7 @@ final class ChoiceField extends AbstractField
 		\assert(null === $data || \is_array($data));
 
 		$data = \array_map(
-			static fn (mixed $value) => $context->normalizeOptionalString((string) $value),
+			static fn (mixed $value) => DataTransformer::normalizeOptionalString((string) $value),
 			// we are in a multiselect, so we expect an array
 			$data ?? [],
 		);
@@ -220,7 +221,7 @@ final class ChoiceField extends AbstractField
 
 		if (\is_string($data))
 		{
-			$data = $context->normalizeOptionalString($data);
+			$data = DataTransformer::normalizeOptionalString($data);
 		}
 
 		$transformed = null !== $data

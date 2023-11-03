@@ -10,6 +10,7 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Asset\AssetFileType;
 use Torr\Storyblok\Field\Data\AssetData;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
@@ -157,12 +158,12 @@ final class AssetField extends AbstractField
 			$transformed = new AssetData(
 				url: $assetUrl,
 				id: $data["id"],
-				alt: $context->normalizeOptionalString($data["alt"] ?? null),
-				name: $context->normalizeOptionalString($data["name"] ?? null),
-				focus: $context->normalizeOptionalString($data["focus"] ?? null),
-				title: $context->normalizeOptionalString($data["title"] ?? null),
-				source: $context->normalizeOptionalString($data["source"] ?? null),
-				copyright: $context->normalizeOptionalString($data["copyright"] ?? null),
+				alt: DataTransformer::normalizeOptionalString($data["alt"] ?? null),
+				name: DataTransformer::normalizeOptionalString($data["name"] ?? null),
+				focus: DataTransformer::normalizeOptionalString($data["focus"] ?? null),
+				title: DataTransformer::normalizeOptionalString($data["title"] ?? null),
+				source: DataTransformer::normalizeOptionalString($data["source"] ?? null),
+				copyright: DataTransformer::normalizeOptionalString($data["copyright"] ?? null),
 				isExternal: $data["is_external_url"] ?? false,
 				width: $width,
 				height: $height,
