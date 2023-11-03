@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Mapping\FieldAttribute;
 
-use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
@@ -31,7 +31,9 @@ final readonly class WithValidation extends FieldAttributeInterface
 		return !$this->required || $this->allowMissingData
 			? []
 			: [
-				new NotNull(),
+				// we need to use NotBlank instead of NotNull here, as Storyblok often
+				// also returns empty strings for empty fields
+				new NotBlank(),
 			];
 	}
 }
