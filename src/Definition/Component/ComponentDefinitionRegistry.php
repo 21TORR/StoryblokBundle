@@ -4,16 +4,29 @@ namespace Torr\Storyblok\Definition\Component;
 
 final readonly class ComponentDefinitionRegistry
 {
-	/** @var array<string, ComponentDefinition[]> */
+	/**
+	 * @var array<string, ComponentDefinition[]>
+	 */
 	private array $componentsByTags;
 
+	/**
+	 * @var array<string, ComponentDefinition>
+	 */
+	private array $definitions;
 
-	public function __construct (
-		/** @var array<string, ComponentDefinition> */
-		private array $definitions,
-	)
+	/**
+	 * @param array<string, ComponentDefinition> $definitions
+	 */
+	public function __construct (array $definitions)
 	{
-		$this->componentsByTags = $this->indexTags($this->definitions);
+		// sort components by name
+		\uasort(
+			$definitions,
+			static fn (ComponentDefinition $left, ComponentDefinition $right) => \strnatcasecmp($left->definition->name, $right->definition->name),
+		);
+
+		$this->definitions = $definitions;
+		$this->componentsByTags = $this->indexTags($definitions);
 	}
 
 
