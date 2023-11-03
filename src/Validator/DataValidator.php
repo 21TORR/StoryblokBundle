@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Validator;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -16,6 +17,7 @@ class DataValidator
 {
 	public function __construct (
 		private readonly ValidatorInterface $validator,
+		private readonly LoggerInterface $logger,
 	) {}
 
 
@@ -47,13 +49,22 @@ class DataValidator
 
 		if (\count($violations) > 0)
 		{
+			$formattedPath = \implode(" → ", $contentPath);
+			$formattedViolations = $violations instanceof ConstraintViolationList
+				? (string) $violations
+				: "n/a";
+
+			$this->logger->error("Storyblok: Invalid data found at {path}", [
+				"path" => $formattedPath,
+				"violations" => $formattedViolations,
+				"data" => $data,
+			]);
+
 			throw new InvalidDataException(
 				\sprintf(
 					"Invalid data found at '%s':\n%s",
-					\implode(" → ", $contentPath),
-					$violations instanceof ConstraintViolationList
-						? (string) $violations
-						: "n/a",
+					$formattedPath,
+					$formattedViolations,
 				),
 				$contentPath,
 				$data,
