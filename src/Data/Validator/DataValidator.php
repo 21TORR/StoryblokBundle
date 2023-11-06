@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Validator;
+namespace Torr\Storyblok\Data\Validator;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraint;
