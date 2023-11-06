@@ -123,7 +123,11 @@ final class StoryHydrator
 
 		\assert(\is_a($blokClass, Blok::class, true));
 
-		$metaData = new BlokMetaData($data);
+		$metaData = new BlokMetaData(
+			$data["_uid"],
+			$data["component"],
+			$data["_editable"],
+		);
 		$blok = new $blokClass($metaData);
 
 		return $this->mapDataToFields(
