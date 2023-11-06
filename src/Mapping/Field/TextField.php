@@ -13,7 +13,7 @@ final class TextField extends AbstractField
 {
 	public function __construct (
 		string $key,
-		string $label,
+		?string $label = null,
 		?string $defaultValue = null,
 		private readonly bool $multiline = false,
 		private readonly ?int $maxLength = null,

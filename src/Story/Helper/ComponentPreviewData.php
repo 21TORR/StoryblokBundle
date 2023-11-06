@@ -3,14 +3,14 @@
 namespace Torr\Storyblok\Story\Helper;
 
 use Torr\Storyblok\Exception\Story\InvalidDataException;
-use Torr\Storyblok\Story\MetaData\BlokMetaData;
+use Torr\Storyblok\Story\MetaData\ContentMetaData;
 
 final class ComponentPreviewData
 {
 	/**
 	 * Normalizes the preview-related data to return it directly
 	 */
-	public static function normalizeData (BlokMetaData $metaData) : array
+	public static function normalizeData (ContentMetaData $metaData) : array
 	{
 		return [
 			"_uid" => $metaData->getUuid(),

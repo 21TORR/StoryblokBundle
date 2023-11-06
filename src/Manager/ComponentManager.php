@@ -13,8 +13,8 @@ use Torr\Storyblok\Definition\Component\ComponentDefinitionRegistry;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
-use Torr\Storyblok\Mapping\StoryDocument;
-use Torr\Storyblok\Story\Document;
+use Torr\Storyblok\Mapping\Storyblok;
+use Torr\Storyblok\Story\StoryDocument;
 
 /**
  * @final
@@ -65,7 +65,7 @@ class ComponentManager
 	/**
 	 * Returns the first component that creates a story of the given type
 	 *
-	 * @template TStory of Document
+	 * @template TStory of StoryDocument
 	 *
 	 * @param class-string<TStory> $storyType
 	 *

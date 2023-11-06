@@ -5,13 +5,14 @@ namespace Torr\Storyblok\Mapping\Field;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Hydrator\StoryHydrator;
 use Torr\Storyblok\Data\Validator\DataValidator;
+use function Symfony\Component\String\u;
 
 abstract class AbstractField
 {
 	public function __construct (
 		public readonly FieldType $internalStoryblokType,
 		public readonly string $key,
-		public readonly string $label,
+		public readonly ?string $label = null,
 		public readonly mixed $defaultValue = null,
 	) {}
 
@@ -23,9 +24,19 @@ abstract class AbstractField
 	{
 		return [
 			"type" => $this->internalStoryblokType->value,
-			"display_name" => $this->label,
+			"display_name" => $this->getLabel(),
 			"default_value" => $this->defaultValue,
 		];
+	}
+
+	/**
+	 *
+	 */
+	public function getLabel () : string
+	{
+		return $this->label ?? u($this->key)
+			->title()
+			->toString();
 	}
 
 	/**

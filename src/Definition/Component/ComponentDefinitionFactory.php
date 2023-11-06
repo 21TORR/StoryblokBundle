@@ -9,8 +9,9 @@ use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 use Torr\Storyblok\Mapping\Field\AbstractField;
 use Torr\Storyblok\Mapping\FieldAttribute\FieldAttributeInterface;
-use Torr\Storyblok\Mapping\StoryBlok;
-use Torr\Storyblok\Mapping\StoryDocument;
+use Torr\Storyblok\Mapping\Storyblok;
+use Torr\Storyblok\Story\StoryContent;
+use Torr\Storyblok\Story\StoryDocument;
 
 final readonly class ComponentDefinitionFactory
 {
@@ -49,22 +50,15 @@ final readonly class ComponentDefinitionFactory
 		try
 		{
 			$reflectionClass = new \ReflectionClass($storyblokClass);
-			$definition = $this->helper->getOptionalSingleAttribute($reflectionClass, StoryDocument::class)
-				?? $this->helper->getOptionalSingleAttribute($reflectionClass, StoryBlok::class);
+			$definition = $this->helper->getRequiredSingleAttribute($reflectionClass, Storyblok::class);
 
-			if (null === $definition)
-			{
-				throw new InvalidComponentDefinitionException(\sprintf(
-					"Could not find required attribute of type '%s' or '%s' on class '%s'.",
-					StoryDocument::class,
-					StoryBlok::class,
-					$reflectionClass->getName(),
-				));
-			}
+			$isDocument = \is_a($reflectionClass->getName(), StoryDocument::class, true);
+			\assert($isDocument || \is_a($reflectionClass->getName(), StoryContent::class, true), "must either be a document or a blok");
 
 			return new ComponentDefinition(
 				$definition,
 				$storyblokClass,
+				$isDocument,
 				$this->createFieldDefinitions($reflectionClass),
 			);
 		}

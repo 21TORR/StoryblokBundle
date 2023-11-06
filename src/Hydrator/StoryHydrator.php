@@ -12,9 +12,9 @@ use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 use Torr\Storyblok\Mapping\Field\BloksField;
-use Torr\Storyblok\Story\Blok;
-use Torr\Storyblok\Story\Document;
-use Torr\Storyblok\Story\MetaData\BlokMetaData;
+use Torr\Storyblok\Story\StoryContent;
+use Torr\Storyblok\Story\StoryDocument;
+use Torr\Storyblok\Story\MetaData\ContentMetaData;
 use Torr\Storyblok\Story\MetaData\DocumentMetaData;
 use Torr\Storyblok\Data\Validator\DataValidator;
 
@@ -91,12 +91,12 @@ final class StoryHydrator
 	public function hydrateDocument (
 		string $type,
 		array $data,
-	) : Document
+	) : StoryDocument
 	{
 		$definition = $this->componentManager->getDefinition($type);
 		$storyClass = $definition->storyClass;
 
-		\assert(\is_a($storyClass, Document::class, true));
+		\assert(\is_a($storyClass, StoryDocument::class, true));
 
 		$metaData = new DocumentMetaData($data, $type);
 		$document = new $storyClass($metaData);
@@ -116,14 +116,14 @@ final class StoryHydrator
 		array $contentPath,
 		string $type,
 		array $data,
-	) : Blok
+	) : StoryContent
 	{
 		$definition = $this->componentManager->getDefinition($type);
 		$blokClass = $definition->storyClass;
 
-		\assert(\is_a($blokClass, Blok::class, true));
+		\assert(\is_a($blokClass, StoryContent::class, true));
 
-		$metaData = new BlokMetaData(
+		$metaData = new ContentMetaData(
 			$data["_uid"],
 			$data["component"],
 			$data["_editable"],

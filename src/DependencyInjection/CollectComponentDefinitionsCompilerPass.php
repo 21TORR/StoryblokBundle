@@ -7,9 +7,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Torr\Storyblok\Exception\Component\DuplicateComponentKeyException;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Manager\ComponentManager;
-use Torr\Storyblok\Mapping\StoryBlok;
-use Torr\Storyblok\Mapping\StoryDocument;
-use Torr\Storyblok\Story\Document;
+use Torr\Storyblok\Mapping\Storyblok;
+use Torr\Storyblok\Story\StoryContent;
+use Torr\Storyblok\Story\StoryDocument;
 
 final class CollectComponentDefinitionsCompilerPass implements CompilerPassInterface
 {
@@ -37,12 +37,13 @@ final class CollectComponentDefinitionsCompilerPass implements CompilerPassInter
 				continue;
 			}
 
-			if (!\is_a($class, $attribute->getRequiredExtendedClass(), true))
+			if (!\is_a($class, StoryDocument::class, true) && !\is_a($class, StoryContent::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
-					"Storyblok element '%s' must extend %s.",
+					"Storyblok element '%s' must extend either '%s' or '%s'.",
 					$class,
-					$attribute->getRequiredExtendedClass(),
+					StoryDocument::class,
+					StoryContent::class,
 				));
 			}
 
@@ -70,14 +71,12 @@ final class CollectComponentDefinitionsCompilerPass implements CompilerPassInter
 	 *
 	 * @param class-string $class
 	 */
-	private function extractKey (string $class) : StoryDocument|StoryBlok|null
+	private function extractKey (string $class) : ?Storyblok
 	{
 		try
 		{
 			$reflectionClass = new \ReflectionClass($class);
-			$reflectionAttribute = $reflectionClass->getAttributes(StoryDocument::class)[0]
-				?? $reflectionClass->getAttributes(StoryBlok::class)[0]
-				?? null;
+			$reflectionAttribute = $reflectionClass->getAttributes(Storyblok::class)[0] ?? null;
 
 			if (null === $reflectionAttribute)
 			{
@@ -85,7 +84,7 @@ final class CollectComponentDefinitionsCompilerPass implements CompilerPassInter
 			}
 
 			$attribute = $reflectionAttribute->newInstance();
-			\assert($attribute instanceof StoryDocument || $attribute instanceof StoryBlok);
+			\assert($attribute instanceof Storyblok);
 
 			return $attribute;
 		}

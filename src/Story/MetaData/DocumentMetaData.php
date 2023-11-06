@@ -5,23 +5,22 @@ namespace Torr\Storyblok\Story\MetaData;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Translation\LocaleHelper;
 
-final class DocumentMetaData
+final class DocumentMetaData extends ContentMetaData
 {
 	private readonly array $data;
 	private readonly array $slugSegments;
-	private readonly ?string $previewData;
 
 	/**
 	 */
 	public function __construct (
 		array $data,
-		/**
-		 * The component type of the story's component
-		 */
-		private readonly string $type,
 	)
 	{
-		$this->previewData = $data["content"]["_editable"] ?? null;
+		parent::__construct(
+			$data["uuid"],
+			$data["content"]["component"],
+			$data["content"]["_editable"] ?? null,
+		);
 		unset($data["content"]);
 		$this->data = $data;
 		$this->slugSegments = \explode("/", \rtrim($data["full_slug"], "/"));
@@ -64,14 +63,6 @@ final class DocumentMetaData
 	/**
 	 *
 	 */
-	public function getUuid () : string
-	{
-		return $this->data["uuid"];
-	}
-
-	/**
-	 *
-	 */
 	public function getSlug () : string
 	{
 		return $this->slugSegments[\count($this->slugSegments) - 1];
@@ -99,13 +90,6 @@ final class DocumentMetaData
 	public function getLocale () : string
 	{
 		return $this->data["lang"];
-	}
-
-	/**
-	 */
-	public function getType () : string
-	{
-		return $this->type;
 	}
 
 	/**
@@ -208,10 +192,5 @@ final class DocumentMetaData
 		}
 
 		return $mapping;
-	}
-
-	public function getPreviewData () : ?string
-	{
-		return $this->previewData;
 	}
 }

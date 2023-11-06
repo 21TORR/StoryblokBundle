@@ -18,7 +18,7 @@ final class BloksField extends AbstractField
 {
 	public function __construct (
 		string $key,
-		string $label,
+		?string $label = null,
 		private readonly ?int $minimumNumberOfBloks = null,
 		private readonly ?int $maximumNumberOfBloks = null,
 		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),

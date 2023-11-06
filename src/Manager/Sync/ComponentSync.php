@@ -5,11 +5,11 @@ namespace Torr\Storyblok\Manager\Sync;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Api\ManagementApi;
+use Torr\Storyblok\Definition\Component\ComponentDefinition;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Manager\ComponentManager;
-use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
 
 final class ComponentSync
 {
@@ -17,7 +17,7 @@ final class ComponentSync
 	 */
 	public function __construct (
 		private readonly ManagementApi $managementApi,
-		private readonly ComponentNormalizer $componentNormalizer,
+		private readonly ComponentManager $componentManager,
 	) {}
 
 	/**
@@ -32,7 +32,19 @@ final class ComponentSync
 	{
 		try
 		{
-			$normalized = $this->componentNormalizer->normalize($io);
+			$normalized = [];
+			$registry = $this->componentManager->getDefinitions();
+
+			$io->listing(
+				\array_map(
+					static fn (ComponentDefinition $definition) => \sprintf(
+						"<fg=blue>%s</> (<fg=yellow>%s</>) ... ",
+						$definition->getName(),
+						$definition->getKey(),
+					),
+					$registry->getComponents(),
+				),
+			);
 
 			if (!$sync)
 			{

@@ -2,13 +2,11 @@
 
 namespace Torr\Storyblok\Mapping;
 
-use Torr\Storyblok\Story\Blok;
-
 /**
- * A nestable storyblok content element
+ * A storyblok content element
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final class StoryBlok
+final readonly class Storyblok
 {
 	public function __construct (
 		public string $key,
@@ -18,24 +16,4 @@ final class StoryBlok
 		public ?string $previewField = null,
 		public string|\BackedEnum|null $group = null,
 	) {}
-
-	/**
-	 *
-	 */
-	public function getComponentTypeApiData () : array
-	{
-		return [
-			"is_root" => false,
-			"is_nestable" => true,
-		];
-	}
-
-
-	/**
-	 * @return class-string
-	 */
-	public function getRequiredExtendedClass () : string
-	{
-		return Blok::class;
-	}
 }

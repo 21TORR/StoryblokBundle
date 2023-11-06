@@ -5,9 +5,9 @@ namespace Torr\Storyblok\Definition\Component;
 use Torr\Storyblok\Definition\Field\EmbeddedFieldDefinition;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
-use Torr\Storyblok\Mapping\StoryBlok;
-use Torr\Storyblok\Mapping\StoryDocument;
-use Torr\Storyblok\Story\Document;
+use Torr\Storyblok\Mapping\Storyblok;
+use Torr\Storyblok\Story\StoryContent;
+use Torr\Storyblok\Story\StoryDocument;
 use function Symfony\Component\String\u;
 
 final readonly class ComponentDefinition
@@ -15,9 +15,10 @@ final readonly class ComponentDefinition
 	/**
 	 */
 	public function __construct (
-		public StoryDocument|StoryBlok $definition,
-		/** @type class-string<Document> */
+		public Storyblok $definition,
+		/** @type class-string<StoryDocument|StoryContent> */
 		public string $storyClass,
+		public bool $isDocument,
 		/** @type array<string, FieldDefinition|EmbeddedFieldDefinition> */
 		public array $fields,
 	)
@@ -40,6 +41,13 @@ final readonly class ComponentDefinition
 			?? u($this->definition->key)
 				->title()
 				->toString();
+	}
+
+	/**
+	 */
+	public function getKey () : string
+	{
+		return $this->definition->key;
 	}
 
 
@@ -79,7 +87,8 @@ final readonly class ComponentDefinition
 			"display_name" => $this->getName(),
 			"schema" => $fieldSchemas,
 			"preview_field" => $this->definition->previewField,
-			...$this->definition->getComponentTypeApiData(),
+			"is_root" => $this->isDocument,
+			"is_nestable" => !$this->isDocument,
 		];
 	}
 }
