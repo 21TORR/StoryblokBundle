@@ -25,7 +25,8 @@ final class TorrStoryblokBundle extends Bundle
 				$container->getDefinition(StoryblokConfig::class)
 					->setArgument('$spaceId', $config["space_id"])
 					->setArgument('$managementToken', $config["management_token"])
-					->setArgument('$contentToken', $config["content_token"]);
+					->setArgument('$contentToken', $config["content_token"])
+					->setArgument('$localeLevel', $config["locale_level"]);
 			},
 			"storyblok",
 		);

@@ -1,3 +1,9 @@
+3.5.0
+=====
+
+* (feature) Add configurable `locale_level` to better support different Storyblok directory layouts.
+
+
 3.4.0
 =====
 

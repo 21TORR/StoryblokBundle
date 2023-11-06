@@ -125,7 +125,10 @@ final class StoryMetaData
 	 */
 	public function getLocaleFromSlug () : ?string
 	{
-		$firstSegment = $this->slugSegments[0] ?? null;
+		$localeLevel = $this->data["_locale_level"];
+		\assert(\is_int($localeLevel));
+
+		$firstSegment = $this->slugSegments[$localeLevel] ?? null;
 
 		return null !== $firstSegment && LocaleHelper::isValidLocale($firstSegment)
 			? $firstSegment
