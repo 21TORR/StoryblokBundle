@@ -9,15 +9,13 @@ final class BlokMetaData
 	private readonly string $type;
 
 	/**
+	 * @param array{"_uid": string, "component": string, "_editable": string|null} $data
 	 */
-	public function __construct (
-		array $data
-
-	)
+	public function __construct (array $data)
 	{
 		$this->uid = $data["_uid"];
 		$this->type = $data["component"];
-		$this->previewData = $data["_editable"];
+		$this->previewData = $data["_editable"] ?? null;
 	}
 
 	/**
