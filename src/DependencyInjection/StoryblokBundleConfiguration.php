@@ -25,6 +25,10 @@ final class StoryblokBundleConfiguration implements ConfigurationInterface
 				->scalarNode("content_token")
 					->defaultNull()
 				->end()
+				->integerNode("locale_level")
+					->defaultValue(0)
+					->info("The slug level that includes the locales (0-based).")
+				->end()
 			->end();
 
 		return $treeBuilder;

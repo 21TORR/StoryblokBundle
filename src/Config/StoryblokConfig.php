@@ -12,6 +12,7 @@ final class StoryblokConfig
 		private readonly ?int $spaceId,
 		private readonly ?string $managementToken,
 		private readonly ?string $contentToken,
+		private readonly int $localeLevel,
 	) {}
 
 	/**
@@ -55,5 +56,14 @@ final class StoryblokConfig
 	public function getStoryblokSpaceUrl () : string
 	{
 		return \sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->getSpaceId());
+	}
+
+	/**
+	 * Returns the slug level, on which the locales are defined.
+	 * 0-based
+	 */
+	public function getLocaleLevel () : int
+	{
+		return $this->localeLevel;
 	}
 }

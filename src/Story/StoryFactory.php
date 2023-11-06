@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Story;
 
 use Psr\Log\LoggerInterface;
+use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\ComponentWithoutStoryException;
@@ -17,6 +18,7 @@ final class StoryFactory
 	public function __construct (
 		private readonly ComponentManager $componentManager,
 		private readonly ComponentContext $storyblokContext,
+		private readonly StoryblokConfig $config,
 		private readonly LoggerInterface $logger,
 	) {}
 
@@ -70,6 +72,8 @@ final class StoryFactory
 					Story::class,
 				));
 			}
+
+			$data["_locale_level"] = $this->config->getLocaleLevel();
 
 			$story = new $storyClass($data, $component, $this->storyblokContext);
 			$story->validate($this->storyblokContext);
