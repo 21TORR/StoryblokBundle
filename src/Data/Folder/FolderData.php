@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Folder;
+namespace Torr\Storyblok\Data\Folder;
 
 final class FolderData
 {
