@@ -17,7 +17,7 @@ use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Release\ReleaseVersion;
 use Torr\Storyblok\Story\Story;
-use Torr\Storyblok\Story\StoryFactory;
+use Torr\Storyblok\Story\StoryHydrator;
 
 final class ContentApi implements ResetInterface
 {
@@ -31,7 +31,7 @@ final class ContentApi implements ResetInterface
 	public function __construct (
 		HttpClientInterface $client,
 		private readonly StoryblokConfig $config,
-		private readonly StoryFactory $storyFactory,
+		private readonly StoryHydrator $storyFactory,
 		private readonly ComponentManager $componentManager,
 		private readonly LoggerInterface $logger,
 	)

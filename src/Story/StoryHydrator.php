@@ -4,7 +4,6 @@ namespace Torr\Storyblok\Story;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
@@ -12,13 +11,12 @@ use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Validator\DataValidator;
 
-final class StoryFactory
+final class StoryHydrator
 {
 	/**
 	 */
 	public function __construct (
 		private readonly ComponentManager $componentManager,
-		private readonly ComponentContext $storyblokContext,
 		private readonly LoggerInterface $logger,
 		private readonly PropertyAccessorInterface $accessor,
 		private readonly DataValidator $dataValidator,
