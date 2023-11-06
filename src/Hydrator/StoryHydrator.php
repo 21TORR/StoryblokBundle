@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Story;
+namespace Torr\Storyblok\Hydrator;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -11,6 +11,11 @@ use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
+use Torr\Storyblok\Mapping\Field\BloksField;
+use Torr\Storyblok\Story\Blok;
+use Torr\Storyblok\Story\Document;
+use Torr\Storyblok\Story\MetaData\BlokMetaData;
+use Torr\Storyblok\Story\MetaData\DocumentMetaData;
 use Torr\Storyblok\Validator\DataValidator;
 
 final class StoryHydrator
@@ -55,17 +60,7 @@ final class StoryHydrator
 
 		try
 		{
-			$definition = $this->componentManager->getDefinition($type);
-			$storyClass = $definition->storyClass;
-
-			$metaData = new StoryMetaData($data, $type);
-
-			return $this->mapDataToFields(
-				[\sprintf("%s (%s)", $storyClass, $type)],
-				new $storyClass($metaData),
-				$definition->fields,
-				$data["content"],
-			);
+			return $this->hydrateDocument($type, $data);
 		}
 		catch (InvalidDataException $exception)
 		{
@@ -90,13 +85,66 @@ final class StoryHydrator
 		}
 	}
 
+	/**
+	 * Hydrates the document with the data
+	 */
+	public function hydrateDocument (
+		string $type,
+		array $data,
+	) : Document
+	{
+		$definition = $this->componentManager->getDefinition($type);
+		$storyClass = $definition->storyClass;
+
+		\assert(\is_a($storyClass, Document::class, true));
+
+		$metaData = new DocumentMetaData($data, $type);
+		$document = new $storyClass($metaData);
+
+		return $this->mapDataToFields(
+			[\sprintf("%s (%s)", $storyClass, $type)],
+			$document,
+			$definition->fields,
+			$data["content"],
+		);
+	}
 
 	/**
+	 *
+	 */
+	public function hydrateBlok (
+		array $contentPath,
+		string $type,
+		array $data,
+	) : Blok
+	{
+		$definition = $this->componentManager->getDefinition($type);
+		$blokClass = $definition->storyClass;
+
+		\assert(\is_a($blokClass, Blok::class, true));
+
+		$metaData = new BlokMetaData($data);
+		$blok = new $blokClass($metaData);
+
+		return $this->mapDataToFields(
+			[...$contentPath, \sprintf("%s (%s)", $blokClass, $type)],
+			$blok,
+			$definition->fields,
+			$data,
+		);
+	}
+
+
+	/**
+	 * @template ContentElement of object
+	 *
+	 * @param ContentElement $item
 	 * @param array<FieldDefinition|EmbeddedFieldDefinition> $fields
+	 * @return ContentElement
 	 */
 	private function mapDataToFields (
 		array $contentPath,
-		object $story,
+		object $item,
 		array $fields,
 		array $completeData,
 	) : object
@@ -124,18 +172,18 @@ final class StoryHydrator
 					$data,
 				);
 
-				$transformed = $field->field->transformRawData($data);
+				$transformed = $field->field->transformRawData($contentPath, $data, $this);
 			}
 
 			// map data
 			$this->accessor->setValue(
-				$story,
+				$item,
 				$field->property,
 				$transformed,
 			);
 		}
 
-		return $story;
+		return $item;
 	}
 
 

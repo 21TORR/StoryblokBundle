@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Mapping\Field;
 
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Hydrator\StoryHydrator;
 use Torr\Storyblok\Validator\DataValidator;
 
 abstract class AbstractField
@@ -30,7 +31,11 @@ abstract class AbstractField
 	/**
 	 * Transforms the raw data from Storyblok to a sanitized format.
 	 */
-	public function transformRawData (mixed $data) : mixed
+	public function transformRawData (
+		array $contentPath,
+		mixed $data,
+		StoryHydrator $hydrator,
+	) : mixed
 	{
 		return $data;
 	}
@@ -44,6 +49,5 @@ abstract class AbstractField
 		DataValidator $validator,
 		mixed $data,
 	) : void
-	{
-	}
+	{}
 }

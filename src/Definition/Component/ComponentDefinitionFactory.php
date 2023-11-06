@@ -9,7 +9,8 @@ use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 use Torr\Storyblok\Mapping\Field\AbstractField;
 use Torr\Storyblok\Mapping\FieldAttribute\FieldAttributeInterface;
-use Torr\Storyblok\Mapping\Storyblok;
+use Torr\Storyblok\Mapping\StoryBlok;
+use Torr\Storyblok\Mapping\StoryDocument;
 
 final readonly class ComponentDefinitionFactory
 {
@@ -48,10 +49,21 @@ final readonly class ComponentDefinitionFactory
 		try
 		{
 			$reflectionClass = new \ReflectionClass($storyblokClass);
-			$blok = $this->helper->getRequiredSingleAttribute($reflectionClass, Storyblok::class);
+			$definition = $this->helper->getOptionalSingleAttribute($reflectionClass, StoryDocument::class)
+				?? $this->helper->getOptionalSingleAttribute($reflectionClass, StoryBlok::class);
+
+			if (null === $definition)
+			{
+				throw new InvalidComponentDefinitionException(\sprintf(
+					"Could not find required attribute of type '%s' or '%s' on class '%s'.",
+					StoryDocument::class,
+					StoryBlok::class,
+					$reflectionClass->getName(),
+				));
+			}
 
 			return new ComponentDefinition(
-				$blok,
+				$definition,
 				$storyblokClass,
 				$this->createFieldDefinitions($reflectionClass),
 			);

@@ -16,8 +16,8 @@ use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Release\ReleaseVersion;
-use Torr\Storyblok\Story\Story;
-use Torr\Storyblok\Story\StoryHydrator;
+use Torr\Storyblok\Story\Document;
+use Torr\Storyblok\Hydrator\StoryHydrator;
 
 final class ContentApi implements ResetInterface
 {
@@ -54,7 +54,7 @@ final class ContentApi implements ResetInterface
 	public function fetchSingleStory (
 		string|int $identifier,
 		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
-	) : ?Story
+	) : ?Document
 	{
 		try
 		{
@@ -102,14 +102,14 @@ final class ContentApi implements ResetInterface
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
 	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
 	 *
-	 * @template TStory of Story
+	 * @template TStory of Document
 	 *
 	 * @param class-string<TStory> $storyType
 	 *
-	 * @throws ContentRequestFailedException
-	 * @throws UnknownStoryTypeException
-	 *
 	 * @return array<TStory>
+	 *@throws UnknownStoryTypeException
+	 *
+	 * @throws ContentRequestFailedException
 	 */
 	public function fetchStories (
 		string $storyType,
@@ -154,9 +154,9 @@ final class ContentApi implements ResetInterface
 	 *
 	 * @param string|string[]|null $slug
 	 *
-	 * @throws ContentRequestFailedException
+	 * @return array<Document>
+	 *@throws ContentRequestFailedException
 	 *
-	 * @return array<Story>
 	 */
 	public function fetchAllStories (
 		string|array|null $slug,

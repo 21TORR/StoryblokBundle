@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Mapping\Field;
 
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Hydrator\StoryHydrator;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
 
@@ -33,7 +34,7 @@ final class TextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformRawData (mixed $data) : ?string
+	public function transformRawData (array $contentPath, mixed $data, StoryHydrator $hydrator) : ?string
 	{
 		\assert(null === $data || \is_string($data));
 

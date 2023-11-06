@@ -5,16 +5,18 @@ namespace Torr\Storyblok\Definition\Component;
 use Torr\Storyblok\Definition\Field\EmbeddedFieldDefinition;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
-use Torr\Storyblok\Mapping\Storyblok;
-use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Mapping\StoryBlok;
+use Torr\Storyblok\Mapping\StoryDocument;
+use Torr\Storyblok\Story\Document;
+use function Symfony\Component\String\u;
 
 final readonly class ComponentDefinition
 {
 	/**
 	 */
 	public function __construct (
-		public Storyblok $definition,
-		/** @type class-string<Story> */
+		public StoryDocument|StoryBlok $definition,
+		/** @type class-string<Document> */
 		public string $storyClass,
 		/** @type array<string, FieldDefinition|EmbeddedFieldDefinition> */
 		public array $fields,
@@ -32,16 +34,12 @@ final readonly class ComponentDefinition
 
 	/**
 	 */
-	public function getDisplayName () : string
+	public function getName () : string
 	{
-		return $this->definition->name;
-	}
-
-	/**
-	 */
-	public function getKey () : string
-	{
-		return $this->definition->key;
+		return $this->definition->name
+			?? u($this->definition->key)
+				->title()
+				->toString();
 	}
 
 
@@ -78,10 +76,10 @@ final readonly class ComponentDefinition
 		return [
 			"name" => $this->definition->key,
 			"real_name" => $this->definition->key,
-			"display_name" => $this->definition->name,
+			"display_name" => $this->getName(),
 			"schema" => $fieldSchemas,
 			"preview_field" => $this->definition->previewField,
-			...$this->definition->type->generateManagementApiData(),
+			...$this->definition->getComponentTypeApiData(),
 		];
 	}
 }

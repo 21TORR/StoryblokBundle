@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Release\ReleaseVersion;
 
 #[AsCommand("storyblok:debug")]
 final class DebugCommand extends Command
@@ -45,7 +46,7 @@ final class DebugCommand extends Command
 
 		if ($input->getOption("fetch"))
 		{
-			$stories = $this->contentApi->fetchAllStories(null);
+			$stories = $this->contentApi->fetchAllStories(null, version: ReleaseVersion::DRAFT);
 			dd($stories);
 		}
 

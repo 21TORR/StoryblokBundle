@@ -4,14 +4,14 @@ namespace Torr\Storyblok\Story\Helper;
 
 use Torr\Storyblok\Component\Data\ComponentData;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
-use Torr\Storyblok\Story\StoryMetaData;
+use Torr\Storyblok\Story\MetaData\DocumentMetaData;
 
 final class ComponentPreviewData
 {
 	/**
 	 * Normalizes the preview-related data to return it directly
 	 */
-	public static function normalizeData (StoryMetaData|ComponentData $metaData) : array
+	public static function normalizeData (DocumentMetaData|ComponentData $metaData) : array
 	{
 		if ($metaData instanceof ComponentData)
 		{

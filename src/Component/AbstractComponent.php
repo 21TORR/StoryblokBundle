@@ -15,14 +15,14 @@ use Torr\Storyblok\Field\Collection\FieldCollection;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
 use Torr\Storyblok\Field\FieldDefinition;
 use Torr\Storyblok\Management\ManagementApiData;
-use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Story\Document;
 use Torr\Storyblok\Visitor\ComponentDataVisitorInterface;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
  * Base class for all components registered in the system
  *
- * @template TStory of Story
+ * @template TStory of Document
  */
 abstract class AbstractComponent
 {

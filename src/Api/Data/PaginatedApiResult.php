@@ -2,12 +2,12 @@
 
 namespace Torr\Storyblok\Api\Data;
 
-use Torr\Storyblok\Story\Story;
+use Torr\Storyblok\Story\Document;
 
 final class PaginatedApiResult
 {
 	/**
-	 * @param array<Story> $stories
+	 * @param array<Document> $stories
 	 */
 	public function __construct (
 		public readonly int $perPage,

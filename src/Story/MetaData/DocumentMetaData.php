@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Story;
+namespace Torr\Storyblok\Story\MetaData;
 
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Translation\LocaleHelper;
 
-final class StoryMetaData
+final class DocumentMetaData
 {
 	private readonly array $data;
 	private readonly array $slugSegments;

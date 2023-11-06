@@ -2,12 +2,14 @@
 
 namespace Torr\Storyblok\Story;
 
-abstract class Story implements StoryInterface
+use Torr\Storyblok\Story\MetaData\DocumentMetaData;
+
+abstract class Document
 {
 	/**
 	 */
 	public function __construct (
-		private readonly StoryMetaData $metaData,
+		private readonly DocumentMetaData $metaData,
 	)
 	{}
 
@@ -20,7 +22,7 @@ abstract class Story implements StoryInterface
 
 	/**
 	 */
-	final public function getMetaData () : StoryMetaData
+	final public function getMetaData () : DocumentMetaData
 	{
 		return $this->metaData;
 	}

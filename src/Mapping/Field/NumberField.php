@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Hydrator\StoryHydrator;
 use Torr\Storyblok\Validator\DataValidator;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
@@ -66,7 +67,7 @@ final class NumberField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function transformRawData (mixed $data) : int|float|null
+	public function transformRawData (array $contentPath, mixed $data, StoryHydrator $hydrator) : int|float|null
 	{
 		if (null === $data)
 		{
