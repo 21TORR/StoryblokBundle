@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Definition\Component;
 
+use Torr\Storyblok\Definition\Field\EmbeddedFieldDefinition;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Mapping\Storyblok;
@@ -15,7 +16,7 @@ final readonly class ComponentDefinition
 		public Storyblok $definition,
 		/** @type class-string<Story> */
 		public string $storyClass,
-		/** @type array<string, FieldDefinition> */
+		/** @type array<string, FieldDefinition|EmbeddedFieldDefinition> */
 		public array $fields,
 	)
 	{
@@ -46,19 +47,39 @@ final readonly class ComponentDefinition
 
 	public function generateManagementApiData () : array
 	{
-		$fields = [];
+		$fieldSchemas = [];
+		$position = 0;
 
 		foreach ($this->fields as $field)
 		{
-			$fieldData = $field->generateManagementApiData();
-			$fields[$field->field->key] = $fieldData;
+			$additionalFields = $field instanceof FieldDefinition
+				? [
+					$field->field->key => $field->generateManagementApiData(),
+				]
+				: $field->generateManagementApiDataForAllFields();
+
+			foreach ($additionalFields as $key => $fieldData)
+			{
+				if (\array_key_exists($key, $fieldSchemas))
+				{
+					throw new InvalidComponentDefinitionException(\sprintf(
+						"Found multiple definitions for field name '%s' in type '%s'",
+						$key,
+						$this->storyClass,
+					));
+				}
+
+				// consistently set the position for all fields
+				$fieldData["pos"] = ++$position;
+				$fieldSchemas[$key] = $fieldData;
+			}
 		}
 
 		return [
 			"name" => $this->definition->key,
 			"real_name" => $this->definition->key,
 			"display_name" => $this->definition->name,
-			"schema" => $fields,
+			"schema" => $fieldSchemas,
 			"preview_field" => $this->definition->previewField,
 			...$this->definition->type->generateManagementApiData(),
 		];

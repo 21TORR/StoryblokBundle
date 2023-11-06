@@ -3,8 +3,10 @@
 namespace Torr\Storyblok\Definition\Component;
 
 use Torr\Storyblok\Definition\Component\Reflection\ReflectionHelper;
+use Torr\Storyblok\Definition\Field\EmbeddedFieldDefinition;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
+use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 use Torr\Storyblok\Mapping\Field\AbstractField;
 use Torr\Storyblok\Mapping\FieldAttribute\FieldAttributeInterface;
 use Torr\Storyblok\Mapping\Storyblok;
@@ -67,7 +69,7 @@ final readonly class ComponentDefinitionFactory
 	}
 
 	/**
-	 * @return array<string, FieldDefinition>
+	 * @return array<string, FieldDefinition|EmbeddedFieldDefinition>
 	 */
 	private function createFieldDefinitions (\ReflectionClass $class) : array
 	{
@@ -77,6 +79,21 @@ final readonly class ComponentDefinitionFactory
 		{
 			if ($reflectionProperty->isStatic())
 			{
+				continue;
+			}
+
+			// check for embeds
+			$embed = $this->helper->getOptionalSingleAttribute($reflectionProperty, EmbeddedStory::class);
+
+			if (null !== $embed)
+			{
+				$embedClass = $this->getSingleClassType($reflectionProperty);
+				$definitions[$embed->prefix] = new EmbeddedFieldDefinition(
+					definition: $embed,
+					property: $reflectionProperty->getName(),
+					embedClass: $embedClass->getName(),
+					fields: $this->createFieldDefinitions($embedClass),
+				);
 				continue;
 			}
 
@@ -95,5 +112,39 @@ final readonly class ComponentDefinitionFactory
 		}
 
 		return $definitions;
+	}
+
+	/**
+	 */
+	private function getSingleClassType (\ReflectionProperty $property) : \ReflectionClass
+	{
+		$type = $property->getType();
+		$fqcn = $property->getDeclaringClass()->getName() . "::" . $property->getName();
+
+		if (!$type instanceof \ReflectionNamedType)
+		{
+			throw new InvalidComponentDefinitionException(
+				message: \sprintf(
+					"Can't use non-singular object type on embedded field: %s",
+					$fqcn,
+				),
+			);
+		}
+
+		try
+		{
+			return new \ReflectionClass($type->getName());
+		}
+		catch (\ReflectionException $exception)
+		{
+			throw new InvalidComponentDefinitionException(
+				message: \sprintf(
+					"Invalid type for embedded field '%s': %s",
+					$fqcn,
+					$exception->getMessage(),
+				),
+				previous: $exception,
+			);
+		}
 	}
 }
