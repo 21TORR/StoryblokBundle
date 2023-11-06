@@ -117,6 +117,7 @@ final readonly class ComponentDefinitionFactory
 					embedClass: $embedClass->getName(),
 					fields: $this->createFieldDefinitions($embedClass, allowEmbeds: false),
 				);
+
 				continue;
 			}
 
@@ -125,6 +126,15 @@ final readonly class ComponentDefinitionFactory
 			if (null === $fieldDefinition)
 			{
 				continue;
+			}
+
+			if ($this->isReservedFieldName($fieldDefinition->key))
+			{
+				throw new InvalidComponentDefinitionException(\sprintf(
+					"Can't use reserved field name '%s' at '%s'",
+					$fieldDefinition->key,
+					$this->formatPropertyName($reflectionProperty),
+				));
 			}
 
 			$definitions[$fieldDefinition->key] = new FieldDefinition(
@@ -168,6 +178,15 @@ final readonly class ComponentDefinitionFactory
 				previous: $exception,
 			);
 		}
+	}
+
+
+	/**
+	 * Returns whether the field uses a reserved field name
+	 */
+	private function isReservedFieldName (string $key) : bool
+	{
+		return "component" === $key;
 	}
 
 
