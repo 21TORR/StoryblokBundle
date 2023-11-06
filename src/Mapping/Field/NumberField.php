@@ -66,7 +66,7 @@ final class NumberField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function normalizeData (mixed $data) : int|float|null
+	public function transformRawData (mixed $data) : int|float|null
 	{
 		if (null === $data)
 		{

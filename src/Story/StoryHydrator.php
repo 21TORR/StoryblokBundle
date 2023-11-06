@@ -124,7 +124,7 @@ final class StoryHydrator
 					$data,
 				);
 
-				$transformed = $field->field->normalizeData($data);
+				$transformed = $field->field->transformRawData($data);
 			}
 
 			// map data

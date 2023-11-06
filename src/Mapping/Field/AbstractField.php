@@ -28,9 +28,9 @@ abstract class AbstractField
 	}
 
 	/**
-	 * Normalizes the data from Storyblok to be more strict
+	 * Transforms the raw data from Storyblok to a sanitized format.
 	 */
-	public function normalizeData (mixed $data) : mixed
+	public function transformRawData (mixed $data) : mixed
 	{
 		return $data;
 	}

@@ -33,7 +33,7 @@ final class TextField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function normalizeData (mixed $data) : ?string
+	public function transformRawData (mixed $data) : ?string
 	{
 		\assert(null === $data || \is_string($data));
 
