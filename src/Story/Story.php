@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Story;
 
-abstract class Story
+abstract class Story implements StoryInterface
 {
 	/**
 	 */
