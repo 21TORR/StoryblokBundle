@@ -30,7 +30,6 @@ final class DebugCache
 	 */
 	public function get () : mixed
 	{
-
 		if ($this->isDebug)
 		{
 			if ($this->hasLocaleCache)
