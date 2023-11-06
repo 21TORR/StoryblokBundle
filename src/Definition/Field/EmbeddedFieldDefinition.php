@@ -8,13 +8,31 @@ use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 
 final readonly class EmbeddedFieldDefinition
 {
+	/**
+	 * @type array<string, FieldDefinition>
+	 */
+	public array $fields;
+
+	/**
+	 * @param array<string, FieldDefinition> $fields
+	 */
 	public function __construct (
 		public EmbeddedStory $definition,
 		public string $property,
+		/** @var class-string */
 		public string $embedClass,
-		/** @type array<string, FieldDefinition> */
-		public array $fields,
-	) {}
+		array $fields,
+	)
+	{
+		$transformed = [];
+
+		foreach ($fields as $key => $field)
+		{
+			$transformed[$this->definition->prefix . $key] = $field;
+		}
+
+		$this->fields = $transformed;
+	}
 
 
 	/**
@@ -22,32 +40,19 @@ final readonly class EmbeddedFieldDefinition
 	 */
 	public function generateManagementApiDataForAllFields () : array
 	{
-		$keys = [];
 		$schemas = [];
 		$prefix = \rtrim($this->definition->prefix, "_") . "_";
 
-		foreach ($this->fields as $field)
+		foreach ($this->fields as $key => $field)
 		{
-			$fullKey = $prefix . $field->field->key;
-
-			if (\array_key_exists($fullKey, $schemas))
-			{
-				throw new InvalidComponentDefinitionException(\sprintf(
-					"Found multiple definitions for field name '%s' in embed '%s'",
-					$fullKey,
-					$this->embedClass,
-				));
-			}
-
-			$schemas[$fullKey] = $field->generateManagementApiData();
-			$keys[] = $fullKey;
+			$schemas[$key] = $field->generateManagementApiData();
 		}
 
 
 		$schemas[$prefix . "_embed"] = [
 			"type" => FieldType::Section->value,
 			"display_name" => $this->definition->label,
-			"keys" => $keys,
+			"keys" => \array_keys($this->fields),
 		];
 
 		return $schemas;

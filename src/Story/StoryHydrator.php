@@ -4,11 +4,13 @@ namespace Torr\Storyblok\Story;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Torr\Storyblok\Definition\Field\EmbeddedFieldDefinition;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 use Torr\Storyblok\Validator\DataValidator;
 
 final class StoryHydrator
@@ -90,7 +92,7 @@ final class StoryHydrator
 
 
 	/**
-	 * @param FieldDefinition[] $fields
+	 * @param array<FieldDefinition|EmbeddedFieldDefinition> $fields
 	 */
 	private function mapDataToFields (
 		array $contentPath,
@@ -99,22 +101,37 @@ final class StoryHydrator
 		array $completeData,
 	) : object
 	{
-		foreach ($fields as $field)
+		foreach ($fields as $fieldKey => $field)
 		{
-			$data = $completeData[$field->field->key] ?? null;
+			if ($field instanceof EmbeddedFieldDefinition)
+			{
+				$embed = new ($field->embedClass)();
+				$transformed = $this->mapDataToFields(
+					[...$contentPath, $field->property],
+					$embed,
+					$field->fields,
+					$completeData,
+				);
+			}
+			else
+			{
+				$data = $completeData[$fieldKey] ?? null;
 
-			// validate data
-			$field->validateData(
-				$contentPath,
-				$this->dataValidator,
-				$data,
-			);
+				// validate data
+				$field->validateData(
+					$contentPath,
+					$this->dataValidator,
+					$data,
+				);
+
+				$transformed = $field->field->normalizeData($data);
+			}
 
 			// map data
 			$this->accessor->setValue(
 				$story,
 				$field->property,
-				$field->field->normalizeData($data),
+				$transformed,
 			);
 		}
 

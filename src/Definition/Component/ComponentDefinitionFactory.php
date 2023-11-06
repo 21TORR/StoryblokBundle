@@ -71,7 +71,10 @@ final readonly class ComponentDefinitionFactory
 	/**
 	 * @return array<string, FieldDefinition|EmbeddedFieldDefinition>
 	 */
-	private function createFieldDefinitions (\ReflectionClass $class) : array
+	private function createFieldDefinitions (
+		\ReflectionClass $class,
+		bool $allowEmbeds = true,
+	) : array
 	{
 		$definitions = [];
 
@@ -87,12 +90,20 @@ final readonly class ComponentDefinitionFactory
 
 			if (null !== $embed)
 			{
+				if (!$allowEmbeds)
+				{
+					throw new InvalidComponentDefinitionException(\sprintf(
+						"Can't use embedded field in embedded type at '%s'",
+						$this->formatPropertyName($reflectionProperty),
+					));
+				}
+
 				$embedClass = $this->getSingleClassType($reflectionProperty);
 				$definitions[$embed->prefix] = new EmbeddedFieldDefinition(
 					definition: $embed,
 					property: $reflectionProperty->getName(),
 					embedClass: $embedClass->getName(),
-					fields: $this->createFieldDefinitions($embedClass),
+					fields: $this->createFieldDefinitions($embedClass, allowEmbeds: false),
 				);
 				continue;
 			}
@@ -119,14 +130,13 @@ final readonly class ComponentDefinitionFactory
 	private function getSingleClassType (\ReflectionProperty $property) : \ReflectionClass
 	{
 		$type = $property->getType();
-		$fqcn = $property->getDeclaringClass()->getName() . "::" . $property->getName();
 
 		if (!$type instanceof \ReflectionNamedType)
 		{
 			throw new InvalidComponentDefinitionException(
 				message: \sprintf(
 					"Can't use non-singular object type on embedded field: %s",
-					$fqcn,
+					$this->formatPropertyName($property),
 				),
 			);
 		}
@@ -140,11 +150,24 @@ final readonly class ComponentDefinitionFactory
 			throw new InvalidComponentDefinitionException(
 				message: \sprintf(
 					"Invalid type for embedded field '%s': %s",
-					$fqcn,
+					$this->formatPropertyName($property),
 					$exception->getMessage(),
 				),
 				previous: $exception,
 			);
 		}
+	}
+
+
+	/**
+	 *
+	 */
+	private function formatPropertyName (\ReflectionProperty $property) : string
+	{
+		return \sprintf(
+			"%s::$%s",
+			$property->getDeclaringClass()->getName(),
+			$property->getName(),
+		);
 	}
 }

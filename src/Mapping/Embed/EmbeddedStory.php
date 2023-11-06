@@ -3,10 +3,17 @@
 namespace Torr\Storyblok\Mapping\Embed;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-final class EmbeddedStory
+final readonly class EmbeddedStory
 {
+	public string $prefix;
+
+	/**
+	 */
 	public function __construct (
-		public readonly string $prefix,
-		public readonly string $label,
-	) {}
+		string $prefix,
+		public string $label,
+	)
+	{
+		$this->prefix = \rtrim($prefix, "_") . "_";
+	}
 }
