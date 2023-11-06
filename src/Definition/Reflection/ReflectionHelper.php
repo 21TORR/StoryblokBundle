@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Definition\Component\Reflection;
+namespace Torr\Storyblok\Definition\Reflection;
 
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 

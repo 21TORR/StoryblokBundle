@@ -2,6 +2,8 @@
 
 namespace Torr\Storyblok\Mapping;
 
+use function Symfony\Component\String\u;
+
 /**
  * A storyblok content element
  */
@@ -16,4 +18,15 @@ final readonly class Storyblok
 		public ?string $previewField = null,
 		public string|\BackedEnum|null $group = null,
 	) {}
+
+
+	/**
+	 *
+	 */
+	public function getName () : string
+	{
+		return $this->name ?? u($this->key)
+			->title()
+			->toString();
+	}
 }

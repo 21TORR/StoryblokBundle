@@ -8,7 +8,6 @@ use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Mapping\Storyblok;
 use Torr\Storyblok\Story\StoryContent;
 use Torr\Storyblok\Story\StoryDocument;
-use function Symfony\Component\String\u;
 
 final readonly class ComponentDefinition
 {
@@ -37,10 +36,7 @@ final readonly class ComponentDefinition
 	 */
 	public function getName () : string
 	{
-		return $this->definition->name
-			?? u($this->definition->key)
-				->title()
-				->toString();
+		return $this->definition->getName();
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Definition\Component;
 
-use Torr\Storyblok\Definition\Component\Reflection\ReflectionHelper;
+use Torr\Storyblok\Definition\Reflection\ReflectionHelper;
 use Torr\Storyblok\Definition\Field\EmbeddedFieldDefinition;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;

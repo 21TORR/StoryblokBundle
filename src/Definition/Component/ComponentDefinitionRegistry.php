@@ -24,7 +24,7 @@ final readonly class ComponentDefinitionRegistry
 		// sort components by name
 		\uasort(
 			$definitions,
-			static fn (ComponentDefinition $left, ComponentDefinition $right) => \strnatcasecmp($left->definition->name, $right->definition->name),
+			static fn (ComponentDefinition $left, ComponentDefinition $right) => \strnatcasecmp($left->getName(), $right->getName()),
 		);
 
 		$this->definitions = $definitions;
