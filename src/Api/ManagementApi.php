@@ -12,7 +12,7 @@ use Torr\Storyblok\Api\Data\ApiActionPerformed;
 use Torr\Storyblok\Api\Data\ComponentIdMap;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
-use Torr\Storyblok\Folder\FolderData;
+use Torr\Storyblok\Data\Folder\FolderData;
 
 final class ManagementApi
 {

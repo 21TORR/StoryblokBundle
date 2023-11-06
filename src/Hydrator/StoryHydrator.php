@@ -16,7 +16,7 @@ use Torr\Storyblok\Story\Blok;
 use Torr\Storyblok\Story\Document;
 use Torr\Storyblok\Story\MetaData\BlokMetaData;
 use Torr\Storyblok\Story\MetaData\DocumentMetaData;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Data\Validator\DataValidator;
 
 final class StoryHydrator
 {

@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Mapping\Field;
 
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Hydrator\StoryHydrator;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Data\Validator\DataValidator;
 
 abstract class AbstractField
 {

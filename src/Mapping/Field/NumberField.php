@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Hydrator\StoryHydrator;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Data\Validator\DataValidator;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class NumberField extends AbstractField

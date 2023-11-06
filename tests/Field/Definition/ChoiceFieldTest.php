@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Transformer\DataTransformer;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Data\Validator\DataValidator;
 
 class ChoiceFieldTest extends TestCase
 {

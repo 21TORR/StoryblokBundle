@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Mapping\Field\AbstractField;
 use Torr\Storyblok\Mapping\FieldAttribute\FieldAttributeInterface;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Data\Validator\DataValidator;
 
 final readonly class FieldDefinition
 {

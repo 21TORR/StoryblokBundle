@@ -8,7 +8,7 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Transformer\DataTransformer;
-use Torr\Storyblok\Validator\DataValidator;
+use Torr\Storyblok\Data\Validator\DataValidator;
 
 trait ComponentContextTestHelperTrait
 {
