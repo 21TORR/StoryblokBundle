@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Story\MetaData;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Translation\LocaleHelper;
 
-final class DocumentMetaData extends ContentMetaData
+final class StandaloneStoryMetaData extends NestedStoryMetaData
 {
 	private readonly array $data;
 	private readonly array $slugSegments;

@@ -8,8 +8,8 @@ use Torr\Storyblok\Exception\Component\DuplicateComponentKeyException;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Mapping\Storyblok;
-use Torr\Storyblok\Story\StoryContent;
-use Torr\Storyblok\Story\StoryDocument;
+use Torr\Storyblok\Story\NestedStory;
+use Torr\Storyblok\Story\StandaloneNestedStory;
 
 final class CollectComponentDefinitionsCompilerPass implements CompilerPassInterface
 {
@@ -37,13 +37,13 @@ final class CollectComponentDefinitionsCompilerPass implements CompilerPassInter
 				continue;
 			}
 
-			if (!\is_a($class, StoryDocument::class, true) && !\is_a($class, StoryContent::class, true))
+			if (!\is_a($class, StandaloneNestedStory::class, true) && !\is_a($class, NestedStory::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
 					"Storyblok element '%s' must extend either '%s' or '%s'.",
 					$class,
-					StoryDocument::class,
-					StoryContent::class,
+					StandaloneNestedStory::class,
+					NestedStory::class,
 				));
 			}
 

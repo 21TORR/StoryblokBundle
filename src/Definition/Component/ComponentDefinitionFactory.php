@@ -10,8 +10,8 @@ use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 use Torr\Storyblok\Mapping\Field\AbstractField;
 use Torr\Storyblok\Mapping\FieldAttribute\FieldAttributeInterface;
 use Torr\Storyblok\Mapping\Storyblok;
-use Torr\Storyblok\Story\StoryContent;
-use Torr\Storyblok\Story\StoryDocument;
+use Torr\Storyblok\Story\NestedStory;
+use Torr\Storyblok\Story\StandaloneNestedStory;
 
 final readonly class ComponentDefinitionFactory
 {
@@ -52,8 +52,8 @@ final readonly class ComponentDefinitionFactory
 			$reflectionClass = new \ReflectionClass($storyblokClass);
 			$definition = $this->helper->getRequiredSingleAttribute($reflectionClass, Storyblok::class);
 
-			$isDocument = \is_a($reflectionClass->getName(), StoryDocument::class, true);
-			\assert($isDocument || \is_a($reflectionClass->getName(), StoryContent::class, true), "must either be a document or a blok");
+			$isDocument = \is_a($reflectionClass->getName(), StandaloneNestedStory::class, true);
+			\assert($isDocument || \is_a($reflectionClass->getName(), NestedStory::class, true), "must either be a document or a blok");
 
 			return new ComponentDefinition(
 				$definition,

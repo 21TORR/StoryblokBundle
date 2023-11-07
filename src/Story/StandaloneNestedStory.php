@@ -2,17 +2,17 @@
 
 namespace Torr\Storyblok\Story;
 
-use Torr\Storyblok\Story\MetaData\DocumentMetaData;
+use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
 
 /**
  * Base class for a standalone storyblok component
  */
-abstract class StoryDocument extends StoryContent
+abstract class StandaloneNestedStory extends NestedStory
 {
 	/**
 	 */
 	public function __construct (
-		DocumentMetaData $metaData,
+		StandaloneStoryMetaData $metaData,
 	)
 	{
 		parent::__construct($metaData);
@@ -21,9 +21,9 @@ abstract class StoryDocument extends StoryContent
 
 	/**
 	 */
-	public function getMetaData () : DocumentMetaData
+	public function getMetaData () : StandaloneStoryMetaData
 	{
-		\assert($this->metaData instanceof DocumentMetaData);
+		\assert($this->metaData instanceof StandaloneStoryMetaData);
 		return $this->metaData;
 	}
 

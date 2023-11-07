@@ -2,17 +2,17 @@
 
 namespace Torr\Storyblok\Story;
 
-use Torr\Storyblok\Story\MetaData\ContentMetaData;
+use Torr\Storyblok\Story\MetaData\NestedStoryMetaData;
 
 /**
  * Base class for a nestable content element
  */
-abstract class StoryContent
+abstract class NestedStory
 {
 	/**
 	 */
 	public function __construct (
-		protected readonly ContentMetaData $metaData,
+		protected readonly NestedStoryMetaData $metaData,
 	)
 	{}
 
@@ -27,7 +27,7 @@ abstract class StoryContent
 
 	/**
 	 */
-	public function getMetaData () : ContentMetaData
+	public function getMetaData () : NestedStoryMetaData
 	{
 		return $this->metaData;
 	}

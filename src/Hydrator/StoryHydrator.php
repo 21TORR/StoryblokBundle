@@ -12,10 +12,10 @@ use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Mapping\Embed\EmbeddedStory;
 use Torr\Storyblok\Mapping\Field\BloksField;
-use Torr\Storyblok\Story\StoryContent;
-use Torr\Storyblok\Story\StoryDocument;
-use Torr\Storyblok\Story\MetaData\ContentMetaData;
-use Torr\Storyblok\Story\MetaData\DocumentMetaData;
+use Torr\Storyblok\Story\NestedStory;
+use Torr\Storyblok\Story\StandaloneNestedStory;
+use Torr\Storyblok\Story\MetaData\NestedStoryMetaData;
+use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
 use Torr\Storyblok\Data\Validator\DataValidator;
 
 final class StoryHydrator
@@ -91,14 +91,14 @@ final class StoryHydrator
 	public function hydrateDocument (
 		string $type,
 		array $data,
-	) : StoryDocument
+	) : StandaloneNestedStory
 	{
 		$definition = $this->componentManager->getDefinition($type);
 		$storyClass = $definition->storyClass;
 
-		\assert(\is_a($storyClass, StoryDocument::class, true));
+		\assert(\is_a($storyClass, StandaloneNestedStory::class, true));
 
-		$metaData = new DocumentMetaData($data, $type);
+		$metaData = new StandaloneStoryMetaData($data, $type);
 		$document = new $storyClass($metaData);
 
 		return $this->mapDataToFields(
@@ -116,14 +116,14 @@ final class StoryHydrator
 		array $contentPath,
 		string $type,
 		array $data,
-	) : StoryContent
+	) : NestedStory
 	{
 		$definition = $this->componentManager->getDefinition($type);
 		$blokClass = $definition->storyClass;
 
-		\assert(\is_a($blokClass, StoryContent::class, true));
+		\assert(\is_a($blokClass, NestedStory::class, true));
 
-		$metaData = new ContentMetaData(
+		$metaData = new NestedStoryMetaData(
 			$data["_uid"],
 			$data["component"],
 			$data["_editable"],

@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Story\MetaData;
 
-class ContentMetaData
+class NestedStoryMetaData
 {
 	/**
 	 */

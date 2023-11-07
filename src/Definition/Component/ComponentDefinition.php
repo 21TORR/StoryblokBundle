@@ -6,8 +6,8 @@ use Torr\Storyblok\Definition\Field\EmbeddedFieldDefinition;
 use Torr\Storyblok\Definition\Field\FieldDefinition;
 use Torr\Storyblok\Exception\Component\InvalidComponentDefinitionException;
 use Torr\Storyblok\Mapping\Storyblok;
-use Torr\Storyblok\Story\StoryContent;
-use Torr\Storyblok\Story\StoryDocument;
+use Torr\Storyblok\Story\NestedStory;
+use Torr\Storyblok\Story\StandaloneNestedStory;
 
 final readonly class ComponentDefinition
 {
@@ -15,7 +15,7 @@ final readonly class ComponentDefinition
 	 */
 	public function __construct (
 		public Storyblok $definition,
-		/** @type class-string<StoryDocument|StoryContent> */
+		/** @type class-string<StandaloneNestedStory|NestedStory> */
 		public string $storyClass,
 		public bool $isDocument,
 		/** @type array<string, FieldDefinition|EmbeddedFieldDefinition> */
