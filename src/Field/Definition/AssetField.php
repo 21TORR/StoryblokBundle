@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -13,6 +14,7 @@ use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
+ * @phpstan-type RawAssetData array{id: int|null, alt: string|null, name: string, focus: string|null, title: string|null, filename: string|null, copyright: string|null, fieldtype: string, is_external_url: bool}
  */
 final class AssetField extends AbstractField
 {
@@ -84,66 +86,111 @@ final class AssetField extends AbstractField
 			$isExternalUrlConstraints[] = new NotNull();
 		}
 
+		$basicConstraint = [
+			new Type("array"),
+			// required fields
+			new Collection(
+				fields: [
+					"id" => $idConstraints,
+					"filename" => $fileNameConstraints,
+					"fieldtype" => [
+						new IdenticalTo("asset"),
+					],
+				],
+				allowExtraFields: true,
+				allowMissingFields: false,
+			),
+			// optional fields
+			new Collection(
+				fields: [
+					"alt" => [
+						new Type("string"),
+					],
+					"name" => [
+						new Type("string"),
+					],
+					"focus" => [
+						new Type("string"),
+					],
+					"title" => [
+						new Type("string"),
+					],
+					"source" => [
+						new Type("string"),
+					],
+					"copyright" => [
+						new Type("string"),
+					],
+					"is_external_url" => $isExternalUrlConstraints,
+				],
+				allowExtraFields: true,
+				allowMissingFields: true,
+			),
+		];
+
+		$constraints = [
+			!$this->allowMissingData && $this->required ? new NotNull() : null,
+			...$basicConstraint,
+		];
+
+		if ($this->allowMultiple)
+		{
+			$constraints = [
+				!$this->allowMissingData && $this->required ? new NotNull() : null,
+				new Type("array"),
+				new All(
+					constraints: $basicConstraint,
+				),
+			];
+		}
+
 		$context->ensureDataIsValid(
 			$contentPath,
 			$this,
 			$data,
-			[
-				!$this->allowMissingData && $this->required ? new NotNull() : null,
-				new Type("array"),
-				// required fields
-				new Collection(
-					fields: [
-						"id" => $idConstraints,
-						"filename" => $fileNameConstraints,
-						"fieldtype" => [
-							new IdenticalTo("asset"),
-						],
-					],
-					allowExtraFields: true,
-					allowMissingFields: false,
-				),
-				// optional fields
-				new Collection(
-					fields: [
-						"alt" => [
-							new Type("string"),
-						],
-						"name" => [
-							new Type("string"),
-						],
-						"focus" => [
-							new Type("string"),
-						],
-						"title" => [
-							new Type("string"),
-						],
-						"source" => [
-							new Type("string"),
-						],
-						"copyright" => [
-							new Type("string"),
-						],
-						"is_external_url" => $isExternalUrlConstraints,
-					],
-					allowExtraFields: true,
-					allowMissingFields: true,
-				),
-			],
+			$constraints,
 		);
 	}
 
 	/**
-	 * @param array{id: int|null, alt: string|null, name: string, focus: string|null, title: string|null, filename: string|null, copyright: string|null, fieldtype: string, is_external_url: bool}|null $data
+	 * @param RawAssetData|RawAssetData[]|null $data
 	 *
 	 * @inheritDoc
+	 *
+	 * @return AssetData|array<AssetData|null>|null
 	 */
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
 		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
-	) : ?AssetData
+	) : AssetData|array|null
+	{
+		\assert(null === $data || \is_array($data));
+
+		if ($this->allowMultiple)
+		{
+			$transformed = [];
+
+			foreach ($data as $assetDataItem)
+			{
+				$transformed[] = $this->transformAssetData($assetDataItem, $context);
+			}
+		}
+		else
+		{
+			$transformed = $this->transformAssetData($data, $context);
+		}
+
+		$dataVisitor?->onDataVisit($this, $transformed);
+
+		return $transformed;
+	}
+
+	/**
+	 * @param RawAssetData|null $data
+	 */
+	private function transformAssetData (mixed $data, ComponentContext $context) : ?AssetData
 	{
 		\assert(null === $data || \is_array($data));
 
@@ -169,7 +216,6 @@ final class AssetField extends AbstractField
 			);
 		}
 
-		$dataVisitor?->onDataVisit($this, $transformed);
 		return $transformed;
 	}
 }

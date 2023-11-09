@@ -1,3 +1,9 @@
+3.5.1
+=====
+
+* (bug) Add missing validation and transformation for `AssetField` if multiple assets are allowed (allowMultiple = true).
+
+
 3.5.0
 =====
 
