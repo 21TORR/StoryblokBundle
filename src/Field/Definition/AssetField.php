@@ -168,10 +168,17 @@ final class AssetField extends AbstractField
 	{
 		\assert(null === $data || \is_array($data));
 
+		if (null === $data)
+		{
+			$dataVisitor?->onDataVisit($this, $data);
+			return null;
+		}
+
 		if ($this->allowMultiple)
 		{
 			$transformed = [];
 
+			/** @var RawAssetData $assetDataItem */
 			foreach ($data as $assetDataItem)
 			{
 				$transformed[] = $this->transformAssetData($assetDataItem, $context);
@@ -179,6 +186,7 @@ final class AssetField extends AbstractField
 		}
 		else
 		{
+			/** @var RawAssetData $data */
 			$transformed = $this->transformAssetData($data, $context);
 		}
 
