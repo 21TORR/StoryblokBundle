@@ -86,7 +86,8 @@ final class AssetField extends AbstractField
 			$isExternalUrlConstraints[] = new NotNull();
 		}
 
-		$basicConstraint = [
+		$constraints = \array_filter([
+			!$this->allowMissingData && $this->required ? new NotNull() : null,
 			new Type("array"),
 			// required fields
 			new Collection(
@@ -94,6 +95,7 @@ final class AssetField extends AbstractField
 					"id" => $idConstraints,
 					"filename" => $fileNameConstraints,
 					"fieldtype" => [
+						new NotNull(),
 						new IdenticalTo("asset"),
 					],
 				],
@@ -126,12 +128,7 @@ final class AssetField extends AbstractField
 				allowExtraFields: true,
 				allowMissingFields: true,
 			),
-		];
-
-		$constraints = [
-			!$this->allowMissingData && $this->required ? new NotNull() : null,
-			...$basicConstraint,
-		];
+		]);
 
 		if ($this->allowMultiple)
 		{
@@ -139,7 +136,7 @@ final class AssetField extends AbstractField
 				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
 				new All(
-					constraints: $basicConstraint,
+					constraints: $constraints,
 				),
 			];
 		}
@@ -157,7 +154,7 @@ final class AssetField extends AbstractField
 	 *
 	 * @inheritDoc
 	 *
-	 * @return AssetData|array<AssetData|null>|null
+	 * @return AssetData|AssetData[]|null
 	 */
 	public function transformData (
 		mixed $data,
@@ -176,23 +173,28 @@ final class AssetField extends AbstractField
 
 		if ($this->allowMultiple)
 		{
-			$transformed = [];
+			$result = [];
 
 			/** @var RawAssetData $assetDataItem */
 			foreach ($data as $assetDataItem)
 			{
-				$transformed[] = $this->transformAssetData($assetDataItem, $context);
+				$transformed = $this->transformAssetData($assetDataItem, $context);
+
+				if (null !== $transformed)
+				{
+					$result[] = $transformed;
+				}
 			}
 		}
 		else
 		{
 			/** @var RawAssetData $data */
-			$transformed = $this->transformAssetData($data, $context);
+			$result = $this->transformAssetData($data, $context);
 		}
 
-		$dataVisitor?->onDataVisit($this, $transformed);
+		$dataVisitor?->onDataVisit($this, $result);
 
-		return $transformed;
+		return $result;
 	}
 
 	/**
