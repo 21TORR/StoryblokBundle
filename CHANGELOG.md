@@ -1,3 +1,9 @@
+3.6.0
+=====
+
+* (improvement) Bump dependencies.
+
+
 3.5.1
 =====
 
