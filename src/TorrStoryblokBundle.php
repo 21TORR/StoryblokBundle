@@ -5,7 +5,6 @@ namespace Torr\Storyblok;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Torr\Storyblok\Assets\ComponentAssetsHelper;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
@@ -28,9 +27,6 @@ final class TorrStoryblokBundle extends Bundle
 					->setArgument('$managementToken', $config["management_token"])
 					->setArgument('$contentToken', $config["content_token"])
 					->setArgument('$localeLevel', $config["locale_level"]);
-
-				$container->getDefinition(ComponentAssetsHelper::class)
-					->setArgument('$componentsPreviewImagePath', $config["components_preview_image_path"]);
 			},
 			"storyblok",
 		);
