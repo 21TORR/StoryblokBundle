@@ -1,3 +1,10 @@
+3.6.0
+=====
+
+* (improvement) Bump dependencies.
+* (feature) Add `ComponentAssetsHelper` to easily generate component preview screenshot URLs.
+
+
 3.5.1
 =====
 
