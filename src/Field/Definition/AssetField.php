@@ -14,6 +14,8 @@ use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
+ * Can't use `no_translate` option, as it is always disabled.
+ *
  * @phpstan-type RawAssetData array{id: int|null, alt: string|null, name: string, focus: string|null, title: string|null, filename: string|null, copyright: string|null, fieldtype: string, is_external_url: bool}
  */
 final class AssetField extends AbstractField

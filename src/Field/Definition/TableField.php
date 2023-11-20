@@ -11,6 +11,11 @@ use Torr\Storyblok\Field\Data\TableData;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
+/**
+ * The field for managing tables.
+ *
+ * Doesn't support the `no_translate` option, it is always disabled.
+ */
 final class TableField extends AbstractField
 {
 	/**

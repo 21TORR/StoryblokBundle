@@ -73,6 +73,7 @@ final class RichTextField extends AbstractField
 					"restrict_components",
 				),
 				"style_options" => $formattedStyleOptions,
+				// can't set the `no_translate` field, as it is always enabled
 			],
 		);
 	}

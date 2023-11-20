@@ -15,6 +15,10 @@ use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
+/**
+ * The `no_translate` option doesn't make sense here, as the field itself has no content and the content is
+ * managed by their translatable settings.
+ */
 final class BloksField extends AbstractField
 {
 	public function __construct (

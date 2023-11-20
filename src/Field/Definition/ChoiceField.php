@@ -73,6 +73,9 @@ final class ChoiceField extends AbstractField
 					: $this->defaultValue,
 				"min_options" => $this->minimumNumberOfOptions,
 				"max_options" => $this->maximumNumberOfOptions,
+				// never allow to export this field to translate (as you need to know the format)
+				// also multi options are never translatable in Storyblok
+				"no_translate" => true,
 			],
 		);
 	}

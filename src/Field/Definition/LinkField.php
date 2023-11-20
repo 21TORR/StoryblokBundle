@@ -17,6 +17,9 @@ use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
+/**
+ * Can't use `no_translate` option, as it is always disabled.
+ */
 final class LinkField extends AbstractField
 {
 	/**

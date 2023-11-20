@@ -19,6 +19,7 @@ final class TextField extends AbstractField
 		private readonly bool $multiline = false,
 		private readonly ?int $maxLength = null,
 		private readonly bool $isRightToLeft = false,
+		private readonly bool $exportTranslation = true,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -44,6 +45,7 @@ final class TextField extends AbstractField
 			[
 				"rtl" => $this->isRightToLeft,
 				"max_length" => $this->maxLength,
+				"no_translate" => !$this->exportTranslation,
 			],
 		);
 	}
