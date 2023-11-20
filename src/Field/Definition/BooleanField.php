@@ -8,6 +8,11 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
+/**
+ * Checkbox field type
+ *
+ * Can't use `no_translate` option, as it is always enabled.
+ */
 final class BooleanField extends AbstractField
 {
 	/**

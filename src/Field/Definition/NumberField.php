@@ -14,7 +14,11 @@ final class NumberField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct (string $label, int|float|null $defaultValue = null)
+	public function __construct (
+		string $label,
+		int|float|null $defaultValue = null,
+		private readonly bool $exportTranslation = true,
+	)
 	{
 		parent::__construct($label, $defaultValue);
 	}
@@ -25,6 +29,19 @@ final class NumberField extends AbstractField
 	protected function getInternalStoryblokType () : FieldType
 	{
 		return FieldType::Number;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function toManagementApiData () : array
+	{
+		return \array_replace(
+			parent::toManagementApiData(),
+			[
+				"no_translate" => !$this->exportTranslation,
+			],
+		);
 	}
 
 	/**

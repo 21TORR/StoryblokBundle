@@ -1,3 +1,9 @@
+3.6.0
+=====
+
+* (feature) Add option to exclude/include certain fields into the translation export.
+
+
 3.5.1
 =====
 

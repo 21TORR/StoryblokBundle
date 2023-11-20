@@ -34,6 +34,8 @@ final class DateTimeField extends AbstractField
 			parent::toManagementApiData(),
 			[
 				"disable_time" => !$this->withTimeSelection,
+				// never allow to export this field to translate (as it would need to be a perfect format match)
+				"no_translate" => true,
 			],
 		);
 	}
