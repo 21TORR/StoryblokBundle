@@ -17,7 +17,7 @@ final class NumberField extends AbstractField
 	public function __construct (
 		string $label,
 		int|float|null $defaultValue = null,
-		private readonly bool $exportTranslation = true,
+		private readonly bool $exportTranslation = false,
 	)
 	{
 		parent::__construct($label, $defaultValue);
