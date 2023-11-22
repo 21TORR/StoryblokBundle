@@ -1,3 +1,9 @@
+3.7.0
+=====
+
+* (feature) Add `HtmlToRichTextTransformer` to transform HTML to rich text.
+
+
 3.6.0
 =====
 
