@@ -1,3 +1,9 @@
+3.7.1
+=====
+
+* (bug) Fix invalid service excludes.
+
+
 3.7.0
 =====
 

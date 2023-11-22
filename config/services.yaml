@@ -11,7 +11,8 @@ services:
              - ../src/Field
              - ../src/Component/Filter
              - ../src/Manager/Sync/Filter
-             - ../src/RichText
+             - ../src/RichText/LinkMarksRichTextTransformer.php
+             - ../src/RichText/RichTextTransformer.php
              - ../src/TorrStoryblokBundle.php
 
     Torr\Storyblok\Config\StoryblokConfig:
