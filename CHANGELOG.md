@@ -1,3 +1,12 @@
+3.8.0 (unreleased)
+=====
+
+* (internal) Add generic `ManagementApi::sendRequest()` to unify call structures.
+* (internal) Reuse existing folder API calls in management API to not duplicate requests anymore.
+* (feature) Add `ManagementApi::syncDatasourceEntries()`.
+* (improvement) Require PHP 8.2+.
+
+
 3.7.1
 =====
 
