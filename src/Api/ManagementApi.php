@@ -123,28 +123,26 @@ final class ManagementApi
 	 */
 	public function fetchFolderTitleMap (string $slugPrefix) : array
 	{
-		// include the trailing slash, to exclude the base directory
-		$slugPrefix = \trim($slugPrefix, "/") . "/";
+		$folders = $this->fetchFoldersInPath($slugPrefix);
 
-		$options = (new HttpOptions())
-			->setQuery([
-				"folder_only" => true,
-				"starts_with" => $slugPrefix,
-				"per_page" => 100,
-			]);
+		// include the trailing slash, to exclude the base directory
+		$slugPrefix = "" !== $slugPrefix
+			? \trim($slugPrefix, "/") . "/"
+			: "";
 
 		$map = [];
-		$replacement = "~" . \preg_quote($slugPrefix, "~") . "~";
+		$replacement = "" !== $slugPrefix
+			? "~^" . \preg_quote($slugPrefix, "~") . "~"
+			: null;
 
-		$data = $this->sendRequest("stories", $options);
-		$stories = $data["stories"] ?? [];
-
-		// @todo paginate here
-		foreach ($stories as $entry)
+		foreach ($folders as $folder)
 		{
 			// use heading slash to local url
-			$localSlug = "/" . \preg_replace($replacement, "", $entry["full_slug"]);
-			$map[$localSlug] = $entry["name"];
+			$localSlug = null !== $replacement
+				? "/" . \preg_replace($replacement, "", $folder->getFullSlug())
+				: "/" . $folder->getFullSlug();
+
+			$map[$localSlug] = $folder->getName();
 		}
 
 		return $map;
@@ -158,7 +156,9 @@ final class ManagementApi
 	public function fetchFoldersInPath (string $slugPrefix) : array
 	{
 		// include the trailing slash, to exclude the base directory
-		$slugPrefix = \trim($slugPrefix, "/") . "/";
+		$slugPrefix = "" !== $slugPrefix
+			? \trim($slugPrefix, "/") . "/"
+			: "";
 
 		$options = (new HttpOptions())
 			->setQuery([
