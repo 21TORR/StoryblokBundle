@@ -1,4 +1,4 @@
-3.8.0 (unreleased)
+3.8.0
 =====
 
 * (internal) Add generic `ManagementApi::sendRequest()` to unify call structures.
