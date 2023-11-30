@@ -274,6 +274,109 @@ final class ManagementApi
 	}
 
 	/**
+	 * @param array<string, string> The values to add/updated. Format: value => name
+	 */
+	public function syncDatasourceEntries (
+		string $datasourceSlug,
+		array $updatedValues
+	)
+	{
+		$nameMap = [];
+		$valueMap = [];
+
+		foreach ($this->fetchDatasourceEntries($datasourceSlug) as $entry)
+		{
+			$nameMap[$entry["name"]] = $entry;
+			$valueMap[$entry["value"]] = $entry;
+		}
+
+		$toAdd = [];
+		$toUpdated = [];
+
+		foreach ($updatedValues as $value => $name)
+		{
+			// if existing entry
+			if (\array_key_exists($value, $valueMap))
+			{
+				if ($valueMap[$value]["name"] === $name)
+				{
+					continue;
+				}
+
+				$toUpdated[] = \array_replace($valueMap[$value], [
+					"name" => $name,
+				]);
+				continue;
+			}
+
+			// if new entry
+			if (\array_key_exists($name, $nameMap))
+			{
+				throw new
+			}
+		}
+
+
+		dd($this->fetchDatasourceEntries($datasourceSlug));
+	}
+
+
+	/**
+	 * Fetches all datasource entries
+	 *
+	 * @return array<array{"id": int, "name": string, "value": string}>
+	 */
+	public function fetchDatasourceEntries (
+		string $datasourceSlug,
+	) : array
+	{
+		$options = (new HttpOptions())
+			->setQuery([
+				"datasource_slug" => $datasourceSlug,
+			]);
+
+		$result = $this->sendRequest("datasource_entries", $options);
+		return $result["datasource_entries"];
+	}
+
+
+	/**
+	 * Sends the request and returns the response
+	 */
+	private function sendRequest (
+		string $path,
+		HttpOptions $options = new HttpOptions(),
+		string $method = "GET",
+	) : array
+	{
+		try
+		{
+			// ensure that we stay in the rate limit
+			$this->rateLimiter->consume()->wait();
+
+			$formattedOptions = $options->toArray();
+			$formattedOptions["headers"]["authorization"] = $this->config->getManagementToken();
+
+			$response = $this->client->request(
+				$method,
+				$path,
+				$formattedOptions,
+			);
+
+			return $response->toArray();
+		}
+		catch (ExceptionInterface $e)
+		{
+			throw new ApiRequestFailedException(\sprintf(
+				"Failed management request %s '%s': %s",
+				$method,
+				$path,
+				$e->getMessage(),
+			), previous: $e);
+		}
+	}
+
+	/**
 	 *
 	 */
 	private function generateBaseOptions () : HttpOptions
