@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Api;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Component\RateLimiter\LimiterInterface;
@@ -27,6 +28,7 @@ final class ManagementApi
 		private readonly StoryblokConfig $config,
 		HttpClientInterface $client,
 		RateLimiterFactory $storyblokManagementLimiter,
+		readonly LoggerInterface $logger,
 	)
 	{
 		$this->rateLimiter = $storyblokManagementLimiter->create();
