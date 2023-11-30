@@ -391,7 +391,7 @@ final class ManagementApi
 				$formattedOptions,
 			);
 
-			return "" !== $response->getContent(true)
+			return "" !== $response->getContent()
 				? $response->toArray()
 				: [];
 		}
