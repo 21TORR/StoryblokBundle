@@ -13,8 +13,7 @@ use Torr\Storyblok\Management\ManagementApiData;
  */
 abstract class AbstractField implements FieldDefinitionInterface
 {
-	private ?bool $canSync = false;
-	private ?bool $useAsAdminDisplayName = false;
+	private bool $useAsAdminDisplayName = false;
 	protected bool $required = false;
 	private ?string $regexp = null;
 	private bool $translatable = false;
@@ -101,7 +100,6 @@ abstract class AbstractField implements FieldDefinitionInterface
 	) : static
 	{
 		$this->useAsAdminDisplayName = true;
-		$this->canSync = $canSync;
 
 		return $this;
 	}
@@ -133,20 +131,13 @@ abstract class AbstractField implements FieldDefinitionInterface
 			"translatable" => $this->translatable,
 			"required" => $this->required,
 			"regex" => $this->regexp,
-			"can_sync" => $this->canSync,
-			"preview_field" => $this->useAsAdminDisplayName,
 		];
 	}
 
 	/**
-	 * This method returns whether the field is used as the storyblok default value.
-	 * It is deliberately name differently, so that it doesn't get listed in autocompletion.
-	 *
-	 * @internal
-	 *
-	 * @private
+	 * @inheritDoc
 	 */
-	public function isStoryblokPreviewField () : ?bool
+	public function isStoryblokPreviewField () : bool
 	{
 		return $this->useAsAdminDisplayName;
 	}

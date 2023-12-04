@@ -274,6 +274,17 @@ abstract class AbstractComponent
 		}
 
 		$definition = $this->configureComponent();
+		$previewField = null;
+
+		foreach ($this->getFields()->getRootFields() as $key => $field)
+		{
+			if ($field->isStoryblokPreviewField())
+			{
+				$previewField = $key;
+				break;
+			}
+		}
+
 
 		return [
 			"name" => static::getKey(),
@@ -282,6 +293,7 @@ abstract class AbstractComponent
 			"image" => $definition->previewScreenshotUrl,
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,
+			"preview_field" => $previewField,
 			"real_name" => static::getKey(),
 			"color" => $definition->iconBackgroundColor,
 			"icon" => $definition->icon?->value,

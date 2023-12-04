@@ -45,4 +45,15 @@ interface FieldDefinitionInterface
 		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
 	) : mixed;
+
+
+	/**
+	 * This method returns whether the field is used as the storyblok default value.
+	 *  It is deliberately name differently, so that it doesn't get listed in autocompletion.
+	 *
+	 * @internal
+	 *
+	 * @private
+	 */
+	public function isStoryblokPreviewField () : bool;
 }
