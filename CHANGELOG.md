@@ -1,3 +1,9 @@
+3.8.1
+=====
+
+* (bug) Fix sync of preview fields - Storyblok changed the way they are defined.
+
+
 3.8.0
 =====
 
