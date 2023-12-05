@@ -294,7 +294,6 @@ abstract class AbstractComponent
 			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,
 			"preview_field" => $previewField,
-			"real_name" => static::getKey(),
 			"color" => $definition->iconBackgroundColor,
 			"icon" => $definition->icon?->value,
 			...$this->getComponentType()->toManagementApiData(),
