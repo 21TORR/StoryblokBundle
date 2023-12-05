@@ -79,7 +79,7 @@ final class ComponentConfigDiffer
 	{
 		return \json_encode(
 			$this->normalizeArray($array),
-			\JSON_PRETTY_PRINT,
+			\JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_UNICODE,
 		);
 	}
 
