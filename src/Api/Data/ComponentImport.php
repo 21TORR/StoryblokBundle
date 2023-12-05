@@ -7,7 +7,14 @@ final class ComponentImport
 	/**
 	 */
 	public function __construct (
+		public readonly string $formattedLabel,
 		public readonly array $config,
-		public readonly string|\BackedEnum|null $groupLabel,
 	) {}
+
+	/**
+	 */
+	public function getName () : string
+	{
+		return $this->config["name"];
+	}
 }

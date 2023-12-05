@@ -9,6 +9,7 @@ use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
+use Torr\Storyblok\Manager\Sync\Diff\ComponentConfigDiffer;
 
 final class ComponentSync
 {
@@ -17,33 +18,104 @@ final class ComponentSync
 	public function __construct (
 		private readonly ManagementApi $managementApi,
 		private readonly ComponentNormalizer $componentNormalizer,
+		private readonly ComponentConfigDiffer $differ,
 	) {}
 
+
 	/**
-	 * @param bool $sync Whether the data should actually be synced to Storyblok (instead of just checking whether all could be normalized).
-	 *
 	 * @throws SyncFailedException
+	 *
+	 * @return bool whether the sync was actually run
 	 */
-	public function syncDefinitions (
+	public function syncDefinitionsInteractively (
 		TorrStyle $io,
-		bool $sync = false,
-	) : void
+		bool $forceSync = false,
+	) : bool
 	{
 		try
 		{
-			$normalized = $this->componentNormalizer->normalize($io);
+			$definitions = $this->managementApi->fetchComponentDefinitions();
+			$io->writeln("• Normalizing all components");
+			$normalized = $this->componentNormalizer->normalize();
+			$io->writeln("<fg=green>✓</> done");
 
-			if (!$sync)
+			$toRun = [];
+
+			foreach ($normalized as $componentImport)
 			{
-				return;
+				$existing = $definitions[$componentImport->getName()] ?? null;
+
+				// if it is a new component: just add
+				if (null === $existing)
+				{
+					$this->renderComponentInfo($io, $componentImport, [
+						"<fg=green>New component</>",
+					]);
+					$toRun[] = $componentImport;
+
+					continue;
+				}
+
+				$diff = $this->differ->diff($existing, $componentImport->config);
+
+				if (null === $diff)
+				{
+					continue;
+				}
+
+				$this->renderComponentInfo($io, $componentImport, $diff);
+				$toRun[] = $componentImport;
 			}
 
-			$this->syncComponents($io, $normalized);
+			if (empty($toRun))
+			{
+				$io->success("No component changed, nothing to do");
+				return true;
+			}
+
+			$io->writeln(\sprintf(
+				"• Found <fg=blue>%d</> components to sync",
+				\count($toRun),
+			));
+
+			if (!$forceSync && !$io->confirm("Should the data really be synced?", false))
+			{
+				$io->caution("Aborting");
+				return false;
+			}
+
+			$this->syncComponents($io, $toRun);
+			return true;
 		}
 		catch (InvalidComponentConfigurationException|ApiRequestException $exception)
 		{
 			throw new SyncFailedException($exception->getMessage(), previous: $exception);
 		}
+	}
+
+
+	/**
+	 */
+	private function renderComponentInfo (
+		TorrStyle $io,
+		ComponentImport $component,
+		array $lines,
+	) : void
+	{
+		$io->writeln("┌─");
+		$io->writeln(\sprintf("│ %s", $component->formattedLabel));
+		$io->writeln("│");
+
+		foreach ($lines as $line)
+		{
+			foreach (\explode("\n", $line) as $splitLine)
+			{
+				$io->writeln("│ {$splitLine}");
+			}
+		}
+
+		$io->writeln("└─");
+		$io->newLine();
 	}
 
 
@@ -59,8 +131,8 @@ final class ComponentSync
 	{
 		foreach ($normalizedComponents as $key => $config)
 		{
-			$io->write("Syncing {$key} ");
-			$performedAction = $this->managementApi->syncComponent($config->config, $config->groupLabel);
+			$io->write("• Syncing {$config->formattedLabel} ... ");
+			$performedAction = $this->managementApi->syncComponent($config->config);
 			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
 		}
 	}

@@ -47,13 +47,9 @@ final class ManagementApi
 	/**
 	 * @throws ApiRequestFailedException
 	 */
-	public function syncComponent (
-		array $config,
-		string|\BackedEnum|null $componentGroupLabel = null,
-	) : ApiActionPerformed
+	public function syncComponent (array $config) : ApiActionPerformed
 	{
 		$componentIdMap = $this->getComponentIdMap();
-		$config["component_group_uuid"] = $this->getOrCreatedComponentGroupUuid($componentGroupLabel);
 
 		$options = (new HttpOptions())
 			->setJson([
@@ -77,7 +73,7 @@ final class ManagementApi
 	/**
 	 * Gets or creates a component group uuid
 	 */
-	private function getOrCreatedComponentGroupUuid (string|\BackedEnum|null $name) : ?string
+	public function getOrCreatedComponentGroupUuid (string|\BackedEnum|null $name) : ?string
 	{
 		if (null === $name)
 		{
@@ -418,6 +414,22 @@ final class ManagementApi
 				$exception->getMessage(),
 			), previous: $exception);
 		}
+	}
+
+	/**
+	 * @return array<string, array>
+	 */
+	public function fetchComponentDefinitions () : array
+	{
+		$components = $this->sendRequest("components")["components"] ?? [];
+		$result = [];
+
+		foreach ($components as $component)
+		{
+			$result[$component["name"]] = $component;
+		}
+
+		return $result;
 	}
 
 	/**

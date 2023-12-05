@@ -2,8 +2,8 @@
 
 namespace Torr\Storyblok\Manager\Normalizer;
 
-use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\Data\ComponentImport;
+use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Sync\ComponentConfigResolver;
 
@@ -12,6 +12,7 @@ final class ComponentNormalizer
 	public function __construct (
 		private readonly ComponentManager $componentManager,
 		private readonly ComponentConfigResolver $componentConfigResolver,
+		private readonly ManagementApi $managementApi,
 	) {}
 
 
@@ -20,27 +21,26 @@ final class ComponentNormalizer
 	 *
 	 * @return ComponentImport[]
 	 */
-	public function normalize (TorrStyle $io) : array
+	public function normalize () : array
 	{
 		$normalized = [];
 
 		// normalize everything to check if normalization fails
 		foreach ($this->componentManager->getAllComponents() as $component)
 		{
-			$key = \sprintf(
-				"<fg=blue>%s</> (<fg=yellow>%s</>) ... ",
+			$formattedLabel = \sprintf(
+				"<fg=blue>%s</> (<fg=yellow>%s</>)",
 				$component->getDisplayName(),
 				$component::getKey(),
 			);
 
-			$io->write("Normalizing {$key} ");
+			$config = $this->componentConfigResolver->resolveComponentConfig($component->toManagementApiData());
+			$config["component_group_uuid"] = $this->managementApi->getOrCreatedComponentGroupUuid($component->getComponentGroup());
 
-			$normalized[$key] = new ComponentImport(
-				$this->componentConfigResolver->resolveComponentConfig($component->toManagementApiData()),
-				$component->getComponentGroup(),
+			$normalized[] = new ComponentImport(
+				$formattedLabel,
+				$config,
 			);
-
-			$io->writeln("done <fg=green>✓</>");
 		}
 
 		return $normalized;
