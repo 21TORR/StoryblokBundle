@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Manager\Sync\Diff;
 
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 
 final class ComponentConfigDiffer
 {
@@ -77,10 +78,21 @@ final class ComponentConfigDiffer
 	 */
 	private function formatAsJson (array $array) : string
 	{
-		return \json_encode(
-			$this->normalizeArray($array),
-			\JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_UNICODE,
-		);
+		try
+		{
+
+			return \json_encode(
+				$this->normalizeArray($array),
+				\JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_UNICODE,
+			);
+		}
+		catch (\JsonException $exception)
+		{
+			throw new InvalidComponentConfigurationException(\sprintf(
+				"Failed to diff component config: %s",
+				$exception->getMessage(),
+			), previous: $exception);
+		}
 	}
 
 	/**

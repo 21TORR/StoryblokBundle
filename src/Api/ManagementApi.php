@@ -427,7 +427,7 @@ final class ManagementApi
 		foreach ($components as $component)
 		{
 			\assert(\is_array($component));
-			$result[$component["name"]] = $component;
+			$result[(string) $component["name"]] = $component;
 		}
 
 		return $result;
