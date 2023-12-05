@@ -44,7 +44,7 @@ final class ValidateDefinitionsCommand extends Command
 
 		try
 		{
-			$this->componentValidator->validateDefinitions($io);
+			$this->componentValidator->validateDefinitions();
 
 			$io->newLine(2);
 			$io->success("All definitions validated.");

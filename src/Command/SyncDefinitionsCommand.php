@@ -57,20 +57,9 @@ final class SyncDefinitionsCommand extends Command
 
 		$sync = (bool) $input->getOption("force");
 
-		if (!$sync)
-		{
-			$sync = $io->confirm("Should the data really be synced?", false);
-		}
-
 		try
 		{
-			$this->componentSync->syncDefinitions($io, $sync);
-
-			if (!$sync)
-			{
-				$io->newLine(2);
-				$io->writeln("<info>Dry-run mode selected, so nothing was actually synced to Storyblok.</>");
-			}
+			$this->componentSync->syncDefinitionsInteractively($io, $sync);
 
 			$io->newLine(2);
 			$io->success("All done");

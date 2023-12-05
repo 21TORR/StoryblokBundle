@@ -1,3 +1,10 @@
+3.9.0
+=====
+
+* (feature) Show diff before syncing component definitions.
+* (feature) Only sync components that actually have a change.
+
+
 3.8.1
 =====
 
