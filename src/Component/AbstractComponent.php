@@ -291,7 +291,6 @@ abstract class AbstractComponent
 			"display_name" => $this->getDisplayName(),
 			"schema" => $this->normalizeFields($this->getFields()->getRootFields()),
 			"image" => $definition->previewScreenshotUrl,
-			"preview" => $definition->previewFieldName,
 			"preview_tmpl" => $definition->previewTemplate,
 			"preview_field" => $previewField,
 			"color" => $definition->iconBackgroundColor,

@@ -15,6 +15,8 @@ final class ComponentDefinition
 		 * easily identify a certain component.
 		 *
 		 * E.g. If this component has a Headline, you might want to use this one as a Preview Field Name.
+		 *
+		 * @deprecated use the parameter on the fields instead
 		 */
 		public readonly ?string $previewFieldName = null,
 		/**
