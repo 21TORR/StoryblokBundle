@@ -14,7 +14,7 @@
 		"21torr/bundle-helpers": "^2.1.2",
 		"21torr/cli": "^1.0",
 		"psr/log": "^3.0",
-		"sebastian/diff": "^5.0",
+		"sebastian/diff": "^4.0.4 || ^5.0",
 		"symfony/console": "^6.1",
 		"symfony/http-client": "^6.1",
 		"symfony/lock": "^6.2",
