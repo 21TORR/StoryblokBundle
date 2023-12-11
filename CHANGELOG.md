@@ -1,3 +1,9 @@
+3.9.2
+=====
+
+* (improvement) Also support older versions of `sebastian/diff`.
+
+
 3.9.1
 =====
 
