@@ -155,10 +155,17 @@ final class LinkField extends AbstractField
 		{
 			$id = $context->normalizeOptionalString($data["id"]);
 
+			// the field is empty
+			if (null === $id)
+			{
+				return null;
+			}
+
 			// we have the cached_url in the data here, but we can't rely on it, as it might be out of date
 			return new StoryLinkData(
 				id: $id,
 				anchor: $context->normalizeOptionalString($data["anchor"] ?? null),
+				fullData: $data,
 			);
 		}
 

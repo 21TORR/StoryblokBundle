@@ -47,7 +47,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-next": "2.x-dev"
+			"3.x-dev": "3.9.x-dev"
 		}
 	},
 	"scripts": {

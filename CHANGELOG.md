@@ -1,3 +1,11 @@
+3.9.1
+=====
+
+* (improvement) Make types in `StoryLinkData` more strict.
+* (improvement) Transform empty links in `LinkField` directly to `null`.
+* (improvement) Pass `fullData` in `StoryLinkData`.
+
+
 3.9.0
 =====
 
