@@ -173,12 +173,14 @@ final class StoryMetaData
 	public function getAlternateLanguages () : array
 	{
 		$result = [];
+		$localeLevel = $this->data["_locale_level"];
+		\assert(\is_int($localeLevel));
 
 		/** @var array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int} $alternate */
 		foreach (($this->data["alternates"] ?? []) as $alternate)
 		{
-			$slug = $alternate["full_slug"];
-			$locale = \mb_substr($slug, 0, \strpos($slug, "/") ?: null);
+			$slugSegments = \explode("/", \rtrim($alternate["full_slug"], "/"));
+			$locale = $slugSegments[$localeLevel];
 
 			$alternate["locale"] = LocaleHelper::isValidLocale($locale)
 				? $locale
