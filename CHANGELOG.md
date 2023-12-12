@@ -1,7 +1,7 @@
 3.9.3
 =====
 
-* (fix) Use configurable `locale_level` to get the correct locale in `StoryMetaData::getAlternateLanguages()`.
+* (bug) Use configurable `locale_level` to get the correct locale in `StoryMetaData::getAlternateLanguages()`.
 
 
 3.9.2
