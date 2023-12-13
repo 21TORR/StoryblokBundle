@@ -1,5 +1,10 @@
+3.10.1 (unreleased)
+======
+
+* (improvement) Add `StoryblokBackendUrlGenerator::generateStoryEditUrlById()`.
+
 3.10.0
-=====
+======
 
 * (feature) Add option `automaticallyTransformNonRichTextContent` to `RichTextField` to allow string as data from Storyblok and transform it to rich text data.
 
