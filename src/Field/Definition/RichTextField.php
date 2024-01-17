@@ -9,6 +9,7 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Field\RichText\RichTextStyling;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
+use Torr\Storyblok\RichText\HtmlToRichTextTransformer;
 use Torr\Storyblok\RichText\LinkMarksRichTextTransformer;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
@@ -30,6 +31,7 @@ final class RichTextField extends AbstractField
 		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly array $toolbarOptions = [],
 		private readonly array $styleOptions = [],
+		private readonly bool $allowStringTransformation = false,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -89,7 +91,11 @@ final class RichTextField extends AbstractField
 			$data,
 			[
 				!$this->allowMissingData && $this->required ? new NotNull() : null,
-				new Type("array"),
+				new Type(
+					$this->allowStringTransformation
+						? ["array", "string"]
+						: "array",
+				),
 			],
 		);
 	}
@@ -104,12 +110,18 @@ final class RichTextField extends AbstractField
 		?DataVisitorInterface $dataVisitor = null,
 	) : ?array
 	{
-		\assert(null === $data || \is_array($data));
+		\assert(null === $data || \is_array($data) || \is_string($data));
+
+		$fieldData = $this->allowStringTransformation && \is_string($data)
+			? $this->transformDataToRichTextArray($data)
+			: $data;
+
+		\assert(null === $fieldData || \is_array($fieldData));
 
 		$contentTransformer = new LinkMarksRichTextTransformer();
 
-		$transformed = null !== $data && !$this->contentIsEmpty($data)
-			? $contentTransformer->transform($data)
+		$transformed = null !== $fieldData && !$this->contentIsEmpty($fieldData)
+			? $contentTransformer->transform($fieldData)
 			: null;
 
 		$content = $transformed["content"] ?? null;
@@ -175,5 +187,16 @@ final class RichTextField extends AbstractField
 
 		return 0 === \count($firstItemContent) &&
 			\in_array($firstItemType, ["paragraph", "heading"], true);
+	}
+
+	/**
+	 * Transforms a string to rich text data
+	 */
+	private function transformDataToRichTextArray (string $data) : array|null
+	{
+		return (new HtmlToRichTextTransformer())
+			->parseHtmlToRichText(
+				\sprintf("<p>%s</p>", $data),
+			);
 	}
 }
