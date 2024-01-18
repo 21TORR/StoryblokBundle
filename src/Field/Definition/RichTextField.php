@@ -31,6 +31,9 @@ final class RichTextField extends AbstractField
 		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly array $toolbarOptions = [],
 		private readonly array $styleOptions = [],
+		/**
+		 * Allows migration text content from text fields to a rich text field.
+		 */
 		private readonly bool $automaticallyTransformNonRichTextContent = false,
 	)
 	{
