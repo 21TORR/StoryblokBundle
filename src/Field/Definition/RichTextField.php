@@ -31,7 +31,10 @@ final class RichTextField extends AbstractField
 		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly array $toolbarOptions = [],
 		private readonly array $styleOptions = [],
-		private readonly bool $allowStringTransformation = false,
+		/**
+		 * Allows migration text content from text fields to a rich text field.
+		 */
+		private readonly bool $automaticallyTransformNonRichTextContent = false,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -92,7 +95,7 @@ final class RichTextField extends AbstractField
 			[
 				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type(
-					$this->allowStringTransformation
+					$this->automaticallyTransformNonRichTextContent
 						? ["array", "string"]
 						: "array",
 				),
@@ -112,7 +115,7 @@ final class RichTextField extends AbstractField
 	{
 		\assert(null === $data || \is_array($data) || \is_string($data));
 
-		$fieldData = $this->allowStringTransformation && \is_string($data)
+		$fieldData = $this->automaticallyTransformNonRichTextContent && \is_string($data)
 			? $this->transformDataToRichTextArray($data)
 			: $data;
 
