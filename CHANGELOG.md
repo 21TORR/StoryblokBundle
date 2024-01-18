@@ -1,3 +1,9 @@
+3.10.0
+=====
+
+* (feature) Add option `allowStringTransformation` to `RichTextField` to allow string as data from Storyblok and transform it to rich text data.
+
+
 3.9.3
 =====
 
