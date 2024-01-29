@@ -23,9 +23,7 @@ final class ComponentConfigDiffer
 	 */
 	public function __construct ()
 	{
-		$builder = new UnifiedDiffOutputBuilder(
-			"--- Currenty in Storyblok\n+++ Modified local Config\n",
-		);
+		$builder = new UnifiedDiffOutputBuilder("");
 		$this->differ = new Differ($builder);
 	}
 
@@ -43,11 +41,19 @@ final class ComponentConfigDiffer
 			$this->formatAsJson($localConfig),
 		));
 
+		if ("" === $diff)
+		{
+			return null;
+		}
+
 		$lines = \explode("\n", $diff);
 
-		return \count($lines) > 2
-			? $this->parseDiffOutputLines($lines)
-			: null;
+		// add header here, so that we can cleanly check for an empty diff above
+		return $this->parseDiffOutputLines([
+			"+++ Modified local Config",
+			"--- Currently in Storyblok",
+			...$lines,
+		]);
 	}
 
 
