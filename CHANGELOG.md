@@ -3,6 +3,7 @@
 
 * (improvement) Add `StoryblokBackendUrlGenerator::generateStoryEditUrlById()`.
 * (improvement) Simplify diff generation.
+* (improvement) Don't sync structure to Storyblok if not in prod.
 
 
 3.10.0
