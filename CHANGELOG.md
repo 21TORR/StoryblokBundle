@@ -2,6 +2,8 @@
 ======
 
 * (improvement) Add `StoryblokBackendUrlGenerator::generateStoryEditUrlById()`.
+* (improvement) Simplify diff generation.
+
 
 3.10.0
 ======
