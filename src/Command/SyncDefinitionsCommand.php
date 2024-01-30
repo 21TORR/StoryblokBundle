@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Hosting\Hosting\HostingEnvironment;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Exception\Validation\ValidationFailedException;
@@ -22,6 +23,7 @@ final class SyncDefinitionsCommand extends Command
 	public function __construct (
 		private readonly ComponentSync $componentSync,
 		private readonly ContentApi $contentApi,
+		private readonly HostingEnvironment $environment,
 	)
 	{
 		parent::__construct();
@@ -54,8 +56,13 @@ final class SyncDefinitionsCommand extends Command
 			$spaceInfo->getBackendDashboardUrl(),
 		));
 
-
 		$sync = (bool) $input->getOption("force");
+
+		if ($sync && !$this->environment->isProduction())
+		{
+			$io->caution("Reject to automatically sync structure to Storyblok in non-production environment.");
+			return self::SUCCESS;
+		}
 
 		try
 		{
