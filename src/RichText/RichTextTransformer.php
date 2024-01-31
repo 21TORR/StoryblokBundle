@@ -29,7 +29,10 @@ abstract class RichTextTransformer
 			"ordered_list" => $this->transformOrderedList($element),
 			"paragraph" => $this->transformParagraph($element),
 			"text" => $this->transformText($element),
-			// "horizontal_rule",
+			"hard_break" => $this->transformHardBreak($element),
+			"code_block" => $this->transformCodeBlock($element),
+			"horizontal_rule" => $this->transformHorizontalRule($element),
+			"emoji" => $this->transformEmoji($element),
 			default => $element,
 		};
 	}
@@ -131,6 +134,48 @@ abstract class RichTextTransformer
 			...$text,
 			"marks" => $transformedMarks,
 		];
+	}
+
+	/**
+	 * Transforms a hard break (SHIFT+Enter)
+	 *
+	 *  Structure: array{}
+	 *  Technically, the structure just contains the `type` key as a line break doesn't have any content in itself.
+	 */
+	protected function transformHardBreak (array $hardBreak) : array
+	{
+		return $hardBreak;
+	}
+
+	/**
+	 * Transforms a code block
+	 *
+	 *  Structure: array{attrs: array{class: string}, content: array}
+	 */
+	protected function transformCodeBlock (array $codeBlock) : array
+	{
+		return $codeBlock;
+	}
+
+	/**
+	 * Transforms a horizontal rule
+	 *
+	 *  Structure: array{}
+	 *  Technically, the structure just contains the `type` key as a horizontal rule doesn't have any content in itself.
+	 */
+	protected function transformHorizontalRule (array $horizontalRule) : array
+	{
+		return $horizontalRule;
+	}
+
+	/**
+	 * Transforms an emoji
+	 *
+	 *  Structure: array{attrs{name: string, emoji: string, fallbackImage: string}}
+	 */
+	protected function transformEmoji (array $emoji) : array
+	{
+		return $emoji;
 	}
 	//endregion
 
