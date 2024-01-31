@@ -1,4 +1,4 @@
-3.10.1 (unreleased)
+3.10.1
 ======
 
 * (improvement) Add `StoryblokBackendUrlGenerator::generateStoryEditUrlById()`.
