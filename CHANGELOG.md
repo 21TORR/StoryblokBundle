@@ -5,6 +5,7 @@
 * (improvement) Simplify diff generation.
 * (improvement) Don't sync structure to Storyblok if not in prod.
 * (improvement) Add new RichTextStyling option `RichTextStyling::UnsetFormatting`.
+* (improvement) Add support for transforming HardBreak, CodeBlock, HorizontalRule and Emoji in `RichTextTransformer`.
 
 
 3.10.0
