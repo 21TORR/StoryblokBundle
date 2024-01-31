@@ -4,6 +4,7 @@
 * (improvement) Add `StoryblokBackendUrlGenerator::generateStoryEditUrlById()`.
 * (improvement) Simplify diff generation.
 * (improvement) Don't sync structure to Storyblok if not in prod.
+* (improvement) Add new RichTextStyling option `RichTextStyling::UnsetFormatting`.
 
 
 3.10.0

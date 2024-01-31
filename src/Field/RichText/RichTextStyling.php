@@ -67,4 +67,6 @@ enum RichTextStyling : string
 	case Undo = "undo";
 
 	case PasteActions = "paste-action";
+
+	case UnsetFormatting = "unset";
 }
