@@ -11,8 +11,12 @@ use Torr\Storyblok\Field\RichText\RichTextStyling;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 use Torr\Storyblok\RichText\HtmlToRichTextTransformer;
 use Torr\Storyblok\RichText\LinkMarksRichTextTransformer;
+use Torr\Storyblok\RichText\RichTextTransformer;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
+/**
+ * @phpstan-import-type RichTextDocument from RichTextTransformer
+ */
 final class RichTextField extends AbstractField
 {
 	/**
@@ -105,6 +109,8 @@ final class RichTextField extends AbstractField
 
 	/**
 	 * @inheritDoc
+	 *
+	 * @return RichTextDocument|null
 	 */
 	public function transformData (
 		mixed $data,

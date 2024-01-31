@@ -3,12 +3,44 @@
 namespace Torr\Storyblok\RichText;
 
 /**
- * Generic base class to help with traversing the rich text data and rewriting it on-the-fly
+ * Generic base class to help with traversing the rich text data and rewriting it on-the-fly.
+ *
+ * @phpstan-type RichTextDocument array{type: "doc", content: RichTextContent[]}
+ * @phpstan-type RichTextContent Blockquote|BulletList|Heading|Image|ListItem|OrderedList|Paragraph|Text|HardBreak|CodeBlock|HorizontalRule|Emoji
+ *
+ * @phpstan-type Blockquote array{type: "blockquote", content: Paragraph[]}
+ * @phpstan-type BulletList array{type: "bullet_list", content: ListItem[]}
+ * @phpstan-type Heading array{type: "heading", content: RichTextContent[], attrs: array{level: int}}
+ * @phpstan-type Image array{type: "image", alt: string, src: string, title: string, copyright: string}
+ * @phpstan-type ListItem array{type: "list_item", content: Paragraph[]}
+ * @phpstan-type OrderedList array{type: "ordered_list", content: ListItem[], attrs: array{order: int}}
+ * @phpstan-type Paragraph array{type: "paragraph", content: RichTextContent[]}
+ * @phpstan-type Text array{type: "text", text: string, marks: Mark[]}
+ * @phpstan-type HardBreak array{type: "hard_break"}
+ * @phpstan-type CodeBlock array{type: "code_block", content: Text[], attrs: array{class: string}}
+ * @phpstan-type HorizontalRule array{type: "horizontal_rule"}
+ * @phpstan-type Emoji array{type: "emoji", attrs: array{name: string, emoji: string, fallbackImage: string}}
+ *
+ * @phpstan-type Mark MarkBold|MarkItalic|MarkStrike|MarkUnderline|MarkCode|MarkLink|MarkStyled|MarkSubScript|MarkSuperScript|MarkHighlight|MarkTextStyle|MarkAnchor
+ * @phpstan-type MarkBold array{type: "bold"}
+ * @phpstan-type MarkItalic array{type: "italic"}
+ * @phpstan-type MarkStrike array{type: "strike"}
+ * @phpstan-type MarkUnderline array{type: "underline"}
+ * @phpstan-type MarkCode array{type: "code"}
+ * @phpstan-type MarkLink array{type: "link", attrs: array{href: string, uuid: string|null, anchor: string|null, custom: array, target: string, linktype: string}}
+ * @phpstan-type MarkStyled array{type: "styled", attrs: array{class: string}}
+ * @phpstan-type MarkSubScript array{type: "subscript"}
+ * @phpstan-type MarkSuperScript array{type: "superscript"}
+ * @phpstan-type MarkHighlight array{type: "highlight", attrs: array{color: string}}
+ * @phpstan-type MarkTextStyle array{type: "textStyle", attrs: array{color: string}}
+ * @phpstan-type MarkAnchor array{type: "anchor", attrs: array{id: string}}
  */
 abstract class RichTextTransformer
 {
 	/**
 	 * Traverses the RTE content
+	 *
+	 * @param RichTextDocument $content
 	 */
 	public function transform (array $content) : ?array
 	{
@@ -16,6 +48,7 @@ abstract class RichTextTransformer
 	}
 
 	/**
+	 * @param RichTextContent $element
 	 */
 	protected function transformContentElement (array $element) : ?array
 	{
@@ -42,6 +75,8 @@ abstract class RichTextTransformer
 	 * Transforms a paragraph
 	 *
 	 * Structure: array{"text": string, "marks": array<Mark>} (see transformMarks())
+	 *
+	 * @param Paragraph $paragraph
 	 */
 	protected function transformParagraph (array $paragraph) : ?array
 	{
@@ -52,6 +87,8 @@ abstract class RichTextTransformer
 	 * Transforms a heading
 	 *
 	 * Structure: array{attrs: array{level: int}, content: array}
+	 *
+	 * @param Heading $heading
 	 */
 	protected function transformHeading (array $heading) : ?array
 	{
@@ -62,6 +99,8 @@ abstract class RichTextTransformer
 	 * Transforms a bullet (= unordered) list
 	 *
 	 * Structure: array{content: array}
+	 *
+	 * @param BulletList $bulletList
 	 */
 	protected function transformBulletList (array $bulletList) : ?array
 	{
@@ -72,6 +111,8 @@ abstract class RichTextTransformer
 	 * Transforms an ordered list
 	 *
 	 * Structure: array{content: array, attrs: array{order: int}}
+	 *
+	 * @param OrderedList $orderedList
 	 */
 	protected function transformOrderedList (array $orderedList) : ?array
 	{
@@ -82,6 +123,8 @@ abstract class RichTextTransformer
 	 * Transforms a list item
 	 *
 	 * Structure: array{content: array}
+	 *
+	 * @param ListItem $listItem
 	 */
 	protected function transformListItem (array $listItem) : ?array
 	{
@@ -92,6 +135,8 @@ abstract class RichTextTransformer
 	 * Transforms a block quote
 	 *
 	 * Structure: array{content: array}
+	 *
+	 * @param Blockquote $blockQuote
 	 */
 	protected function transformBlockQuote (array $blockQuote) : ?array
 	{
@@ -102,6 +147,8 @@ abstract class RichTextTransformer
 	 * Transforms an image
 	 *
 	 * Structure: array{alt: string, src: string, title: string, copyright: string}
+	 *
+	 * @param Image $image
 	 */
 	protected function transformImage (array $image) : ?array
 	{
@@ -110,6 +157,8 @@ abstract class RichTextTransformer
 
 	/**
 	 * Transforms a text
+	 *
+	 * @param Text $text
 	 */
 	protected function transformText (array $text) : ?array
 	{
@@ -141,6 +190,8 @@ abstract class RichTextTransformer
 	 *
 	 *  Structure: array{}
 	 *  Technically, the structure just contains the `type` key as a line break doesn't have any content in itself.
+	 *
+	 * @param HardBreak $hardBreak
 	 */
 	protected function transformHardBreak (array $hardBreak) : array
 	{
@@ -151,6 +202,8 @@ abstract class RichTextTransformer
 	 * Transforms a code block
 	 *
 	 *  Structure: array{attrs: array{class: string}, content: array}
+	 *
+	 * @param CodeBlock $codeBlock
 	 */
 	protected function transformCodeBlock (array $codeBlock) : array
 	{
@@ -162,6 +215,8 @@ abstract class RichTextTransformer
 	 *
 	 *  Structure: array{}
 	 *  Technically, the structure just contains the `type` key as a horizontal rule doesn't have any content in itself.
+	 *
+	 * @param HorizontalRule $horizontalRule
 	 */
 	protected function transformHorizontalRule (array $horizontalRule) : array
 	{
@@ -172,6 +227,8 @@ abstract class RichTextTransformer
 	 * Transforms an emoji
 	 *
 	 *  Structure: array{attrs{name: string, emoji: string, fallbackImage: string}}
+	 *
+	 * @param Emoji $emoji
 	 */
 	protected function transformEmoji (array $emoji) : array
 	{
@@ -183,6 +240,8 @@ abstract class RichTextTransformer
 	// region Mark Transformers
 	/**
 	 * Structure: array{type: string, attrs: array{href: string, uuid: string, anchor: string|null, custom: array, target: string, linktype: string}}
+	 *
+	 * @param MarkLink $linkMark
 	 */
 	protected function transformLinkMark (array $linkMark) : ?array
 	{
@@ -193,6 +252,8 @@ abstract class RichTextTransformer
 
 	/**
 	 * Structure: array{type: string, attrs: array{href: string, uuid: string, anchor: string|null, custom: array, target: string, linktype: string}}
+	 *
+	 * @param Mark $mark
 	 */
 	private function transformMark (array $mark) : ?array
 	{
@@ -204,7 +265,7 @@ abstract class RichTextTransformer
 	}
 
 	/**
-	 *
+	 * @param RichTextContent $element
 	 */
 	private function transformContentOfElement (array $element) : ?array
 	{
