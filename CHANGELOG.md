@@ -1,3 +1,10 @@
+3.10.2
+======
+
+* (improvement) Allow Symfony 7.
+* (improvement) Require PHP 8.3+.
+
+
 3.10.1
 ======
 

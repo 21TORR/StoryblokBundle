@@ -11,11 +11,11 @@ jobs:
 
         strategy:
             matrix:
-                php: ['8.2', '8.3']
+                php: [8.3']
 
         steps:
             -   name: Checkout Code
-                uses: actions/checkout@v3
+                uses: actions/checkout@v4
 
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
@@ -23,7 +23,7 @@ jobs:
                     coverage: "none"
                     ini-values: "memory_limit=-1"
                     php-version: "${{ matrix.php }}"
-                    tools: "composer, composer-normalize"
+                    tools: "composer"
 
             -   name: Display versions
                 run: |
