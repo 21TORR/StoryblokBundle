@@ -9,10 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Hosting\Hosting\HostingEnvironment;
-use Torr\Storyblok\Api\ContentApi;
-use Torr\Storyblok\Exception\Sync\SyncFailedException;
-use Torr\Storyblok\Exception\Validation\ValidationFailedException;
-use Torr\Storyblok\Manager\Sync\ComponentSync;
 
 #[AsCommand("storyblok:definitions:sync")]
 final class SyncDefinitionsCommand extends Command
@@ -21,8 +17,6 @@ final class SyncDefinitionsCommand extends Command
 	 * @inheritDoc
 	 */
 	public function __construct (
-		private readonly ComponentSync $componentSync,
-		private readonly ContentApi $contentApi,
 		private readonly HostingEnvironment $environment,
 	)
 	{
@@ -47,15 +41,6 @@ final class SyncDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
-		$spaceInfo = $this->contentApi->getSpaceInfo();
-
-		$io->comment(\sprintf(
-			"Syncing components for space <fg=magenta>%s</> (<fg=yellow>%d</>)\n<fg=gray>%s</>",
-			$spaceInfo->getName(),
-			$spaceInfo->getId(),
-			$spaceInfo->getBackendDashboardUrl(),
-		));
-
 		$sync = (bool) $input->getOption("force");
 
 		if ($sync && !$this->environment->isProduction())
@@ -64,28 +49,7 @@ final class SyncDefinitionsCommand extends Command
 			return self::SUCCESS;
 		}
 
-		try
-		{
-			$this->componentSync->syncDefinitionsInteractively($io, $sync);
-
-			$io->newLine(2);
-			$io->success("All done");
-
-			return self::SUCCESS;
-		}
-		catch (ValidationFailedException $exception)
-		{
-			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
-			$io->error("Validation failed");
-
-			return self::FAILURE;
-		}
-		catch (SyncFailedException $exception)
-		{
-			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
-			$io->error("Sync failed");
-
-			return self::FAILURE;
-		}
+		$io->error("Not implemented yet");
+		return self::FAILURE;
 	}
 }
