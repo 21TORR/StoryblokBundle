@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\Storyblok\Config\StoryblokConfig;
+use Torr\Storyblok\DependencyInjection\CollectComponentDefinitionsCompilerPass;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleExtension;
 
@@ -36,7 +37,7 @@ final class TorrStoryblokBundle extends Bundle
 	 */
 	public function build (ContainerBuilder $container) : void
 	{
-		// not yet implemented
+		$container->addCompilerPass(new CollectComponentDefinitionsCompilerPass());
 	}
 
 	/**

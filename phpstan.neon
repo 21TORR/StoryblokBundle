@@ -3,3 +3,7 @@ includes:
 
 parameters:
     level: 9
+
+    ignoreErrors:
+        # @todo remove
+        - '#has an unused parameter#'
