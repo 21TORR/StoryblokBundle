@@ -7,6 +7,9 @@ final readonly class StoryblokLink
 	public int $id;
 	public string $uuid;
 	public string $slug;
+	public string $name;
+	public bool $isFolder;
+	public int $position;
 
 	/**
 	 */
@@ -15,5 +18,15 @@ final readonly class StoryblokLink
 		$this->id = $data["id"];
 		$this->uuid = $data["uuid"];
 		$this->slug = $data["slug"];
+		$this->isFolder = $data["is_folder"];
+		$this->position = $data["position"];
+		$this->name = $data["name"];
+	}
+
+	/**
+	 */
+	public function getSlugSegments () : array
+	{
+		return \explode("/", \trim($this->slug, "/"));
 	}
 }
