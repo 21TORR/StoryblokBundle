@@ -472,10 +472,11 @@ final class ContentApi implements ResetInterface
 		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
 	) : array
 	{
-		// force per_page to the maximum to minimize pagination
-		$query["per_page"] = 1000;
-		$query["version"] = $version->value;
-		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
+		$query = [
+			// force per_page to the maximum to minimize pagination
+			"per_page" => 1000,
+			"version" => $version->value,
+		];
 
 		$result = [];
 		$page = 1;
