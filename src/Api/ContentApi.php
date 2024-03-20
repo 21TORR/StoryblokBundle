@@ -10,6 +10,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Api\Data\SpaceInfo;
+use Torr\Storyblok\Api\Data\StoryblokLink;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Datasource\DatasourceEntry;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
@@ -448,6 +449,118 @@ final class ContentApi implements ResetInterface
 				perPage: $perPage,
 				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
 				entries: $entries,
+			);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			throw new ContentRequestFailedException(\sprintf(
+				"Content request failed: %s",
+				$exception->getMessage(),
+			), previous: $exception);
+		}
+	}
+
+
+	/**
+	 * Fetches all links.
+	 *
+	 * @throws ContentRequestFailedException
+	 *
+	 * @return array<StoryblokLink>
+	 */
+	public function fetchAllLinks (
+		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
+	) : array
+	{
+		// force per_page to the maximum to minimize pagination
+		$query["per_page"] = 1000;
+		$query["version"] = $version->value;
+		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
+
+		$result = [];
+		$page = 1;
+
+		do
+		{
+			$currentPage = $this->fetchLinksResultPage($query, $page);
+
+			foreach ($currentPage->entries as $link)
+			{
+				$result[] = $link;
+			}
+
+			++$page;
+		}
+		while ($currentPage->totalPages >= $page);
+
+		return $result;
+	}
+
+
+	/**
+	 * Fetches links.
+	 *
+	 * @throws ContentRequestFailedException
+	 *
+	 * @return PaginatedApiResult<StoryblokLink>
+	 */
+	private function fetchLinksResultPage (
+		array $query = [],
+		int $page = 1,
+	) : PaginatedApiResult
+	{
+		$query["token"] = $this->config->getContentToken();
+		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
+		$query["page"] = $page;
+		$query["paginated"] = 1;
+
+		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
+		\ksort($query);
+
+		try
+		{
+			$response = $this->client->request(
+				"GET",
+				"links",
+				(new HttpOptions())
+					->setQuery($query)
+					->toArray(),
+			);
+
+			$data = $response->toArray();
+			$headers = $response->getHeaders();
+			$perPage = $this->parseHeaderAsInt($headers, "per-page");
+			$totalNumberOfItems = $this->parseHeaderAsInt($headers, "total");
+
+			$links = [];
+
+			if (
+				!\is_array($data["links"])
+				|| null === $perPage
+				|| null === $totalNumberOfItems
+				|| $perPage <= 0
+			)
+			{
+				$this->logger->error("Content request failed: invalid response structure / missing headers", [
+					"query" => $query,
+					"headers" => $headers,
+					"response" => $response->getContent(false),
+					"perPage" => $perPage,
+					"totalNumberOfItems" => $totalNumberOfItems,
+				]);
+
+				throw new ContentRequestFailedException("Content request failed: invalid response structure / missing headers");
+			}
+
+			foreach ($data["links"] as $linkData)
+			{
+				$links[] = new StoryblokLink($linkData);
+			}
+
+			return new PaginatedApiResult(
+				perPage: $perPage,
+				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
+				entries: $links,
 			);
 		}
 		catch (ExceptionInterface $exception)

@@ -1,3 +1,10 @@
+3.11.0
+======
+
+* (feature) Add fetching links in `ContentApi`.
+* (improvement) Use in `StoryblokIdSlugMapper` the links data from Storyblok instead of stories.
+
+
 3.10.2
 ======
 
