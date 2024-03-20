@@ -44,8 +44,8 @@ final class StoryblokIdSlugMapper implements ResetInterface
 		foreach ($this->contentApi->fetchAllLinks() as $story)
 		{
 			// we have no overlap between the formats, so we can combine them into a single map
-			$map[$story->getUuid()] = $story->getSlug();
-			$map[$story->getId()] = $story->getSlug();
+			$map[$story->uuid] = $story->slug;
+			$map[$story->id] = $story->slug;
 		}
 
 		return $map;
