@@ -24,6 +24,7 @@ final readonly class StoryblokLink
 	}
 
 	/**
+	 * @return string[]
 	 */
 	public function getSlugSegments () : array
 	{
