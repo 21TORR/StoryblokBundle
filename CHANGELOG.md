@@ -1,3 +1,9 @@
+3.11.1
+======
+
+* (improvement) Ignore even more key when diffing.
+
+
 3.11.0
 ======
 

@@ -10,8 +10,11 @@ final class ComponentConfigDiffer
 {
 	private const IGNORED_KEYS = [
 		"all_presets",
+		"content_type_asset_preview",
 		"created_at",
 		"id",
+		"internal_tag_ids",
+		"internal_tags_list",
 		"preset_id",
 		"real_name",
 		"updated_at",
