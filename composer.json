@@ -11,6 +11,7 @@
 	],
 	"require": {
 		"php": ">= 8.4",
+		"ext-ctype": "*",
 		"ext-dom": "*",
 		"ext-libxml": "*",
 		"21torr/bundle-helpers": "^2.3.1",
