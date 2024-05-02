@@ -1,3 +1,9 @@
+3.11.2 (unreleased)
+======
+
+* (improvement) Handle empty space ids in env vars better.
+
+
 3.11.1
 ======
 

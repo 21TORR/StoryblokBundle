@@ -6,14 +6,30 @@ use Torr\Storyblok\Exception\Config\MissingConfigException;
 
 final class StoryblokConfig
 {
+	private readonly ?int $spaceId;
+
 	/**
 	 */
 	public function __construct (
-		private readonly ?int $spaceId,
+		string $spaceId,
 		private readonly ?string $managementToken,
 		private readonly ?string $contentToken,
 		private readonly int $localeLevel,
-	) {}
+	)
+	{
+		if ("" === $spaceId)
+		{
+			$this->spaceId = null;
+		}
+		elseif (\ctype_digit($spaceId))
+		{
+			$this->spaceId = (int) $spaceId;
+		}
+		else
+		{
+			throw new MissingConfigException("Invalid storyblok.space_id configured: must be empty or an integer.");
+		}
+	}
 
 	/**
 	 */
