@@ -1,3 +1,10 @@
+3.12.0
+======
+
+* (feature) Add support for rendering a `StoryChoice`'s entry appearance as Link or Card (argument: `$displayAsCard`).
+* (feature) Add support for using modal / advanced search when selecting a `StoryChoice` (argument: `allowAdvancedSearch`) instead of a dropdown.
+
+
 3.11.1
 ======
 

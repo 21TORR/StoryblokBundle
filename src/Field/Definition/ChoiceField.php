@@ -183,7 +183,7 @@ final class ChoiceField extends AbstractField
 		\assert(null === $data || \is_array($data));
 
 		$data = \array_map(
-			static fn (mixed $value) => $context->normalizeOptionalString((string) $value),
+			static fn (string $value) => $context->normalizeOptionalString($value),
 			// we are in a multiselect, so we expect an array
 			$data ?? [],
 		);

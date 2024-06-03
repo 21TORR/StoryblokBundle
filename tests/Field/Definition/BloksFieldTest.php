@@ -42,7 +42,7 @@ class BloksFieldTest extends TestCase
 				["component" => "invalid"],
 				["component" => "invalid"],
 			],
-			"error" => "Found 2 (known) components, but was expecting at least 3",
+			"message" => "Found 2 (known) components, but was expecting at least 3",
 			"minCount" => 3,
 		];
 
@@ -53,7 +53,7 @@ class BloksFieldTest extends TestCase
 				["component" => "invalid"],
 				["component" => "invalid"],
 			],
-			"error" => "Found 2 (known) components, but was expecting at most 1",
+			"message" => "Found 2 (known) components, but was expecting at most 1",
 			"minCount" => null,
 			"maxCount" => 1,
 		];
