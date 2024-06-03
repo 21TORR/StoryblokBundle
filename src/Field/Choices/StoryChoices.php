@@ -20,6 +20,8 @@ final class StoryChoices implements ChoicesInterface
 		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly string $restrictToPath = "",
 		private readonly string|\BackedEnum|null $referencedStoryDataMode = null,
+		private readonly bool $displayAsCard = false,
+		private readonly bool $allowAdvancedSearch = false,
 	) {}
 
 	/**
@@ -31,6 +33,8 @@ final class StoryChoices implements ChoicesInterface
 			"source" => "internal_stories",
 			"filter_content_type" => new ResolvableComponentFilter($this->allowedComponents, "filter_content_type"),
 			"folder_slug" => $this->restrictToPath,
+			"entry_appearance" => $this->displayAsCard ? "card" : "link",
+			"allow_advanced_search" => $this->allowAdvancedSearch,
 		];
 	}
 
