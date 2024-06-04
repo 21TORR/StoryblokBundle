@@ -1,3 +1,10 @@
+3.13.0
+======
+
+* (feature) Add ability to set preview image on `AssetField`s by calling `::useAsAdminDisplayImage()`. This behaves 
+    the same way as `::useAsAdminDisplayName()`, but is just for images. It is being used when a story is being referenced and displayed as card (see v3.12.0).
+
+
 3.12.0
 ======
 

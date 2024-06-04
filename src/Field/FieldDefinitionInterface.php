@@ -56,4 +56,16 @@ interface FieldDefinitionInterface
 	 * @private
 	 */
 	public function isStoryblokPreviewField () : bool;
+
+
+	/**
+	 * This method returns whether the field is used as the image preview field when the component
+	 * containing this field is being referenced.
+	 *  It is deliberately name differently, so that it doesn't get listed in autocompletion.
+	 *
+	 * @internal
+	 *
+	 * @private
+	 */
+	public function isStoryblokImagePreviewField () : bool;
 }
