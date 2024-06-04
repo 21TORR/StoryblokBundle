@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\Asset\AssetFileType;
 use Torr\Storyblok\Field\Data\AssetData;
 use Torr\Storyblok\Field\FieldType;
@@ -240,5 +241,14 @@ final class AssetField extends AbstractField
 		$this->useAsAdminDisplayImage = true;
 
 		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	#[\Override]
+	public function useAsAdminDisplayName (?bool $canSync = null, ) : static
+	{
+		throw new InvalidFieldConfigurationException("This field type cannot be used as admin display name. Only text-based fields can be used.");
 	}
 }

@@ -3,6 +3,7 @@
 
 * (feature) Add ability to set preview image on `AssetField`s by calling `::useAsAdminDisplayImage()`. This behaves 
     the same way as `::useAsAdminDisplayName()`, but is just for images. It is being used when a story is being referenced and displayed as card (see v3.12.0).
+* (bug) Throw an exception when trying to call `::useAsAdminDisplayName` on non-text-based fields. The affected fields are `AssetField`, `BloksField`, `BooleanField`, ChoiceField` (multi-select only) and `TableField`.
 
 
 3.12.0
