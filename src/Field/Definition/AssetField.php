@@ -231,4 +231,15 @@ final class AssetField extends AbstractField
 
 		return $transformed;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	#[\Override]
+	public function useAsAdminDisplayImage () : static
+	{
+		$this->useAsAdminDisplayImage = true;
+
+		return $this;
+	}
 }
