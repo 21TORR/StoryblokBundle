@@ -16,17 +16,31 @@ final class FieldDefinitionHelper
 	public static function ensureMaximumOneAdminDisplayName (iterable $fields) : void
 	{
 		$fieldWithPreview = null;
+		$fieldWithImagePreview = null;
 
 		foreach ($fields as $field)
 		{
-			if ($field instanceof AbstractField && $field->isStoryblokPreviewField())
+			if ($field instanceof AbstractField)
 			{
-				if (null !== $fieldWithPreview)
+				if ($field->isStoryblokPreviewField())
 				{
-					throw new InvalidComponentConfigurationException("Can't use multiple fields as admin display name");
+					if (null !== $fieldWithPreview)
+					{
+						throw new InvalidComponentConfigurationException("Can't use multiple fields as admin display name");
+					}
+
+					$fieldWithPreview = $field;
 				}
 
-				$fieldWithPreview = $field;
+				if ($field->isStoryblokImagePreviewField())
+				{
+					if (null !== $fieldWithImagePreview)
+					{
+						throw new InvalidComponentConfigurationException("Can't use multiple fields as admin display image");
+					}
+
+					$fieldWithImagePreview = $field;
+				}
 			}
 		}
 	}

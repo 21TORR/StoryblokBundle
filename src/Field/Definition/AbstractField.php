@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
+use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Management\ManagementApiData;
@@ -14,6 +15,7 @@ use Torr\Storyblok\Management\ManagementApiData;
 abstract class AbstractField implements FieldDefinitionInterface
 {
 	private bool $useAsAdminDisplayName = false;
+	protected bool $useAsAdminDisplayImage = false;
 	protected bool $required = false;
 	private ?string $regexp = null;
 	private bool $translatable = false;
@@ -105,6 +107,16 @@ abstract class AbstractField implements FieldDefinitionInterface
 	}
 
 	/**
+	 * Uses this field as admin display preview value
+	 *
+	 * @return $this
+	 */
+	public function useAsAdminDisplayImage () : static
+	{
+		throw new InvalidFieldConfigurationException("This field type cannot be used as admin display image. Only 'AssetField's can be used.");
+	}
+
+	/**
 	 * Returns the internal storyblok type
 	 */
 	abstract protected function getInternalStoryblokType () : FieldType;
@@ -140,5 +152,13 @@ abstract class AbstractField implements FieldDefinitionInterface
 	public function isStoryblokPreviewField () : bool
 	{
 		return $this->useAsAdminDisplayName;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function isStoryblokImagePreviewField () : bool
+	{
+		return $this->useAsAdminDisplayImage;
 	}
 }

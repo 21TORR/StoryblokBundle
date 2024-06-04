@@ -233,4 +233,20 @@ final class ChoiceField extends AbstractField
 		$dataVisitor?->onDataVisit($this, $transformed);
 		return $transformed;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	#[\Override]
+	public function useAsAdminDisplayName (?bool $canSync = null, ) : static
+	{
+		if ($this->allowMultiselect)
+		{
+			throw new InvalidFieldConfigurationException("This field type cannot be used as admin display name. Only text-based fields can be used.");
+		}
+
+		parent::useAsAdminDisplayName($canSync);
+
+		return $this;
+	}
 }

@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\Data\TableData;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -83,5 +84,14 @@ final class TableField extends AbstractField
 		$dataVisitor?->onDataVisit($this, $transformed);
 
 		return $transformed;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	#[\Override]
+	public function useAsAdminDisplayName (?bool $canSync = null, ) : static
+	{
+		throw new InvalidFieldConfigurationException("This field type cannot be used as admin display name. Only text-based fields can be used.");
 	}
 }
