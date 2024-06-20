@@ -21,8 +21,6 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
  * Base class for all components registered in the system
- *
- * @template TStory of Story
  */
 abstract class AbstractComponent
 {
@@ -80,7 +78,7 @@ abstract class AbstractComponent
 	 * Returns the class of story to create for this component.
 	 * If null is returned here, you can't create a story for that component
 	 *
-	 * @return class-string<TStory>|null
+	 * @return class-string<Story>|null
 	 */
 	public function getStoryClass () : ?string
 	{
@@ -221,7 +219,7 @@ abstract class AbstractComponent
 	/**
 	 * Normalizes the fields for usage in the management API
 	 *
-	 * @param list<FieldDefinitionInterface> $fields
+	 * @param array<string, FieldDefinitionInterface> $fields
 	 */
 	private function normalizeFields (
 		array $fields,

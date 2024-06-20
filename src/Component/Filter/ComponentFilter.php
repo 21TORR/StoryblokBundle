@@ -17,13 +17,13 @@ final class ComponentFilter
 	 */
 	public static function tags (string|\BackedEnum ...$tags) : self
 	{
-		return new self(tags: $tags);
+		return new self(tags: array_values($tags));
 	}
 
 	/**
 	 */
 	public static function keys (string|\BackedEnum ...$components) : self
 	{
-		return new self(components: $components);
+		return new self(components: array_values($components));
 	}
 }

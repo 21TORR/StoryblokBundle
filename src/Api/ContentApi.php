@@ -338,7 +338,7 @@ final class ContentApi implements ResetInterface
 	 *
 	 * @param string|string[]|null $slug the slug of the datasource
 	 *
-	 * @return array<string, DatasourceEntry> DatasourceEntry value to DatasourceEntry
+	 * @return array<array-key, DatasourceEntry> DatasourceEntry value to DatasourceEntry
 	 *
 	 * @throws ContentRequestFailedException
 	 */

@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Manager;
 
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Torr\Storyblok\Component\AbstractComponent;
@@ -17,6 +18,8 @@ class ComponentManager
 	/**
 	 */
 	public function __construct (
+		/** @var ServiceLocator<AbstractComponent> */
+		#[AutowireLocator(services: 'storyblok.component.definition', defaultIndexMethod: 'getKey')]
 		private readonly ServiceLocator $components,
 	) {}
 
@@ -44,8 +47,6 @@ class ComponentManager
 	 * @template TStory of Story
 	 *
 	 * @param class-string<TStory> $storyType
-	 *
-	 * @return AbstractComponent<TStory>
 	 *
 	 * @throws UnknownStoryTypeException
 	 */

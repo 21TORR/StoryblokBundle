@@ -19,7 +19,3 @@ services:
         $spaceId: !abstract set via config
         $managementToken: !abstract set via config
         $contentToken: !abstract set via config
-
-
-    Torr\Storyblok\Manager\ComponentManager:
-        $components: !tagged_locator { tag: 'storyblok.component.definition', default_index_method: 'getKey' }
