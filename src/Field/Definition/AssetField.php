@@ -54,11 +54,11 @@ final class AssetField extends AbstractField
 	 */
 	protected function toManagementApiData () : array
 	{
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			[
 				"allow_external_url" => $this->allowExternalUrl,
-				"filetypes" => \array_map(
+				"filetypes" => array_map(
 					static fn (AssetFileType $fileType) => $fileType->value,
 					$this->fileTypes,
 				),
@@ -88,7 +88,7 @@ final class AssetField extends AbstractField
 			$isExternalUrlConstraints[] = new NotNull();
 		}
 
-		$constraints = \array_filter([
+		$constraints = array_filter([
 			!$this->allowMissingData && $this->required ? new NotNull() : null,
 			new Type("array"),
 			// required fields
@@ -170,6 +170,7 @@ final class AssetField extends AbstractField
 		if (null === $data)
 		{
 			$dataVisitor?->onDataVisit($this, $data);
+
 			return null;
 		}
 

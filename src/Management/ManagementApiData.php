@@ -15,7 +15,7 @@ final class ManagementApiData
 	{
 		if (\array_key_exists($key, $this->fields))
 		{
-			throw new InvalidComponentConfigurationException(\sprintf(
+			throw new InvalidComponentConfigurationException(sprintf(
 				"Invalid component configuration: field key '%s' used more than once",
 				$key,
 			));

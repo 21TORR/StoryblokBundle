@@ -24,7 +24,7 @@ final class StoryMetaData
 		$this->previewData = $data["content"]["_editable"] ?? null;
 		unset($data["content"]);
 		$this->data = $data;
-		$this->slugSegments = \explode("/", \rtrim($data["full_slug"], "/"));
+		$this->slugSegments = explode("/", rtrim($data["full_slug"], "/"));
 	}
 
 	/**
@@ -82,7 +82,7 @@ final class StoryMetaData
 	 */
 	public function getFullSlug () : string
 	{
-		return \implode("/", $this->slugSegments);
+		return implode("/", $this->slugSegments);
 	}
 
 	/**
@@ -115,7 +115,7 @@ final class StoryMetaData
 	public function getParentSlug () : ?string
 	{
 		return \count($this->slugSegments) > 1
-			? \implode("/", \array_slice($this->slugSegments, 0, -1))
+			? implode("/", \array_slice($this->slugSegments, 0, -1))
 			: null;
 	}
 
@@ -151,7 +151,7 @@ final class StoryMetaData
 
 		if (false === $parsed)
 		{
-			throw new StoryHydrationFailed(\sprintf(
+			throw new StoryHydrationFailed(sprintf(
 				"Could not parse date: %s",
 				$date,
 			));
@@ -168,7 +168,7 @@ final class StoryMetaData
 	}
 
 	/**
-	 * @return array<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int, locale: ?string}>
+	 * @return list<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int, locale: ?string}>
 	 */
 	public function getAlternateLanguages () : array
 	{
@@ -179,7 +179,7 @@ final class StoryMetaData
 		/** @var array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int} $alternate */
 		foreach (($this->data["alternates"] ?? []) as $alternate)
 		{
-			$slugSegments = \explode("/", \rtrim($alternate["full_slug"], "/"));
+			$slugSegments = explode("/", rtrim($alternate["full_slug"], "/"));
 			$locale = $slugSegments[$localeLevel];
 
 			$alternate["locale"] = LocaleHelper::isValidLocale($locale)
@@ -208,7 +208,7 @@ final class StoryMetaData
 				$slug = $alternateLanguage["full_slug"];
 				$mapping[$alternateLanguage["locale"]] = $alternateLanguage["is_folder"]
 					? $slug
-					: \rtrim($slug, "/");
+					: rtrim($slug, "/");
 			}
 		}
 

@@ -27,7 +27,7 @@ abstract class CompositeField extends AbstractGroupingElement
 				->toString();
 		}
 
-		$this->prefix = \strtolower(\rtrim($prefix, "_")) . "_";
+		$this->prefix = strtolower(rtrim($prefix, "_")) . "_";
 		$fields = [];
 
 		foreach ($this->configureFields() as $name => $fieldConfig)
@@ -67,7 +67,7 @@ abstract class CompositeField extends AbstractGroupingElement
 
 		foreach ($this->fields as $name => $fieldDefinition)
 		{
-			$unprefixedName = \preg_replace("~^(" . \preg_quote($this->prefix, "~") . ")~", "", $name);
+			$unprefixedName = preg_replace("~^(" . preg_quote($this->prefix, "~") . ")~", "", $name);
 
 			$transformed[$unprefixedName] = $fieldDefinition->transformData(
 				$fullData[$name] ?? null,
@@ -78,6 +78,7 @@ abstract class CompositeField extends AbstractGroupingElement
 		}
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
 
@@ -92,7 +93,7 @@ abstract class CompositeField extends AbstractGroupingElement
 				$context,
 				[
 					...$contentPath,
-					\sprintf("Field(%s)", $name),
+					sprintf("Field(%s)", $name),
 				],
 				$fullData[$name] ?? null,
 				$fullData,

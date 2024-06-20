@@ -30,7 +30,7 @@ final class DateTimeField extends AbstractField
 	 */
 	protected function toManagementApiData () : array
 	{
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			[
 				"disable_time" => !$this->withTimeSelection,
@@ -99,6 +99,7 @@ final class DateTimeField extends AbstractField
 		}
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
 }

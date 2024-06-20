@@ -3,10 +3,13 @@
 namespace Tests\Torr\Storyblok\Release;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Torr\Storyblok\Release\ReleaseVersion;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Release\ReleaseVersion;
 
-class ReleaseVersionTest extends TestCase
+/**
+ * @internal
+ */
+final class ReleaseVersionTest extends TestCase
 {
 	/**
 	 */

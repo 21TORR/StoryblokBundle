@@ -21,8 +21,8 @@ final class RichTextField extends AbstractField
 	 * The style options have the format
 	 *   ui label => css class name
 	 *
-	 * @param array<RichTextStyling> $toolbarOptions
-	 * @param array<string, string>  $styleOptions
+	 * @param list<RichTextStyling> $toolbarOptions
+	 * @param array<string, string> $styleOptions
 	 */
 	public function __construct (
 		string $label,
@@ -63,12 +63,12 @@ final class RichTextField extends AbstractField
 			];
 		}
 
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			[
 				"max_length" => $this->maxLength,
 				"customize_toolbar" => !empty($this->toolbarOptions),
-				"toolbar" => \array_map(
+				"toolbar" => array_map(
 					static fn (RichTextStyling $option) => $option->value,
 					$this->toolbarOptions,
 				),
@@ -139,6 +139,7 @@ final class RichTextField extends AbstractField
 		}
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
 
@@ -188,18 +189,18 @@ final class RichTextField extends AbstractField
 		$firstItemType = $firstItem["type"] ?? null;
 		$firstItemContent = $firstItem["content"] ?? [];
 
-		return 0 === \count($firstItemContent) &&
-			\in_array($firstItemType, ["paragraph", "heading"], true);
+		return 0 === \count($firstItemContent)
+			&& \in_array($firstItemType, ["paragraph", "heading"], true);
 	}
 
 	/**
 	 * Transforms a string to rich text data
 	 */
-	private function transformDataToRichTextArray (string $data) : array|null
+	private function transformDataToRichTextArray (string $data) : ?array
 	{
 		return (new HtmlToRichTextTransformer())
 			->parseHtmlToRichText(
-				\sprintf("<p>%s</p>", $data),
+				sprintf("<p>%s</p>", $data),
 			);
 	}
 }

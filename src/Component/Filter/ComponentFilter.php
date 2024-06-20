@@ -7,12 +7,11 @@ final class ComponentFilter
 	/**
 	 */
 	public function __construct (
-		/** @var array<string|\BackedEnum> */
+		/** @var list<string|\BackedEnum> */
 		public readonly array $tags = [],
-		/** @var array<string|\BackedEnum> */
+		/** @var list<string|\BackedEnum> */
 		public readonly array $components = [],
 	) {}
-
 
 	/**
 	 */
@@ -20,7 +19,6 @@ final class ComponentFilter
 	{
 		return new self(tags: $tags);
 	}
-
 
 	/**
 	 */

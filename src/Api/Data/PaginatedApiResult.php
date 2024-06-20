@@ -8,12 +8,12 @@ namespace Torr\Storyblok\Api\Data;
 final class PaginatedApiResult
 {
 	/**
-	 * @param array<T> $entries
+	 * @param list<T> $entries
 	 */
 	public function __construct (
 		public readonly int $perPage,
 		public readonly int $totalPages,
-		/** @var array<T> */
+		/** @var list<T> */
 		public readonly array $entries,
 	) {}
 }

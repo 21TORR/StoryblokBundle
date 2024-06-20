@@ -2,21 +2,22 @@
 
 namespace Tests\Torr\Storyblok\Field\Definition;
 
-use PHPUnit\TextUI\XmlConfiguration\Validator;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\ValidatorBuilder;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Choices\StaticChoices;
 use Torr\Storyblok\Field\Definition\ChoiceField;
-use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
 
-class ChoiceFieldTest extends TestCase
+/**
+ * @internal
+ */
+final class ChoiceFieldTest extends TestCase
 {
 	public static function provideValid () : iterable
 	{
@@ -45,7 +46,7 @@ class ChoiceFieldTest extends TestCase
 		];
 
 		yield "single select: normalization" => [
-			new ChoiceField("label", $defaultChoices,false),
+			new ChoiceField("label", $defaultChoices, false),
 			1,
 		];
 
@@ -71,7 +72,7 @@ class ChoiceFieldTest extends TestCase
 		];
 
 		yield "multi select: normalization" => [
-			new ChoiceField("label", $defaultChoices,true),
+			new ChoiceField("label", $defaultChoices, true),
 			[1],
 		];
 
@@ -80,7 +81,7 @@ class ChoiceFieldTest extends TestCase
 				"label",
 				$defaultChoices,
 				true,
-				minimumNumberOfOptions: 1
+				minimumNumberOfOptions: 1,
 			),
 			["key1"],
 		];
@@ -107,7 +108,6 @@ class ChoiceFieldTest extends TestCase
 		];
 	}
 
-
 	/**
 	 * @dataProvider provideValid
 	 */
@@ -117,7 +117,6 @@ class ChoiceFieldTest extends TestCase
 		$field->validateData($context, [], $data, []);
 		self::assertTrue(true, "should not throw");
 	}
-
 
 	public static function provideInvalid () : iterable
 	{
@@ -222,7 +221,6 @@ class ChoiceFieldTest extends TestCase
 		$context = $this->createComponentContext();
 		$field->validateData($context, [], $data, []);
 	}
-
 
 	/**
 	 */

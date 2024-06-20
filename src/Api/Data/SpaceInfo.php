@@ -7,7 +7,8 @@ final class SpaceInfo
 	private readonly int $spaceId;
 	private readonly string $name;
 	private readonly int $cacheVersion;
-	/** @var array<string> */
+
+	/** @var list<string> */
 	private readonly array $languageCodes;
 	private readonly string $domain;
 
@@ -61,6 +62,6 @@ final class SpaceInfo
 	 */
 	public function getBackendDashboardUrl () : string
 	{
-		return \sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->spaceId);
+		return sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->spaceId);
 	}
 }

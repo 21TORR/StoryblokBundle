@@ -8,7 +8,8 @@ final class TableData
 {
 	/** @var TableColumnData[] */
 	public readonly array $thead;
-	/** @var array<TableColumnData[]> */
+
+	/** @var list<TableColumnData[]> */
 	public readonly array $tbody;
 
 	public function __construct (
@@ -17,9 +18,9 @@ final class TableData
 	)
 	{
 		$this->thead = $this->flattenRows($thead);
-		$this->tbody = \array_map(
+		$this->tbody = array_map(
 			$this->flattenRows(...),
-			\array_column($tbody, "body"),
+			array_column($tbody, "body"),
 		);
 	}
 
@@ -28,9 +29,9 @@ final class TableData
 	 */
 	private function flattenRows (array $columnEntries) : array
 	{
-		return \array_map(
+		return array_map(
 			static fn (string $value) => new TableColumnData($value),
-			\array_column($columnEntries, "value"),
+			array_column($columnEntries, "value"),
 		);
 	}
 }

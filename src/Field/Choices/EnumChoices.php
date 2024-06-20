@@ -18,9 +18,9 @@ class EnumChoices extends StaticChoices
 		bool $showEmptyOption = true,
 	)
 	{
-		if (!\is_a($this->enumType, BackedEnumChoiceInterface::class, true))
+		if (!is_a($this->enumType, BackedEnumChoiceInterface::class, true))
 		{
-			throw new InvalidFieldConfigurationException(\sprintf(
+			throw new InvalidFieldConfigurationException(sprintf(
 				"Enum type in EnumChoices must implement %s, but %s given",
 				BackedEnumChoiceInterface::class,
 				$this->enumType,
@@ -60,7 +60,7 @@ class EnumChoices extends StaticChoices
 		if (\is_array($data))
 		{
 			/** @var T[] $data */
-			$data = \array_map(
+			$data = array_map(
 				$this->enumType::from(...),
 				$data,
 			);

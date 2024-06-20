@@ -2,10 +2,13 @@
 
 namespace Tests\Torr\Storyblok\RichText;
 
-use Torr\Storyblok\RichText\HtmlToRichTextTransformer;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\RichText\HtmlToRichTextTransformer;
 
-class HtmlToRichTextTransformerTest extends TestCase
+/**
+ * @internal
+ */
+final class HtmlToRichTextTransformerTest extends TestCase
 {
 	/**
 	 */
@@ -14,20 +17,20 @@ class HtmlToRichTextTransformerTest extends TestCase
 		$transformer = new HtmlToRichTextTransformer();
 
 		$html = <<<'HTML'
-			<p>Test</p>
-			<ul>
-				<li>UL List item</li>
-			</ul>
-			<ol>
-				<li>OL List item</li>
-			</ol>
-			<h1>Heading 1</h1>
-			<h2>Heading 2</h2>
-			<h3>Heading 3</h3>
-			<h4>Heading 4</h4>
-			<h5>Heading 5</h5>
-			<h6>Heading 6</h6>
-		HTML;
+				<p>Test</p>
+				<ul>
+					<li>UL List item</li>
+				</ul>
+				<ol>
+					<li>OL List item</li>
+				</ol>
+				<h1>Heading 1</h1>
+				<h2>Heading 2</h2>
+				<h3>Heading 3</h3>
+				<h4>Heading 4</h4>
+				<h5>Heading 5</h5>
+				<h6>Heading 6</h6>
+			HTML;
 
 		// use assertSame() as the order is important
 		self::assertSame([
@@ -56,7 +59,7 @@ class HtmlToRichTextTransformerTest extends TestCase
 											'text' => 'UL List item',
 										],
 									],
-								]
+								],
 							],
 						],
 					],
@@ -75,7 +78,7 @@ class HtmlToRichTextTransformerTest extends TestCase
 											'text' => 'OL List item',
 										],
 									],
-								]
+								],
 							],
 						],
 					],

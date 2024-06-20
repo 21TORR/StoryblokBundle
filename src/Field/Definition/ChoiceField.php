@@ -31,9 +31,9 @@ final class ChoiceField extends AbstractField
 
 		if (!$this->allowMultiselect && (null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions))
 		{
-			throw new InvalidFieldConfigurationException(\sprintf(
+			throw new InvalidFieldConfigurationException(
 				"Can't configure minimum or maximum amount of options for single-select choice.",
-			));
+			);
 		}
 
 		if (
@@ -42,12 +42,11 @@ final class ChoiceField extends AbstractField
 			&& $this->minimumNumberOfOptions > $this->maximumNumberOfOptions
 		)
 		{
-			throw new InvalidFieldConfigurationException(\sprintf(
+			throw new InvalidFieldConfigurationException(
 				"The minimum number of options value can't be higher than the maximum",
-			));
+			);
 		}
 	}
-
 
 	/**
 	 * @inheritDoc
@@ -64,7 +63,7 @@ final class ChoiceField extends AbstractField
 	 */
 	protected function toManagementApiData () : array
 	{
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			$this->choices->toManagementApiData(),
 			[
@@ -154,7 +153,6 @@ final class ChoiceField extends AbstractField
 		);
 	}
 
-
 	/**
 	 */
 	private function validateMultiSelect (ComponentContext $context, array $contentPath, mixed $data) : void
@@ -182,7 +180,7 @@ final class ChoiceField extends AbstractField
 
 		\assert(null === $data || \is_array($data));
 
-		$data = \array_map(
+		$data = array_map(
 			static fn (string $value) => $context->normalizeOptionalString($value),
 			// we are in a multiselect, so we expect an array
 			$data ?? [],
@@ -231,6 +229,7 @@ final class ChoiceField extends AbstractField
 			: null;
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
 }

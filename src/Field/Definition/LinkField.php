@@ -51,7 +51,7 @@ final class LinkField extends AbstractField
 	 */
 	protected function toManagementApiData () : array
 	{
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			[
 				"asset_link_type" => $this->allowAssetLinks,
@@ -139,9 +139,9 @@ final class LinkField extends AbstractField
 			: null;
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
-
 
 	/**
 	 * Transforms the data array to a link
@@ -188,6 +188,7 @@ final class LinkField extends AbstractField
 			}
 
 			[$width, $height] = $context->extractImageDimensions($url);
+
 			return new AssetLinkData($url, $width, $height);
 		}
 
@@ -198,5 +199,4 @@ final class LinkField extends AbstractField
 			? new ExternalLinkData($url)
 			: null;
 	}
-
 }

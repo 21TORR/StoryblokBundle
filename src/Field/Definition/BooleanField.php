@@ -65,6 +65,7 @@ final class BooleanField extends AbstractField
 		\assert(\is_bool($data));
 
 		$dataVisitor?->onDataVisit($this, $data);
+
 		return $data;
 	}
 }

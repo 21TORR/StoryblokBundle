@@ -37,7 +37,7 @@ abstract class RichTextTransformer
 		};
 	}
 
-	//region Content Element Transformers
+	// region Content Element Transformers
 	/**
 	 * Transforms a paragraph
 	 *
@@ -177,8 +177,7 @@ abstract class RichTextTransformer
 	{
 		return $emoji;
 	}
-	//endregion
-
+	// endregion
 
 	// region Mark Transformers
 	/**
@@ -189,7 +188,6 @@ abstract class RichTextTransformer
 		return $linkMark;
 	}
 	// endregion
-
 
 	/**
 	 * Structure: array{type: string, attrs: array{href: string, uuid: string, anchor: string|null, custom: array, target: string, linktype: string}}

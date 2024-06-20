@@ -59,7 +59,6 @@ abstract class Story implements StoryInterface
 		);
 	}
 
-
 	/**
 	 * Returns the transformed data for a single field
 	 */

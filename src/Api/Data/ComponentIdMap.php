@@ -41,7 +41,6 @@ final class ComponentIdMap
 		$this->components[$key] = $id;
 	}
 
-
 	/**
 	 *
 	 */
@@ -63,6 +62,6 @@ final class ComponentIdMap
 	 */
 	public function getAllComponentKeys () : array
 	{
-		return \array_keys($this->components);
+		return array_keys($this->components);
 	}
 }

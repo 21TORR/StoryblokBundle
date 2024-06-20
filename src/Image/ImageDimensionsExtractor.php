@@ -11,13 +11,13 @@ final class ImageDimensionsExtractor
 	 */
 	public function extractImageDimensions (string $imageUrl) : array
 	{
-		$urlPath = (string) \parse_url($imageUrl, \PHP_URL_PATH);
-		$urlSegments = \explode("/", \trim($urlPath, "/"));
+		$urlPath = (string) parse_url($imageUrl, \PHP_URL_PATH);
+		$urlSegments = explode("/", trim($urlPath, "/"));
 
 		$width = null;
 		$height = null;
 
-		if (\preg_match('~^(?<width>\\d+)x(?<height>\\d+)$~', $urlSegments[2] ?? "", $matches))
+		if (preg_match('~^(?<width>\\d+)x(?<height>\\d+)$~', $urlSegments[2] ?? "", $matches))
 		{
 			$width = (int) $matches["width"];
 			$height = (int) $matches["height"];

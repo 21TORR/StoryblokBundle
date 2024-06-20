@@ -25,8 +25,8 @@ trait ComponentContextTestHelperTrait
 		return new ComponentContext(
 			$componentManager ?? $this->createMock(ComponentManager::class),
 			$dataTransformer ?? new DataTransformer(),
-				$logger ?? new NullLogger(),
-				$validator ?? $this->createMock(DataValidator::class),
+			$logger ?? new NullLogger(),
+			$validator ?? $this->createMock(DataValidator::class),
 			$imageDimensionsExtractor ?? new ImageDimensionsExtractor(),
 		);
 	}

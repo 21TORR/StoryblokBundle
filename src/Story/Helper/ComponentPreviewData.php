@@ -40,25 +40,25 @@ final class ComponentPreviewData
 
 		if (!\is_string($editableData))
 		{
-			throw new InvalidDataException(\sprintf(
+			throw new InvalidDataException(sprintf(
 				"Encountered invalid preview data of type '%s'. Expected string or null.",
-				\get_debug_type($editableData),
+				get_debug_type($editableData),
 			));
 		}
 
 		$previewData = null;
 
-		if (\preg_match('~^<!--#storyblok#(.*)-->$~', $editableData, $matches))
+		if (preg_match('~^<!--#storyblok#(.*)-->$~', $editableData, $matches))
 		{
 			try
 			{
-				$previewData = \json_decode(\stripslashes($matches[1]), true, flags: \JSON_THROW_ON_ERROR);
+				$previewData = json_decode(stripslashes($matches[1]), true, flags: \JSON_THROW_ON_ERROR);
 
 				\assert(\is_array($previewData));
 			}
 			catch (\JsonException $exception)
 			{
-				throw new InvalidDataException(\sprintf(
+				throw new InvalidDataException(sprintf(
 					"Encountered invalid preview data: '%s'",
 					$editableData,
 				), previous: $exception);

@@ -19,7 +19,6 @@ final class ComponentConfigDiffer
 		"real_name",
 		"updated_at",
 	];
-
 	private readonly Differ $differ;
 
 	/**
@@ -30,7 +29,6 @@ final class ComponentConfigDiffer
 		$this->differ = new Differ($builder);
 	}
 
-
 	/**
 	 * @return string[]|null
 	 */
@@ -39,7 +37,7 @@ final class ComponentConfigDiffer
 		array $localConfig,
 	) : ?array
 	{
-		$diff = \trim($this->differ->diff(
+		$diff = trim($this->differ->diff(
 			$this->formatAsJson($storyblokConfig),
 			$this->formatAsJson($localConfig),
 		));
@@ -49,7 +47,7 @@ final class ComponentConfigDiffer
 			return null;
 		}
 
-		$lines = \explode("\n", $diff);
+		$lines = explode("\n", $diff);
 
 		// add header here, so that we can cleanly check for an empty diff above
 		return $this->parseDiffOutputLines([
@@ -58,7 +56,6 @@ final class ComponentConfigDiffer
 			...$lines,
 		]);
 	}
-
 
 	/**
 	 *
@@ -81,7 +78,6 @@ final class ComponentConfigDiffer
 		return $result;
 	}
 
-
 	/**
 	 * Formats the given array as normalized JSON
 	 */
@@ -89,15 +85,14 @@ final class ComponentConfigDiffer
 	{
 		try
 		{
-
-			return \json_encode(
+			return json_encode(
 				$this->normalizeArray($array),
 				\JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_UNICODE,
 			);
 		}
 		catch (\JsonException $exception)
 		{
-			throw new InvalidComponentConfigurationException(\sprintf(
+			throw new InvalidComponentConfigurationException(sprintf(
 				"Failed to diff component config: %s",
 				$exception->getMessage(),
 			), previous: $exception);
@@ -110,7 +105,7 @@ final class ComponentConfigDiffer
 	private function normalizeArray (array $array, int $level = 0) : array
 	{
 		// sort array
-		\uksort($array, "strnatcasecmp");
+		uksort($array, "strnatcasecmp");
 		$result = [];
 
 		foreach ($array as $key => $value)

@@ -15,7 +15,6 @@ final class ComponentNormalizer
 		private readonly ManagementApi $managementApi,
 	) {}
 
-
 	/**
 	 * Validates and normalizes the components and returns them as ComponentImport.
 	 *
@@ -28,7 +27,7 @@ final class ComponentNormalizer
 		// normalize everything to check if normalization fails
 		foreach ($this->componentManager->getAllComponents() as $component)
 		{
-			$formattedLabel = \sprintf(
+			$formattedLabel = sprintf(
 				"<fg=blue>%s</> (<fg=yellow>%s</>)",
 				$component->getDisplayName(),
 				$component::getKey(),

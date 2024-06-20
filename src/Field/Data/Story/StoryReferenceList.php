@@ -7,7 +7,7 @@ use Torr\Storyblok\Field\Data\StoryReferenceData;
 final class StoryReferenceList
 {
 	/**
-	 * @param array<StoryReferenceData> $references
+	 * @param list<StoryReferenceData> $references
 	 */
 	public function __construct (
 		public readonly array $references,

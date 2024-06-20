@@ -17,5 +17,4 @@ final class UnknownComponentKeyException extends \InvalidArgumentException imple
 	{
 		parent::__construct($message, 0, $previous);
 	}
-
 }

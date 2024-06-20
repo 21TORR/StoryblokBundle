@@ -47,7 +47,6 @@ final class StoryChoices implements ChoicesInterface
 		return [];
 	}
 
-
 	/**
 	 */
 	public function transformData (
@@ -61,7 +60,7 @@ final class StoryChoices implements ChoicesInterface
 		}
 
 		return new StoryReferenceList(
-			\array_map(
+			array_map(
 				fn (string $uuid) => new StoryReferenceData($uuid, $this->referencedStoryDataMode),
 				$data,
 			),

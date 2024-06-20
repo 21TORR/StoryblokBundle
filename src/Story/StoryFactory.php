@@ -33,7 +33,7 @@ final class StoryFactory
 
 		if (!\is_string($type))
 		{
-			throw new StoryHydrationFailed(\sprintf(
+			throw new StoryHydrationFailed(sprintf(
 				"Could not hydrate story %s: no component type given",
 				$data["id"] ?? "n/a",
 			));
@@ -58,15 +58,15 @@ final class StoryFactory
 
 			if (null === $storyClass)
 			{
-				throw new ComponentWithoutStoryException(\sprintf(
+				throw new ComponentWithoutStoryException(sprintf(
 					"Can't create story for component of type '%s', as no story class was defined.",
 					$component::getKey(),
 				));
 			}
 
-			if (!\is_a($storyClass, Story::class, true))
+			if (!is_a($storyClass, Story::class, true))
 			{
-				throw new StoryHydrationFailed(\sprintf(
+				throw new StoryHydrationFailed(sprintf(
 					"Could not hydrate story of type '%s': story class does not extend %s",
 					$component::getKey(),
 					Story::class,
@@ -82,7 +82,7 @@ final class StoryFactory
 		}
 		catch (InvalidDataException $exception)
 		{
-			throw new StoryHydrationFailed(\sprintf(
+			throw new StoryHydrationFailed(sprintf(
 				"Failed to hydrate story (Id: '%s', Name: '%s') of type '%s' due to invalid data: %s",
 				$data["id"] ?? "n/a",
 				$data["name"] ?? "n/a",

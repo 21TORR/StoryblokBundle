@@ -47,7 +47,6 @@ final class ContentApi implements ResetInterface
 		);
 	}
 
-
 	/**
 	 * Loads a single story.
 	 *
@@ -60,14 +59,14 @@ final class ContentApi implements ResetInterface
 	{
 		try
 		{
-			$identifier = \ltrim((string) $identifier, "/");
+			$identifier = ltrim((string) $identifier, "/");
 
 			$queryParameters = [
 				"token" => $this->config->getContentToken(),
 				"version" => $version->value,
 			];
 
-			if (\preg_match(self::STORYBLOK_UUID_REGEX, $identifier))
+			if (preg_match(self::STORYBLOK_UUID_REGEX, $identifier))
 			{
 				$queryParameters["find_by"] = "uuid";
 			}
@@ -86,11 +85,12 @@ final class ContentApi implements ResetInterface
 			}
 
 			$data = $response->toArray();
+
 			return $this->storyFactory->createFromApiData($data["story"]);
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(\sprintf(
+			throw new ContentRequestFailedException(sprintf(
 				"Content request failed for single story '%s': %s",
 				$identifier,
 				$exception->getMessage(),
@@ -108,10 +108,10 @@ final class ContentApi implements ResetInterface
 	 *
 	 * @param class-string<TStory> $storyType
 	 *
+	 * @return list<TStory>
+	 *
 	 * @throws ContentRequestFailedException
 	 * @throws UnknownStoryTypeException
-	 *
-	 * @return array<TStory>
 	 */
 	public function fetchStories (
 		string $storyType,
@@ -133,20 +133,19 @@ final class ContentApi implements ResetInterface
 
 		foreach ($result as $story)
 		{
-			if (!\is_a($story, $storyType))
+			if (!is_a($story, $storyType))
 			{
-				throw new InvalidDataException(\sprintf(
+				throw new InvalidDataException(sprintf(
 					"Requested stories for type '%s', but encountered story of type '%s'.",
 					$storyType,
-					\get_class($story),
+					$story::class,
 				));
 			}
 		}
 
-		/** @var array<TStory> $result */
+		/** @var list<TStory> $result */
 		return $result;
 	}
-
 
 	/**
 	 * Fetches all stories (regardless of type).
@@ -156,9 +155,9 @@ final class ContentApi implements ResetInterface
 	 *
 	 * @param string|string[]|null $slug
 	 *
-	 * @throws ContentRequestFailedException
+	 * @return list<Story>
 	 *
-	 * @return array<Story>
+	 * @throws ContentRequestFailedException
 	 */
 	public function fetchAllStories (
 		string|array|null $slug,
@@ -176,7 +175,7 @@ final class ContentApi implements ResetInterface
 		if (null !== $slug)
 		{
 			$query["by_slugs"] = \is_array($slug)
-				? \implode(",", $slug)
+				? implode(",", $slug)
 				: $slug;
 		}
 
@@ -226,11 +225,12 @@ final class ContentApi implements ResetInterface
 			);
 
 			$data = $response->toArray();
+
 			return $this->spaceInfo = new SpaceInfo($data["space"]);
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(\sprintf(
+			throw new ContentRequestFailedException(sprintf(
 				"Failed to fetch space info: %s",
 				$exception->getMessage(),
 			), previous: $exception);
@@ -243,9 +243,9 @@ final class ContentApi implements ResetInterface
 	 * This method provides certain commonly used named parameters, but also supports passing arbitrary parameters
 	 * in the parameter. Passing named parameters will always overwrite parameters in $query.
 	 *
-	 * @throws ContentRequestFailedException
-	 *
 	 * @return PaginatedApiResult<Story>
+	 *
+	 * @throws ContentRequestFailedException
 	 */
 	private function fetchStoriesResultPage (
 		array $query = [],
@@ -257,7 +257,7 @@ final class ContentApi implements ResetInterface
 		$query["page"] = $page;
 
 		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
-		\ksort($query);
+		ksort($query);
 
 		try
 		{
@@ -306,19 +306,18 @@ final class ContentApi implements ResetInterface
 
 			return new PaginatedApiResult(
 				perPage: $perPage,
-				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
+				totalPages: (int) ceil($totalNumberOfItems / $perPage),
 				entries: $stories,
 			);
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(\sprintf(
+			throw new ContentRequestFailedException(sprintf(
 				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);
 		}
 	}
-
 
 	/**
 	 * Gets the first header as int/null
@@ -329,20 +328,19 @@ final class ContentApi implements ResetInterface
 	{
 		$value = $headers[$headerName][0] ?? null;
 
-		return \ctype_digit($value)
+		return ctype_digit($value)
 			? (int) $value
 			: null;
 	}
 
-
 	/**
 	 * Fetches all entry for the given datasource.
 	 *
-	 * @param string|string[]|null $slug The slug of the datasource.
-	 *
-	 * @throws ContentRequestFailedException
+	 * @param string|string[]|null $slug the slug of the datasource
 	 *
 	 * @return array<string, DatasourceEntry> DatasourceEntry value to DatasourceEntry
+	 *
+	 * @throws ContentRequestFailedException
 	 */
 	public function fetchDatasourceEntries (
 		string|array|null $slug,
@@ -380,13 +378,12 @@ final class ContentApi implements ResetInterface
 		return $result;
 	}
 
-
 	/**
 	 * Fetches datasource entries.
 	 *
-	 * @throws ContentRequestFailedException
-	 *
 	 * @return PaginatedApiResult<DatasourceEntry>
+	 *
+	 * @throws ContentRequestFailedException
 	 */
 	private function fetchDatasourceEntriesResultPage (
 		array $query = [],
@@ -398,7 +395,7 @@ final class ContentApi implements ResetInterface
 		$query["page"] = $page;
 
 		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
-		\ksort($query);
+		ksort($query);
 
 		try
 		{
@@ -447,26 +444,25 @@ final class ContentApi implements ResetInterface
 
 			return new PaginatedApiResult(
 				perPage: $perPage,
-				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
+				totalPages: (int) ceil($totalNumberOfItems / $perPage),
 				entries: $entries,
 			);
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(\sprintf(
+			throw new ContentRequestFailedException(sprintf(
 				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);
 		}
 	}
 
-
 	/**
 	 * Fetches all links.
 	 *
-	 * @throws ContentRequestFailedException
+	 * @return list<StoryblokLink>
 	 *
-	 * @return array<StoryblokLink>
+	 * @throws ContentRequestFailedException
 	 */
 	public function fetchAllLinks (
 		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
@@ -497,13 +493,12 @@ final class ContentApi implements ResetInterface
 		return $result;
 	}
 
-
 	/**
 	 * Fetches links.
 	 *
-	 * @throws ContentRequestFailedException
-	 *
 	 * @return PaginatedApiResult<StoryblokLink>
+	 *
+	 * @throws ContentRequestFailedException
 	 */
 	private function fetchLinksResultPage (
 		array $query = [],
@@ -516,7 +511,7 @@ final class ContentApi implements ResetInterface
 		$query["paginated"] = 1;
 
 		// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
-		\ksort($query);
+		ksort($query);
 
 		try
 		{
@@ -560,13 +555,13 @@ final class ContentApi implements ResetInterface
 
 			return new PaginatedApiResult(
 				perPage: $perPage,
-				totalPages: (int) \ceil($totalNumberOfItems / $perPage),
+				totalPages: (int) ceil($totalNumberOfItems / $perPage),
 				entries: $links,
 			);
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(\sprintf(
+			throw new ContentRequestFailedException(sprintf(
 				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);

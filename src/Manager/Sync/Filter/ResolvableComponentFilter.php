@@ -71,6 +71,6 @@ final class ResolvableComponentFilter
 			}
 		}
 
-		return \array_keys($result);
+		return array_keys($result);
 	}
 }
