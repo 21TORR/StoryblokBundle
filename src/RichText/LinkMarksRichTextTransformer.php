@@ -86,7 +86,6 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 			: null;
 	}
 
-
 	/**
 	 *
 	 */
@@ -98,7 +97,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 		}
 
 		// Normalize to null. Trim for checking, but don't trim data if is not empty, just to be sure.
-		return "" !== \trim($value)
+		return "" !== trim($value)
 			? $value
 			: null;
 	}

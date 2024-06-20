@@ -40,7 +40,7 @@ final class TextField extends AbstractField
 	 */
 	protected function toManagementApiData () : array
 	{
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			[
 				"rtl" => $this->isRightToLeft,
@@ -82,6 +82,7 @@ final class TextField extends AbstractField
 		$transformed = $context->normalizeOptionalString($data);
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
 }

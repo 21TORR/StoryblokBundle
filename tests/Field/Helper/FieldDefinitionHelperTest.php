@@ -2,12 +2,15 @@
 
 namespace Tests\Torr\Storyblok\Field\Helper;
 
+use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Field\Definition\TextField;
 use Torr\Storyblok\Field\Helper\FieldDefinitionHelper;
-use PHPUnit\Framework\TestCase;
 
-class FieldDefinitionHelperTest extends TestCase
+/**
+ * @internal
+ */
+final class FieldDefinitionHelperTest extends TestCase
 {
 	/**
 	 *

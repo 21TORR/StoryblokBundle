@@ -15,7 +15,6 @@ final class ComponentValidator
 		private readonly ComponentNormalizer $componentNormalizer,
 	) {}
 
-
 	public function validateDefinitions () : void
 	{
 		try

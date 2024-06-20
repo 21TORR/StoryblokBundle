@@ -36,7 +36,7 @@ final class NumberField extends AbstractField
 	 */
 	protected function toManagementApiData () : array
 	{
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			[
 				"no_translate" => !$this->exportTranslation,
@@ -76,7 +76,7 @@ final class NumberField extends AbstractField
 
 		if (null !== $data && "" !== $data)
 		{
-			$transformed = \str_contains($data, ".")
+			$transformed = str_contains($data, ".")
 				? (float) $data
 				: (int) $data;
 		}
@@ -86,6 +86,7 @@ final class NumberField extends AbstractField
 		}
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
 }

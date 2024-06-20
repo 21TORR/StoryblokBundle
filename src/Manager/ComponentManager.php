@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Manager;
 
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Torr\Storyblok\Component\AbstractComponent;
@@ -17,22 +18,24 @@ class ComponentManager
 	/**
 	 */
 	public function __construct (
+		/** @var ServiceLocator<AbstractComponent> */
+		#[AutowireLocator(services: 'storyblok.component.definition', defaultIndexMethod: 'getKey')]
 		private readonly ServiceLocator $components,
 	) {}
 
 	/**
-	 * @return array<AbstractComponent>
+	 * @return list<AbstractComponent>
 	 */
 	public function getAllComponents () : array
 	{
-		$components = \array_map(
+		$components = array_map(
 			fn (string $key) => $this->getComponent($key),
-			\array_keys($this->components->getProvidedServices()),
+			array_keys($this->components->getProvidedServices()),
 		);
 
-		\usort(
+		usort(
 			$components,
-			static fn (AbstractComponent $left, AbstractComponent $right) => \strnatcmp($left->getDisplayName(), $right->getDisplayName()),
+			static fn (AbstractComponent $left, AbstractComponent $right) => strnatcmp($left->getDisplayName(), $right->getDisplayName()),
 		);
 
 		return $components;
@@ -46,8 +49,6 @@ class ComponentManager
 	 * @param class-string<TStory> $storyType
 	 *
 	 * @throws UnknownStoryTypeException
-	 *
-	 * @return AbstractComponent<TStory>
 	 */
 	public function getComponentByStoryType (string $storyType) : AbstractComponent
 	{
@@ -59,17 +60,16 @@ class ComponentManager
 			}
 		}
 
-		throw new UnknownStoryTypeException(\sprintf(
+		throw new UnknownStoryTypeException(sprintf(
 			"Found no component generating a story of type '%s'",
 			$storyType,
 		));
 	}
 
-
 	/**
 	 * Returns the component keys for all components with any of the given tags
 	 *
-	 * @param array<string|\BackedEnum> $tags
+	 * @param list<string|\BackedEnum> $tags
 	 *
 	 * @return string[]
 	 */
@@ -81,13 +81,13 @@ class ComponentManager
 			? $tag->value
 			: $tag;
 
-		$normalizedTags = \array_map($normalizeTag, $tags);
+		$normalizedTags = array_map($normalizeTag, $tags);
 
 		foreach ($this->getAllComponents() as $component)
 		{
-			$componentTags = \array_map($normalizeTag, $component->getTags());
+			$componentTags = array_map($normalizeTag, $component->getTags());
 
-			if (!empty(\array_intersect($normalizedTags, $componentTags)))
+			if (!empty(array_intersect($normalizedTags, $componentTags)))
 			{
 				$matches[] = $component::getKey();
 			}
@@ -95,7 +95,6 @@ class ComponentManager
 
 		return $matches;
 	}
-
 
 	/**
 	 * Gets the component by key
@@ -114,7 +113,7 @@ class ComponentManager
 		catch (ServiceNotFoundException $exception)
 		{
 			throw new UnknownComponentKeyException(
-				message: \sprintf(
+				message: sprintf(
 					"Unknown component type: %s",
 					$key,
 				),

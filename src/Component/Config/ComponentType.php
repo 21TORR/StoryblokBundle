@@ -5,9 +5,7 @@ namespace Torr\Storyblok\Component\Config;
 enum ComponentType
 {
 	case Standalone;
-
 	case Nested;
-
 	case Universal;
 
 	public function toManagementApiData () : array

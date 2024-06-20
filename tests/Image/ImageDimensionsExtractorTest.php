@@ -2,11 +2,13 @@
 
 namespace Tests\Torr\Storyblok\Image;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Image\ImageDimensionsExtractor;
 
-class ImageDimensionsExtractorTest extends TestCase
+/**
+ * @internal
+ */
+final class ImageDimensionsExtractorTest extends TestCase
 {
 	/**
 	 *
@@ -40,11 +42,11 @@ class ImageDimensionsExtractorTest extends TestCase
 	}
 
 	/**
+	 * @dataProvider provideExtraction
 	 */
-	#[DataProvider("provideExtraction")]
 	public function testExtraction (string $url, array $expected) : void
 	{
 		$extractor = new ImageDimensionsExtractor();
-		self::assertEquals($expected, $extractor->extractImageDimensions($url));
+		self::assertSame($expected, $extractor->extractImageDimensions($url));
 	}
 }

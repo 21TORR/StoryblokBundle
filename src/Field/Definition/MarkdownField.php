@@ -38,7 +38,7 @@ final class MarkdownField extends AbstractField
 	 */
 	protected function toManagementApiData () : array
 	{
-		return \array_replace(
+		return array_replace(
 			parent::toManagementApiData(),
 			[
 				"rich_markdown" => $this->hasRichMarkdown,
@@ -80,7 +80,7 @@ final class MarkdownField extends AbstractField
 		$transformed = $context->dataTransformer->normalizeOptionalString($data);
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return $transformed;
 	}
-
 }

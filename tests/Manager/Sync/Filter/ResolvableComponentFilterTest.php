@@ -2,12 +2,15 @@
 
 namespace Tests\Torr\Storyblok\Manager\Sync\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
-use PHPUnit\Framework\TestCase;
 
-class ResolvableComponentFilterTest extends TestCase
+/**
+ * @internal
+ */
+final class ResolvableComponentFilterTest extends TestCase
 {
 	/**
 	 */

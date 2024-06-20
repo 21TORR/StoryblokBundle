@@ -2,10 +2,13 @@
 
 namespace Tests\Torr\Storyblok\Story;
 
-use Torr\Storyblok\Story\StoryMetaData;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Story\StoryMetaData;
 
-class StoryMetaDataTest extends TestCase
+/**
+ * @internal
+ */
+final class StoryMetaDataTest extends TestCase
 {
 	public static function provideValidLocaleLevel () : iterable
 	{
@@ -46,5 +49,4 @@ class StoryMetaDataTest extends TestCase
 
 		self::assertSame($expected, $metaData->getLocaleFromSlug());
 	}
-
 }

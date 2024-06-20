@@ -28,6 +28,6 @@ final readonly class StoryblokLink
 	 */
 	public function getSlugSegments () : array
 	{
-		return \explode("/", \trim($this->slug, "/"));
+		return explode("/", trim($this->slug, "/"));
 	}
 }

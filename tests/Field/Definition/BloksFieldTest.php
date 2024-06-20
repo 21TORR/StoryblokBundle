@@ -2,16 +2,18 @@
 
 namespace Tests\Torr\Storyblok\Field\Definition;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Tests\Torr\Storyblok\Context\ComponentContextTestHelperTrait;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Definition\BloksField;
-use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Manager\ComponentManager;
 
-class BloksFieldTest extends TestCase
+/**
+ * @internal
+ */
+final class BloksFieldTest extends TestCase
 {
 	use ComponentContextTestHelperTrait;
 
@@ -28,7 +30,7 @@ class BloksFieldTest extends TestCase
 		$field->validateData($context, ["path"], [
 			[
 				"component" => "_unknown",
-			]
+			],
 		], []);
 		self::assertTrue(true, "Should ignore missing components");
 	}
@@ -59,10 +61,9 @@ class BloksFieldTest extends TestCase
 		];
 	}
 
-
 	/**
+	 * @dataProvider provideIgnoredComponentsCount
 	 */
-	#[DataProvider("provideIgnoredComponentsCount")]
 	public function testIgnoredComponentsCount (
 		array $data,
 		string $message,

@@ -33,10 +33,10 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 	public function registerManagementApiData (string $key, ManagementApiData $managementApiData) : void
 	{
 		/** @var array<string, mixed> $fieldConfig */
-		$fieldConfig = \array_replace(
+		$fieldConfig = array_replace(
 			$this->toManagementApiData(),
 			[
-				"keys" => \array_keys($this->fields),
+				"keys" => array_keys($this->fields),
 			],
 		);
 		unset($fieldConfig["required"], $fieldConfig["regexp"]);
@@ -78,7 +78,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 				$context,
 				[
 					...$contentPath,
-					\sprintf("Field(%s)", $name),
+					sprintf("Field(%s)", $name),
 				],
 				$fieldData,
 				$fullData,
@@ -121,6 +121,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 		}
 
 		$dataVisitor?->onDataVisit($this, $transformed);
+
 		return new InlinedTransformedData($transformed);
 	}
 

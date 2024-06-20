@@ -18,7 +18,6 @@ class StaticChoices implements ChoicesInterface
 		private readonly bool $showEmptyOption = true,
 	) {}
 
-
 	/**
 	 * @inheritDoc
 	 */

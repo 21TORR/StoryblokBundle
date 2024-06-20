@@ -2,11 +2,13 @@
 
 namespace Tests\Torr\Storyblok\Translation;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use Torr\Storyblok\Translation\LocaleHelper;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Translation\LocaleHelper;
 
-class LocaleHelperTest extends TestCase
+/**
+ * @internal
+ */
+final class LocaleHelperTest extends TestCase
 {
 	/**
 	 */
@@ -29,10 +31,9 @@ class LocaleHelperTest extends TestCase
 		yield "(empty)" => ["", false];
 	}
 
-
 	/**
+	 * @dataProvider provideLocales
 	 */
-	#[DataProvider("provideLocales")]
 	public function testLocales (string $value, bool $expectedValid) : void
 	{
 		self::assertSame($expectedValid, LocaleHelper::isValidLocale($value));

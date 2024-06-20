@@ -1,3 +1,13 @@
+3.12.1
+======
+
+* (improvement) Allow `21torr/hosting` v3.
+* (improvement) Require Symfony 7.
+* (improvement) Remove useless type parameter in `AbstractComponent`.
+* (improvement) Improve type definitions.
+* (internal) Update CI.
+
+
 3.12.0
 ======
 

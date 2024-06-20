@@ -10,7 +10,6 @@ final class StoryblokIdSlugMapper implements ResetInterface
 	/** @var array<string|int, string>|null */
 	private ?array $map = null;
 
-
 	/**
 	 */
 	public function __construct (
@@ -24,7 +23,6 @@ final class StoryblokIdSlugMapper implements ResetInterface
 		return $this->getMap()[$id] ?? null;
 	}
 
-
 	/**
 	 * @return array<string|int, string>
 	 */
@@ -32,7 +30,6 @@ final class StoryblokIdSlugMapper implements ResetInterface
 	{
 		return $this->map ??= $this->fetchMap();
 	}
-
 
 	/**
 	 * @return array<string|int, string>
@@ -50,7 +47,6 @@ final class StoryblokIdSlugMapper implements ResetInterface
 
 		return $map;
 	}
-
 
 	/**
 	 * @inheritDoc

@@ -44,8 +44,8 @@ class ComponentContext
 	/**
 	 * @see DataValidator::ensureDataIsValid()
 	 *
-	 * @param string[]               $contentPath
-	 * @param array<Constraint|null> $constraints
+	 * @param string[]              $contentPath
+	 * @param list<Constraint|null> $constraints
 	 */
 	public function ensureDataIsValid (
 		array $contentPath,
@@ -84,10 +84,11 @@ class ComponentContext
 	/**
 	 * @see StoryblokIdSlugMapper::getFullSlugById()
 	 */
-	public function fetchFullSlugByUuid (string|int $identifier) : string|null
+	public function fetchFullSlugByUuid (string|int $identifier) : ?string
 	{
 		// the content api is already set by the DI container
 		\assert(null !== $this->storyblokIdSlugMapper);
+
 		return $this->storyblokIdSlugMapper->getFullSlugById($identifier);
 	}
 }

@@ -21,11 +21,10 @@ final class ComponentSync
 		private readonly ComponentConfigDiffer $differ,
 	) {}
 
-
 	/**
-	 * @throws SyncFailedException
-	 *
 	 * @return bool whether the sync was actually run
+	 *
+	 * @throws SyncFailedException
 	 */
 	public function syncDefinitionsInteractively (
 		TorrStyle $io,
@@ -70,10 +69,11 @@ final class ComponentSync
 			if (empty($toRun))
 			{
 				$io->success("No component changed, nothing to do");
+
 				return true;
 			}
 
-			$io->writeln(\sprintf(
+			$io->writeln(sprintf(
 				"• Found <fg=blue>%d</> components to sync",
 				\count($toRun),
 			));
@@ -81,10 +81,12 @@ final class ComponentSync
 			if (!$forceSync && !$io->confirm("Should the data really be synced?", false))
 			{
 				$io->caution("Aborting");
+
 				return false;
 			}
 
 			$this->syncComponents($io, $toRun);
+
 			return true;
 		}
 		catch (InvalidComponentConfigurationException|ApiRequestException $exception)
@@ -92,7 +94,6 @@ final class ComponentSync
 			throw new SyncFailedException($exception->getMessage(), previous: $exception);
 		}
 	}
-
 
 	/**
 	 */
@@ -103,12 +104,12 @@ final class ComponentSync
 	) : void
 	{
 		$io->writeln("┌─");
-		$io->writeln(\sprintf("│ %s", $component->formattedLabel));
+		$io->writeln(sprintf("│ %s", $component->formattedLabel));
 		$io->writeln("│");
 
 		foreach ($lines as $line)
 		{
-			foreach (\explode("\n", $line) as $splitLine)
+			foreach (explode("\n", $line) as $splitLine)
 			{
 				$io->writeln("│ {$splitLine}");
 			}
@@ -117,7 +118,6 @@ final class ComponentSync
 		$io->writeln("└─");
 		$io->newLine();
 	}
-
 
 	/**
 	 * Syncs all components
@@ -133,7 +133,7 @@ final class ComponentSync
 		{
 			$io->write("• Syncing {$config->formattedLabel} ... ");
 			$performedAction = $this->managementApi->syncComponent($config->config);
-			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
+			$io->writeln(sprintf("%s <fg=green>✓</>", $performedAction->value));
 		}
 	}
 }

@@ -14,7 +14,6 @@ final class ComponentConfigResolver
 		private readonly ComponentManager $componentManager,
 	) {}
 
-
 	/**
 	 * Resolves the given component config.
 	 *
@@ -40,9 +39,9 @@ final class ComponentConfigResolver
 			{
 				\is_array($value) => $this->resolveComponentConfig($value),
 				\is_scalar($value) || null === $value => $value,
-				default => throw new ValidationFailedException(\sprintf(
+				default => throw new ValidationFailedException(sprintf(
 					"Invalid config value encountered: %s",
-					\get_debug_type($value),
+					get_debug_type($value),
 				)),
 			};
 		}

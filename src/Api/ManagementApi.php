@@ -38,7 +38,7 @@ final class ManagementApi
 		$this->client = new RetryableHttpClient(
 			$client->withOptions(
 				(new HttpOptions())
-					->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
+					->setBaseUri(sprintf(self::API_URL, $this->config->getSpaceId()))
 					->toArray(),
 			),
 		);
@@ -123,19 +123,19 @@ final class ManagementApi
 
 		// include the trailing slash, to exclude the base directory
 		$slugPrefix = "" !== $slugPrefix
-			? \trim($slugPrefix, "/") . "/"
+			? trim($slugPrefix, "/") . "/"
 			: "";
 
 		$map = [];
 		$replacement = "" !== $slugPrefix
-			? "~^" . \preg_quote($slugPrefix, "~") . "~"
+			? "~^" . preg_quote($slugPrefix, "~") . "~"
 			: null;
 
 		foreach ($folders as $folder)
 		{
 			// use heading slash to local url
 			$localSlug = null !== $replacement
-				? "/" . \preg_replace($replacement, "", $folder->getFullSlug())
+				? "/" . preg_replace($replacement, "", $folder->getFullSlug())
 				: "/" . $folder->getFullSlug();
 
 			$map[$localSlug] = $folder->getName();
@@ -147,13 +147,13 @@ final class ManagementApi
 	/**
 	 * Fetches all folders in a given slug path
 	 *
-	 * @return array<FolderData>
+	 * @return list<FolderData>
 	 */
 	public function fetchFoldersInPath (string $slugPrefix) : array
 	{
 		// include the trailing slash, to exclude the base directory
 		$slugPrefix = "" !== $slugPrefix
-			? \trim($slugPrefix, "/") . "/"
+			? trim($slugPrefix, "/") . "/"
 			: "";
 
 		$options = (new HttpOptions())
@@ -183,7 +183,6 @@ final class ManagementApi
 	{
 		return $this->getComponentIdMap()->getAllComponentKeys();
 	}
-
 
 	/**
 	 *
@@ -218,7 +217,7 @@ final class ManagementApi
 		}
 		catch (ExceptionInterface $e)
 		{
-			throw new ApiRequestFailedException(\sprintf(
+			throw new ApiRequestFailedException(sprintf(
 				"Failed to fetch existing components: %s",
 				$e->getMessage(),
 			), previous: $e);
@@ -233,14 +232,13 @@ final class ManagementApi
 		?TorrStyle $io = null,
 	) : void
 	{
-		$io?->writeln(\sprintf("• Fetching the id for datasource <fg=blue>%s</>", $datasourceSlug));
+		$io?->writeln(sprintf("• Fetching the id for datasource <fg=blue>%s</>", $datasourceSlug));
 
 		$datasourceId = $this->getDatasourceId($datasourceSlug);
-		$io?->writeln(\sprintf("• Found id <fg=yellow>%d</>", $datasourceId));
+		$io?->writeln(sprintf("• Found id <fg=yellow>%d</>", $datasourceId));
 
 		$nameMap = [];
 		$valueMap = [];
-
 
 		$io?->writeln("• Fetching datasource entries...");
 
@@ -263,7 +261,7 @@ final class ManagementApi
 					continue;
 				}
 
-				$toUpdate[] = \array_replace($valueMap[$value], [
+				$toUpdate[] = array_replace($valueMap[$value], [
 					"name" => $name,
 				]);
 				continue;
@@ -272,7 +270,7 @@ final class ManagementApi
 			// if new entry
 			if (\array_key_exists($name, $nameMap))
 			{
-				throw new DatasourceSyncFailedException(\sprintf(
+				throw new DatasourceSyncFailedException(sprintf(
 					"Duplicate datasource name for name '%s' found, one new with key '%s' and existing '%s'.",
 					$name,
 					$value,
@@ -287,12 +285,11 @@ final class ManagementApi
 			];
 		}
 
-
-		$io?->writeln(\sprintf("• Found <fg=blue>%d</> entries to add", \count($toAdd)));
+		$io?->writeln(sprintf("• Found <fg=blue>%d</> entries to add", \count($toAdd)));
 
 		foreach ($toAdd as $entry)
 		{
-			$io?->writeln(\sprintf("• Adding <fg=yellow>%s</>", $entry["name"]));
+			$io?->writeln(sprintf("• Adding <fg=yellow>%s</>", $entry["name"]));
 			$this->sendRequest(
 				"datasource_entries",
 				options: (new HttpOptions())
@@ -303,11 +300,11 @@ final class ManagementApi
 			);
 		}
 
-		$io?->writeln(\sprintf("• Found <fg=blue>%d</> entries to update", \count($toUpdate)));
+		$io?->writeln(sprintf("• Found <fg=blue>%d</> entries to update", \count($toUpdate)));
 
 		foreach ($toUpdate as $entry)
 		{
-			$io?->writeln(\sprintf("• Updating <fg=yellow>%s</>", $entry["name"]));
+			$io?->writeln(sprintf("• Updating <fg=yellow>%s</>", $entry["name"]));
 			$this->sendRequest(
 				"datasource_entries/{$entry["id"]}",
 				options: (new HttpOptions())
@@ -321,11 +318,10 @@ final class ManagementApi
 		$io?->writeln("-> <fg=green>done</>");
 	}
 
-
 	/**
 	 * Fetches all datasource entries
 	 *
-	 * @return array<array{"id": int, "name": string, "value": string}>
+	 * @return list<array{"id": int, "name": string, "value": string}>
 	 */
 	public function fetchDatasourceEntries (
 		string $datasourceSlug,
@@ -337,6 +333,7 @@ final class ManagementApi
 			]);
 
 		$result = $this->sendRequest("datasource_entries", $options);
+
 		return $result["datasource_entries"];
 	}
 
@@ -357,12 +354,11 @@ final class ManagementApi
 			}
 		}
 
-		throw new DatasourceSyncFailedException(\sprintf(
+		throw new DatasourceSyncFailedException(sprintf(
 			"Could not find data source id for datasource '%s'",
 			$datasourceSlug,
 		));
 	}
-
 
 	/**
 	 * Sends the request and returns the response
@@ -407,7 +403,7 @@ final class ManagementApi
 				"response" => $response?->getContent(false),
 			]);
 
-			throw new ApiRequestFailedException(\sprintf(
+			throw new ApiRequestFailedException(sprintf(
 				"Failed management request %s '%s': %s",
 				$method,
 				$path,

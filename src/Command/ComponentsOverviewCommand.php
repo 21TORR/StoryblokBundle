@@ -6,11 +6,12 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use function Symfony\Component\String\u;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Manager\ComponentManager;
+
+use function Symfony\Component\String\u;
 
 #[AsCommand("storyblok:components:overview")]
 final class ComponentsOverviewCommand extends Command
@@ -74,12 +75,12 @@ final class ComponentsOverviewCommand extends Command
 
 			if (null === $details)
 			{
-				$unregistered[] = \sprintf("<fg=red>%s</>", $componentKey);
+				$unregistered[] = sprintf("<fg=red>%s</>", $componentKey);
 				continue;
 			}
 
 			$registered[] = [
-				\sprintf("<fg=yellow>%s</>", $componentKey),
+				sprintf("<fg=yellow>%s</>", $componentKey),
 				...$details,
 			];
 		}
@@ -104,7 +105,7 @@ final class ComponentsOverviewCommand extends Command
 				$className = u($className)->afterLast("\\")->toString();
 			}
 
-			return \sprintf("<fg=blue>%s</>", $className);
+			return sprintf("<fg=blue>%s</>", $className);
 		};
 
 		try
@@ -113,7 +114,7 @@ final class ComponentsOverviewCommand extends Command
 
 			return [
 				$component->getDisplayName(),
-				$renderClass(\get_debug_type($component)),
+				$renderClass(get_debug_type($component)),
 				$renderClass($component->getStoryClass()),
 			];
 		}

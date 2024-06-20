@@ -21,8 +21,6 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
  * Base class for all components registered in the system
- *
- * @template TStory of Story
  */
 abstract class AbstractComponent
 {
@@ -69,7 +67,7 @@ abstract class AbstractComponent
 	/**
 	 * Returns the tags of this component
 	 *
-	 * @return array<string|\BackedEnum>
+	 * @return list<string|\BackedEnum>
 	 */
 	public function getTags () : array
 	{
@@ -80,7 +78,7 @@ abstract class AbstractComponent
 	 * Returns the class of story to create for this component.
 	 * If null is returned here, you can't create a story for that component
 	 *
-	 * @return class-string<TStory>|null
+	 * @return class-string<Story>|null
 	 */
 	public function getStoryClass () : ?string
 	{
@@ -155,7 +153,6 @@ abstract class AbstractComponent
 		);
 	}
 
-
 	/**
 	 * @throws InvalidDataException
 	 */
@@ -168,7 +165,7 @@ abstract class AbstractComponent
 	{
 		$contentPath = [
 			...$contentPath,
-			\sprintf("Component(%s, '%s')", static::getKey(), $label ?? "n/a"),
+			sprintf("Component(%s, '%s')", static::getKey(), $label ?? "n/a"),
 		];
 
 		// validate base data
@@ -206,7 +203,7 @@ abstract class AbstractComponent
 				$context,
 				[
 					...$contentPath,
-					\sprintf("Field(%s)", $name),
+					sprintf("Field(%s)", $name),
 				],
 				$fieldData,
 				$data,
@@ -219,11 +216,10 @@ abstract class AbstractComponent
 		return $this->fields ??= new FieldCollection($this->configureFields());
 	}
 
-
 	/**
 	 * Normalizes the fields for usage in the management API
 	 *
-	 * @param array<FieldDefinitionInterface> $fields
+	 * @param array<string, FieldDefinitionInterface> $fields
 	 */
 	private function normalizeFields (
 		array $fields,
@@ -231,7 +227,7 @@ abstract class AbstractComponent
 	{
 		if (empty($fields))
 		{
-			throw new InvalidComponentConfigurationException(\sprintf(
+			throw new InvalidComponentConfigurationException(sprintf(
 				"Invalid component '%s': can't have a component without fields",
 				static::class,
 			));
@@ -243,7 +239,7 @@ abstract class AbstractComponent
 		{
 			if (ComponentHelper::isReservedKey($key))
 			{
-				throw new InvalidComponentConfigurationException(\sprintf(
+				throw new InvalidComponentConfigurationException(sprintf(
 					"Invalid component configuration '%s': can't use '%s' as field key, as that is a reserved key.",
 					static::class,
 					$key,
@@ -256,7 +252,6 @@ abstract class AbstractComponent
 		return $managementDataApi->getFullConfig();
 	}
 
-
 	/**
 	 * Transforms the data for the component
 	 *
@@ -266,7 +261,7 @@ abstract class AbstractComponent
 	{
 		if (ComponentHelper::isReservedKey(static::getKey()))
 		{
-			throw new InvalidComponentConfigurationException(\sprintf(
+			throw new InvalidComponentConfigurationException(sprintf(
 				"Invalid component configuration '%s': can't use '%s' as component key, as that is a reserved key.",
 				static::class,
 				static::getKey(),
@@ -284,7 +279,6 @@ abstract class AbstractComponent
 				break;
 			}
 		}
-
 
 		return [
 			"name" => static::getKey(),

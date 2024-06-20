@@ -35,6 +35,6 @@ final class FolderData
 	 */
 	public function getSlugSegments () : array
 	{
-		return \explode("/", \trim($this->getFullSlug(), "/"));
+		return explode("/", trim($this->getFullSlug(), "/"));
 	}
 }

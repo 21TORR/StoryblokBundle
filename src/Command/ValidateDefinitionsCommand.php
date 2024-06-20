@@ -35,7 +35,7 @@ final class ValidateDefinitionsCommand extends Command
 
 		$spaceInfo = $this->contentApi->getSpaceInfo();
 
-		$io->comment(\sprintf(
+		$io->comment(sprintf(
 			"Validating components for space <fg=magenta>%s</> (<fg=yellow>%d</>)\n<fg=gray>%s</>",
 			$spaceInfo->getName(),
 			$spaceInfo->getId(),
@@ -53,7 +53,7 @@ final class ValidateDefinitionsCommand extends Command
 		}
 		catch (ValidationFailedException $exception)
 		{
-			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
+			$io->comment(sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
 			$io->error("Definitions validation failed");
 
 			return self::FAILURE;

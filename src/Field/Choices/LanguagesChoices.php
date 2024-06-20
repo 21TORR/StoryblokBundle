@@ -35,7 +35,6 @@ final class LanguagesChoices implements ChoicesInterface
 		return [];
 	}
 
-
 	/**
 	 * @inheritDoc
 	 */
