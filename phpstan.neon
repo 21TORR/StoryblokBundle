@@ -1,5 +1,8 @@
 includes:
-    - vendor-bin/test/vendor/21torr/php-cs/phpstan/lib.neon
+	- vendor/21torr/janus/phpstan/lib.neon
 
-parameters:
-    level: 9
+# If you use simple-phpunit, you need to uncomment the following line.
+# Always make sure to first run simple-phpunit and then PHPStan.
+# parameters:
+#	bootstrapFiles:
+#		- vendor/bin/.phpunit/phpunit/vendor/autoload.php
