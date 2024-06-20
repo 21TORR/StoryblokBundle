@@ -2,6 +2,7 @@
 ======
 
 * (improvement) Allow `21torr/hosting` v3.
+* (improvement) Require Symfony 7.
 
 
 3.12.0
