@@ -15,7 +15,12 @@ use Torr\Storyblok\Manager\ComponentManager;
 
 use function Symfony\Component\String\u;
 
-#[AsCommand("storyblok:debug")]
+#[AsCommand(
+	"storyblok:debug",
+	description: "Displays debug info for the current Storyblok connection and config.",
+	// TODO v4: remove alias
+	aliases: ["storyblok:components:overview"],
+)]
 final class DebugCommand extends Command
 {
 	/**
@@ -39,6 +44,18 @@ final class DebugCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Debug");
 
+		// TODO v4: remove check
+		if ("storyblok:debug" !== $input->getFirstArgument())
+		{
+			$message = sprintf(
+				"The command `%s` is deprecated. Use `%s` instead.",
+				$input->getFirstArgument(),
+				"storyblok:debug",
+			);
+			trigger_deprecation("21torr/storyblok", "3.13.0", $message);
+			$io->caution($message);
+		}
+
 		try
 		{
 			$this->showInfo($io);
@@ -60,7 +77,7 @@ final class DebugCommand extends Command
 	}
 
 	/**
-	 *
+	 * @throws StoryblokException
 	 */
 	private function showInfo (TorrStyle $io) : void
 	{
