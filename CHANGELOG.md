@@ -1,7 +1,9 @@
-3.12.2
+3.13.0
 ======
 
 * (improvement) Detect space id / content token mismatch and automatically abort all further requests.
+* (feature) Add `storyblok:debug` command.
+* (deprecation) Deprecate `storyblok:components:overview` command, use `storyblok:debug` instead.
 
 
 3.12.1

@@ -7,19 +7,27 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
+use Torr\Storyblok\Exception\StoryblokException;
 use Torr\Storyblok\Manager\ComponentManager;
 
 use function Symfony\Component\String\u;
 
-#[AsCommand("storyblok:components:overview")]
-final class ComponentsOverviewCommand extends Command
+#[AsCommand(
+	"storyblok:debug",
+	description: "Displays debug info for the current Storyblok connection and config.",
+	// TODO v4: remove alias
+	aliases: ["storyblok:components:overview"],
+)]
+final class DebugCommand extends Command
 {
 	/**
-	 * @inheritDoc
+	 *
 	 */
 	public function __construct (
+		private readonly ContentApi $contentApi,
 		private readonly ManagementApi $managementApi,
 		private readonly ComponentManager $componentManager,
 	)
@@ -28,15 +36,71 @@ final class ComponentsOverviewCommand extends Command
 	}
 
 	/**
-	 * @inheritDoc
+	 *
 	 */
+	#[\Override]
 	protected function execute (InputInterface $input, OutputInterface $output) : int
 	{
 		$io = new TorrStyle($input, $output);
+		$io->title("Storyblok: Debug");
 
-		$io->title("Storyblok: Components Overview");
+		// TODO v4: remove check
+		if ("storyblok:debug" !== $input->getFirstArgument())
+		{
+			$message = sprintf(
+				"The command `%s` is deprecated. Use `%s` instead.",
+				$input->getFirstArgument(),
+				"storyblok:debug",
+			);
+			trigger_deprecation("21torr/storyblok", "3.13.0", $message);
+			$io->caution($message);
+		}
 
-		[$registered, $unregistered] = $this->fetchOverview($output->isVerbose());
+		try
+		{
+			$this->showInfo($io);
+			$io->newLine();
+
+			$this->showComponentsOverview($io);
+
+			return self::SUCCESS;
+		}
+		catch (StoryblokException $exception)
+		{
+			$io->error(sprintf(
+				"Failed to show debug info: %s",
+				$exception->getMessage(),
+			));
+
+			return self::FAILURE;
+		}
+	}
+
+	/**
+	 * @throws StoryblokException
+	 */
+	private function showInfo (TorrStyle $io) : void
+	{
+		$spaceInfo = $this->contentApi->getSpaceInfo();
+		$color = static fn (string $color, string|int $text) => sprintf("<fg=%s>%s</>", $color, $text);
+
+		$io->definitionList(
+			["Space ID" => $color("magenta", $spaceInfo->getId())],
+			["Name" => $color("blue", $spaceInfo->getName())],
+			["Preview URL" => $spaceInfo->getDomain()],
+			["Backend URL" => $spaceInfo->getBackendDashboardUrl()],
+			["Cache Version" => $color("yellow", $spaceInfo->getCacheVersion())],
+		);
+	}
+
+	/**
+	 *
+	 */
+	private function showComponentsOverview (
+		TorrStyle $io,
+	) : void
+	{
+		[$registered, $unregistered] = $this->fetchOverview($io->isVerbose());
 
 		if (!empty($registered))
 		{
@@ -57,8 +121,6 @@ final class ComponentsOverviewCommand extends Command
 			$io->section("Unknown Components");
 			$io->listing($unregistered);
 		}
-
-		return 0;
 	}
 
 	/**

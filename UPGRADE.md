@@ -1,6 +1,11 @@
-2.x to 4.0
+3.x to 4.0
 ==========
 
+* Removed `storyblok:components:overview` command, use `storyblok:debug` instead.
+
+
+2.x to 4.0
+==========
 
 * `AbstractField::enablePreview()` is removed, use `AbstractField::useAsAdminDisplayName()` instead.
 

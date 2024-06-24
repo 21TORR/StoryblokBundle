@@ -205,6 +205,8 @@ final class ContentApi implements ResetInterface
 	}
 
 	/**
+	 * @throws InvalidConfigException
+	 * @throws ContentRequestFailedException
 	 */
 	public function getSpaceInfo () : SpaceInfo
 	{
