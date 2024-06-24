@@ -1,7 +1,8 @@
-3.12.2
+3.13.0
 ======
 
 * (improvement) Detect space id / content token mismatch and automatically abort all further requests.
+* (feature) Add `storyblok:debug` command.
 
 
 3.12.1
