@@ -15,6 +15,7 @@ use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Datasource\DatasourceEntry;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
+use Torr\Storyblok\Exception\Config\InvalidConfigException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Release\ReleaseVersion;
@@ -225,6 +226,27 @@ final class ContentApi implements ResetInterface
 			);
 
 			$data = $response->toArray();
+			$spaceInfo = new SpaceInfo($data["space"]);
+
+			// This check is important, as the content token is tied to the space, so you don't need the space id
+			// for any content API requests. However, the management API is using the space id from the config.
+			// If you have a misconfiguration, you could send the management API requests and the content API requests
+			// to different spaces.
+			if ($spaceInfo->getId() !== $this->config->getSpaceId())
+			{
+				$this->logger->critical("Invalid storyblok config: configured space id is {configuredSpaceId}, but content token belongs to space {tokenSpaceId} ({name})", [
+					"configuredSpaceId" => $this->config->getSpaceId(),
+					"tokenSpaceId" => $spaceInfo->getId(),
+					"name" => $spaceInfo->getName(),
+				]);
+
+				throw new InvalidConfigException(sprintf(
+					"Invalid storyblok config: configured space id is '%s', but content token belongs to space id '%s' (name '%s')",
+					$this->config->getSpaceId(),
+					$spaceInfo->getId(),
+					$spaceInfo->getName(),
+				));
+			}
 
 			return $this->spaceInfo = new SpaceInfo($data["space"]);
 		}

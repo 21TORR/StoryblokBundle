@@ -1,3 +1,9 @@
+3.12.2
+======
+
+* (improvement) Detect space id / content token mismatch and automatically abort all further requests.
+
+
 3.12.1
 ======
 
