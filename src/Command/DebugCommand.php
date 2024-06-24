@@ -8,7 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\ContentApi;
+use Torr\Storyblok\Api\ManagementApi;
+use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\StoryblokException;
+use Torr\Storyblok\Manager\ComponentManager;
+
+use function Symfony\Component\String\u;
 
 #[AsCommand("storyblok:debug")]
 final class DebugCommand extends Command
@@ -18,6 +23,8 @@ final class DebugCommand extends Command
 	 */
 	public function __construct (
 		private readonly ContentApi $contentApi,
+		private readonly ManagementApi $managementApi,
+		private readonly ComponentManager $componentManager,
 	)
 	{
 		parent::__construct();
@@ -31,19 +38,13 @@ final class DebugCommand extends Command
 	{
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Debug");
-		$color = static fn (string $color, string|int $text) => sprintf("<fg=%s>%s</>", $color, $text);
 
 		try
 		{
-			$spaceInfo = $this->contentApi->getSpaceInfo();
+			$this->showInfo($io);
+			$io->newLine();
 
-			$io->definitionList(
-				["Space ID" => $color("magenta", $spaceInfo->getId())],
-				["Name" => $color("blue", $spaceInfo->getName())],
-				["Preview URL" => $spaceInfo->getDomain()],
-				["Backend URL" => $spaceInfo->getBackendDashboardUrl()],
-				["Cache Version" => $color("yellow", $spaceInfo->getCacheVersion())],
-			);
+			$this->showComponentsOverview($io);
 
 			return self::SUCCESS;
 		}
@@ -55,6 +56,116 @@ final class DebugCommand extends Command
 			));
 
 			return self::FAILURE;
+		}
+	}
+
+	/**
+	 *
+	 */
+	private function showInfo (TorrStyle $io) : void
+	{
+		$spaceInfo = $this->contentApi->getSpaceInfo();
+		$color = static fn (string $color, string|int $text) => sprintf("<fg=%s>%s</>", $color, $text);
+
+		$io->definitionList(
+			["Space ID" => $color("magenta", $spaceInfo->getId())],
+			["Name" => $color("blue", $spaceInfo->getName())],
+			["Preview URL" => $spaceInfo->getDomain()],
+			["Backend URL" => $spaceInfo->getBackendDashboardUrl()],
+			["Cache Version" => $color("yellow", $spaceInfo->getCacheVersion())],
+		);
+	}
+
+	/**
+	 *
+	 */
+	private function showComponentsOverview (
+		TorrStyle $io,
+	) : void
+	{
+		[$registered, $unregistered] = $this->fetchOverview($io->isVerbose());
+
+		if (!empty($registered))
+		{
+			$io->section("Registered Components");
+			$io->table(
+				[
+					"Key",
+					"Name",
+					"Component",
+					"Story",
+				],
+				$registered,
+			);
+		}
+
+		if (!empty($unregistered))
+		{
+			$io->section("Unknown Components");
+			$io->listing($unregistered);
+		}
+	}
+
+	/**
+	 *
+	 */
+	private function fetchOverview (bool $verbose) : array
+	{
+		$registered = [];
+		$unregistered = [];
+
+		foreach ($this->managementApi->fetchAllRegisteredComponents() as $componentKey)
+		{
+			$details = $this->getComponentDetails($componentKey, $verbose);
+
+			if (null === $details)
+			{
+				$unregistered[] = sprintf("<fg=red>%s</>", $componentKey);
+				continue;
+			}
+
+			$registered[] = [
+				sprintf("<fg=yellow>%s</>", $componentKey),
+				...$details,
+			];
+		}
+
+		return [$registered, $unregistered];
+	}
+
+	/**
+	 *
+	 */
+	private function getComponentDetails (string $componentKey, bool $verbose) : ?array
+	{
+		$renderClass = static function (?string $className) use ($verbose)
+		{
+			if (null === $className)
+			{
+				return "<fg=gray>—</>";
+			}
+
+			if (!$verbose)
+			{
+				$className = u($className)->afterLast("\\")->toString();
+			}
+
+			return sprintf("<fg=blue>%s</>", $className);
+		};
+
+		try
+		{
+			$component = $this->componentManager->getComponent($componentKey);
+
+			return [
+				$component->getDisplayName(),
+				$renderClass(get_debug_type($component)),
+				$renderClass($component->getStoryClass()),
+			];
+		}
+		catch (UnknownComponentKeyException)
+		{
+			return null;
 		}
 	}
 }
