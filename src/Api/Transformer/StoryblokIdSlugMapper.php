@@ -5,7 +5,10 @@ namespace Torr\Storyblok\Api\Transformer;
 use Symfony\Contracts\Service\ResetInterface;
 use Torr\Storyblok\Api\ContentApi;
 
-final class StoryblokIdSlugMapper implements ResetInterface
+/**
+ * @final
+ */
+class StoryblokIdSlugMapper implements ResetInterface
 {
 	/** @var array<string|int, string>|null */
 	private ?array $map = null;

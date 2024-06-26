@@ -1,3 +1,9 @@
+3.13.1
+======
+
+* (improvement) Make `StoryblokIdSlugMapper` mock-able.
+
+
 3.13.0
 ======
 
