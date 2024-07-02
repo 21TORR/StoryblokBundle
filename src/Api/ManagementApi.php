@@ -16,6 +16,7 @@ use Torr\Storyblok\Api\Data\ComponentIdMap;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
 use Torr\Storyblok\Exception\Api\DatasourceSyncFailedException;
+use Torr\Storyblok\Exception\Api\TranslationsXmlFileImportFailedException;
 use Torr\Storyblok\Folder\FolderData;
 
 final class ManagementApi
@@ -427,6 +428,74 @@ final class ManagementApi
 		}
 
 		return $result;
+	}
+
+	public function exportTranslationsXmlFile (
+		string $storyId,
+		string $languageCode = "default",
+	) : string
+	{
+		$this->rateLimiter->consume()->wait();
+
+		$options = $this->generateBaseOptions()
+			->setQuery([
+				"export_lang" => true,
+				"lang_code" => "default" !== $languageCode ? $languageCode : "",
+			])
+			->toArray();
+
+		try
+		{
+			$response = $this->client->request("GET", "stories/{$storyId}/export.xml", $options);
+
+			return $response->getContent();
+		}
+		catch (\Throwable $e)
+		{
+			$this->logger->error("An exception occurred during the export of the XML translations file for Story {storyId}: {message}", [
+				"storyId" => $storyId,
+				"message" => $e->getMessage(),
+				"exception" => $e,
+			]);
+
+			throw new TranslationsXmlFileImportFailedException($storyId, $e);
+		}
+	}
+
+	public function importTranslationsXmlFile (
+		string $storyId,
+		string $xmlContent,
+	) : void
+	{
+		$this->rateLimiter->consume()->wait();
+
+		try
+		{
+			$options = $this->generateBaseOptions()
+				->setHeaders([
+					"Authorization" => $this->config->getManagementToken(),
+					"Content-Type" => "application/json",
+					"Accept" => "application/json",
+				])
+				->setBody(
+					json_encode([
+						"data" => $xmlContent,
+					], \JSON_THROW_ON_ERROR),
+				)
+				->toArray();
+
+			$this->client->request("PUT", "stories/{$storyId}/import.xml", $options)->getContent();
+		}
+		catch (\Throwable $e)
+		{
+			$this->logger->error("An exception occurred during the import of the XML translations file for Story {storyId}: {message}", [
+				"storyId" => $storyId,
+				"message" => $e->getMessage(),
+				"exception" => $e,
+			]);
+
+			throw new TranslationsXmlFileImportFailedException($storyId, $e);
+		}
 	}
 
 	/**

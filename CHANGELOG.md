@@ -1,3 +1,9 @@
+3.14.0
+======
+
+* (feature) Add `ManagementApi::exportTranslationsXmlFile()` and `::importTranslationsXmlFile()`.
+
+
 3.13.1
 ======
 
