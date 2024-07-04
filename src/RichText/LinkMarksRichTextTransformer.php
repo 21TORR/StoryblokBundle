@@ -29,14 +29,14 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 	 */
 	protected function transformData (array $data) : mixed
 	{
-		$uuid = $this->normalizeOptionalString($data["uuid"]);
+		$uuid = $this->normalizeOptionalString($data["uuid"] ?? null);
 
 		if ("story" === $data["linktype"])
 		{
 			// we have the cached_url in the data here, but we can't rely on it, as it might be out of date
 			return new RichTextStoryLinkData(
 				uuid: $uuid,
-				anchor: $data["anchor"],
+				anchor: $data["anchor"] ?? null,
 				target: $data["target"],
 			);
 		}
@@ -49,7 +49,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 				? new RichTextEmailLinkData(
 					uuid: $uuid,
 					email: $email,
-					anchor: $data["anchor"],
+					anchor: $data["anchor"] ?? null,
 					target: $data["target"],
 				)
 				: null;
@@ -67,7 +67,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 			return new RichTextAssetLinkData(
 				uuid: $uuid,
 				url: $url,
-				anchor: $data["anchor"],
+				anchor: $data["anchor"] ?? null,
 				target: $data["target"],
 				custom: $data["custom"] ?? null,
 			);
@@ -80,7 +80,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 			? new RichTextExternalLinkData(
 				uuid: $uuid,
 				href: $href,
-				anchor: $data["anchor"],
+				anchor: $data["anchor"] ?? null,
 				target: $data["target"],
 			)
 			: null;
