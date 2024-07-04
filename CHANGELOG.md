@@ -1,3 +1,9 @@
+3.14.1
+======
+
+* (bug) Don't crash hard when RichText Links don't contain optional properties.
+
+
 3.14.0
 ======
 
