@@ -39,7 +39,7 @@ final class ManagementApi
 		$this->client = new RetryableHttpClient(
 			$client->withOptions(
 				(new HttpOptions())
-					->setBaseUri(sprintf(self::API_URL, $this->config->getSpaceId()))
+					->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
 					->toArray(),
 			),
 		);
@@ -218,7 +218,7 @@ final class ManagementApi
 		}
 		catch (ExceptionInterface $e)
 		{
-			throw new ApiRequestFailedException(sprintf(
+			throw new ApiRequestFailedException(\sprintf(
 				"Failed to fetch existing components: %s",
 				$e->getMessage(),
 			), previous: $e);
@@ -233,10 +233,10 @@ final class ManagementApi
 		?TorrStyle $io = null,
 	) : void
 	{
-		$io?->writeln(sprintf("• Fetching the id for datasource <fg=blue>%s</>", $datasourceSlug));
+		$io?->writeln(\sprintf("• Fetching the id for datasource <fg=blue>%s</>", $datasourceSlug));
 
 		$datasourceId = $this->getDatasourceId($datasourceSlug);
-		$io?->writeln(sprintf("• Found id <fg=yellow>%d</>", $datasourceId));
+		$io?->writeln(\sprintf("• Found id <fg=yellow>%d</>", $datasourceId));
 
 		$nameMap = [];
 		$valueMap = [];
@@ -271,7 +271,7 @@ final class ManagementApi
 			// if new entry
 			if (\array_key_exists($name, $nameMap))
 			{
-				throw new DatasourceSyncFailedException(sprintf(
+				throw new DatasourceSyncFailedException(\sprintf(
 					"Duplicate datasource name for name '%s' found, one new with key '%s' and existing '%s'.",
 					$name,
 					$value,
@@ -286,11 +286,11 @@ final class ManagementApi
 			];
 		}
 
-		$io?->writeln(sprintf("• Found <fg=blue>%d</> entries to add", \count($toAdd)));
+		$io?->writeln(\sprintf("• Found <fg=blue>%d</> entries to add", \count($toAdd)));
 
 		foreach ($toAdd as $entry)
 		{
-			$io?->writeln(sprintf("• Adding <fg=yellow>%s</>", $entry["name"]));
+			$io?->writeln(\sprintf("• Adding <fg=yellow>%s</>", $entry["name"]));
 			$this->sendRequest(
 				"datasource_entries",
 				options: (new HttpOptions())
@@ -301,11 +301,11 @@ final class ManagementApi
 			);
 		}
 
-		$io?->writeln(sprintf("• Found <fg=blue>%d</> entries to update", \count($toUpdate)));
+		$io?->writeln(\sprintf("• Found <fg=blue>%d</> entries to update", \count($toUpdate)));
 
 		foreach ($toUpdate as $entry)
 		{
-			$io?->writeln(sprintf("• Updating <fg=yellow>%s</>", $entry["name"]));
+			$io?->writeln(\sprintf("• Updating <fg=yellow>%s</>", $entry["name"]));
 			$this->sendRequest(
 				"datasource_entries/{$entry["id"]}",
 				options: (new HttpOptions())
@@ -355,7 +355,7 @@ final class ManagementApi
 			}
 		}
 
-		throw new DatasourceSyncFailedException(sprintf(
+		throw new DatasourceSyncFailedException(\sprintf(
 			"Could not find data source id for datasource '%s'",
 			$datasourceSlug,
 		));
@@ -404,7 +404,7 @@ final class ManagementApi
 				"response" => $response?->getContent(false),
 			]);
 
-			throw new ApiRequestFailedException(sprintf(
+			throw new ApiRequestFailedException(\sprintf(
 				"Failed management request %s '%s': %s",
 				$method,
 				$path,

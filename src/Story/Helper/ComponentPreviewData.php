@@ -40,7 +40,7 @@ final class ComponentPreviewData
 
 		if (!\is_string($editableData))
 		{
-			throw new InvalidDataException(sprintf(
+			throw new InvalidDataException(\sprintf(
 				"Encountered invalid preview data of type '%s'. Expected string or null.",
 				get_debug_type($editableData),
 			));
@@ -58,7 +58,7 @@ final class ComponentPreviewData
 			}
 			catch (\JsonException $exception)
 			{
-				throw new InvalidDataException(sprintf(
+				throw new InvalidDataException(\sprintf(
 					"Encountered invalid preview data: '%s'",
 					$editableData,
 				), previous: $exception);

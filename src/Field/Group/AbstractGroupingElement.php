@@ -78,7 +78,7 @@ abstract class AbstractGroupingElement extends AbstractField implements NestedFi
 				$context,
 				[
 					...$contentPath,
-					sprintf("Field(%s)", $name),
+					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,
 				$fullData,

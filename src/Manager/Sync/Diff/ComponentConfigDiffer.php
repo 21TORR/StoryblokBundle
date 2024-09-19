@@ -92,7 +92,7 @@ final class ComponentConfigDiffer
 		}
 		catch (\JsonException $exception)
 		{
-			throw new InvalidComponentConfigurationException(sprintf(
+			throw new InvalidComponentConfigurationException(\sprintf(
 				"Failed to diff component config: %s",
 				$exception->getMessage(),
 			), previous: $exception);

@@ -151,7 +151,7 @@ final class StoryMetaData
 
 		if (false === $parsed)
 		{
-			throw new StoryHydrationFailed(sprintf(
+			throw new StoryHydrationFailed(\sprintf(
 				"Could not parse date: %s",
 				$date,
 			));

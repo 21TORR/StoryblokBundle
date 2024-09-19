@@ -165,7 +165,7 @@ abstract class AbstractComponent
 	{
 		$contentPath = [
 			...$contentPath,
-			sprintf("Component(%s, '%s')", static::getKey(), $label ?? "n/a"),
+			\sprintf("Component(%s, '%s')", static::getKey(), $label ?? "n/a"),
 		];
 
 		// validate base data
@@ -203,7 +203,7 @@ abstract class AbstractComponent
 				$context,
 				[
 					...$contentPath,
-					sprintf("Field(%s)", $name),
+					\sprintf("Field(%s)", $name),
 				],
 				$fieldData,
 				$data,
@@ -227,7 +227,7 @@ abstract class AbstractComponent
 	{
 		if (empty($fields))
 		{
-			throw new InvalidComponentConfigurationException(sprintf(
+			throw new InvalidComponentConfigurationException(\sprintf(
 				"Invalid component '%s': can't have a component without fields",
 				static::class,
 			));
@@ -239,7 +239,7 @@ abstract class AbstractComponent
 		{
 			if (ComponentHelper::isReservedKey($key))
 			{
-				throw new InvalidComponentConfigurationException(sprintf(
+				throw new InvalidComponentConfigurationException(\sprintf(
 					"Invalid component configuration '%s': can't use '%s' as field key, as that is a reserved key.",
 					static::class,
 					$key,
@@ -261,7 +261,7 @@ abstract class AbstractComponent
 	{
 		if (ComponentHelper::isReservedKey(static::getKey()))
 		{
-			throw new InvalidComponentConfigurationException(sprintf(
+			throw new InvalidComponentConfigurationException(\sprintf(
 				"Invalid component configuration '%s': can't use '%s' as component key, as that is a reserved key.",
 				static::class,
 				static::getKey(),

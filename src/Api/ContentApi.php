@@ -91,7 +91,7 @@ final class ContentApi implements ResetInterface
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(sprintf(
+			throw new ContentRequestFailedException(\sprintf(
 				"Content request failed for single story '%s': %s",
 				$identifier,
 				$exception->getMessage(),
@@ -136,7 +136,7 @@ final class ContentApi implements ResetInterface
 		{
 			if (!is_a($story, $storyType))
 			{
-				throw new InvalidDataException(sprintf(
+				throw new InvalidDataException(\sprintf(
 					"Requested stories for type '%s', but encountered story of type '%s'.",
 					$storyType,
 					$story::class,
@@ -242,7 +242,7 @@ final class ContentApi implements ResetInterface
 					"name" => $spaceInfo->getName(),
 				]);
 
-				throw new InvalidConfigException(sprintf(
+				throw new InvalidConfigException(\sprintf(
 					"Invalid storyblok config: configured space id is '%s', but content token belongs to space id '%s' (name '%s')",
 					$this->config->getSpaceId(),
 					$spaceInfo->getId(),
@@ -254,7 +254,7 @@ final class ContentApi implements ResetInterface
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(sprintf(
+			throw new ContentRequestFailedException(\sprintf(
 				"Failed to fetch space info: %s",
 				$exception->getMessage(),
 			), previous: $exception);
@@ -336,7 +336,7 @@ final class ContentApi implements ResetInterface
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(sprintf(
+			throw new ContentRequestFailedException(\sprintf(
 				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);
@@ -474,7 +474,7 @@ final class ContentApi implements ResetInterface
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(sprintf(
+			throw new ContentRequestFailedException(\sprintf(
 				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);
@@ -585,7 +585,7 @@ final class ContentApi implements ResetInterface
 		}
 		catch (ExceptionInterface $exception)
 		{
-			throw new ContentRequestFailedException(sprintf(
+			throw new ContentRequestFailedException(\sprintf(
 				"Content request failed: %s",
 				$exception->getMessage(),
 			), previous: $exception);

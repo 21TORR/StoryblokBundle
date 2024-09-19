@@ -62,6 +62,6 @@ final class SpaceInfo
 	 */
 	public function getBackendDashboardUrl () : string
 	{
-		return sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->spaceId);
+		return \sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->spaceId);
 	}
 }

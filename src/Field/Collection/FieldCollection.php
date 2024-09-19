@@ -54,7 +54,7 @@ final class FieldCollection
 
 		if (null === $field)
 		{
-			throw new UnknownFieldException(sprintf(
+			throw new UnknownFieldException(\sprintf(
 				"Unknown field %s",
 				$key,
 			));
