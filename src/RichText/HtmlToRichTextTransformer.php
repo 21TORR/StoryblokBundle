@@ -3,6 +3,12 @@
 namespace Torr\Storyblok\RichText;
 
 use Tiptap\Editor;
+use Tiptap\Extensions\StarterKit;
+use Tiptap\Marks\Highlight;
+use Tiptap\Marks\Link;
+use Tiptap\Marks\Subscript;
+use Tiptap\Marks\Superscript;
+use Tiptap\Marks\Underline;
 use Tiptap\Nodes\BulletList;
 use Tiptap\Nodes\CodeBlock;
 use Tiptap\Nodes\HardBreak;
@@ -21,7 +27,18 @@ final class HtmlToRichTextTransformer
 	 */
 	public function __construct ()
 	{
-		$this->editor = new Editor();
+		$this->editor = new Editor([
+			"extensions" => [
+				new StarterKit(),
+				new Link(),
+				new Highlight([
+					"multicolor" => true,
+				]),
+				new Superscript(),
+				new Subscript(),
+				new Underline(),
+			],
+		]);
 	}
 
 	/**
