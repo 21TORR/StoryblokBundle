@@ -73,7 +73,7 @@ final class ComponentSync
 				return true;
 			}
 
-			$io->writeln(sprintf(
+			$io->writeln(\sprintf(
 				"• Found <fg=blue>%d</> components to sync",
 				\count($toRun),
 			));
@@ -104,7 +104,7 @@ final class ComponentSync
 	) : void
 	{
 		$io->writeln("┌─");
-		$io->writeln(sprintf("│ %s", $component->formattedLabel));
+		$io->writeln(\sprintf("│ %s", $component->formattedLabel));
 		$io->writeln("│");
 
 		foreach ($lines as $line)
@@ -133,7 +133,7 @@ final class ComponentSync
 		{
 			$io->write("• Syncing {$config->formattedLabel} ... ");
 			$performedAction = $this->managementApi->syncComponent($config->config);
-			$io->writeln(sprintf("%s <fg=green>✓</>", $performedAction->value));
+			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
 		}
 	}
 }

@@ -129,7 +129,7 @@ final class BloksField extends AbstractField
 		if (null !== $this->minimumNumberOfBloks && $noOfKnownContainedBloks < $this->minimumNumberOfBloks)
 		{
 			throw new InvalidDataException(
-				sprintf("Found %d (known) components, but was expecting at least %d", $noOfKnownContainedBloks, $this->minimumNumberOfBloks),
+				\sprintf("Found %d (known) components, but was expecting at least %d", $noOfKnownContainedBloks, $this->minimumNumberOfBloks),
 				$contentPath,
 				$this,
 				$data,
@@ -139,7 +139,7 @@ final class BloksField extends AbstractField
 		if (null !== $this->maximumNumberOfBloks && $noOfKnownContainedBloks > $this->maximumNumberOfBloks)
 		{
 			throw new InvalidDataException(
-				sprintf("Found %d (known) components, but was expecting at most %d", $noOfKnownContainedBloks, $this->maximumNumberOfBloks),
+				\sprintf("Found %d (known) components, but was expecting at most %d", $noOfKnownContainedBloks, $this->maximumNumberOfBloks),
 				$contentPath,
 				$this,
 				$data,

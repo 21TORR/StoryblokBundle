@@ -44,7 +44,7 @@ final class ComponentDefinition
 	{
 		if (null !== $this->iconBackgroundColor && !preg_match('~^#(\\d{3}|\\d{6})$~', $this->iconBackgroundColor))
 		{
-			throw new InvalidComponentConfigurationException(sprintf(
+			throw new InvalidComponentConfigurationException(\sprintf(
 				"Invalid component configuration: icon background color must be hex with #, but is %s",
 				$this->iconBackgroundColor,
 			));

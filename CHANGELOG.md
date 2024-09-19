@@ -1,3 +1,9 @@
+3.14.2
+======
+
+* (improvement) Widen support for tags in TipTaps HTML to rich text transformer
+
+
 3.14.1
 ======
 

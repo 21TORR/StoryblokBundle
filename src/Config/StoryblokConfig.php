@@ -55,7 +55,7 @@ final class StoryblokConfig
 	 */
 	public function getStoryblokSpaceUrl () : string
 	{
-		return sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->getSpaceId());
+		return \sprintf("https://app.storyblok.com/#/me/spaces/%d/dashboard", $this->getSpaceId());
 	}
 
 	/**

@@ -48,7 +48,7 @@ class DataValidator
 		if (\count($violations) > 0)
 		{
 			throw new InvalidDataException(
-				sprintf(
+				\sprintf(
 					"Invalid data found at '%s':\n%s",
 					implode(" → ", $contentPath),
 					$violations instanceof ConstraintViolationList

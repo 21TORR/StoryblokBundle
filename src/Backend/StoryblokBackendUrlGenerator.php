@@ -30,7 +30,7 @@ final readonly class StoryblokBackendUrlGenerator
 	 */
 	public function generateStoryEditUrlById (int $storyId) : string
 	{
-		return sprintf(
+		return \sprintf(
 			"https://app.storyblok.com/#/me/spaces/%d/stories/0/0/%d",
 			$this->config->getSpaceId(),
 			$storyId,

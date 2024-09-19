@@ -200,7 +200,7 @@ final class RichTextField extends AbstractField
 	{
 		return (new HtmlToRichTextTransformer())
 			->parseHtmlToRichText(
-				sprintf("<p>%s</p>", $data),
+				\sprintf("<p>%s</p>", $data),
 			);
 	}
 }

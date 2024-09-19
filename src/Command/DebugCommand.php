@@ -47,7 +47,7 @@ final class DebugCommand extends Command
 		// TODO v4: remove check
 		if ("storyblok:debug" !== $input->getFirstArgument())
 		{
-			$message = sprintf(
+			$message = \sprintf(
 				"The command `%s` is deprecated. Use `%s` instead.",
 				$input->getFirstArgument(),
 				"storyblok:debug",
@@ -67,7 +67,7 @@ final class DebugCommand extends Command
 		}
 		catch (StoryblokException $exception)
 		{
-			$io->error(sprintf(
+			$io->error(\sprintf(
 				"Failed to show debug info: %s",
 				$exception->getMessage(),
 			));
@@ -82,7 +82,7 @@ final class DebugCommand extends Command
 	private function showInfo (TorrStyle $io) : void
 	{
 		$spaceInfo = $this->contentApi->getSpaceInfo();
-		$color = static fn (string $color, string|int $text) => sprintf("<fg=%s>%s</>", $color, $text);
+		$color = static fn (string $color, string|int $text) => \sprintf("<fg=%s>%s</>", $color, $text);
 
 		$io->definitionList(
 			["Space ID" => $color("magenta", $spaceInfo->getId())],
@@ -137,12 +137,12 @@ final class DebugCommand extends Command
 
 			if (null === $details)
 			{
-				$unregistered[] = sprintf("<fg=red>%s</>", $componentKey);
+				$unregistered[] = \sprintf("<fg=red>%s</>", $componentKey);
 				continue;
 			}
 
 			$registered[] = [
-				sprintf("<fg=yellow>%s</>", $componentKey),
+				\sprintf("<fg=yellow>%s</>", $componentKey),
 				...$details,
 			];
 		}
@@ -167,7 +167,7 @@ final class DebugCommand extends Command
 				$className = u($className)->afterLast("\\")->toString();
 			}
 
-			return sprintf("<fg=blue>%s</>", $className);
+			return \sprintf("<fg=blue>%s</>", $className);
 		};
 
 		try

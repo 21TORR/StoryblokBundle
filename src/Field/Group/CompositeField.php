@@ -93,7 +93,7 @@ abstract class CompositeField extends AbstractGroupingElement
 				$context,
 				[
 					...$contentPath,
-					sprintf("Field(%s)", $name),
+					\sprintf("Field(%s)", $name),
 				],
 				$fullData[$name] ?? null,
 				$fullData,

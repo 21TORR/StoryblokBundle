@@ -60,7 +60,7 @@ class ComponentManager
 			}
 		}
 
-		throw new UnknownStoryTypeException(sprintf(
+		throw new UnknownStoryTypeException(\sprintf(
 			"Found no component generating a story of type '%s'",
 			$storyType,
 		));
@@ -113,7 +113,7 @@ class ComponentManager
 		catch (ServiceNotFoundException $exception)
 		{
 			throw new UnknownComponentKeyException(
-				message: sprintf(
+				message: \sprintf(
 					"Unknown component type: %s",
 					$key,
 				),
