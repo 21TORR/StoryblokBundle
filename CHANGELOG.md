@@ -1,3 +1,9 @@
+3.14.3
+======
+
+* (improvement) Allow `21torr/hosting` v4.
+
+
 3.14.2
 ======
 
