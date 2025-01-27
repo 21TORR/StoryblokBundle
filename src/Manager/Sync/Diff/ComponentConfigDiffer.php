@@ -8,7 +8,7 @@ use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 
 final class ComponentConfigDiffer
 {
-	private const IGNORED_KEYS = [
+	private const array IGNORED_LEVEL_0_KEYS = [
 		"all_presets",
 		"content_type_asset_preview",
 		"created_at",
@@ -18,6 +18,9 @@ final class ComponentConfigDiffer
 		"preset_id",
 		"real_name",
 		"updated_at",
+	];
+	private const array IGNORED_LEVEL_2_KEYS = [
+		"id",
 	];
 	private readonly Differ $differ;
 
@@ -110,7 +113,12 @@ final class ComponentConfigDiffer
 
 		foreach ($array as $key => $value)
 		{
-			if (0 === $level && \in_array($key, self::IGNORED_KEYS, true))
+			if (0 === $level && \in_array($key, self::IGNORED_LEVEL_0_KEYS, true))
+			{
+				continue;
+			}
+
+			if (2 === $level && \in_array($key, self::IGNORED_LEVEL_2_KEYS, true))
 			{
 				continue;
 			}

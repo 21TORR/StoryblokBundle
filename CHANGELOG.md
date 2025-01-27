@@ -3,6 +3,7 @@
 
 * (improvement) Improve type declarations.
 * (improvement) Allow trailing slashes in webhook URL to not affect verification process.
+* (improvement) Ignore other level with new set of keys too when diffing.
 
 
 3.17.0
