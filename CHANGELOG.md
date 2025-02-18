@@ -2,6 +2,7 @@
 ======
 
 * (improvement) Improve type declarations.
+* (improvement) Allow trailing slashes in webhook URL to not affect verification process.
 
 
 3.17.0
