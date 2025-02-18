@@ -17,6 +17,8 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 final class ChoiceField extends AbstractField
 {
 	/**
+	 * @param int<0, max>|null $minimumNumberOfOptions
+	 * @param int<0, max>|null $maximumNumberOfOptions
 	 */
 	public function __construct (
 		string $label,
