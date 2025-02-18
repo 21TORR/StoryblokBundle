@@ -8,7 +8,7 @@ jobs:
 
         strategy:
             matrix:
-                php: [8.3]
+                php: [8.4]
 
         steps:
             -   name: Checkout Code
@@ -33,8 +33,8 @@ jobs:
 
             -   name: Lint
                 run: composer run-script lint
+                env:
+                    PHP_CS_FIXER_IGNORE_ENV: 1
 
             -   name: Test Suite
                 run: composer run-script test
-                env:
-                    PHP_CS_FIXER_IGNORE_ENV: 1
