@@ -26,6 +26,9 @@ final class WebhookController extends AbstractController
 		?string $urlSecret,
 	) : JsonResponse
 	{
+		// Trailing slashes at the end of the URL will cause the URL secret to contain an empty string. We're normalizing here.
+		$urlSecret = $urlSecret ?: null;
+
 		$isValidSignature = $requestValidator->isValidRequest($request, $urlSecret);
 
 		if (!$isValidSignature || !$request->isMethod("POST"))
