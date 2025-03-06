@@ -4,6 +4,7 @@
 * (improvement) Improve type declarations.
 * (improvement) Allow trailing slashes in webhook URL to not affect verification process.
 * (improvement) Ignore more keys when diffing the component definitions.
+* (improvement) Decrease memory consumption in debug mode.
 
 
 3.17.0
