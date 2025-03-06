@@ -1,4 +1,4 @@
-3.17.1 (unreleased)
+3.17.1
 ======
 
 * (improvement) Improve type declarations.
