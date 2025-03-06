@@ -4,7 +4,6 @@ namespace Tests\Torr\Storyblok\Field\Definition;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Symfony\Component\Validator\Validation;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Choices\StaticChoices;
@@ -230,7 +229,7 @@ final class ChoiceFieldTest extends TestCase
 			$this->createMock(ComponentManager::class),
 			new DataTransformer(),
 			new NullLogger(),
-			new DataValidator(Validation::createValidator()),
+			new DataValidator(),
 			new ImageDimensionsExtractor(),
 		);
 	}

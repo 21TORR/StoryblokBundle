@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Validator;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
@@ -14,9 +15,18 @@ use Torr\Storyblok\Field\FieldDefinitionInterface;
  */
 class DataValidator
 {
-	public function __construct (
-		private readonly ValidatorInterface $validator,
-	) {}
+	private readonly ValidatorInterface $validator;
+
+	/**
+	 */
+	public function __construct ()
+	{
+		// We don't use the validator from the DI container here,
+		// as in debug it will be a traceable validator that logs
+		// every call. As we are producing A TON of calls here
+		// this will hugely increase the memory consumption.
+		$this->validator = Validation::createValidator();
+	}
 
 	/**
 	 * Ensures that the given data is valid
