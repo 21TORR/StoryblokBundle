@@ -15,6 +15,7 @@ final class ComponentConfigDiffer
 		"id",
 		"internal_tag_ids",
 		"internal_tags_list",
+		"metadata",
 		"preset_id",
 		"real_name",
 		"updated_at",
