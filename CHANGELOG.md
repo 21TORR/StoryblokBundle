@@ -1,3 +1,9 @@
+3.17.2
+======
+
+* (improvement) Ignore key `metadata` when diffing the component definitions.
+
+
 3.17.1
 ======
 
