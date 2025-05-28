@@ -13,6 +13,7 @@ use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
 final class StoryTransformer
 {
 	/**
+	 * @param array                       $story  Storyblok management API story data
 	 * @param array<string, list<string>> $config
 	 *
 	 * @throws StoryInvalidException
