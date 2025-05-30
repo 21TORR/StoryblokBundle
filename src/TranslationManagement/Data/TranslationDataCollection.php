@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\TranslationManagement\Data;
 
-use Torr\Storyblok\TranslationManagement\Service\NormalizerInterface;
+use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
 
 final readonly class TranslationDataCollection
 {

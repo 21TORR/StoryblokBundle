@@ -6,8 +6,8 @@ use Torr\Storyblok\TranslationManagement\Data\ComponentDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslationDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslationDataElement;
 use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
-use Torr\Storyblok\TranslationManagement\Service\NormalizerInterface;
-use Torr\Storyblok\TranslationManagement\Service\XmlNormalizer;
+use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
+use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
 use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
 
 final class StoryTransformer
