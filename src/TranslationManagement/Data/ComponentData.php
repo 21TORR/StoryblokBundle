@@ -30,7 +30,7 @@ final readonly class ComponentData
 	 */
 	public function getKeyForField (string $fieldname) : string
 	{
-		return \sprintf("$..[?(@._uid==\"%s\")].%s", $this->id, $fieldname);
+		return \sprintf("$..[?(@['_uid']=='%s')]['%s']", $this->id, $fieldname);
 	}
 
 	public function getStringValueForField (string $fieldname) : ?string
