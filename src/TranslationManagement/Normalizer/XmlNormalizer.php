@@ -3,7 +3,9 @@
 namespace Torr\Storyblok\TranslationManagement\Normalizer;
 
 use Torr\Storyblok\TranslationManagement\Data\TranslationDataCollection;
+use Torr\Storyblok\TranslationManagement\Data\TranslationDataElement;
 use Torr\Storyblok\TranslationManagement\Exception\XmlExportException;
+use Torr\Storyblok\TranslationManagement\Exception\XmlInvalidException;
 
 final readonly class XmlNormalizer implements NormalizerInterface
 {
@@ -53,5 +55,85 @@ final readonly class XmlNormalizer implements NormalizerInterface
 		}
 
 		return $dom->saveXML() ?: throw new XmlExportException("XML Export failed");
+	}
+
+	#[\Override]
+	public function denormalize (string $data) : TranslationDataCollection
+	{
+		$xml = new \DOMDocument();
+
+		if (!$xml->loadXML($data))
+		{
+			throw new XmlInvalidException("XML not valid");
+		}
+
+		$xpath = new \DOMXPath($xml);
+
+		$page = $xml->documentElement ?? throw new XmlInvalidException("XML root element missing");
+
+		$nameNodes = $xpath->query(\sprintf("/%s/name", $page->tagName));
+		$nameNode = $nameNodes[0] ?? null;
+
+		if (!$nameNode instanceof \DOMElement)
+		{
+			throw new XmlInvalidException("XML not valid: Name node missing");
+		}
+
+		if (
+			"" === $page->getAttribute("id")
+			|| "" === $page->getAttribute("filename")
+			|| "" === $page->getAttribute("url")
+			|| "" === $page->getAttribute("language")
+		)
+		{
+			throw new XmlInvalidException("XML not valid: Page node invalid");
+		}
+
+		$tagNodes = $xpath->query("//tag");
+
+		if (!$tagNodes instanceof \DOMNodeList)
+		{
+			throw new XmlInvalidException("XML not valid");
+		}
+
+		$translationDataElements = [];
+
+		foreach ($tagNodes as $tagNode)
+		{
+			if (!$tagNode instanceof \DOMElement)
+			{
+				continue;
+			}
+
+			$textNode = $tagNode->getElementsByTagName("text")->item(0);
+
+			if (null === $textNode)
+			{
+				throw new XmlInvalidException("XML not valid: text node missing");
+			}
+
+			if (
+				"" === $tagNode->getAttribute("id")
+				|| "" === $tagNode->getAttribute("type")
+			)
+			{
+				throw new XmlInvalidException("XML not valid: Tag node invalid");
+			}
+
+			$translationDataElements[] = new TranslationDataElement(
+				key: $tagNode->getAttribute("id"),
+				type: $tagNode->getAttribute("type"),
+				value: $textNode->textContent,
+			);
+		}
+
+		return new TranslationDataCollection(
+			id: $page->getAttribute("id"),
+			filename: $page->getAttribute("filename"),
+			url: $page->getAttribute("url"),
+			language: $page->getAttribute("language"),
+			name: $nameNode->textContent,
+			data: $translationDataElements,
+		);
 	}
 }

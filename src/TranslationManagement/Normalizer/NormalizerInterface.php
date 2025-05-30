@@ -11,4 +11,9 @@ interface NormalizerInterface
 	 * @throws TranslationManagementExceptionInterface
 	 */
 	public function normalize (TranslationDataCollection $data) : string;
+
+	/**
+	 * @throws TranslationManagementExceptionInterface
+	 */
+	public function denormalize (string $data) : TranslationDataCollection;
 }

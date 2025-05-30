@@ -2,10 +2,13 @@
 
 namespace Torr\Storyblok\TranslationManagement;
 
+use JsonPath\InvalidJsonException;
+use JsonPath\JsonObject;
 use Torr\Storyblok\TranslationManagement\Data\ComponentDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslationDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslationDataElement;
 use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
+use Torr\Storyblok\TranslationManagement\Exception\StoryUpdateException;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
 use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
@@ -74,5 +77,32 @@ final class TranslationManagement
 		);
 
 		return $translationDataCollection->normalize($normalizer);
+	}
+
+	/**
+	 * @param array  $story           Story data from storyblok management api
+	 * @param string $translationData Translation xml from transformStory function
+	 *
+	 * @return array Updated story data for storyblok management api
+	 *
+	 * @throws TranslationManagementExceptionInterface
+	 * @throws InvalidJsonException
+	 */
+	public function updateStory (array $story, string $translationData, NormalizerInterface $normalizer = new XmlNormalizer()) : array
+	{
+		$jsonObject = new JsonObject($story);
+
+		foreach ($normalizer->denormalize($translationData)->getData() as $translationData)
+		{
+			if (!$jsonObject->get($translationData->getKey()))
+			{
+				// skip if text was removed
+				continue;
+			}
+
+			$jsonObject->set($translationData->getKey(), $translationData->getValue());
+		}
+
+		return $jsonObject->getValue() ?? throw new StoryUpdateException("Story update failed");
 	}
 }
