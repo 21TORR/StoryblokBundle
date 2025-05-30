@@ -10,7 +10,7 @@ use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
 use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
 use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
 
-final class StoryTransformer
+final class TranslationManagement
 {
 	/**
 	 * @param array                       $story  Storyblok management API story data
@@ -18,7 +18,7 @@ final class StoryTransformer
 	 *
 	 * @throws StoryInvalidException
 	 */
-	public function transform (array $story, array $config, string $languageCode = "default", NormalizerInterface $normalizer = new XmlNormalizer()) : string
+	public function transformStory (array $story, array $config, string $languageCode = "default", NormalizerInterface $normalizer = new XmlNormalizer()) : string
 	{
 		if (!StoryValidator::isValid($story))
 		{
