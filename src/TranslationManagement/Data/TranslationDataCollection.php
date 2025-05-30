@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\TranslationManagement\Data;
 
+use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
 
 final readonly class TranslationDataCollection
@@ -51,6 +52,9 @@ final readonly class TranslationDataCollection
 		return $this->data;
 	}
 
+	/**
+	 * @throws TranslationManagementExceptionInterface
+	 */
 	public function normalize (NormalizerInterface $exportService) : string
 	{
 		return $exportService->normalize($this);

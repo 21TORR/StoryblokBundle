@@ -6,6 +6,7 @@ use Torr\Storyblok\TranslationManagement\Data\ComponentDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslationDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslationDataElement;
 use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
+use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
 use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
 use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
@@ -16,6 +17,7 @@ final class TranslationManagement
 	 * @param array                       $story  Storyblok management API story data
 	 * @param array<string, list<string>> $config <component-key, <fieldnames>>
 	 *
+	 * @throws TranslationManagementExceptionInterface
 	 * @throws StoryInvalidException
 	 */
 	public function transformStory (array $story, array $config, string $languageCode = "default", NormalizerInterface $normalizer = new XmlNormalizer()) : string
