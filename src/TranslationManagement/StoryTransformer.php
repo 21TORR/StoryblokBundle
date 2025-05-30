@@ -14,7 +14,7 @@ final class StoryTransformer
 {
 	/**
 	 * @param array                       $story  Storyblok management API story data
-	 * @param array<string, list<string>> $config
+	 * @param array<string, list<string>> $config <component-key, <fieldnames>>
 	 *
 	 * @throws StoryInvalidException
 	 */
