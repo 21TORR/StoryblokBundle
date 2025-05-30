@@ -1,0 +1,178 @@
+{
+	"name": "Test",
+	"lang": "de",
+	"created_at": "2018-12-10T17:51:25.161Z",
+	"published_at": "2018-12-10T18:27:28.137Z",
+	"id": 461935,
+	"uuid": "14d950c6-0a8f-4088-98e3-73efced9ff6d",
+	"content": {
+		"_uid": "00b45e23-5dc5-4398-9b34-e87ae4ed42e6",
+		"name": "TRANSLATED: Test",
+		"description": "TRANSLATED: Description",
+		"image": "//a.storyblok.com/f/44203/6016x4016/995fde1190/spaceship.jpg",
+		"price": "1700000000",
+		"component": "product",
+		"content": [
+			{
+				"_uid": "a46d5a15-f99a-4a6e-ad48-773ab0a807f9",
+				"quote": "TRANSLATED: Quote + Emoji ❤\uFE0F",
+				"author": "TRANSLATED: Author",
+				"component": "quote-block",
+				"anchor-title": "TRANSLATED: "
+			},
+			{
+				"_uid": "d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8",
+				"text": {
+					"type": "doc",
+					"content": [
+						{
+							"type": "paragraph",
+							"content": [
+								{
+									"text": "TRANSLATED: Text 1",
+									"type": "text",
+									"marks": [
+										{
+											"type": "bold"
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "bullet_list",
+							"content": [
+								{
+									"type": "list_item",
+									"content": [
+										{
+											"type": "paragraph",
+											"content": [
+												{
+													"text": "TRANSLATED: Text 2",
+													"type": "text"
+												},
+												{
+													"text": "TRANSLATED: Text 3",
+													"type": "text",
+													"marks": [
+														{
+															"type": "bold"
+														}
+													]
+												},
+												{
+													"text": "TRANSLATED: Text 4",
+													"type": "text"
+												}
+											]
+										}
+									]
+								},
+								{
+									"type": "list_item",
+									"content": [
+										{
+											"type": "paragraph",
+											"content": [
+												{
+													"text": "TRANSLATED: Text 5",
+													"type": "text"
+												},
+												{
+													"text": "TRANSLATED: Text 6",
+													"type": "text",
+													"marks": [
+														{
+															"type": "bold"
+														}
+													]
+												}
+											]
+										}
+									]
+								},
+								{
+									"type": "list_item",
+									"content": [
+										{
+											"type": "paragraph",
+											"content": [
+												{
+													"text": "TRANSLATED: Text 7",
+													"type": "text",
+													"marks": [
+														{
+															"type": "bold"
+														}
+													]
+												},
+												{
+													"text": "TRANSLATED: Text 8",
+													"type": "text"
+												},
+												{
+													"text": "TRANSLATED: Text 9",
+													"type": "text",
+													"marks": [
+														{
+															"type": "bold"
+														}
+													]
+												},
+												{
+													"text": "TRANSLATED: Text 10",
+													"type": "text"
+												}
+											]
+										}
+									]
+								},
+								{
+									"type": "list_item",
+									"content": [
+										{
+											"type": "paragraph",
+											"content": [
+												{
+													"text": "TRANSLATED: Text 11",
+													"type": "text"
+												},
+												{
+													"text": "TRANSLATED: Text 12",
+													"type": "text",
+													"marks": [
+														{
+															"type": "bold"
+														}
+													]
+												},
+												{
+													"text": "TRANSLATED: Text 13",
+													"type": "text",
+													"marks": [
+														{
+															"type": "textStyle",
+															"attrs": {
+																"color": "#0E101E"
+															}
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				"component": "text-block",
+				"anchor-title": "TRANSLATED: ",
+				"text-list-style": "bullet"
+			}
+		]
+	},
+	"slug": "test",
+	"full_slug": "de/products/test"
+}
