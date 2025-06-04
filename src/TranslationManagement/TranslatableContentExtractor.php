@@ -4,7 +4,7 @@ namespace Torr\Storyblok\TranslationManagement;
 
 use JsonPath\InvalidJsonException;
 use JsonPath\JsonObject;
-use Torr\Storyblok\TranslationManagement\Data\ComponentDataCollection;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableComponentDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
 use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
@@ -28,7 +28,7 @@ final class TranslatableContentExtractor
 			throw new StoryInvalidException("Story is not valid");
 		}
 
-		$componentDataCollection = new ComponentDataCollection($story);
+		$componentDataCollection = new TranslatableComponentDataCollection($story);
 
 		$tagElements = [];
 

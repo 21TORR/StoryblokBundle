@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\TranslationManagement\Data;
 
-final readonly class ComponentData
+final readonly class TranslatableComponentData
 {
 	public function __construct (
 		private string $id,

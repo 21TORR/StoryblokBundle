@@ -5,11 +5,11 @@ namespace Torr\Storyblok\TranslationManagement\Data;
 use Torr\Storyblok\TranslationManagement\Validator\ComponentDataValidator;
 
 /**
- * @implements \IteratorAggregate<int, ComponentData>
+ * @implements \IteratorAggregate<int, TranslatableComponentData>
  */
-final readonly class ComponentDataCollection implements \IteratorAggregate
+final readonly class TranslatableComponentDataCollection implements \IteratorAggregate
 {
-	/** @var array<string, ComponentData> */
+	/** @var array<string, TranslatableComponentData> */
 	private array $data;
 
 	public function __construct (
@@ -25,7 +25,7 @@ final readonly class ComponentDataCollection implements \IteratorAggregate
 	}
 
 	/**
-	 * @return \Traversable<ComponentData>
+	 * @return \Traversable<TranslatableComponentData>
 	 */
 	public function getIterator () : \Traversable
 	{
@@ -33,7 +33,7 @@ final readonly class ComponentDataCollection implements \IteratorAggregate
 	}
 
 	/**
-	 * @return array<string, ComponentData>
+	 * @return array<string, TranslatableComponentData>
 	 */
 	private function extractComponents (array $storyData) : array
 	{
@@ -45,7 +45,7 @@ final readonly class ComponentDataCollection implements \IteratorAggregate
 			{
 				if (ComponentDataValidator::isValid($entry))
 				{
-					$components[$entry["_uid"]] = new ComponentData($entry["_uid"], $entry["component"], $entry);
+					$components[$entry["_uid"]] = new TranslatableComponentData($entry["_uid"], $entry["component"], $entry);
 				}
 
 				$components = [
