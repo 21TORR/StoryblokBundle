@@ -4,7 +4,7 @@ namespace Tests\Torr\Storyblok\TranslationManagement;
 
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
-use Torr\Storyblok\TranslationManagement\TranslationManagement;
+use Torr\Storyblok\TranslationManagement\TranslatableContentExtractor;
 
 /**
  * @internal
@@ -15,7 +15,7 @@ final class TranslationManagementTest extends TestCase
 	 */
 	public function testBasic () : void
 	{
-		$translationManagement = new TranslationManagement();
+		$translationManagement = new TranslatableContentExtractor();
 
 		$xmlNormalizer = new XmlNormalizer();
 
@@ -23,7 +23,7 @@ final class TranslationManagementTest extends TestCase
 		$story = json_decode($jsonOriginal, true);
 
 		$transformedStoryXml = $xmlNormalizer->normalize(
-			$translationManagement->transformStory(
+			$translationManagement->extractTranslatableContent(
 				$story,
 				[
 					"product" => [

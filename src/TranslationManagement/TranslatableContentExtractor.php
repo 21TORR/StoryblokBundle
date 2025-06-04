@@ -12,7 +12,7 @@ use Torr\Storyblok\TranslationManagement\Exception\StoryUpdateException;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
 
-final class TranslationManagement
+final class TranslatableContentExtractor
 {
 	/**
 	 * @param array                       $story  Storyblok management API story data
@@ -21,7 +21,7 @@ final class TranslationManagement
 	 * @throws TranslationManagementExceptionInterface
 	 * @throws StoryInvalidException
 	 */
-	public function transformStory (array $story, array $config, string $languageCode = "default") : TranslatableContentCollection
+	public function extractTranslatableContent (array $story, array $config) : TranslatableContentCollection
 	{
 		if (!StoryValidator::isValid($story))
 		{
@@ -69,7 +69,7 @@ final class TranslationManagement
 			(string) $story["id"],
 			$story["slug"],
 			$story["full_slug"],
-			$languageCode,
+			$story["lang"] ?? "default",
 			$story["name"],
 			$tagElements,
 		);
