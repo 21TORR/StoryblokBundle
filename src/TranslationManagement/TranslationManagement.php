@@ -5,8 +5,8 @@ namespace Torr\Storyblok\TranslationManagement;
 use JsonPath\InvalidJsonException;
 use JsonPath\JsonObject;
 use Torr\Storyblok\TranslationManagement\Data\ComponentDataCollection;
-use Torr\Storyblok\TranslationManagement\Data\TranslationDataCollection;
-use Torr\Storyblok\TranslationManagement\Data\TranslationDataElement;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
 use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
 use Torr\Storyblok\TranslationManagement\Exception\StoryUpdateException;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
@@ -49,7 +49,7 @@ final class TranslationManagement
 				{
 					foreach ($componentData->getRichTextValuesForField($fieldname) as $richTextValue)
 					{
-						$tagElements[] = new TranslationDataElement(
+						$tagElements[] = new TranslatableContentElement(
 							$richTextValue["key"],
 							"STRING",
 							$richTextValue["value"],
@@ -59,7 +59,7 @@ final class TranslationManagement
 					continue;
 				}
 
-				$tagElements[] = new TranslationDataElement(
+				$tagElements[] = new TranslatableContentElement(
 					$componentData->getKeyForField($fieldname),
 					"STRING",
 					$componentData->getStringValueForField($fieldname),
@@ -67,7 +67,7 @@ final class TranslationManagement
 			}
 		}
 
-		$translationDataCollection = new TranslationDataCollection(
+		$translationDataCollection = new TranslatableContentCollection(
 			(string) $story["id"],
 			$story["slug"],
 			$story["full_slug"],

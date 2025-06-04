@@ -5,10 +5,10 @@ namespace Torr\Storyblok\TranslationManagement\Data;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
 
-final readonly class TranslationDataCollection
+final readonly class TranslatableContentCollection
 {
 	/**
-	 * @param list<TranslationDataElement> $data
+	 * @param list<TranslatableContentElement> $data
 	 */
 	public function __construct (
 		private string $id,
@@ -45,7 +45,7 @@ final readonly class TranslationDataCollection
 	}
 
 	/**
-	 * @return list<TranslationDataElement>
+	 * @return list<TranslatableContentElement>
 	 */
 	public function getData () : array
 	{

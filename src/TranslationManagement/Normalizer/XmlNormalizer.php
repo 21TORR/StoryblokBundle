@@ -2,15 +2,15 @@
 
 namespace Torr\Storyblok\TranslationManagement\Normalizer;
 
-use Torr\Storyblok\TranslationManagement\Data\TranslationDataCollection;
-use Torr\Storyblok\TranslationManagement\Data\TranslationDataElement;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
 use Torr\Storyblok\TranslationManagement\Exception\XmlExportException;
 use Torr\Storyblok\TranslationManagement\Exception\XmlInvalidException;
 
 final readonly class XmlNormalizer implements NormalizerInterface
 {
 	#[\Override]
-	public function normalize (TranslationDataCollection $data) : string
+	public function normalize (TranslatableContentCollection $data) : string
 	{
 		$dom = new \DOMDocument('1.0', 'UTF-8');
 		$dom->formatOutput = true;
@@ -58,7 +58,7 @@ final readonly class XmlNormalizer implements NormalizerInterface
 	}
 
 	#[\Override]
-	public function denormalize (string $data) : TranslationDataCollection
+	public function denormalize (string $data) : TranslatableContentCollection
 	{
 		$xml = new \DOMDocument();
 
@@ -120,14 +120,14 @@ final readonly class XmlNormalizer implements NormalizerInterface
 				throw new XmlInvalidException("XML not valid: Tag node invalid");
 			}
 
-			$translationDataElements[] = new TranslationDataElement(
+			$translationDataElements[] = new TranslatableContentElement(
 				key: $tagNode->getAttribute("id"),
 				type: $tagNode->getAttribute("type"),
 				value: $textNode->textContent,
 			);
 		}
 
-		return new TranslationDataCollection(
+		return new TranslatableContentCollection(
 			id: $page->getAttribute("id"),
 			filename: $page->getAttribute("filename"),
 			url: $page->getAttribute("url"),

@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\TranslationManagement\Normalizer;
 
-use Torr\Storyblok\TranslationManagement\Data\TranslationDataCollection;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 
 interface NormalizerInterface
@@ -10,10 +10,10 @@ interface NormalizerInterface
 	/**
 	 * @throws TranslationManagementExceptionInterface
 	 */
-	public function normalize (TranslationDataCollection $data) : string;
+	public function normalize (TranslatableContentCollection $data) : string;
 
 	/**
 	 * @throws TranslationManagementExceptionInterface
 	 */
-	public function denormalize (string $data) : TranslationDataCollection;
+	public function denormalize (string $data) : TranslatableContentCollection;
 }
