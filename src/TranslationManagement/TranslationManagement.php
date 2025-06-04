@@ -10,8 +10,6 @@ use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
 use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
 use Torr\Storyblok\TranslationManagement\Exception\StoryUpdateException;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
-use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
-use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
 use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
 
 final class TranslationManagement
@@ -23,7 +21,7 @@ final class TranslationManagement
 	 * @throws TranslationManagementExceptionInterface
 	 * @throws StoryInvalidException
 	 */
-	public function transformStory (array $story, array $config, string $languageCode = "default", NormalizerInterface $normalizer = new XmlNormalizer()) : string
+	public function transformStory (array $story, array $config, string $languageCode = "default") : TranslatableContentCollection
 	{
 		if (!StoryValidator::isValid($story))
 		{
@@ -34,7 +32,7 @@ final class TranslationManagement
 
 		$tagElements = [];
 
-		foreach ($componentDataCollection->getData() as $componentData)
+		foreach ($componentDataCollection as $componentData)
 		{
 			$componentConfig = $config[$componentData->getKey()] ?? null;
 
@@ -67,7 +65,7 @@ final class TranslationManagement
 			}
 		}
 
-		$translationDataCollection = new TranslatableContentCollection(
+		return new TranslatableContentCollection(
 			(string) $story["id"],
 			$story["slug"],
 			$story["full_slug"],
@@ -75,32 +73,29 @@ final class TranslationManagement
 			$story["name"],
 			$tagElements,
 		);
-
-		return $translationDataCollection->normalize($normalizer);
 	}
 
 	/**
-	 * @param array  $story           Story data from storyblok management api
-	 * @param string $translationData Translation xml from transformStory function
+	 * @param array $story Story data from storyblok management api
 	 *
 	 * @return array Updated story data for storyblok management api
 	 *
 	 * @throws TranslationManagementExceptionInterface
 	 * @throws InvalidJsonException
 	 */
-	public function updateStory (array $story, string $translationData, NormalizerInterface $normalizer = new XmlNormalizer()) : array
+	public function updateStory (array $story, TranslatableContentCollection $translatableContentCollection) : array
 	{
 		$jsonObject = new JsonObject($story);
 
-		foreach ($normalizer->denormalize($translationData)->getData() as $translationData)
+		foreach ($translatableContentCollection as $translatableContent)
 		{
-			if (!$jsonObject->get($translationData->getKey()))
+			if (!$jsonObject->get($translatableContent->getKey()))
 			{
 				// skip if text was removed
 				continue;
 			}
 
-			$jsonObject->set($translationData->getKey(), $translationData->getValue());
+			$jsonObject->set($translatableContent->getKey(), $translatableContent->getValue());
 		}
 
 		return $jsonObject->getValue() ?? throw new StoryUpdateException("Story update failed");

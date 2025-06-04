@@ -4,7 +4,10 @@ namespace Torr\Storyblok\TranslationManagement\Data;
 
 use Torr\Storyblok\TranslationManagement\Validator\ComponentDataValidator;
 
-final readonly class ComponentDataCollection
+/**
+ * @implements \IteratorAggregate<int, ComponentData>
+ */
+final readonly class ComponentDataCollection implements \IteratorAggregate
 {
 	/** @var array<string, ComponentData> */
 	private array $data;
@@ -19,6 +22,14 @@ final readonly class ComponentDataCollection
 	public function getData () : array
 	{
 		return $this->data;
+	}
+
+	/**
+	 * @return \Traversable<ComponentData>
+	 */
+	public function getIterator () : \Traversable
+	{
+		return new \ArrayIterator($this->data);
 	}
 
 	/**

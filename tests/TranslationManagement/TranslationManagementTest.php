@@ -3,6 +3,7 @@
 namespace Tests\Torr\Storyblok\TranslationManagement;
 
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
 use Torr\Storyblok\TranslationManagement\TranslationManagement;
 
 /**
@@ -16,26 +17,30 @@ final class TranslationManagementTest extends TestCase
 	{
 		$translationManagement = new TranslationManagement();
 
+		$xmlNormalizer = new XmlNormalizer();
+
 		$jsonOriginal = file_get_contents(\sprintf("%s/Data/StoryOriginal.json", __DIR__));
 		$story = json_decode($jsonOriginal, true);
 
-		$transformedStoryXml = $translationManagement->transformStory(
-			$story,
-			[
-				"product" => [
-					"name",
-					"description",
+		$transformedStoryXml = $xmlNormalizer->normalize(
+			$translationManagement->transformStory(
+				$story,
+				[
+					"product" => [
+						"name",
+						"description",
+					],
+					"quote-block" => [
+						"quote",
+						"author",
+						"anchor-title",
+					],
+					"text-block" => [
+						"text",
+						"anchor-title",
+					],
 				],
-				"quote-block" => [
-					"quote",
-					"author",
-					"anchor-title",
-				],
-				"text-block" => [
-					"text",
-					"anchor-title",
-				],
-			],
+			),
 		);
 
 		$xmlOriginal = file_get_contents(\sprintf("%s/Data/StoryTranslationXmlOriginal.xml", __DIR__));
@@ -47,7 +52,7 @@ final class TranslationManagementTest extends TestCase
 
 		$xmlTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslationXmlTranslated.xml", __DIR__));
 
-		$updatedStory = $translationManagement->updateStory($story, $xmlTranslated);
+		$updatedStory = $translationManagement->updateStory($story, $xmlNormalizer->denormalize($xmlTranslated));
 
 		self::assertSame($storyTranslated, $updatedStory);
 	}

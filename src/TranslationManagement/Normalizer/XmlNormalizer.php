@@ -7,9 +7,8 @@ use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
 use Torr\Storyblok\TranslationManagement\Exception\XmlExportException;
 use Torr\Storyblok\TranslationManagement\Exception\XmlInvalidException;
 
-final readonly class XmlNormalizer implements NormalizerInterface
+final readonly class XmlNormalizer
 {
-	#[\Override]
 	public function normalize (TranslatableContentCollection $data) : string
 	{
 		$dom = new \DOMDocument('1.0', 'UTF-8');
@@ -57,7 +56,6 @@ final readonly class XmlNormalizer implements NormalizerInterface
 		return $dom->saveXML() ?: throw new XmlExportException("XML Export failed");
 	}
 
-	#[\Override]
 	public function denormalize (string $data) : TranslatableContentCollection
 	{
 		$xml = new \DOMDocument();

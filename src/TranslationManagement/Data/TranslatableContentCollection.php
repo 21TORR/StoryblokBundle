@@ -2,10 +2,10 @@
 
 namespace Torr\Storyblok\TranslationManagement\Data;
 
-use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
-use Torr\Storyblok\TranslationManagement\Normalizer\NormalizerInterface;
-
-final readonly class TranslatableContentCollection
+/**
+ * @implements \IteratorAggregate<int, TranslatableContentElement>
+ */
+final readonly class TranslatableContentCollection implements \IteratorAggregate
 {
 	/**
 	 * @param list<TranslatableContentElement> $data
@@ -53,10 +53,10 @@ final readonly class TranslatableContentCollection
 	}
 
 	/**
-	 * @throws TranslationManagementExceptionInterface
+	 * @return \Traversable<TranslatableContentElement>
 	 */
-	public function normalize (NormalizerInterface $exportService) : string
+	public function getIterator () : \Traversable
 	{
-		return $exportService->normalize($this);
+		return new \ArrayIterator($this->data);
 	}
 }
