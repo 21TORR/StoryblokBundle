@@ -22,12 +22,6 @@ final readonly class XmlNormalizer
 
 		$dom->appendChild($page);
 
-		$name = $dom->createElement("name");
-
-		$name->appendChild($dom->createTextNode($data->getName()));
-
-		$page->appendChild($name);
-
 		$tags = $dom->createElement('tags');
 
 		$page->appendChild($tags);
@@ -66,14 +60,6 @@ final readonly class XmlNormalizer
 		$xpath = new \DOMXPath($xml);
 
 		$page = $xml->documentElement ?? throw new XmlInvalidException("XML root element missing");
-
-		$nameNodes = $xpath->query(\sprintf("/%s/name", $page->tagName));
-		$nameNode = $nameNodes[0] ?? null;
-
-		if (!$nameNode instanceof \DOMElement)
-		{
-			throw new XmlInvalidException("XML not valid: Name node missing");
-		}
 
 		if (
 			"" === $page->getAttribute("id")
@@ -124,7 +110,6 @@ final readonly class XmlNormalizer
 			id: $page->getAttribute("id"),
 			url: $page->getAttribute("url"),
 			language: $page->getAttribute("language"),
-			name: $nameNode->textContent,
 			data: $translationDataElements,
 		);
 	}

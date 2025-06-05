@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page id="461935" url="de/products/test" language="default">
-  <name>Test</name>
   <tags>
     <tag id="$..[?(@['_uid']=='00b45e23-5dc5-4398-9b34-e87ae4ed42e6')]['name']">
       <text><![CDATA[Test]]></text>

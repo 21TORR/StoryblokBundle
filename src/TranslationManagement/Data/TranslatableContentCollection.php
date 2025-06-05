@@ -14,7 +14,6 @@ final readonly class TranslatableContentCollection implements \IteratorAggregate
 		private string $id,
 		private string $url,
 		private string $language,
-		private string $name,
 		private array $data,
 	) {}
 
@@ -31,11 +30,6 @@ final readonly class TranslatableContentCollection implements \IteratorAggregate
 	public function getLanguage () : string
 	{
 		return $this->language;
-	}
-
-	public function getName () : string
-	{
-		return $this->name;
 	}
 
 	/**

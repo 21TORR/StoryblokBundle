@@ -64,7 +64,6 @@ final class TranslatableContentExtractor
 			id: (string) $story["id"],
 			url: $story["full_slug"],
 			language: $story["lang"] ?? "default",
-			name: $story["name"],
 			data: $tagElements,
 		);
 	}
