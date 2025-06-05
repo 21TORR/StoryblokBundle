@@ -5,6 +5,7 @@ namespace Tests\Torr\Storyblok\TranslationManagement;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
 use Torr\Storyblok\TranslationManagement\TranslatableContentExtractor;
+use Torr\Storyblok\TranslationManagement\TranslatableContentTranslator;
 
 /**
  * @internal
@@ -15,15 +16,13 @@ final class TranslationManagementTest extends TestCase
 	 */
 	public function testBasic () : void
 	{
-		$translationManagement = new TranslatableContentExtractor();
-
 		$xmlNormalizer = new XmlNormalizer();
 
 		$jsonOriginal = file_get_contents(\sprintf("%s/Data/StoryOriginal.json", __DIR__));
 		$story = json_decode($jsonOriginal, true);
 
 		$transformedStoryXml = $xmlNormalizer->normalize(
-			$translationManagement->extractTranslatableContent(
+			TranslatableContentExtractor::extractTranslatableContent(
 				$story,
 				[
 					"product" => [
@@ -52,7 +51,7 @@ final class TranslationManagementTest extends TestCase
 
 		$xmlTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslationXmlTranslated.xml", __DIR__));
 
-		$updatedStory = $translationManagement->updateStory($story, $xmlNormalizer->denormalize($xmlTranslated));
+		$updatedStory = TranslatableContentTranslator::translate($story, $xmlNormalizer->denormalize($xmlTranslated));
 
 		self::assertSame($storyTranslated, $updatedStory);
 	}
