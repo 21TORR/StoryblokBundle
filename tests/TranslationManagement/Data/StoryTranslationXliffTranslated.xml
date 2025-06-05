@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.1" version="2.1" srcLang="default" trgLang="en">
+  <file id="461935" original="de/products/test">
+    <unit id="$..[?(@['_uid']=='00b45e23-5dc5-4398-9b34-e87ae4ed42e6')]['name']">
+      <segment>
+        <source><![CDATA[Test]]></source>
+        <target><![CDATA[TRANSLATED: Test]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='00b45e23-5dc5-4398-9b34-e87ae4ed42e6')]['description']">
+      <segment>
+        <source><![CDATA[Description]]></source>
+        <target><![CDATA[TRANSLATED: Description]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='a46d5a15-f99a-4a6e-ad48-773ab0a807f9')]['quote']">
+      <segment>
+        <source><![CDATA[Quote + Emoji ❤️]]></source>
+        <target><![CDATA[TRANSLATED: Quote + Emoji ❤️]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='a46d5a15-f99a-4a6e-ad48-773ab0a807f9')]['author']">
+      <segment>
+        <source><![CDATA[Author]]></source>
+        <target><![CDATA[TRANSLATED: Author]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='a46d5a15-f99a-4a6e-ad48-773ab0a807f9')]['anchor-title']">
+      <segment>
+        <source><![CDATA[]]></source>
+        <target><![CDATA[TRANSLATED: ]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[0].content[0].text">
+      <segment>
+        <source><![CDATA[Text 1]]></source>
+        <target><![CDATA[TRANSLATED: Text 1]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[0].content[0].content[0].text">
+      <segment>
+        <source><![CDATA[Text 2]]></source>
+        <target><![CDATA[TRANSLATED: Text 2]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[0].content[0].content[1].text">
+      <segment>
+        <source><![CDATA[Text 3]]></source>
+        <target><![CDATA[TRANSLATED: Text 3]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[0].content[0].content[2].text">
+      <segment>
+        <source><![CDATA[Text 4]]></source>
+        <target><![CDATA[TRANSLATED: Text 4]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[1].content[0].content[0].text">
+      <segment>
+        <source><![CDATA[Text 5]]></source>
+        <target><![CDATA[TRANSLATED: Text 5]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[1].content[0].content[1].text">
+      <segment>
+        <source><![CDATA[Text 6]]></source>
+        <target><![CDATA[TRANSLATED: Text 6]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[2].content[0].content[0].text">
+      <segment>
+        <source><![CDATA[Text 7]]></source>
+        <target><![CDATA[TRANSLATED: Text 7]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[2].content[0].content[1].text">
+      <segment>
+        <source><![CDATA[Text 8]]></source>
+        <target><![CDATA[TRANSLATED: Text 8]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[2].content[0].content[2].text">
+      <segment>
+        <source><![CDATA[Text 9]]></source>
+        <target><![CDATA[TRANSLATED: Text 9]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[2].content[0].content[3].text">
+      <segment>
+        <source><![CDATA[Text 10]]></source>
+        <target><![CDATA[TRANSLATED: Text 10]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[3].content[0].content[0].text">
+      <segment>
+        <source><![CDATA[Text 11]]></source>
+        <target><![CDATA[TRANSLATED: Text 11]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[3].content[0].content[1].text">
+      <segment>
+        <source><![CDATA[Text 12]]></source>
+        <target><![CDATA[TRANSLATED: Text 12]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text'].content[1].content[3].content[0].content[2].text">
+      <segment>
+        <source><![CDATA[Text 13]]></source>
+        <target><![CDATA[TRANSLATED: Text 13]]></target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['anchor-title']">
+      <segment>
+        <source><![CDATA[]]></source>
+        <target><![CDATA[TRANSLATED: ]]></target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

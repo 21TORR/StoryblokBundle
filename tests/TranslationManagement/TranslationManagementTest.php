@@ -3,7 +3,7 @@
 namespace Tests\Torr\Storyblok\TranslationManagement;
 
 use PHPUnit\Framework\TestCase;
-use Torr\Storyblok\TranslationManagement\Normalizer\XmlNormalizer;
+use Torr\Storyblok\TranslationManagement\Normalizer\XliffNormalizer;
 use Torr\Storyblok\TranslationManagement\TranslatableContentExtractor;
 use Torr\Storyblok\TranslationManagement\TranslatableContentTranslator;
 
@@ -16,12 +16,12 @@ final class TranslationManagementTest extends TestCase
 	 */
 	public function testBasic () : void
 	{
-		$xmlNormalizer = new XmlNormalizer();
+		$xliffNormalizer = new XliffNormalizer();
 
 		$jsonOriginal = file_get_contents(\sprintf("%s/Data/StoryOriginal.json", __DIR__));
 		$story = json_decode($jsonOriginal, true);
 
-		$transformedStoryXml = $xmlNormalizer->normalize(
+		$transformedStoryXliff = $xliffNormalizer->normalize(
 			TranslatableContentExtractor::extractTranslatableContent(
 				$story,
 				[
@@ -40,18 +40,25 @@ final class TranslationManagementTest extends TestCase
 					],
 				],
 			),
+			[
+				"targetLanguage" => "en",
+			],
 		);
 
-		$xmlOriginal = file_get_contents(\sprintf("%s/Data/StoryTranslationXmlOriginal.xml", __DIR__));
+		$xliffOriginal = file_get_contents(\sprintf("%s/Data/StoryTranslationXliffOriginal.xml", __DIR__));
 
-		self::assertSame($xmlOriginal, $transformedStoryXml);
+		self::assertSame($xliffOriginal, $transformedStoryXliff);
 
 		$jsonTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslated.json", __DIR__));
 		$storyTranslated = json_decode($jsonTranslated, true);
 
-		$xmlTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslationXmlTranslated.xml", __DIR__));
+		$xliffTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslationXliffTranslated.xml", __DIR__));
 
-		$updatedStory = TranslatableContentTranslator::translate($story, $xmlNormalizer->denormalize($xmlTranslated));
+		$translatableContentCollection = $xliffNormalizer->denormalize($xliffTranslated);
+
+		self::assertSame("en", $translatableContentCollection->getLanguage());
+
+		$updatedStory = TranslatableContentTranslator::translate($story, $translatableContentCollection);
 
 		self::assertSame($storyTranslated, $updatedStory);
 	}
