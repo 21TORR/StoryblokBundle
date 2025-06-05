@@ -12,7 +12,6 @@ final readonly class TranslatableContentCollection implements \IteratorAggregate
 	 */
 	public function __construct (
 		private string $id,
-		private string $filename,
 		private string $url,
 		private string $language,
 		private string $name,
@@ -22,11 +21,6 @@ final readonly class TranslatableContentCollection implements \IteratorAggregate
 	public function getId () : string
 	{
 		return $this->id;
-	}
-
-	public function getFilename () : string
-	{
-		return $this->filename;
 	}
 
 	public function getUrl () : string

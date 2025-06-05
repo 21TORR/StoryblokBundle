@@ -19,7 +19,6 @@ final readonly class XmlNormalizer
 		$page->setAttribute("id", $data->getId());
 		$page->setAttribute("url", $data->getUrl());
 		$page->setAttribute("language", $data->getLanguage());
-		$page->setAttribute("filename", $data->getFilename());
 
 		$dom->appendChild($page);
 
@@ -38,7 +37,6 @@ final readonly class XmlNormalizer
 			$tag = $dom->createElement('tag');
 
 			$tag->setAttribute('id', $tagData->getKey());
-			$tag->setAttribute('type', $tagData->getType());
 
 			$text = $dom->createElement('text');
 
@@ -79,7 +77,6 @@ final readonly class XmlNormalizer
 
 		if (
 			"" === $page->getAttribute("id")
-			|| "" === $page->getAttribute("filename")
 			|| "" === $page->getAttribute("url")
 			|| "" === $page->getAttribute("language")
 		)
@@ -112,7 +109,6 @@ final readonly class XmlNormalizer
 
 			if (
 				"" === $tagNode->getAttribute("id")
-				|| "" === $tagNode->getAttribute("type")
 			)
 			{
 				throw new XmlInvalidException("XML not valid: Tag node invalid");
@@ -120,14 +116,12 @@ final readonly class XmlNormalizer
 
 			$translationDataElements[] = new TranslatableContentElement(
 				key: $tagNode->getAttribute("id"),
-				type: $tagNode->getAttribute("type"),
 				value: $textNode->textContent,
 			);
 		}
 
 		return new TranslatableContentCollection(
 			id: $page->getAttribute("id"),
-			filename: $page->getAttribute("filename"),
 			url: $page->getAttribute("url"),
 			language: $page->getAttribute("language"),
 			name: $nameNode->textContent,

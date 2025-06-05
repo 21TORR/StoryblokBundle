@@ -49,7 +49,6 @@ final class TranslatableContentExtractor
 					{
 						$tagElements[] = new TranslatableContentElement(
 							$richTextValue["key"],
-							"STRING",
 							$richTextValue["value"],
 						);
 					}
@@ -59,19 +58,17 @@ final class TranslatableContentExtractor
 
 				$tagElements[] = new TranslatableContentElement(
 					$componentData->getKeyForField($fieldname),
-					"STRING",
 					$componentData->getStringValueForField($fieldname),
 				);
 			}
 		}
 
 		return new TranslatableContentCollection(
-			(string) $story["id"],
-			$story["slug"],
-			$story["full_slug"],
-			$story["lang"] ?? "default",
-			$story["name"],
-			$tagElements,
+			id: (string) $story["id"],
+			url: $story["full_slug"],
+			language: $story["lang"] ?? "default",
+			name: $story["name"],
+			data: $tagElements,
 		);
 	}
 

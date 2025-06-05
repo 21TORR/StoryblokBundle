@@ -6,8 +6,7 @@ final readonly class TranslatableContentElement
 {
 	public function __construct (
 		private string $key,
-		private string $type,
-		private ?string $value,
+		private ?string $value = null,
 	) {}
 
 	/**
@@ -16,11 +15,6 @@ final readonly class TranslatableContentElement
 	public function getKey () : string
 	{
 		return $this->key;
-	}
-
-	public function getType () : string
-	{
-		return $this->type;
 	}
 
 	public function getValue () : ?string
