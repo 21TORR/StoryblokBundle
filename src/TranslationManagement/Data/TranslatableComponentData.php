@@ -33,6 +33,11 @@ final readonly class TranslatableComponentData
 		return \sprintf("$..[?(@['_uid']=='%s')]['%s']", $this->id, $fieldname);
 	}
 
+	public function getJsonValueForField (string $fieldname) : ?string
+	{
+		return $this->data[$fieldname] ?? null ? json_encode($this->data[$fieldname], \JSON_THROW_ON_ERROR) : null;
+	}
+
 	public function getStringValueForField (string $fieldname) : ?string
 	{
 		return \is_string($this->data[$fieldname] ?? null) ? $this->data[$fieldname] : null;
@@ -40,46 +45,11 @@ final readonly class TranslatableComponentData
 
 	public function isRichTextField (string $fieldname) : bool
 	{
-		return \is_array($this->data[$fieldname]) && "doc" === $this->data[$fieldname]["type"];
+		return self::isRichText($this->data[$fieldname] ?? null);
 	}
 
-	public function getRichTextValuesForField (string $fieldname) : array
+	public static function isRichText (mixed $data) : bool
 	{
-		$texts = [];
-
-		if (!$this->isRichTextField($fieldname))
-		{
-			return $texts;
-		}
-
-		return $this->getTextsFromRichtextData($this->data[$fieldname], $this->getKeyForField($fieldname));
-	}
-
-	private function getTextsFromRichtextData (array $data, string $currentPath = "") : array
-	{
-		$results = [];
-
-		foreach ($data as $key => $value)
-		{
-			$path = \is_int($key) ? \sprintf("%s[%d]", $currentPath, $key) : \sprintf("%s.%s", $currentPath, $key);
-
-			if ("text" === ($value["type"] ?? null))
-			{
-				$results[] = [
-					"key" => \sprintf("%s.text", $path),
-					"value" => $value["text"] ?? null,
-				];
-			}
-
-			if (\is_array($value))
-			{
-				$results = [
-					...$results,
-					...$this->getTextsFromRichtextData($value, $path),
-				];
-			}
-		}
-
-		return $results;
+		return \is_array($data) && "doc" === ($data["type"] ?? null);
 	}
 }

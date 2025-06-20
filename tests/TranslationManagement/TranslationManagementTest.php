@@ -3,6 +3,7 @@
 namespace Tests\Torr\Storyblok\TranslationManagement;
 
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Tiptap\Transformer\RichTextHtmlTransformer;
 use Torr\Storyblok\TranslationManagement\Normalizer\XliffNormalizer;
 use Torr\Storyblok\TranslationManagement\TranslatableContentExtractor;
 use Torr\Storyblok\TranslationManagement\TranslatableContentTranslator;
@@ -18,11 +19,13 @@ final class TranslationManagementTest extends TestCase
 	{
 		$xliffNormalizer = new XliffNormalizer();
 
+		$translatableContentExtractor = new TranslatableContentExtractor(new RichTextHtmlTransformer());
+
 		$jsonOriginal = file_get_contents(\sprintf("%s/Data/StoryOriginal.json", __DIR__));
 		$story = json_decode($jsonOriginal, true);
 
 		$transformedStoryXliff = $xliffNormalizer->normalize(
-			TranslatableContentExtractor::extractTranslatableContent(
+			$translatableContentExtractor->extractTranslatableContent(
 				$story,
 				[
 					"product" => [
@@ -58,7 +61,9 @@ final class TranslationManagementTest extends TestCase
 
 		self::assertSame("en", $translatableContentCollection->getLanguage());
 
-		$updatedStory = TranslatableContentTranslator::translate($story, $translatableContentCollection);
+		$translatableContentTranslator = new TranslatableContentTranslator(new RichTextHtmlTransformer());
+
+		$updatedStory = $translatableContentTranslator->translate($story, $translatableContentCollection);
 
 		self::assertSame($storyTranslated, $updatedStory);
 	}

@@ -29,8 +29,17 @@
 							"type": "paragraph",
 							"content": [
 								{
-									"text": "TRANSLATED: Text 1",
 									"type": "text",
+									"text": "TRANSLATED:"
+								}
+							]
+						},
+						{
+							"type": "paragraph",
+							"content": [
+								{
+									"type": "text",
+									"text": "Text 1",
 									"marks": [
 										{
 											"type": "bold"
@@ -49,12 +58,12 @@
 											"type": "paragraph",
 											"content": [
 												{
-													"text": "TRANSLATED: Text 2",
-													"type": "text"
+													"type": "text",
+													"text": "Text 2"
 												},
 												{
-													"text": "TRANSLATED: Text 3",
 													"type": "text",
+													"text": "Text 3",
 													"marks": [
 														{
 															"type": "bold"
@@ -62,8 +71,8 @@
 													]
 												},
 												{
-													"text": "TRANSLATED: Text 4",
-													"type": "text"
+													"type": "text",
+													"text": "Text 4"
 												}
 											]
 										}
@@ -76,12 +85,12 @@
 											"type": "paragraph",
 											"content": [
 												{
-													"text": "TRANSLATED: Text 5",
-													"type": "text"
+													"type": "text",
+													"text": "Text 5"
 												},
 												{
-													"text": "TRANSLATED: Text 6",
 													"type": "text",
+													"text": "Text 6",
 													"marks": [
 														{
 															"type": "bold"
@@ -99,8 +108,8 @@
 											"type": "paragraph",
 											"content": [
 												{
-													"text": "TRANSLATED: Text 7",
 													"type": "text",
+													"text": "Text 7",
 													"marks": [
 														{
 															"type": "bold"
@@ -108,12 +117,12 @@
 													]
 												},
 												{
-													"text": "TRANSLATED: Text 8",
-													"type": "text"
+													"type": "text",
+													"text": "Text 8"
 												},
 												{
-													"text": "TRANSLATED: Text 9",
 													"type": "text",
+													"text": "Text 9",
 													"marks": [
 														{
 															"type": "bold"
@@ -121,8 +130,8 @@
 													]
 												},
 												{
-													"text": "TRANSLATED: Text 10",
-													"type": "text"
+													"type": "text",
+													"text": "Text 10"
 												}
 											]
 										}
@@ -135,12 +144,12 @@
 											"type": "paragraph",
 											"content": [
 												{
-													"text": "TRANSLATED: Text 11",
-													"type": "text"
+													"type": "text",
+													"text": "Text 11"
 												},
 												{
-													"text": "TRANSLATED: Text 12",
 													"type": "text",
+													"text": "Text 12",
 													"marks": [
 														{
 															"type": "bold"
@@ -148,16 +157,8 @@
 													]
 												},
 												{
-													"text": "TRANSLATED: Text 13",
 													"type": "text",
-													"marks": [
-														{
-															"type": "textStyle",
-															"attrs": {
-																"color": "#0E101E"
-															}
-														}
-													]
+													"text": "Text 13"
 												}
 											]
 										}

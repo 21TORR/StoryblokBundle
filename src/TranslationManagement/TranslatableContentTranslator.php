@@ -4,12 +4,18 @@ namespace Torr\Storyblok\TranslationManagement;
 
 use JsonPath\InvalidJsonException;
 use JsonPath\JsonObject;
+use Torr\Storyblok\Tiptap\Transformer\RichTextHtmlTransformer;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableComponentData;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
 use Torr\Storyblok\TranslationManagement\Exception\StoryUpdateException;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 
-final class TranslatableContentTranslator
+final readonly class TranslatableContentTranslator
 {
+	public function __construct (
+		private RichTextHtmlTransformer $richTextHtmlTransformer,
+	) {}
+
 	/**
 	 * @param array $story Story data from storyblok management api
 	 *
@@ -18,15 +24,35 @@ final class TranslatableContentTranslator
 	 * @throws TranslationManagementExceptionInterface
 	 * @throws InvalidJsonException
 	 */
-	public static function translate (array $story, TranslatableContentCollection $translatableContentCollection) : array
+	public function translate (array $story, TranslatableContentCollection $translatableContentCollection) : array
 	{
 		$jsonObject = new JsonObject($story);
 
 		foreach ($translatableContentCollection as $translatableContent)
 		{
-			if (!$jsonObject->get($translatableContent->getKey()))
+			$jsonDataForKey = $jsonObject->get($translatableContent->getKey());
+
+			if (!$jsonDataForKey)
 			{
 				// skip if text was removed
+				continue;
+			}
+
+			if (
+				$translatableContent->getValue()
+				&& \is_array($jsonDataForKey)
+				&& TranslatableComponentData::isRichText($jsonDataForKey[0] ?? null)
+			)
+			{
+				$jsonObject->set(
+					$translatableContent->getKey(),
+					json_decode(
+						$this->richTextHtmlTransformer->transformToJsonMarkup($translatableContent->getValue()),
+						true,
+						flags: \JSON_THROW_ON_ERROR,
+					),
+				);
+
 				continue;
 			}
 

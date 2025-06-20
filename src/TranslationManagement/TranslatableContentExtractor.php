@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\TranslationManagement;
 
+use Torr\Storyblok\Tiptap\Transformer\RichTextHtmlTransformer;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableComponentDataCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
@@ -9,16 +10,21 @@ use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
 use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
 use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
 
-final class TranslatableContentExtractor
+final readonly class TranslatableContentExtractor
 {
+	public function __construct (
+		private RichTextHtmlTransformer $richTextHtmlTransformer,
+	) {}
+
 	/**
 	 * @param array                       $story  Storyblok management API story data
 	 * @param array<string, list<string>> $config <component-key, <fieldnames>>
 	 *
 	 * @throws TranslationManagementExceptionInterface
 	 * @throws StoryInvalidException
+	 * @throws \JsonException
 	 */
-	public static function extractTranslatableContent (array $story, array $config) : TranslatableContentCollection
+	public function extractTranslatableContent (array $story, array $config) : TranslatableContentCollection
 	{
 		if (!StoryValidator::isValid($story))
 		{
@@ -42,13 +48,12 @@ final class TranslatableContentExtractor
 			{
 				if ($componentData->isRichTextField($fieldname))
 				{
-					foreach ($componentData->getRichTextValuesForField($fieldname) as $richTextValue)
-					{
-						$tagElements[] = new TranslatableContentElement(
-							$richTextValue["key"],
-							$richTextValue["value"],
-						);
-					}
+					$jsonRichTextData = $componentData->getJsonValueForField($fieldname);
+
+					$tagElements[] = new TranslatableContentElement(
+						$componentData->getKeyForField($fieldname),
+						$jsonRichTextData ? $this->richTextHtmlTransformer->transformToHtml($jsonRichTextData) : null,
+					);
 
 					continue;
 				}

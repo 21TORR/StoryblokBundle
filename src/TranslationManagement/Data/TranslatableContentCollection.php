@@ -47,4 +47,9 @@ final readonly class TranslatableContentCollection implements \IteratorAggregate
 	{
 		return new \ArrayIterator($this->data);
 	}
+
+	public function hasTranslatableContentElements () : bool
+	{
+		return 0 < \count($this->data);
+	}
 }
