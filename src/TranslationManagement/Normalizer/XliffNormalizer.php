@@ -20,7 +20,7 @@ final readonly class XliffNormalizer
 		$dom->formatOutput = true;
 
 		$xliff = $dom->createElement("xliff");
-		$xliff->setAttribute("xmlns", "urn:oasis:names:tc:xliff:document:2.1");
+		$xliff->setAttribute("xmlns", "urn:oasis:names:tc:xliff:document:2.0");
 		$xliff->setAttribute("version", "2.1");
 		$xliff->setAttribute("srcLang", $data->getLanguage());
 		$xliff->setAttribute("trgLang", $options["targetLanguage"] ?? "");
@@ -39,7 +39,7 @@ final readonly class XliffNormalizer
 			$segment = $dom->createElement("segment");
 
 			$source = $dom->createElement("source");
-			$source->appendChild($dom->createCDATASection($element->getValue() ?? ""));
+			$source->appendChild($dom->createTextNode($element->getValue() ?? ""));
 
 			$target = $dom->createElement("target");
 
