@@ -2,10 +2,10 @@
 
 namespace Torr\Storyblok\TranslationManagement\Data;
 
-final readonly class TranslatableContentElement
+final class TranslatableContentElement
 {
 	public function __construct (
-		private string $key,
+		private readonly string $key,
 		private ?string $value = null,
 	) {}
 
@@ -20,5 +20,10 @@ final readonly class TranslatableContentElement
 	public function getValue () : ?string
 	{
 		return $this->value;
+	}
+
+	public function setValue (?string $value) : void
+	{
+		$this->value = $value;
 	}
 }
