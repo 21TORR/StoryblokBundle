@@ -88,8 +88,12 @@ final class RichTextHtmlTransformer
 			$modifiedJson = [];
 			$nodeContent = $json["content"] ?? [];
 
+			\assert(\is_array($nodeContent));
+
 			foreach ($nodeContent as $key => $item)
 			{
+				\assert(\is_array($item));
+
 				$modifiedJson[$key] = $this->traverseNode($item);
 			}
 
@@ -115,6 +119,8 @@ final class RichTextHtmlTransformer
 
 			foreach ($content as $key => $childNode)
 			{
+				\assert(\is_array($childNode));
+
 				$modified[$key] = $this->traverseNode($childNode);
 			}
 
@@ -130,6 +136,8 @@ final class RichTextHtmlTransformer
 
 			foreach ($marks as $key => $mark)
 			{
+				\assert(\is_array($mark));
+
 				$modified[$key] = $this->traverseMark($mark);
 			}
 
