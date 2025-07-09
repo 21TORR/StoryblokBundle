@@ -1,3 +1,9 @@
+3.17.3 (unreleased)
+======
+
+* (improvement) Allow `sebastian/diff` v6 + v7.
+
+
 3.17.2
 ======
 
