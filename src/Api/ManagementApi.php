@@ -32,7 +32,7 @@ final class ManagementApi
 		private readonly StoryblokConfig $config,
 		HttpClientInterface $client,
 		RateLimiterFactory $storyblokManagementLimiter,
-		readonly LoggerInterface $logger,
+		private readonly LoggerInterface $logger,
 	)
 	{
 		$this->rateLimiter = $storyblokManagementLimiter->create();
