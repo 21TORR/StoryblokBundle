@@ -10,7 +10,7 @@
 		}
 	],
 	"require": {
-		"php": ">= 8.3",
+		"php": ">= 8.4",
 		"21torr/bundle-helpers": "^2.3.1",
 		"21torr/cli": "^1.2.3",
 		"21torr/hosting": "^3.2 || ^4.0",
