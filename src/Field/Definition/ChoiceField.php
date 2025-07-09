@@ -180,12 +180,13 @@ final class ChoiceField extends AbstractField
 			);
 		}
 
-		\assert(null === $data || \is_array($data));
+		/** @var list<string|int> $validatedData */
+		$validatedData = $data ?? [];
 
 		$data = array_map(
-			static fn (string $value) => $context->normalizeOptionalString($value),
+			static fn (string|int $value) => $context->normalizeOptionalString((string) $value),
 			// we are in a multiselect, so we expect an array
-			$data ?? [],
+			$validatedData,
 		);
 
 		// collect constraints for content

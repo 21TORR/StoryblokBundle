@@ -112,6 +112,9 @@ final class BloksField extends AbstractField
 		{
 			try
 			{
+				\assert(\is_array($componentData));
+				\assert(\is_string($componentData["component"]));
+
 				$component = $context->getComponentByKey($componentData["component"]);
 				$component->validateData(
 					$context,
@@ -168,6 +171,7 @@ final class BloksField extends AbstractField
 
 				try
 				{
+					\assert(\is_string($componentData["component"]));
 					$component = $context->getComponentByKey($componentData["component"]);
 					$transformed[] = $component->transformData($componentData, $context, $dataVisitor);
 				}

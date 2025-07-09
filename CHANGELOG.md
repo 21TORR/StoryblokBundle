@@ -3,6 +3,7 @@
 
 * (improvement) Allow `sebastian/diff` v6 + v7.
 * (improvement) Require PHP 8.4+.
+* (improvement) Improve type definitions.
 * (internal) Update CI.
 
 
