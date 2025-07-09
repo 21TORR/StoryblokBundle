@@ -2,6 +2,7 @@
 
 namespace Tests\Torr\Storyblok\Webhook\Request;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ use Torr\Storyblok\Webhook\Request\RequestValidator;
 final class RequestValidatorTest extends TestCase
 {
 	/**
+	 *
 	 */
 	public static function provideIsValidRequest () : iterable
 	{
@@ -126,8 +128,9 @@ final class RequestValidatorTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider provideIsValidRequest
+	 *
 	 */
+	#[DataProvider("provideIsValidRequest")]
 	public function testIsValidRequest (
 		bool $expectedValid,
 		?string $secret,

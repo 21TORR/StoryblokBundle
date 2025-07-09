@@ -1,8 +1,14 @@
 includes:
 	- vendor/21torr/janus/phpstan/lib.neon
 
-# If you use simple-phpunit, you need to uncomment the following line.
-# Always make sure to first run simple-phpunit and then PHPStan.
 parameters:
-	bootstrapFiles:
-		- vendor/bin/.phpunit/phpunit/vendor/autoload.php
+
+# These are temporarily copied here, as normally they should be in the lib.neon of janus.
+# However, due to a bug in PHPStan, this currently doesn't work (https://github.com/phpstan/phpstan/issues/12844)
+	excludePaths:
+		analyse:
+			- vendor
+		analyseAndScan:
+			- node_modules (?)
+			- var (?)
+			- vendor-bin
