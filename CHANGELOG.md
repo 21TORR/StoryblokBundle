@@ -1,12 +1,8 @@
-3.19.0 (unreleased)
-======
-
-* (improvement) Update `ComponentIcon` with new `::ADD` icon.
-
-
 3.18.0
 ======
 
+* (improvement) Update `ComponentIcon` with new `::ADD` icon.
+* (feature) Add story translation library
 * (feature) Add function to get `first published at` date.
 * (improvement) Allow `sebastian/diff` v6 + v7.
 * (improvement) Require PHP 8.4+.
