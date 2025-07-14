@@ -1,3 +1,9 @@
+3.17.4
+======
+
+* (feature) Add function to get `first published at` date.
+
+
 3.17.3 (unreleased)
 ======
 

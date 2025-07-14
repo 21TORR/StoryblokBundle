@@ -46,6 +46,16 @@ final class StoryMetaData
 	/**
 	 *
 	 */
+	public function getFirstPublishedAt () : ?\DateTimeImmutable
+	{
+		return null !== $this->data["first_published_at"]
+			? $this->parseDate($this->data["first_published_at"])
+			: null;
+	}
+
+	/**
+	 *
+	 */
 	public function getPublishedAt () : ?\DateTimeImmutable
 	{
 		return null !== $this->data["published_at"]
