@@ -88,7 +88,7 @@ final class AssetField extends AbstractField
 			$isExternalUrlConstraints[] = new NotNull();
 		}
 
-		$constraints = array_filter([
+		$constraints = [
 			!$this->allowMissingData && $this->required ? new NotNull() : null,
 			new Type("array"),
 			// required fields
@@ -130,7 +130,7 @@ final class AssetField extends AbstractField
 				allowExtraFields: true,
 				allowMissingFields: true,
 			),
-		]);
+		];
 
 		if ($this->allowMultiple)
 		{
@@ -138,7 +138,7 @@ final class AssetField extends AbstractField
 				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				new Type("array"),
 				new All(
-					constraints: $constraints,
+					constraints: array_filter($constraints),
 				),
 			];
 		}

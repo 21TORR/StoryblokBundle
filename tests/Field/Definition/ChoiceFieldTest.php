@@ -2,6 +2,7 @@
 
 namespace Tests\Torr\Storyblok\Field\Definition;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Torr\Storyblok\Context\ComponentContext;
@@ -18,6 +19,9 @@ use Torr\Storyblok\Validator\DataValidator;
  */
 final class ChoiceFieldTest extends TestCase
 {
+	/**
+	 *
+	 */
 	public static function provideValid () : iterable
 	{
 		$defaultChoices = new StaticChoices([
@@ -108,8 +112,9 @@ final class ChoiceFieldTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider provideValid
+	 *
 	 */
+	#[DataProvider("provideValid")]
 	public function testValid (ChoiceField $field, mixed $data) : void
 	{
 		$context = $this->createComponentContext();
@@ -117,6 +122,9 @@ final class ChoiceFieldTest extends TestCase
 		self::assertTrue(true, "should not throw");
 	}
 
+	/**
+	 *
+	 */
 	public static function provideInvalid () : iterable
 	{
 		$defaultChoices = new StaticChoices([
@@ -211,8 +219,9 @@ final class ChoiceFieldTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider provideInvalid
+	 *
 	 */
+	#[DataProvider("provideInvalid")]
 	public function testInvalid (ChoiceField $field, mixed $data) : void
 	{
 		$this->expectException(InvalidDataException::class);

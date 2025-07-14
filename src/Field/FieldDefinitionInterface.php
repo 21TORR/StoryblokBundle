@@ -21,6 +21,8 @@ interface FieldDefinitionInterface
 
 	/**
 	 * Validates the data for this field, as it was sent by Storyblok.
+	 *
+	 * @param string[] $contentPath
 	 */
 	public function validateData (
 		ComponentContext $context,

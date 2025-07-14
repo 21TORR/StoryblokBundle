@@ -3,14 +3,14 @@
 		"php": "^8.3"
 	},
 	"require-dev": {
-		"phpstan/extension-installer": "^1.3.1",
-		"phpstan/phpstan": "^1.11",
-		"phpstan/phpstan-deprecation-rules": "^1.2",
-		"phpstan/phpstan-doctrine": "^1.4",
-		"phpstan/phpstan-phpunit": "^1.4",
-		"phpstan/phpstan-symfony": "^1.4",
+		"phpstan/extension-installer": "^1.4.2",
+		"phpstan/phpstan": "^2.1.11",
+		"phpstan/phpstan-deprecation-rules": "^2.0.1",
+		"phpstan/phpstan-doctrine": "^2.0.2",
+		"phpstan/phpstan-phpunit": "^2.0.6",
+		"phpstan/phpstan-symfony": "^2.0.4",
 		"roave/security-advisories": "dev-latest",
-		"staabm/phpstan-todo-by": "^0.1.25"
+		"staabm/phpstan-todo-by": "^0.2"
 	},
 	"config": {
 		"sort-packages": true,

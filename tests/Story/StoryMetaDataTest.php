@@ -2,6 +2,7 @@
 
 namespace Tests\Torr\Storyblok\Story;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Story\StoryMetaData;
 
@@ -10,6 +11,9 @@ use Torr\Storyblok\Story\StoryMetaData;
  */
 final class StoryMetaDataTest extends TestCase
 {
+	/**
+	 *
+	 */
 	public static function provideValidLocaleLevel () : iterable
 	{
 		yield "valid: level 0" => [
@@ -38,8 +42,9 @@ final class StoryMetaDataTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider provideValidLocaleLevel
+	 *
 	 */
+	#[DataProvider("provideValidLocaleLevel")]
 	public function testValidLocaleLevel (int $localeLevel, string $fullSlug, ?string $expected) : void
 	{
 		$metaData = new StoryMetaData([

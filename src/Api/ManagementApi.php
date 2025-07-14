@@ -32,7 +32,7 @@ final class ManagementApi
 		private readonly StoryblokConfig $config,
 		HttpClientInterface $client,
 		RateLimiterFactory $storyblokManagementLimiter,
-		readonly LoggerInterface $logger,
+		private readonly LoggerInterface $logger,
 	)
 	{
 		$this->rateLimiter = $storyblokManagementLimiter->create();
@@ -424,7 +424,8 @@ final class ManagementApi
 		foreach ($components as $component)
 		{
 			\assert(\is_array($component));
-			$result[(string) $component["name"]] = $component;
+			\assert(\is_string($component["name"]));
+			$result[$component["name"]] = $component;
 		}
 
 		return $result;

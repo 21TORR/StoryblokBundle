@@ -2,6 +2,7 @@
 
 namespace Tests\Torr\Storyblok\Release;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Release\ReleaseVersion;
 
@@ -11,6 +12,7 @@ use Torr\Storyblok\Release\ReleaseVersion;
 final class ReleaseVersionTest extends TestCase
 {
 	/**
+	 *
 	 */
 	public static function providePreviewFlag () : iterable
 	{
@@ -19,8 +21,9 @@ final class ReleaseVersionTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider providePreviewFlag
+	 *
 	 */
+	#[DataProvider("providePreviewFlag")]
 	public function testPreviewFlag (bool $flag, ReleaseVersion $expected) : void
 	{
 		self::assertSame($expected, ReleaseVersion::createFromPreviewFlag($flag));

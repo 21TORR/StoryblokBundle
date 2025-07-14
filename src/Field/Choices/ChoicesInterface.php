@@ -15,7 +15,7 @@ interface ChoicesInterface
 	/**
 	 * Returns the constraints to validate the data.
 	 *
-	 * @return Constraint[]
+	 * @return list<Constraint>
 	 */
 	public function getValidationConstraints (bool $allowMultiple) : array;
 

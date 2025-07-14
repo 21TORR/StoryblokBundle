@@ -1,3 +1,12 @@
+3.17.3 (unreleased)
+======
+
+* (improvement) Allow `sebastian/diff` v6 + v7.
+* (improvement) Require PHP 8.4+.
+* (improvement) Improve type definitions.
+* (internal) Update CI.
+
+
 3.17.2
 ======
 

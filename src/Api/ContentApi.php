@@ -320,6 +320,19 @@ final class ContentApi implements ResetInterface
 
 			foreach ($data["stories"] as $storyData)
 			{
+				if (!\is_array($storyData))
+				{
+					$this->logger->error("Content request failed: invalid response structure", [
+						"query" => $query,
+						"headers" => $headers,
+						"response" => $response->getContent(false),
+						"perPage" => $perPage,
+						"totalNumberOfItems" => $totalNumberOfItems,
+					]);
+
+					throw new ContentRequestFailedException("Content request failed: invalid response structure");
+				}
+
 				$hydrated = $this->storyFactory->createFromApiData($storyData);
 
 				if (null !== $hydrated)
@@ -458,6 +471,24 @@ final class ContentApi implements ResetInterface
 
 			foreach ($data["datasource_entries"] as $entryData)
 			{
+				if (
+					!\is_array($entryData)
+					|| !\is_string($entryData["name"])
+					|| !(\is_string($entryData["dimension_value"]) || null === $entryData["dimension_value"])
+					|| !\is_string($entryData["value"])
+				)
+				{
+					$this->logger->error("Content request failed: invalid response structure", [
+						"query" => $query,
+						"headers" => $headers,
+						"response" => $response->getContent(false),
+						"perPage" => $perPage,
+						"totalNumberOfItems" => $totalNumberOfItems,
+					]);
+
+					throw new ContentRequestFailedException("Content request failed: invalid response structure");
+				}
+
 				$entry = new DatasourceEntry(
 					$entryData["name"],
 					$entryData["dimension_value"] ?? $entryData["value"],
@@ -574,6 +605,19 @@ final class ContentApi implements ResetInterface
 
 			foreach ($data["links"] as $linkData)
 			{
+				if (!\is_array($linkData))
+				{
+					$this->logger->error("Content request failed: invalid response structure", [
+						"query" => $query,
+						"headers" => $headers,
+						"response" => $response->getContent(false),
+						"perPage" => $perPage,
+						"totalNumberOfItems" => $totalNumberOfItems,
+					]);
+
+					throw new ContentRequestFailedException("Content request failed: invalid response structure");
+				}
+
 				$links[] = new StoryblokLink($linkData);
 			}
 
