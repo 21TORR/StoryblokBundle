@@ -5,9 +5,9 @@ namespace Torr\Storyblok\TranslationManagement\Data;
 final readonly class TranslatableComponentData
 {
 	public function __construct (
-		private string $id,
-		private string $key,
-		private array $data,
+		public string $id,
+		public string $key,
+		public array $data,
 	) {}
 
 	public function getId () : string
