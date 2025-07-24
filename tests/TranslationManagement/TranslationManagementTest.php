@@ -3,6 +3,7 @@
 namespace Tests\Torr\Storyblok\TranslationManagement;
 
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Tiptap\Helper\FixBrokenLinksMarksHelper;
 use Torr\Storyblok\Tiptap\Transformer\RichTextHtmlTransformer;
 use Torr\Storyblok\TranslationManagement\Normalizer\XliffNormalizer;
 use Torr\Storyblok\TranslationManagement\TranslatableContentExtractor;
@@ -19,7 +20,7 @@ final class TranslationManagementTest extends TestCase
 	{
 		$xliffNormalizer = new XliffNormalizer();
 
-		$translatableContentExtractor = new TranslatableContentExtractor(new RichTextHtmlTransformer());
+		$translatableContentExtractor = new TranslatableContentExtractor(new RichTextHtmlTransformer(new FixBrokenLinksMarksHelper()));
 
 		$jsonOriginal = file_get_contents(\sprintf("%s/Data/StoryOriginal.json", __DIR__));
 		$story = json_decode($jsonOriginal, true);
@@ -61,7 +62,7 @@ final class TranslationManagementTest extends TestCase
 
 		self::assertSame("en", $translatableContentCollection->getLanguage());
 
-		$translatableContentTranslator = new TranslatableContentTranslator(new RichTextHtmlTransformer());
+		$translatableContentTranslator = new TranslatableContentTranslator(new RichTextHtmlTransformer(new FixBrokenLinksMarksHelper()));
 
 		$updatedStory = $translatableContentTranslator->translate($story, $translatableContentCollection);
 

@@ -14,13 +14,18 @@ use Tiptap\Nodes\HardBreak;
 use Tiptap\Nodes\HorizontalRule;
 use Tiptap\Nodes\ListItem;
 use Tiptap\Nodes\OrderedList;
+use Torr\Storyblok\Tiptap\Helper\FixBrokenLinksMarksHelper;
 use Torr\Storyblok\Tiptap\Marks\CustomCodeBlock;
 use Torr\Storyblok\Tiptap\Marks\CustomLink;
 use Torr\Storyblok\Tiptap\Nodes\CustomListItem;
 use Torr\Storyblok\Tiptap\Nodes\CustomOrderedList;
 
-final class RichTextHtmlTransformer
+final readonly class RichTextHtmlTransformer
 {
+	public function __construct (
+		private FixBrokenLinksMarksHelper $fixBrokenLinksMarksHelper,
+	) {}
+
 	public function transformToHtml (string $jsonMarkup) : string
 	{
 		return $this->createEditor()
@@ -34,7 +39,7 @@ final class RichTextHtmlTransformer
 			->setContent($html)
 			->getJSON();
 
-		return $this->fixBrokenLinkMarks($json);
+		return $this->fixBrokenLinksMarksHelper->fixJson($json);
 	}
 
 	public function transformToPlainText (string $jsonMarkup) : string
@@ -72,110 +77,5 @@ final class RichTextHtmlTransformer
 				new CustomOrderedList(),
 			],
 		]);
-	}
-
-	private function fixBrokenLinkMarks (string $rawJson) : string
-	{
-		try
-		{
-			$json = json_decode($rawJson, true, 512, \JSON_THROW_ON_ERROR);
-
-			if (!\is_array($json))
-			{
-				return $rawJson;
-			}
-
-			$modifiedJson = [];
-			$nodeContent = $json["content"] ?? [];
-
-			\assert(\is_array($nodeContent));
-
-			foreach ($nodeContent as $key => $item)
-			{
-				\assert(\is_array($item));
-
-				$modifiedJson[$key] = $this->traverseNode($item);
-			}
-
-			return json_encode([
-				...$json,
-				"content" => $modifiedJson,
-			], \JSON_THROW_ON_ERROR);
-		}
-		catch (\JsonException $e)
-		{
-			return $rawJson;
-		}
-	}
-
-	private function traverseNode (array $node) : array
-	{
-		$content = $node["content"] ?? null;
-		$marks = $node["marks"] ?? null;
-
-		if (\is_array($content))
-		{
-			$modified = [];
-
-			foreach ($content as $key => $childNode)
-			{
-				\assert(\is_array($childNode));
-
-				$modified[$key] = $this->traverseNode($childNode);
-			}
-
-			return [
-				...$node,
-				"content" => $modified,
-			];
-		}
-
-		if (\is_array($marks))
-		{
-			$modified = [];
-
-			foreach ($marks as $key => $mark)
-			{
-				\assert(\is_array($mark));
-
-				$modified[$key] = $this->traverseMark($mark);
-			}
-
-			return [
-				...$node,
-				"marks" => $modified,
-			];
-		}
-
-		return $node;
-	}
-
-	private function traverseMark (array $mark) : array
-	{
-		switch ($mark["type"] ?? null)
-		{
-			case "link":
-				$linkType = $mark["attrs"]["linktype"] ?? null;
-
-				return match($linkType)
-				{
-					"story",
-					"email",
-					"url",
-					"asset" => [
-						...$mark,
-						"attrs" => [
-							"uuid" => null,
-							"anchor" => null,
-							...$mark["attrs"],
-						],
-					],
-
-					default => $mark,
-				};
-
-			default:
-				return $mark;
-		}
 	}
 }
