@@ -43,7 +43,7 @@ final readonly class TranslatableComponentDataCollection implements \IteratorAgg
 		{
 			if (\is_array($entry))
 			{
-				if (ComponentDataValidator::isValid($entry))
+				if (ComponentDataValidator::isComponent($entry))
 				{
 					\assert(\is_string($entry["_uid"]));
 					\assert(\is_string($entry["component"]));
