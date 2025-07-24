@@ -14,58 +14,94 @@ use Torr\Storyblok\TranslationManagement\TranslatableContentTranslator;
  */
 final class TranslationManagementTest extends TestCase
 {
+	private array $componentFieldConfiguration = [
+		"product" => [
+			"name",
+			"description",
+		],
+		"quote-block" => [
+			"quote",
+			"author",
+			"anchor-title",
+		],
+		"text-block" => [
+			"text",
+			"anchor-title",
+		],
+	];
+
+	private function getStoryOriginal () : array
+	{
+		$storyJsonOriginal = file_get_contents(\sprintf("%s/Data/StoryOriginal.json", __DIR__));
+		$storyOriginal = json_decode($storyJsonOriginal, true);
+
+		\assert(\is_array($storyOriginal));
+
+		return $storyOriginal;
+	}
+
+	private function getStoryTranslated () : array
+	{
+		$jsonStoryTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslated.json", __DIR__));
+		$storyTranslated = json_decode($jsonStoryTranslated, true);
+
+		\assert(\is_array($storyTranslated));
+
+		return $storyTranslated;
+	}
+
+	private function getXliffOriginal () : string
+	{
+		return file_get_contents(\sprintf("%s/Data/StoryTranslationXliffOriginal.xml", __DIR__)) ?: throw new \RuntimeException("Could not load xliff file");
+	}
+
+	private function getXliffTranslated () : string
+	{
+		return file_get_contents(\sprintf("%s/Data/StoryTranslationXliffTranslated.xml", __DIR__)) ?: throw new \RuntimeException("Could not load xliff file");
+	}
+
 	/**
 	 */
-	public function testBasic () : void
+	public function testStoryToXliff () : void
 	{
+		$story = $this->getStoryOriginal();
+		$xliffExpected = $this->getXliffOriginal();
+
 		$xliffNormalizer = new XliffNormalizer();
 
-		$translatableContentExtractor = new TranslatableContentExtractor(new RichTextHtmlTransformer(new FixBrokenLinksMarksHelper()));
+		$translatableContentExtractor
+			= new TranslatableContentExtractor(new RichTextHtmlTransformer(new FixBrokenLinksMarksHelper()));
 
-		$jsonOriginal = file_get_contents(\sprintf("%s/Data/StoryOriginal.json", __DIR__));
-		$story = json_decode($jsonOriginal, true);
-
-		$transformedStoryXliff = $xliffNormalizer->normalize(
+		$xliff = $xliffNormalizer->normalize(
 			$translatableContentExtractor->extractTranslatableContent(
 				$story,
-				[
-					"product" => [
-						"name",
-						"description",
-					],
-					"quote-block" => [
-						"quote",
-						"author",
-						"anchor-title",
-					],
-					"text-block" => [
-						"text",
-						"anchor-title",
-					],
-				],
+				$this->componentFieldConfiguration,
 			),
 			[
 				"targetLanguage" => "en",
 			],
 		);
 
-		$xliffOriginal = file_get_contents(\sprintf("%s/Data/StoryTranslationXliffOriginal.xml", __DIR__));
+		self::assertSame($xliffExpected, $xliff);
+	}
 
-		self::assertSame($xliffOriginal, $transformedStoryXliff);
+	/**
+	 */
+	public function testStoryTranslation () : void
+	{
+		$story = $this->getStoryOriginal();
+		$storyTranslatedExpected = $this->getStoryTranslated();
+		$xliffTranslated = $this->getXliffTranslated();
+		$languageExpected = "en";
 
-		$jsonTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslated.json", __DIR__));
-		$storyTranslated = json_decode($jsonTranslated, true);
-
-		$xliffTranslated = file_get_contents(\sprintf("%s/Data/StoryTranslationXliffTranslated.xml", __DIR__));
-
+		$xliffNormalizer = new XliffNormalizer();
 		$translatableContentCollection = $xliffNormalizer->denormalize($xliffTranslated);
 
-		self::assertSame("en", $translatableContentCollection->getLanguage());
+		self::assertSame($languageExpected, $translatableContentCollection->getLanguage());
 
 		$translatableContentTranslator = new TranslatableContentTranslator(new RichTextHtmlTransformer(new FixBrokenLinksMarksHelper()));
+		$storyTranslated = $translatableContentTranslator->translate($story, $translatableContentCollection);
 
-		$updatedStory = $translatableContentTranslator->translate($story, $translatableContentCollection);
-
-		self::assertSame($storyTranslated, $updatedStory);
+		self::assertSame($storyTranslatedExpected, $storyTranslated);
 	}
 }
