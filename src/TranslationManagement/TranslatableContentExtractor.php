@@ -35,7 +35,7 @@ final readonly class TranslatableContentExtractor
 
 		$tagElements = [];
 
-		foreach ($componentDataCollection as $componentData)
+		foreach ($componentDataCollection->getData() as $componentData)
 		{
 			$componentConfig = $config[$componentData->getKey()] ?? null;
 
