@@ -1,12 +1,7 @@
-3.17.4
+3.18.0
 ======
 
 * (feature) Add function to get `first published at` date.
-
-
-3.17.3 (unreleased)
-======
-
 * (improvement) Allow `sebastian/diff` v6 + v7.
 * (improvement) Require PHP 8.4+.
 * (improvement) Improve type definitions.
