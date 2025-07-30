@@ -270,12 +270,22 @@ abstract class AbstractComponent
 
 		$definition = $this->configureComponent();
 		$previewField = null;
+		$previewImageField = null;
 
 		foreach ($this->getFields()->getRootFields() as $key => $field)
 		{
 			if ($field->isStoryblokPreviewField())
 			{
 				$previewField = $key;
+			}
+
+			if ($field->isStoryblokImagePreviewField())
+			{
+				$previewImageField = $key;
+			}
+
+			if (null !== $previewField && null !== $previewImageField)
+			{
 				break;
 			}
 		}
@@ -292,6 +302,7 @@ abstract class AbstractComponent
 				)
 				: null,
 			"preview_field" => $previewField,
+			"content_type_asset_preview" => $previewImageField,
 			"color" => $definition->iconBackgroundColor,
 			"icon" => $definition->icon?->value,
 			"description" => $definition->description,

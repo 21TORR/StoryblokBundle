@@ -235,4 +235,20 @@ final class ChoiceField extends AbstractField
 
 		return $transformed;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	#[\Override]
+	public function useAsAdminDisplayName (?bool $canSync = null) : static
+	{
+		if ($this->allowMultiselect)
+		{
+			throw new InvalidFieldConfigurationException("The choice field with multiselect can't be used as preview field.");
+		}
+
+		parent::useAsAdminDisplayName($canSync);
+
+		return $this;
+	}
 }
