@@ -58,7 +58,6 @@ interface FieldDefinitionInterface
 	 */
 	public function isStoryblokPreviewField () : bool;
 
-
 	/**
 	 * This method returns whether the field is used as the image preview field when the component
 	 * containing this field is being referenced.
