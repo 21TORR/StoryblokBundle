@@ -244,7 +244,7 @@ final class ChoiceField extends AbstractField
 	{
 		if ($this->allowMultiselect)
 		{
-			throw new InvalidFieldConfigurationException("This field type cannot be used as admin display name. Only text-based fields can be used.");
+			throw new InvalidFieldConfigurationException("The choice field with multiselect can't be used as preview field.");
 		}
 
 		parent::useAsAdminDisplayName($canSync);
