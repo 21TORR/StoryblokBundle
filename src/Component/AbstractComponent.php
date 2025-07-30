@@ -277,21 +277,16 @@ abstract class AbstractComponent
 			if ($field->isStoryblokPreviewField())
 			{
 				$previewField = $key;
-
-				if (null !== $previewField && null !== $previewImageField)
-				{
-					break;
-				}
 			}
 
 			if ($field->isStoryblokImagePreviewField())
 			{
 				$previewImageField = $key;
+			}
 
-				if (null !== $previewField && null !== $previewImageField)
-				{
-					break;
-				}
+			if (null !== $previewField && null !== $previewImageField)
+			{
+				break;
 			}
 		}
 
