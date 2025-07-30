@@ -195,7 +195,7 @@ final class BloksField extends AbstractField
 	 * @inheritDoc
 	 */
 	#[\Override]
-	public function useAsAdminDisplayName (?bool $canSync = null, ) : static
+	public function useAsAdminDisplayName (?bool $canSync = null) : static
 	{
 		throw new InvalidFieldConfigurationException("This field type cannot be used as admin display name. Only text-based fields can be used.");
 	}

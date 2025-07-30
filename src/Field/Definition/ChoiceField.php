@@ -240,7 +240,7 @@ final class ChoiceField extends AbstractField
 	 * @inheritDoc
 	 */
 	#[\Override]
-	public function useAsAdminDisplayName (?bool $canSync = null, ) : static
+	public function useAsAdminDisplayName (?bool $canSync = null) : static
 	{
 		if ($this->allowMultiselect)
 		{
