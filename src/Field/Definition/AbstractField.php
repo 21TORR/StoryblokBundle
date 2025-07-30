@@ -149,6 +149,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function isStoryblokPreviewField () : bool
 	{
 		return $this->useAsAdminDisplayName;
@@ -157,6 +158,7 @@ abstract class AbstractField implements FieldDefinitionInterface
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function isStoryblokImagePreviewField () : bool
 	{
 		return $this->useAsAdminDisplayImage;
