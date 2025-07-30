@@ -10,7 +10,6 @@ final class ComponentConfigDiffer
 {
 	private const array IGNORED_LEVEL_0_KEYS = [
 		"all_presets",
-		"content_type_asset_preview",
 		"created_at",
 		"id",
 		"internal_tag_ids",
