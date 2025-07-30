@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Component\Config;
 
 enum ComponentIcon : string
 {
+	case ADD = "block-add";
 	case ARROW_POINTER = "block-arrow-pointer";
 	case AT = "block-@";
 	case BLOCK = "block-block";
