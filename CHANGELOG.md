@@ -1,3 +1,9 @@
+3.19.0 (unreleased)
+======
+
+* (improvement) Update `ComponentIcon` with new `::ADD` icon.
+
+
 3.18.0
 ======
 
