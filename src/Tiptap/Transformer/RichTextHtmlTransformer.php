@@ -26,6 +26,9 @@ final readonly class RichTextHtmlTransformer
 		private FixBrokenLinksMarksHelper $fixBrokenLinksMarksHelper,
 	) {}
 
+	/**
+	 *
+	 */
 	public function transformToHtml (string $jsonMarkup) : string
 	{
 		return $this->createEditor()
@@ -33,6 +36,9 @@ final readonly class RichTextHtmlTransformer
 			->getHTML();
 	}
 
+	/**
+	 *
+	 */
 	public function transformToJsonMarkup (string $html) : string
 	{
 		$json = $this->createEditor()
@@ -42,6 +48,9 @@ final readonly class RichTextHtmlTransformer
 		return $this->fixBrokenLinksMarksHelper->fixJson($json);
 	}
 
+	/**
+	 *
+	 */
 	public function transformToPlainText (string $jsonMarkup) : string
 	{
 		return $this->createEditor()
@@ -49,6 +58,9 @@ final readonly class RichTextHtmlTransformer
 			->getText();
 	}
 
+	/**
+	 *
+	 */
 	private function createEditor () : Editor
 	{
 		BulletList::$name = "bullet_list";
