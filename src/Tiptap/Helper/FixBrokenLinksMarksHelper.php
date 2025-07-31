@@ -82,30 +82,28 @@ class FixBrokenLinksMarksHelper
 
 	private function traverseMark (array $mark) : array
 	{
-		switch ($mark["type"] ?? null)
+		$type = $mark["type"] ?? null;
+
+		if ("link" !== $type)
 		{
-			case "link":
-				$linkType = $mark["attrs"]["linktype"] ?? null;
-
-				return match($linkType)
-				{
-					"story",
-					"email",
-					"url",
-					"asset" => [
-						...$mark,
-						"attrs" => [
-							"uuid" => null,
-							"anchor" => null,
-							...$mark["attrs"],
-						],
-					],
-
-					default => $mark,
-				};
-
-			default:
-				return $mark;
+			return $mark;
 		}
+
+		return match ($mark["attrs"]["linktype"] ?? null)
+		{
+			"story",
+			"email",
+			"url",
+			"asset" => [
+				...$mark,
+				"attrs" => [
+					"uuid" => null,
+					"anchor" => null,
+					...$mark["attrs"],
+				],
+			],
+
+			default => $mark,
+		};
 	}
 }
