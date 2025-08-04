@@ -41,11 +41,17 @@ final readonly class RichTextHtmlTransformer
 	 */
 	public function transformToJsonMarkup (string $html) : string
 	{
-		$json = $this->createEditor()
-			->setContent($html)
-			->getJSON();
+		// parse the HTML
+		$editor = $this->createEditor()
+			->setContent($html);
 
-		return $this->fixBrokenLinksMarksHelper->fixJson($json);
+		// fix the links in the document
+		$modified = $this->fixBrokenLinksMarksHelper->fixLinksInDocument($editor->getDocument());
+
+		// normalize using the Tiptap editor to keep compatibility
+		return $editor
+			->setContent($modified)
+			->getJSON();
 	}
 
 	/**

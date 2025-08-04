@@ -4,38 +4,27 @@ namespace Torr\Storyblok\Tiptap\Helper;
 
 class FixBrokenLinksMarksHelper
 {
-	public function fixJson (string $rawJson) : string
+	/**
+	 *
+	 */
+	public function fixLinksInDocument (array $document) : array
 	{
-		try
+		$modifiedJson = [];
+		$nodeContent = $document["content"] ?? [];
+
+		\assert(\is_array($nodeContent));
+
+		foreach ($nodeContent as $key => $item)
 		{
-			$json = json_decode($rawJson, true, 512, \JSON_THROW_ON_ERROR);
+			\assert(\is_array($item));
 
-			if (!\is_array($json))
-			{
-				return $rawJson;
-			}
-
-			$modifiedJson = [];
-			$nodeContent = $json["content"] ?? [];
-
-			\assert(\is_array($nodeContent));
-
-			foreach ($nodeContent as $key => $item)
-			{
-				\assert(\is_array($item));
-
-				$modifiedJson[$key] = $this->traverseNode($item);
-			}
-
-			return json_encode([
-				...$json,
-				"content" => $modifiedJson,
-			], \JSON_THROW_ON_ERROR);
+			$modifiedJson[$key] = $this->traverseNode($item);
 		}
-		catch (\JsonException $e)
-		{
-			return $rawJson;
-		}
+
+		return [
+			...$document,
+			"content" => $modifiedJson,
+		];
 	}
 
 	private function traverseNode (array $node) : array
