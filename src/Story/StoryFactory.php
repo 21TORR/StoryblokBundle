@@ -92,7 +92,7 @@ final class StoryFactory
 		}
 		catch (UnknownComponentKeyException $exception)
 		{
-			$this->logger->warning("Could not hydrate story {id} of type {type}: {message}", [
+			$this->logger->error("Could not hydrate story {id} of type {type}: {message}", [
 				"id" => $data["id"] ?? "n/a",
 				"type" => $type,
 				"message" => $exception->getMessage(),
