@@ -11,9 +11,12 @@
 	],
 	"require": {
 		"php": ">= 8.4",
+		"ext-dom": "*",
+		"ext-libxml": "*",
 		"21torr/bundle-helpers": "^2.3.1",
 		"21torr/cli": "^1.2.3",
 		"21torr/hosting": "^3.2 || ^4.0",
+		"galbar/jsonpath": "^3.0",
 		"psr/log": "^3.0",
 		"sebastian/diff": "^4.0.4 || ^5.0 || ^6.0 || ^7.0",
 		"symfony/config": "^7.1",

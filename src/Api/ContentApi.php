@@ -82,6 +82,10 @@ final class ContentApi implements ResetInterface
 
 			if (404 === $response->getStatusCode())
 			{
+				$this->logger->error("Story not found with id {id}", [
+					"id" => $identifier,
+				]);
+
 				return null;
 			}
 
@@ -91,6 +95,11 @@ final class ContentApi implements ResetInterface
 		}
 		catch (ExceptionInterface $exception)
 		{
+			$this->logger->error("Failed to request story {id}", [
+				"id" => $identifier,
+				"exception" => $exception,
+			]);
+
 			throw new ContentRequestFailedException(\sprintf(
 				"Content request failed for single story '%s': %s",
 				$identifier,

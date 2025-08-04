@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="default" trgLang="en">
+  <file id="461935" original="de/products/test">
+    <unit id="$..[?(@['_uid']=='00b45e23-5dc5-4398-9b34-e87ae4ed42e6')]['name']">
+      <segment>
+        <source>Test</source>
+        <target>TRANSLATED: Test</target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='00b45e23-5dc5-4398-9b34-e87ae4ed42e6')]['description']">
+      <segment>
+        <source>Description</source>
+        <target>TRANSLATED: Description</target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='a46d5a15-f99a-4a6e-ad48-773ab0a807f9')]['quote']">
+      <segment>
+        <source>Quote + Emoji ❤️</source>
+        <target>TRANSLATED: Quote + Emoji ❤️</target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='a46d5a15-f99a-4a6e-ad48-773ab0a807f9')]['author']">
+      <segment>
+        <source>Author</source>
+        <target>TRANSLATED: Author</target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='a46d5a15-f99a-4a6e-ad48-773ab0a807f9')]['anchor-title']">
+      <segment>
+        <source></source>
+        <target>TRANSLATED: </target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text']">
+      <segment>
+        <source>Text 1</source>
+        <target>TRANSLATED: &lt;p&gt;&lt;strong&gt;Text 1&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Text 2&lt;strong&gt;Text 3&lt;/strong&gt;Text 4&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 5&lt;strong&gt;Text 6&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;strong&gt;Text 7&lt;/strong&gt;Text 8&lt;strong&gt;Text 9&lt;/strong&gt;Text 10&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 11&lt;strong&gt;Text 12&lt;/strong&gt;Text 13&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</target>
+      </segment>
+    </unit>
+    <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['anchor-title']">
+      <segment>
+        <source></source>
+        <target>TRANSLATED: </target>
+      </segment>
+    </unit>
+  </file>
+</xliff>
