@@ -1,4 +1,4 @@
-3.19.0 (unreleased)
+3.19.0
 ======
 
 * (feature) Add story import/export infrastructure with integration as translation library
