@@ -1,14 +1,14 @@
-3.18.1 (unreleased)
+3.19.0 (unreleased)
 ======
 
+* (feature) Add story import/export infrastructure with integration as translation library
+* (improvement) Update `ComponentIcon` with new `::ADD` icon.
 * (improvement) Handle empty space ids in env vars better.
 
 
 3.18.0
 ======
 
-* (improvement) Update `ComponentIcon` with new `::ADD` icon.
-* (feature) Add story translation library
 * (feature) Add function to get `first published at` date.
 * (improvement) Allow `sebastian/diff` v6 + v7.
 * (improvement) Require PHP 8.4+.
