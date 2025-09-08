@@ -2,6 +2,7 @@
 ======
 
 * (improvement) Add support for richtext table toolbar options
+* (bug) Fix handling of "empty" (= structure is there, but filename is empty) assets from Storyblok.
 
 
 3.19.0
