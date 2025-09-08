@@ -42,6 +42,9 @@ enum RichTextStyling : string
 	case InsertColumnAfter = "insert-column-after";
 	case InsertRowAbove = "insert-row-above";
 	case InsertRowBelow = "insert-row-below";
+	case ToggleHeaderColumn = "toggle-header-column";
+	case ToggleHeaderRow = "toggle-header-row";
+	case ToggleHeaderCell = "toggle-header-cell";
 	case MergeCells = "merge-cells";
 	case DeleteRow = "delete-row";
 	case DeleteColumn = "delete-column";
