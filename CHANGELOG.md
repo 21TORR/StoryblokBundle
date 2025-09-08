@@ -1,3 +1,9 @@
+3.19.1
+======
+
+* (improvement) Add support for richtext table toolbar options
+
+
 3.19.0
 ======
 
