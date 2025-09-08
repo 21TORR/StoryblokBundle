@@ -2,6 +2,9 @@
 
 namespace Torr\Storyblok\Transformer;
 
+/**
+ *
+ */
 final class DataTransformer
 {
 	/**
