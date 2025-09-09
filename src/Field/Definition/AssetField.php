@@ -207,28 +207,32 @@ final class AssetField extends AbstractField
 	{
 		\assert(null === $data || \is_array($data));
 
-		$transformed = null;
-
-		if (\is_array($data) && null !== $data["filename"])
+		if (!\is_array($data))
 		{
-			$assetUrl = $data["filename"];
-			[$width, $height] = $context->extractImageDimensions($assetUrl);
-
-			$transformed = new AssetData(
-				url: $assetUrl,
-				id: $data["id"],
-				alt: $context->normalizeOptionalString($data["alt"] ?? null),
-				name: $context->normalizeOptionalString($data["name"] ?? null),
-				focus: $context->normalizeOptionalString($data["focus"] ?? null),
-				title: $context->normalizeOptionalString($data["title"] ?? null),
-				source: $context->normalizeOptionalString($data["source"] ?? null),
-				copyright: $context->normalizeOptionalString($data["copyright"] ?? null),
-				isExternal: $data["is_external_url"] ?? false,
-				width: $width,
-				height: $height,
-			);
+			return null;
 		}
 
-		return $transformed;
+		$assetUrl = (string) ($data["filename"] ?? "");
+
+		if ("" === $assetUrl)
+		{
+			return null;
+		}
+
+		[$width, $height] = $context->extractImageDimensions($assetUrl);
+
+		return new AssetData(
+			url: $assetUrl,
+			id: $data["id"],
+			alt: $context->normalizeOptionalString($data["alt"] ?? null),
+			name: $context->normalizeOptionalString($data["name"] ?? null),
+			focus: $context->normalizeOptionalString($data["focus"] ?? null),
+			title: $context->normalizeOptionalString($data["title"] ?? null),
+			source: $context->normalizeOptionalString($data["source"] ?? null),
+			copyright: $context->normalizeOptionalString($data["copyright"] ?? null),
+			isExternal: $data["is_external_url"] ?? false,
+			width: $width,
+			height: $height,
+		);
 	}
 }
