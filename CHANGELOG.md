@@ -1,3 +1,9 @@
+3.19.2
+======
+
+* (bug) Send strings instead of integers to Storyblok for ChoiceField minimum and maximum option settings
+
+
 3.19.1
 ======
 
