@@ -73,11 +73,11 @@ final class ChoiceField extends AbstractField
 					? $this->defaultValue->value
 					: $this->defaultValue,
 				// we need to provide the min_options and max_options as string, otherwise the validation
-				// of the number of choices won't work when saving an element
+				// of the number of choices won't work in Storyblok when saving an element
 				"min_options" => null !== $this->minimumNumberOfOptions
 					? (string) $this->minimumNumberOfOptions
 					: null,
-				"max_options" => null !== $this->minimumNumberOfOptions
+				"max_options" => null !== $this->maximumNumberOfOptions
 					? (string) $this->maximumNumberOfOptions
 					: null,
 				// never allow to export this field to translate (as you need to know the format)
