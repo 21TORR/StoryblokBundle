@@ -72,8 +72,14 @@ final class ChoiceField extends AbstractField
 				"default_value" => $this->defaultValue instanceof \BackedEnum
 					? $this->defaultValue->value
 					: $this->defaultValue,
-				"min_options" => $this->minimumNumberOfOptions,
-				"max_options" => $this->maximumNumberOfOptions,
+				// we need to provide the min_options and max_options as string, otherwise the validation
+				// of the number of choices won't work in Storyblok when saving an element
+				"min_options" => null !== $this->minimumNumberOfOptions
+					? (string) $this->minimumNumberOfOptions
+					: null,
+				"max_options" => null !== $this->maximumNumberOfOptions
+					? (string) $this->maximumNumberOfOptions
+					: null,
 				// never allow to export this field to translate (as you need to know the format)
 				// also multi options are never translatable in Storyblok
 				"no_translate" => true,
