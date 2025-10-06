@@ -1,3 +1,9 @@
+3.19.3
+======
+
+* (bug) Remove URL check for Storyblok asset proxy, as Storyblok has changed their URL structure.
+
+
 3.19.2
 ======
 
