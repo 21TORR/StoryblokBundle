@@ -26,12 +26,6 @@ class AssetProxyController extends AbstractController
 			throw $this->createNotFoundException("Invalid request");
 		}
 
-		// check for valid URLs
-		if (!preg_match('~^\d*x\d*\/\w+\/[^\/]+$~D', $path))
-		{
-			throw $this->createNotFoundException("File not found");
-		}
-
 		$filePath = $assetProxy->getFilePath($path);
 
 		if (null === $filePath)
