@@ -1,3 +1,9 @@
+3.19.4
+======
+
+* (improvement) Make URI signer more lenient by ignoring all other query parameters in the asset proxy.
+
+
 3.19.3
 ======
 
