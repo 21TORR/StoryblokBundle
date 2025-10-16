@@ -40,6 +40,15 @@ readonly class AssetProxyUrlGenerator
 	 */
 	public function verifyProxyUrlRequest (Request $request) : bool
 	{
-		return $this->uriSigner->checkRequest($request);
+		// strip other query parameters, we only care about the _hash
+		$urlToCheck = \sprintf(
+			"%s?%s",
+			$request->getUriForPath($request->getPathInfo()),
+			http_build_query([
+				"_hash" => $request->query->get("_hash"),
+			]),
+		);
+
+		return $this->uriSigner->check($urlToCheck);
 	}
 }
