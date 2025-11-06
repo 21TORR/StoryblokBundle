@@ -50,4 +50,20 @@ readonly class AssetFolderTree
 	{
 		return $this->idMap[$id] ?? null;
 	}
+
+	/**
+	 *
+	 */
+	public function getFolderByUuid (string $uuid) : ?AssetFolder
+	{
+		return $this->uuidMap[$uuid] ?? null;
+	}
+
+	/**
+	 * @return list<AssetFolder>
+	 */
+	public function getRootFolders () : array
+	{
+		return $this->rootFolders;
+	}
 }
