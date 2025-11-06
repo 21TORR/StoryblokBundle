@@ -1,3 +1,10 @@
+3.20.0
+======
+
+* (feature) Add management API method to update an asset.
+* (feature) Add management API asset folder fetcher.
+
+
 3.19.4
 ======
 

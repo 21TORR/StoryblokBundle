@@ -12,6 +12,9 @@ use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Api\Data\ApiActionPerformed;
+use Torr\Storyblok\Api\Data\Asset\AssetData;
+use Torr\Storyblok\Api\Data\Asset\AssetFolder;
+use Torr\Storyblok\Api\Data\Asset\AssetFolderTree;
 use Torr\Storyblok\Api\Data\ComponentIdMap;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
@@ -341,6 +344,22 @@ final class ManagementApi
 	/**
 	 *
 	 */
+	public function updateAsset (
+		int $assetId,
+		array $payload,
+	) : array
+	{
+		return $this->sendRequest(
+			path: "assets/{$assetId}",
+			options: new HttpOptions()
+				->setJson($payload),
+			method: "PUT",
+		);
+	}
+
+	/**
+	 *
+	 */
 	private function getDatasourceId (
 		string $datasourceSlug,
 	) : int
@@ -429,6 +448,47 @@ final class ManagementApi
 		}
 
 		return $result;
+	}
+
+	/**
+	 *
+	 */
+	public function fetchAssetFolders () : AssetFolderTree
+	{
+		$response = $this->sendRequest("asset_folders");
+		$folders = [];
+
+		// create all asset folders
+		foreach ($response["asset_folders"] as $folderData)
+		{
+			$folders[$folderData["id"]] = new AssetFolder(
+				id: $folderData["id"],
+				name: $folderData["name"],
+				uuid: $folderData["uuid"],
+			);
+		}
+
+		// link asset folders
+		foreach ($response["asset_folders"] as $assetFolder)
+		{
+			$parentId = $assetFolder["parent_id"];
+
+			if (0 === $parentId)
+			{
+				continue;
+			}
+
+			$folders[$parentId]->addChild($folders[$assetFolder["id"]]);
+		}
+
+		return new AssetFolderTree($folders);
+	}
+
+	public function fetchAssetData (int $assetId) : AssetData
+	{
+		$response = $this->sendRequest("assets/{$assetId}");
+
+		return new AssetData($response);
 	}
 
 	public function exportTranslationsXmlFile (
