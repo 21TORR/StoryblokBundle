@@ -32,6 +32,14 @@ readonly class AssetData
 	/**
 	 *
 	 */
+	public function getFilename () : string
+	{
+		return $this->data["short_filename"];
+	}
+
+	/**
+	 *
+	 */
 	public function getSpaceId () : int
 	{
 		return $this->data["space_id"];
@@ -43,5 +51,29 @@ readonly class AssetData
 	public function getFolderId () : ?int
 	{
 		return $this->data["asset_folder_id"];
+	}
+
+	/**
+	 *
+	 */
+	public function getFileSize () : int
+	{
+		return $this->data["content_length"];
+	}
+
+	/**
+	 *
+	 */
+	public function getMimeType () : string
+	{
+		return $this->data["content_type"];
+	}
+
+	/**
+	 *
+	 */
+	public function isPrivate () : bool
+	{
+		return $this->data["is_private"];
 	}
 }
