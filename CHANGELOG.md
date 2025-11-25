@@ -1,4 +1,4 @@
-3.20.1 (unreleased)
+3.20.1
 ======
 
 * (improvement) Add more getters for `AssetData`.
