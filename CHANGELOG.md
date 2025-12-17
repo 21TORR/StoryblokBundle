@@ -1,3 +1,10 @@
+3.21.0
+======
+
+* (feature) Add `AssetDataEntity`.
+* (feature) Add asset data importer.
+
+
 3.20.1
 ======
 

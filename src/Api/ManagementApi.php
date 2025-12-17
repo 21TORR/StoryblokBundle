@@ -16,6 +16,7 @@ use Torr\Storyblok\Api\Data\Asset\AssetData;
 use Torr\Storyblok\Api\Data\Asset\AssetFolder;
 use Torr\Storyblok\Api\Data\Asset\AssetFolderTree;
 use Torr\Storyblok\Api\Data\ComponentIdMap;
+use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
 use Torr\Storyblok\Exception\Api\DatasourceSyncFailedException;
@@ -433,6 +434,66 @@ final class ManagementApi
 	}
 
 	/**
+	 * Sends the paginated request and returns the response
+	 */
+	private function sendPaginatedRequest (
+		string $path,
+		HttpOptions $options = new HttpOptions(),
+		string $method = "GET",
+	) : PaginatedApiResult
+	{
+		$formattedOptions = $options->toArray();
+		$formattedOptions["headers"]["authorization"] = $this->config->getManagementToken();
+
+		try
+		{
+			// ensure that we stay in the rate limit
+			$this->rateLimiter->consume()->wait();
+
+			$response = $this->client->request(
+				$method,
+				$path,
+				$formattedOptions,
+			);
+
+			$headers = $response->getHeaders();
+			$perPage = $this->parseHeaderAsInt($headers, "per-page");
+			$totalNumberOfItems = $this->parseHeaderAsInt($headers, "total");
+
+			return new PaginatedApiResult(
+				perPage: $perPage,
+				totalPages: (int) ceil($totalNumberOfItems / $perPage),
+				entries: "" !== $response->getContent()
+					? $response->toArray()
+					: [],
+			);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			$response = $exception instanceof HttpExceptionInterface
+				? $exception->getResponse()
+				: null;
+
+			$this->logger->error("Failed management request {method} '{path}': {message}", [
+				"method" => $method,
+				"path" => $path,
+				"message" => $exception->getMessage(),
+				"statusCode" => $response?->getStatusCode(),
+				// use unchanged, to not leak the token
+				"options" => $options->toArray(),
+				"response" => $response?->getContent(false),
+			]);
+
+			throw new ApiRequestFailedException(\sprintf(
+				"Failed management request %s '%s': %s",
+				$method,
+				$path,
+				$exception->getMessage(),
+			), previous: $exception);
+		}
+	}
+
+	/**
 	 * @return array<string, array>
 	 */
 	public function fetchComponentDefinitions () : array
@@ -482,6 +543,36 @@ final class ManagementApi
 		}
 
 		return new AssetFolderTree($folders);
+	}
+
+	/**
+	 * @return AssetData[]
+	 */
+	public function fetchAllAssets () : array
+	{
+		$result = [];
+		$page = 1;
+
+		do
+		{
+			$options = new HttpOptions()
+				->setQuery([
+					"page" => $page,
+					"per_page" => 100,
+				]);
+
+			$currentPage = $this->sendPaginatedRequest("assets", $options);
+
+			foreach ($currentPage->entries["assets"] as $asset)
+			{
+				$result[] = new AssetData($asset);
+			}
+
+			++$page;
+		}
+		while ($currentPage->totalPages >= $page);
+
+		return $result;
 	}
 
 	public function fetchAssetData (int $assetId) : AssetData
@@ -568,5 +659,19 @@ final class ManagementApi
 			->setHeaders([
 				"Authorization" => $this->config->getManagementToken(),
 			]);
+	}
+
+	/**
+	 * Gets the first header as int/null
+	 *
+	 * @param string[][] $headers
+	 */
+	private function parseHeaderAsInt (array $headers, string $headerName) : ?int
+	{
+		$value = $headers[$headerName][0] ?? null;
+
+		return ctype_digit($value)
+			? (int) $value
+			: null;
 	}
 }

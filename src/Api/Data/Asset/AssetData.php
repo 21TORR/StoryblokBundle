@@ -76,4 +76,11 @@ readonly class AssetData
 	{
 		return $this->data["is_private"];
 	}
+
+	/**
+	 */
+	public function getInternalTags () : array
+	{
+		return $this->data["internal_tags_list"];
+	}
 }

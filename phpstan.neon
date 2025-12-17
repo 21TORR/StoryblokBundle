@@ -2,6 +2,10 @@ includes:
 	- vendor/21torr/janus/phpstan/lib.neon
 
 parameters:
+	ignoreErrors:
+		# We will always have the issue, that the type of the prop and the database type won't match,
+		# as we validate in between and PHPStan can't know that. So let's just deactivate it.
+		- identifier: doctrine.columnType
 
 # These are temporarily copied here, as normally they should be in the lib.neon of janus.
 # However, due to a bug in PHPStan, this currently doesn't work (https://github.com/phpstan/phpstan/issues/12844)
