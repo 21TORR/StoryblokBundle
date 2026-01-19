@@ -1,7 +1,7 @@
 3.20.2
 ======
 
-* (improvement) Fix deprecation in `Choice` asserts.
+* (improvement) Fix deprecation in `Choice` asserts and rate limiter.
 * (improvement) Bump required packages.
 
 

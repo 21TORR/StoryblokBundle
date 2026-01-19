@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Component\RateLimiter\LimiterInterface;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -34,7 +34,7 @@ final class ManagementApi
 	public function __construct (
 		private readonly StoryblokConfig $config,
 		HttpClientInterface $client,
-		RateLimiterFactory $storyblokManagementLimiter,
+		RateLimiterFactoryInterface $storyblokManagementLimiter,
 		private readonly LoggerInterface $logger,
 	)
 	{
