@@ -52,7 +52,7 @@ final class TableField extends AbstractField
 				new Collection([
 					"thead" => new Type("array"),
 					"tbody" => new Type("array"),
-					"fieldtype" => new Choice(["table"]),
+					"fieldtype" => new Choice(choices: ["table"]),
 				]),
 			],
 		);
