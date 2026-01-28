@@ -51,4 +51,9 @@ abstract class AbstractStoryblokAdapter
 	 * @return list<class-string<AbstractComponent>>
 	 */
 	abstract public function getStandaloneComponents () : array;
+
+	public static function getKey () : string
+	{
+		return self::class;
+	}
 }
