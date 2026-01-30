@@ -25,24 +25,29 @@ use Torr\Storyblok\Folder\FolderData;
 final class ManagementApi
 {
 	private const API_URL = "https://mapi.storyblok.com/v1/spaces/%d/";
-	private readonly HttpClientInterface $client;
+	private ?StoryblokConfig $config = null;
+	private ?HttpClientInterface $client = null;
 	private ?ComponentIdMap $componentIdMap = null;
 	private readonly LimiterInterface $rateLimiter;
 
 	/**
 	 */
 	public function __construct (
-		private readonly StoryblokConfig $config,
-		HttpClientInterface $client,
+		private readonly HttpClientInterface $httpClient,
 		RateLimiterFactoryInterface $storyblokManagementLimiter,
 		private readonly LoggerInterface $logger,
 	)
 	{
 		$this->rateLimiter = $storyblokManagementLimiter->create();
+	}
+
+	public function setConfig (StoryblokConfig $config) : void
+	{
+		$this->config = $config;
 		$this->client = new RetryableHttpClient(
-			$client->withOptions(
+			$this->httpClient->withOptions(
 				(new HttpOptions())
-					->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
+					->setBaseUri(\sprintf(self::API_URL, $config->getSpaceId()))
 					->toArray(),
 			),
 		);
@@ -206,6 +211,8 @@ final class ManagementApi
 	 */
 	private function fetchFreshComponentIdMap () : ComponentIdMap
 	{
+		\assert(null !== $this->client, "ManagementApi is missing client");
+
 		try
 		{
 			// ensure that we stay in the rate limit
@@ -389,6 +396,9 @@ final class ManagementApi
 		string $method = "GET",
 	) : array
 	{
+		\assert(null !== $this->config, "ManagementApi is missing config");
+		\assert(null !== $this->client, "ManagementApi is missing client");
+
 		try
 		{
 			// ensure that we stay in the rate limit
@@ -496,6 +506,8 @@ final class ManagementApi
 		string $languageCode = "default",
 	) : string
 	{
+		\assert(null !== $this->client, "ManagementApi is missing client");
+
 		$this->rateLimiter->consume()->wait();
 
 		$options = $this->generateBaseOptions()
@@ -528,6 +540,9 @@ final class ManagementApi
 		string $xmlContent,
 	) : void
 	{
+		\assert(null !== $this->config, "ManagementApi is missing config");
+		\assert(null !== $this->client, "ManagementApi is missing client");
+
 		$this->rateLimiter->consume()->wait();
 
 		try
@@ -564,6 +579,8 @@ final class ManagementApi
 	 */
 	private function generateBaseOptions () : HttpOptions
 	{
+		\assert(null !== $this->config, "ManagementApi is missing config");
+
 		return (new HttpOptions())
 			->setHeaders([
 				"Authorization" => $this->config->getManagementToken(),

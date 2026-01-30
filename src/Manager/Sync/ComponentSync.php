@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Manager\Sync;
 
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Storyblok\Api\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
@@ -28,21 +29,25 @@ final class ComponentSync
 	 */
 	public function syncDefinitionsInteractively (
 		TorrStyle $io,
+		AbstractStoryblokAdapter $adapter,
 		bool $forceSync = false,
 	) : bool
 	{
+		$this->managementApi->setConfig($adapter->config);
+
 		try
 		{
-			$definitions = $this->managementApi->fetchComponentDefinitions();
+			$remoteDefinitions = $this->managementApi->fetchComponentDefinitions();
+
 			$io->writeln("• Normalizing all components");
-			$normalized = $this->componentNormalizer->normalize();
+			$localDefinitions = $this->componentNormalizer->normalize($adapter);
 			$io->writeln("<fg=green>✓</> done");
 
 			$toRun = [];
 
-			foreach ($normalized as $componentImport)
+			foreach ($localDefinitions as $componentImport)
 			{
-				$existing = $definitions[$componentImport->getName()] ?? null;
+				$existing = $remoteDefinitions[$componentImport->getName()] ?? null;
 
 				// if it is a new component: just add
 				if (null === $existing)

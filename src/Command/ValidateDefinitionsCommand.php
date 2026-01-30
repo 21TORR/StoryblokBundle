@@ -7,8 +7,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
-use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Exception\Validation\ValidationFailedException;
+use Torr\Storyblok\Manager\StoryblokAdapterManager;
 use Torr\Storyblok\Manager\Validator\ComponentValidator;
 
 #[AsCommand(name: "storyblok:definitions:validate", description: "Validates the local component definitions against Storyblok")]
@@ -19,7 +19,7 @@ final class ValidateDefinitionsCommand extends Command
 	 */
 	public function __construct (
 		private readonly ComponentValidator $componentValidator,
-		private readonly ContentApi $contentApi,
+		private readonly StoryblokAdapterManager $adapterManager,
 	)
 	{
 		parent::__construct();
@@ -31,32 +31,37 @@ final class ValidateDefinitionsCommand extends Command
 	protected function execute (InputInterface $input, OutputInterface $output) : int
 	{
 		$io = new TorrStyle($input, $output);
-		$io->title("Storyblok: Sync Definitions");
+		$io->title("Storyblok: Validate Definitions");
 
-		$spaceInfo = $this->contentApi->getSpaceInfo();
+		$adapters = $this->adapterManager->getAllAdapters();
 
-		$io->comment(\sprintf(
-			"Validating components for space <fg=magenta>%s</> (<fg=yellow>%d</>)\n<fg=gray>%s</>",
-			$spaceInfo->getName(),
-			$spaceInfo->getId(),
-			$spaceInfo->getBackendDashboardUrl(),
-		));
-
-		try
+		foreach ($adapters as $adapter)
 		{
-			$this->componentValidator->validateDefinitions();
+			$spaceInfo = $adapter->contentApi->getSpaceInfo();
 
-			$io->newLine(2);
-			$io->success("All definitions validated.");
+			$io->comment(\sprintf(
+				"Validating components for space <fg=magenta>%s</> (<fg=yellow>%d</>)\n<fg=gray>%s</>",
+				$spaceInfo->getName(),
+				$spaceInfo->getId(),
+				$spaceInfo->getBackendDashboardUrl(),
+			));
 
-			return self::SUCCESS;
+			try
+			{
+				$this->componentValidator->validateDefinitions($adapter);
+
+				$io->newLine(2);
+				$io->success("All definitions validated.");
+			}
+			catch (ValidationFailedException $exception)
+			{
+				$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
+				$io->error("Definitions validation failed");
+
+				return self::FAILURE;
+			}
 		}
-		catch (ValidationFailedException $exception)
-		{
-			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
-			$io->error("Definitions validation failed");
 
-			return self::FAILURE;
-		}
+		return self::SUCCESS;
 	}
 }

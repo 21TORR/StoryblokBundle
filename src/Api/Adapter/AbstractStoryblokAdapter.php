@@ -12,7 +12,8 @@ use Torr\Storyblok\Story\StoryFactory;
 
 abstract class AbstractStoryblokAdapter
 {
-	public ContentApi $contentApi;
+	public readonly StoryblokConfig $config;
+	public readonly ContentApi $contentApi;
 
 	/**
 	 * @param string $spaceId         To be defined in extending class as dependency injection
@@ -31,7 +32,7 @@ abstract class AbstractStoryblokAdapter
 		LoggerInterface $logger,
 	)
 	{
-		$config = new StoryblokConfig(
+		$this->config = new StoryblokConfig(
 			spaceId: $spaceId,
 			managementToken: $managementToken,
 			contentToken: $contentToken,
@@ -40,7 +41,7 @@ abstract class AbstractStoryblokAdapter
 
 		$this->contentApi = new ContentApi(
 			$client,
-			$config,
+			$this->config,
 			$storyFactory,
 			$componentManager,
 			$logger,
