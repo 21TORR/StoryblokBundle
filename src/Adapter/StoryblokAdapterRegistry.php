@@ -10,7 +10,7 @@ use Torr\Storyblok\Exception\Adapter\UnknownAdapterKeyException;
 /**
  * @final
  */
-readonly class StoryblokAdapterManager
+readonly class StoryblokAdapterRegistry
 {
 	public const string DI_TAG = "storyblok.adapter";
 
@@ -33,7 +33,7 @@ readonly class StoryblokAdapterManager
 		{
 			throw new UnknownAdapterKeyException(
 				message: \sprintf(
-					"Unknown storyblok adapter type: %s",
+					"Unknown storyblok adapter: %s",
 					$key,
 				),
 				adapterKey: $key,
