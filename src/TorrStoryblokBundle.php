@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
-use Torr\Storyblok\Adapter\StoryblokAdapterManager;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
@@ -45,7 +45,7 @@ final class TorrStoryblokBundle extends Bundle
 			->addTag("storyblok.component.definition");
 
 		$container->registerForAutoconfiguration(AbstractStoryblokAdapter::class)
-			->addTag(StoryblokAdapterManager::DI_TAG);
+			->addTag(StoryblokAdapterRegistry::DI_TAG);
 	}
 
 	/**
