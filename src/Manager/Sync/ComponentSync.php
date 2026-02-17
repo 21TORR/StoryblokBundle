@@ -16,7 +16,6 @@ final class ComponentSync
 	/**
 	 */
 	public function __construct (
-		private readonly ManagementApi $managementApi,
 		private readonly ComponentNormalizer $componentNormalizer,
 		private readonly ComponentConfigDiffer $differ,
 	) {}
@@ -27,13 +26,14 @@ final class ComponentSync
 	 * @throws SyncFailedException
 	 */
 	public function syncDefinitionsInteractively (
+		ManagementApi $managementApi,
 		TorrStyle $io,
 		bool $forceSync = false,
 	) : bool
 	{
 		try
 		{
-			$definitions = $this->managementApi->fetchComponentDefinitions();
+			$definitions = $managementApi->fetchComponentDefinitions();
 			$io->writeln("• Normalizing all components");
 			$normalized = $this->componentNormalizer->normalize();
 			$io->writeln("<fg=green>✓</> done");
@@ -85,7 +85,7 @@ final class ComponentSync
 				return false;
 			}
 
-			$this->syncComponents($io, $toRun);
+			$this->syncComponents($io, $managementApi, $toRun);
 
 			return true;
 		}
@@ -126,13 +126,14 @@ final class ComponentSync
 	 */
 	private function syncComponents (
 		TorrStyle $io,
+		ManagementApi $managementApi,
 		array $normalizedComponents,
 	) : void
 	{
 		foreach ($normalizedComponents as $key => $config)
 		{
 			$io->write("• Syncing {$config->formattedLabel} ... ");
-			$performedAction = $this->managementApi->syncComponent($config->config);
+			$performedAction = $managementApi->syncComponent($config->config);
 			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
 		}
 	}

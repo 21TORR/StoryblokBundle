@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Story\Story;
@@ -121,5 +122,13 @@ class ComponentManager
 				previous: $exception,
 			);
 		}
+	}
+
+	/**
+	 * @return AbstractComponent[]
+	 */
+	public function findReachableComponents (ComponentFilter $filter) : array
+	{
+
 	}
 }

@@ -5,6 +5,8 @@ namespace Torr\Storyblok;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
+use Torr\Storyblok\Adapter\AdapterManager;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
@@ -41,6 +43,9 @@ final class TorrStoryblokBundle extends Bundle
 	{
 		$container->registerForAutoconfiguration(AbstractComponent::class)
 			->addTag("storyblok.component.definition");
+
+		$container->registerForAutoconfiguration(AbstractStoryblokAdapter::class)
+			->addTag(AdapterManager::DI_TAG);
 	}
 
 	/**

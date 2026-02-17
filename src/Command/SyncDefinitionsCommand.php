@@ -9,6 +9,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Hosting\Hosting\HostingEnvironment;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
+use Torr\Storyblok\Adapter\AdapterManager;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Exception\Validation\ValidationFailedException;
@@ -22,8 +24,8 @@ final class SyncDefinitionsCommand extends Command
 	 */
 	public function __construct (
 		private readonly ComponentSync $componentSync,
-		private readonly ContentApi $contentApi,
 		private readonly HostingEnvironment $environment,
+		private readonly AdapterManager $adapterManager,
 	)
 	{
 		parent::__construct();
@@ -47,7 +49,23 @@ final class SyncDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
-		$spaceInfo = $this->contentApi->getSpaceInfo();
+		$sync = (bool) $input->getOption("force");
+
+		foreach ($this->adapterManager->getAllAdapters() as $adapter)
+		{
+			$io->section($adapter->getDisplayName());
+			$this->syncAdapter($io, $adapter, $sync);
+		}
+	}
+
+	private function syncAdapter (
+		TorrStyle $io,
+		AbstractStoryblokAdapter $adapter,
+		bool $sync,
+	)
+	{
+		$contentApi = $adapter->contentApi;
+		$spaceInfo = $contentApi->getSpaceInfo();
 
 		$io->comment(\sprintf(
 			"Syncing components for space <fg=magenta>%s</> (<fg=yellow>%d</>)\n<fg=gray>%s</>",
@@ -55,8 +73,6 @@ final class SyncDefinitionsCommand extends Command
 			$spaceInfo->getId(),
 			$spaceInfo->getBackendDashboardUrl(),
 		));
-
-		$sync = (bool) $input->getOption("force");
 
 		if ($sync && !$this->environment->isProduction())
 		{
@@ -67,7 +83,7 @@ final class SyncDefinitionsCommand extends Command
 
 		try
 		{
-			$this->componentSync->syncDefinitionsInteractively($io, $sync);
+			$this->componentSync->syncDefinitionsInteractively($adapter->managementApi, $io, $sync);
 
 			$io->newLine(2);
 			$io->success("All done");

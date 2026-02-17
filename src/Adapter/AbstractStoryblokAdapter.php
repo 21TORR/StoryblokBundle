@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Api\Adapter;
+namespace Torr\Storyblok\Adapter;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Api\ContentApi;
+use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Manager\ComponentManager;
@@ -13,6 +14,7 @@ use Torr\Storyblok\Story\StoryFactory;
 abstract class AbstractStoryblokAdapter
 {
 	public ContentApi $contentApi;
+	public ManagementApi $managementApi;
 
 	/**
 	 * @param string $spaceId         To be defined in extending class as dependency injection
@@ -52,8 +54,13 @@ abstract class AbstractStoryblokAdapter
 	 */
 	abstract public function getStandaloneComponents () : array;
 
-	public static function getKey () : string
-	{
-		return self::class;
-	}
+	/**
+	 *
+	 */
+	abstract public static function getKey () : string;
+
+	/**
+	 *
+	 */
+	abstract public function getDisplayName () : string;
 }

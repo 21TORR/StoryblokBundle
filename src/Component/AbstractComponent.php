@@ -13,8 +13,10 @@ use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Collection\FieldCollection;
 use Torr\Storyblok\Field\Data\Helper\InlinedTransformedData;
+use Torr\Storyblok\Field\Definition\BloksField;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Management\ManagementApiData;
+use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Visitor\ComponentDataVisitorInterface;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
@@ -297,5 +299,37 @@ abstract class AbstractComponent
 			"description" => $definition->description,
 			...$this->getComponentType()->toManagementApiData(),
 		];
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function collectNestedComponents (
+		ComponentManager $componentManager,
+		DiscoveredComponents $discovered,
+	) : array
+	{
+		$fields = $this->configureFields();
+		$discovered->markAsDiscovered($this);
+
+		foreach ($fields as $field)
+		{
+			// no other field except bloks field can have nested components
+			if (!$field instanceof BloksField)
+			{
+				continue;
+			}
+
+			foreach ($componentManager->findReachableComponents($field->allowedComponents) as $nestedComponent)
+			{
+				// if we already discovered this component, then there is nothing left to do -> skip
+				if ($discovered->hasAlreadyDiscovered($nestedComponent))
+				{
+					continue;
+				}
+
+				$nestedComponent->collectNestedComponents($componentManager, $discovered);
+			}
+		}
 	}
 }
