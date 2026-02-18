@@ -25,7 +25,6 @@ readonly class StoryblokAdapterRegistry
 		try
 		{
 			$storyblokAdapter = $this->storyblokAdapters->get($key);
-			\assert($storyblokAdapter instanceof AbstractStoryblokAdapter);
 
 			return $storyblokAdapter;
 		}
