@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Adapter;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Torr\Storyblok\Exception\Adapter\UnknownAdapterKeyException;
+use Torr\Storyblok\Exception\Adapter\UnknownStoryblokAdapterException;
 
 /**
  * @final
@@ -24,13 +24,11 @@ readonly class StoryblokAdapterRegistry
 	{
 		try
 		{
-			$storyblokAdapter = $this->storyblokAdapters->get($key);
-
-			return $storyblokAdapter;
+			return $this->storyblokAdapters->get($key);
 		}
 		catch (ServiceNotFoundException $exception)
 		{
-			throw new UnknownAdapterKeyException(
+			throw new UnknownStoryblokAdapterException(
 				message: \sprintf(
 					"Unknown storyblok adapter: %s",
 					$key,

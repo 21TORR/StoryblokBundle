@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Exception\Adapter;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-final class UnknownAdapterKeyException extends \InvalidArgumentException implements StoryblokException
+final class UnknownStoryblokAdapterException extends \InvalidArgumentException implements StoryblokException
 {
 	/**
 	 * @inheritDoc
