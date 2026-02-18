@@ -30,7 +30,7 @@ final class ResolvableComponentFilter
 	 */
 	public function transformToManagementApiData (ComponentManager $componentManager) : array
 	{
-		$keys = $this->resolveComponentKeys($componentManager);
+		$keys = $componentManager->getComponentKeysForFilter($this->filter);
 
 		$result = [
 			$this->componentsConfigKey => $keys,
@@ -42,35 +42,5 @@ final class ResolvableComponentFilter
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Transforms the filter to the component keys
-	 */
-	private function resolveComponentKeys (ComponentManager $componentManager) : array
-	{
-		$result = [];
-
-		foreach ($this->filter->components as $component)
-		{
-			if ($component instanceof \BackedEnum)
-			{
-				$result[$component->value] = true;
-			}
-			else
-			{
-				$result[$component] = true;
-			}
-		}
-
-		if (!empty($this->filter->tags))
-		{
-			foreach ($componentManager->getComponentKeysForTags($this->filter->tags) as $componentKey)
-			{
-				$result[$componentKey] = true;
-			}
-		}
-
-		return array_keys($result);
 	}
 }
