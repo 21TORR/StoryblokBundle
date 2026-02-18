@@ -25,7 +25,7 @@ final class BloksField extends AbstractField
 		string $label,
 		private readonly ?int $minimumNumberOfBloks = null,
 		private readonly ?int $maximumNumberOfBloks = null,
-		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
+		public readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 	)
 	{
 		parent::__construct($label);
