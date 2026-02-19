@@ -50,9 +50,14 @@ final class SyncDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
-		$adapters = $input->getArgument("adapterKey")
-			? [$this->storyblokAdapterRegistry->getByKey((string) $input->getArgument("adapterKey"))]
-			: $this->storyblokAdapterRegistry->getAllAdapters();
+		$adapterKey = $input->getArgument("adapterKey");
+		$adapters = $this->storyblokAdapterRegistry->getAllAdapters();
+
+		if (null !== $adapterKey)
+		{
+			\assert(\is_string($adapterKey));
+			$adapters = [$this->storyblokAdapterRegistry->getByKey($adapterKey)];
+		}
 
 		$result = self::SUCCESS;
 
