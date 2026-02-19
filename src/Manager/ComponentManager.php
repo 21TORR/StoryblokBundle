@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Story\Story;
@@ -121,5 +122,32 @@ class ComponentManager
 				previous: $exception,
 			);
 		}
+	}
+
+	public function getComponentKeysForFilter (ComponentFilter $filter) : array
+	{
+		$result = [];
+
+		foreach ($filter->components as $component)
+		{
+			if ($component instanceof \BackedEnum)
+			{
+				$result[$component->value] = true;
+			}
+			else
+			{
+				$result[$component] = true;
+			}
+		}
+
+		if (!empty($filter->tags))
+		{
+			foreach ($this->getComponentKeysForTags($filter->tags) as $componentKey)
+			{
+				$result[$componentKey] = true;
+			}
+		}
+
+		return array_keys($result);
 	}
 }

@@ -21,8 +21,10 @@ final class ResolvableComponentFilterTest extends TestCase
 
 		$manager = $this->createMock(ComponentManager::class);
 		$manager
-			->expects(self::never())
-			->method("getComponentKeysForTags");
+			->expects(self::once())
+			->method("getComponentKeysForFilter")
+			->with($filter)
+			->willReturn(["test"]);
 
 		$resolved = $resolvable->transformToManagementApiData($manager);
 
@@ -34,34 +36,18 @@ final class ResolvableComponentFilterTest extends TestCase
 
 	/**
 	 */
-	public function testResolvingWithTags () : void
-	{
-		$filter = new ComponentFilter(["tag1"], ["test"]);
-		$resolvable = new ResolvableComponentFilter($filter, "field", "enabled");
-
-		$manager = $this->createMock(ComponentManager::class);
-		$manager
-			->expects(self::once())
-			->method("getComponentKeysForTags")
-			->with(["tag1"])
-			->willReturn(["transformedTag1", "transformedTag2"]);
-
-		$resolved = $resolvable->transformToManagementApiData($manager);
-
-		self::assertIsArray($resolved);
-		self::assertCount(2, $resolved);
-		self::assertSame(["test", "transformedTag1", "transformedTag2"], $resolved["field"]);
-		self::assertTrue($resolved["enabled"]);
-	}
-
-	/**
-	 */
 	public function testResolvingWithoutEnabled () : void
 	{
 		$filter = new ComponentFilter(components: ["test"]);
 		$resolvable = new ResolvableComponentFilter($filter, "field");
 
 		$manager = $this->createMock(ComponentManager::class);
+		$manager
+			->expects(self::once())
+			->method("getComponentKeysForFilter")
+			->with($filter)
+			->willReturn(["test"]);
+
 		$resolved = $resolvable->transformToManagementApiData($manager);
 
 		self::assertIsArray($resolved);
@@ -77,29 +63,16 @@ final class ResolvableComponentFilterTest extends TestCase
 		$resolvable = new ResolvableComponentFilter($filter, "field");
 
 		$manager = $this->createMock(ComponentManager::class);
-		$manager->method("getComponentKeysForTags")
+		$manager
+			->expects(self::once())
+			->method("getComponentKeysForFilter")
+			->with($filter)
 			->willReturn([]);
+
 		$resolved = $resolvable->transformToManagementApiData($manager);
 
 		self::assertIsArray($resolved);
 		self::assertCount(1, $resolved);
 		self::assertSame([], $resolved["field"]);
-	}
-
-	/**
-	 */
-	public function testNoDuplicates () : void
-	{
-		$filter = new ComponentFilter(tags: ["tag"], components: ["test"]);
-		$resolvable = new ResolvableComponentFilter($filter, "field");
-
-		$manager = $this->createMock(ComponentManager::class);
-		$manager->method("getComponentKeysForTags")
-			->willReturn(["test"]);
-		$resolved = $resolvable->transformToManagementApiData($manager);
-
-		self::assertIsArray($resolved);
-		self::assertCount(1, $resolved);
-		self::assertSame(["test"], $resolved["field"]);
 	}
 }
