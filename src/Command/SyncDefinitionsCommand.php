@@ -4,12 +4,14 @@ namespace Torr\Storyblok\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Hosting\Hosting\HostingEnvironment;
-use Torr\Storyblok\Api\ContentApi;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Exception\Validation\ValidationFailedException;
 use Torr\Storyblok\Manager\Sync\ComponentSync;
@@ -22,7 +24,7 @@ final class SyncDefinitionsCommand extends Command
 	 */
 	public function __construct (
 		private readonly ComponentSync $componentSync,
-		private readonly ContentApi $contentApi,
+		private readonly StoryblokAdapterRegistry $storyblokAdapterRegistry,
 		private readonly HostingEnvironment $environment,
 	)
 	{
@@ -36,6 +38,7 @@ final class SyncDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Syncs the local component definitions to storyblok")
+			->addArgument("adapterKey", InputArgument::OPTIONAL, "Storyblok adapter key")
 			->addOption("force", null, InputOption::VALUE_NONE, "Whether to force sync");
 	}
 
@@ -47,7 +50,23 @@ final class SyncDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
-		$spaceInfo = $this->contentApi->getSpaceInfo();
+		$adapters = $input->getArgument("adapterKey")
+			? [$this->storyblokAdapterRegistry->getByKey((string) $input->getArgument("adapterKey"))]
+			: $this->storyblokAdapterRegistry->getAllAdapters();
+
+		$result = self::SUCCESS;
+
+		foreach ($adapters as $adapter)
+		{
+			$result = self::FAILURE === $this->syncComponents($io, $input, $adapter) ? self::FAILURE : $result;
+		}
+
+		return $result;
+	}
+
+	private function syncComponents (TorrStyle $io, InputInterface $input, AbstractStoryblokAdapter $adapter) : int
+	{
+		$spaceInfo = $adapter->contentApi->getSpaceInfo();
 
 		$io->comment(\sprintf(
 			"Syncing components for space <fg=magenta>%s</> (<fg=yellow>%d</>)\n<fg=gray>%s</>",
@@ -67,7 +86,7 @@ final class SyncDefinitionsCommand extends Command
 
 		try
 		{
-			$this->componentSync->syncDefinitionsInteractively($io, $sync);
+			$this->componentSync->syncDefinitionsInteractively($io, $adapter, $sync);
 
 			$io->newLine(2);
 			$io->success("All done");
