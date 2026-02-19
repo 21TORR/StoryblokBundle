@@ -11,9 +11,9 @@ final readonly class ComponentDiscoverer
 	) {}
 
 	/**
-	 * @param list<class-string<AbstractComponent>> $componentKeys
+	 * @param list<string> $componentKeys
 	 *
-	 * @return list<class-string<AbstractComponent>>
+	 * @return list<string>
 	 */
 	public function discoverReachableComponents (array $componentKeys) : array
 	{

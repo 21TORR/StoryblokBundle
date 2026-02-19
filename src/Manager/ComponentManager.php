@@ -124,9 +124,6 @@ class ComponentManager
 		}
 	}
 
-	/**
-	 * @return list<class-string<AbstractComponent>>
-	 */
 	public function getComponentKeysForFilter (ComponentFilter $filter) : array
 	{
 		$result = [];

@@ -7,7 +7,6 @@ use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Api\ManagementApi;
-use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Component\ComponentDiscoverer;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Manager\ComponentManager;
@@ -47,7 +46,7 @@ abstract class AbstractStoryblokAdapter
 	}
 
 	/**
-	 * @return list<class-string<AbstractComponent>>
+	 * @return list<string>
 	 */
 	public function getAllComponentKeys () : array
 	{
@@ -55,7 +54,7 @@ abstract class AbstractStoryblokAdapter
 	}
 
 	/**
-	 * @return list<class-string<AbstractComponent>>
+	 * @return list<string>
 	 */
 	abstract public function getStandaloneComponentKeys () : array;
 
