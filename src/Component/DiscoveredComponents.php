@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Component;
 
 final class DiscoveredComponents
 {
-	/** @var array<class-string<AbstractComponent>, true> */
+	/** @var array<string, true> */
 	private array $components = [];
 
 	public function markAsDiscovered (AbstractComponent $component) : void
@@ -18,7 +18,7 @@ final class DiscoveredComponents
 	}
 
 	/**
-	 * @return list<class-string<AbstractComponent>>
+	 * @return list<string>
 	 */
 	public function getAllDiscoveredComponents () : array
 	{
