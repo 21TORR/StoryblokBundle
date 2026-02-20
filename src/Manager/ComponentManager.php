@@ -5,7 +5,9 @@ namespace Torr\Storyblok\Manager;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Component\ComponentDiscoverer;
 use Torr\Storyblok\Component\Filter\ComponentFilter;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
@@ -16,13 +18,18 @@ use Torr\Storyblok\Story\Story;
  */
 class ComponentManager
 {
+	private readonly ComponentDiscoverer $discoverer;
+
 	/**
 	 */
 	public function __construct (
 		/** @var ServiceLocator<AbstractComponent> */
 		#[AutowireLocator(services: 'storyblok.component.definition', defaultIndexMethod: 'getKey')]
 		private readonly ServiceLocator $components,
-	) {}
+	)
+	{
+		$this->discoverer = new ComponentDiscoverer($this);
+	}
 
 	/**
 	 * @return list<AbstractComponent>
@@ -149,5 +156,23 @@ class ComponentManager
 		}
 
 		return array_keys($result);
+	}
+
+	/**
+	 * Receives an adapter and returns the list of all used components in this specific adapter.
+	 * This includes standalone components, as well as nested components that are used in these standalone components.
+	 *
+	 * @return AbstractComponent[]
+	 */
+	public function getAllUsedComponentsInAdapter (AbstractStoryblokAdapter $adapter) : array
+	{
+		$componentKeys = $this->discoverer->discoverReachableComponents(
+			$adapter->getStandaloneComponentKeys(),
+		);
+
+		return array_map(
+			$this->getComponent(...),
+			$componentKeys,
+		);
 	}
 }

@@ -38,7 +38,7 @@ final class SyncDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Syncs the local component definitions to storyblok")
-			->addArgument("adapterKey", InputArgument::OPTIONAL, "Storyblok adapter key. If not set, all adapters will be synced.")
+			->addArgument("adapterKey", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.")
 			->addOption("force", null, InputOption::VALUE_NONE, "Whether to force sync");
 	}
 
@@ -50,26 +50,45 @@ final class SyncDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
-		$adapterKey = $input->getArgument("adapterKey");
-		$adapters = $this->storyblokAdapterRegistry->getAllAdapters();
+		$sync = (bool) $input->getOption("force");
 
-		if (null !== $adapterKey)
+		if ($sync && !$this->environment->isProduction())
 		{
-			\assert(\is_string($adapterKey));
-			$adapters = [$this->storyblokAdapterRegistry->getByKey($adapterKey)];
+			$io->caution("Reject to automatically sync structure to Storyblok in non-production environment.");
+
+			return self::SUCCESS;
 		}
+
+		/** @var string[] $adapterKeys */
+		$adapterKeys = $input->getArgument("adapterKey");
+
+		$adapters = [] !== $adapterKeys
+			? array_map($this->storyblokAdapterRegistry->getByKey(...), $adapterKeys)
+			: $this->storyblokAdapterRegistry->getAllAdapters();
 
 		$result = self::SUCCESS;
 
 		foreach ($adapters as $adapter)
 		{
-			$result = self::FAILURE === $this->syncComponents($io, $input, $adapter) ? self::FAILURE : $result;
+			$adapterSyncSuccess = $this->syncComponents($io, $sync, $adapter);
+
+			if (!$adapterSyncSuccess)
+			{
+				$result = self::FAILURE;
+			}
 		}
 
 		return $result;
 	}
 
-	private function syncComponents (TorrStyle $io, InputInterface $input, AbstractStoryblokAdapter $adapter) : int
+	/**
+	 *
+	 */
+	private function syncComponents (
+		TorrStyle $io,
+		bool $sync,
+		AbstractStoryblokAdapter $adapter,
+	) : bool
 	{
 		$spaceInfo = $adapter->contentApi->getSpaceInfo();
 
@@ -80,15 +99,6 @@ final class SyncDefinitionsCommand extends Command
 			$spaceInfo->getBackendDashboardUrl(),
 		));
 
-		$sync = (bool) $input->getOption("force");
-
-		if ($sync && !$this->environment->isProduction())
-		{
-			$io->caution("Reject to automatically sync structure to Storyblok in non-production environment.");
-
-			return self::SUCCESS;
-		}
-
 		try
 		{
 			$this->componentSync->syncDefinitionsInteractively($io, $adapter, $sync);
@@ -96,21 +106,21 @@ final class SyncDefinitionsCommand extends Command
 			$io->newLine(2);
 			$io->success("All done");
 
-			return self::SUCCESS;
+			return true;
 		}
 		catch (ValidationFailedException $exception)
 		{
 			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
 			$io->error("Validation failed");
 
-			return self::FAILURE;
+			return false;
 		}
 		catch (SyncFailedException $exception)
 		{
 			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
 			$io->error("Sync failed");
 
-			return self::FAILURE;
+			return false;
 		}
 	}
 }
