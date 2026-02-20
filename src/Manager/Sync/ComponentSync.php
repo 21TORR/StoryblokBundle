@@ -8,6 +8,7 @@ use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
+use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
 use Torr\Storyblok\Manager\Sync\Diff\ComponentConfigDiffer;
 
@@ -18,6 +19,7 @@ final class ComponentSync
 	public function __construct (
 		private readonly ComponentNormalizer $componentNormalizer,
 		private readonly ComponentConfigDiffer $differ,
+		private readonly ComponentManager $componentManager,
 	) {}
 
 	/**
@@ -33,9 +35,14 @@ final class ComponentSync
 	{
 		try
 		{
+			$io->writeln("• Fetching current component definitions from Storyblok");
 			$definitions = $adapter->managementApi->fetchComponentDefinitions();
+
+			$io->writeln("• Determining components to sync");
+			$componentsToSync = $this->componentManager->getAllUsedComponentsInAdapter($adapter);
+
 			$io->writeln("• Normalizing all components");
-			$normalized = $this->componentNormalizer->normalize($adapter);
+			$normalized = $this->componentNormalizer->normalize($componentsToSync);
 			$io->writeln("<fg=green>✓</> done");
 
 			$toRun = [];

@@ -2,16 +2,14 @@
 
 namespace Torr\Storyblok\Manager\Normalizer;
 
-use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Api\Data\ComponentImport;
 use Torr\Storyblok\Api\ManagementApi;
-use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Manager\Sync\ComponentConfigResolver;
 
 final class ComponentNormalizer
 {
 	public function __construct (
-		private readonly ComponentManager $componentManager,
 		private readonly ComponentConfigResolver $componentConfigResolver,
 		private readonly ManagementApi $managementApi,
 	) {}
@@ -19,22 +17,17 @@ final class ComponentNormalizer
 	/**
 	 * Validates and normalizes the components and returns them as ComponentImport.
 	 *
+	 * @param AbstractComponent[] $components
+	 *
 	 * @return ComponentImport[]
 	 */
-	public function normalize (AbstractStoryblokAdapter $adapter) : array
+	public function normalize (array $components) : array
 	{
 		$normalized = [];
 
 		// normalize everything to check if normalization fails
-		foreach ($this->componentManager->getAllComponents() as $component)
+		foreach ($components as $component)
 		{
-			$componentsForAdapter = $adapter->getAllComponentKeys();
-
-			if (!\in_array($component::getKey(), $componentsForAdapter, true))
-			{
-				continue;
-			}
-
 			$formattedLabel = \sprintf(
 				"<fg=blue>%s</> (<fg=yellow>%s</>)",
 				$component->getDisplayName(),
