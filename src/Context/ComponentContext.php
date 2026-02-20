@@ -4,8 +4,6 @@ namespace Torr\Storyblok\Context;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Contracts\Service\Attribute\Required;
-use Torr\Storyblok\Api\Transformer\StoryblokIdSlugMapper;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
@@ -18,8 +16,6 @@ use Torr\Storyblok\Validator\DataValidator;
  */
 class ComponentContext
 {
-	public ?StoryblokIdSlugMapper $storyblokIdSlugMapper = null;
-
 	/**
 	 */
 	public function __construct (
@@ -29,17 +25,6 @@ class ComponentContext
 		public readonly DataValidator $validator,
 		public readonly ImageDimensionsExtractor $imageDimensionsExtractor,
 	) {}
-
-	/**
-	 * This setter is only required, as we need to break a circular service definition.
-	 *
-	 * @internal
-	 */
-	#[Required]
-	public function setStoryblokIdSlugMapper (StoryblokIdSlugMapper $storyblokIdSlugMapper) : void
-	{
-		$this->storyblokIdSlugMapper = $storyblokIdSlugMapper;
-	}
 
 	/**
 	 * @see DataValidator::ensureDataIsValid()
@@ -79,16 +64,5 @@ class ComponentContext
 	public function extractImageDimensions (string $imageUrl) : array
 	{
 		return $this->imageDimensionsExtractor->extractImageDimensions($imageUrl);
-	}
-
-	/**
-	 * @see StoryblokIdSlugMapper::getFullSlugById()
-	 */
-	public function fetchFullSlugByUuid (string|int $identifier) : ?string
-	{
-		// the content api is already set by the DI container
-		\assert(null !== $this->storyblokIdSlugMapper);
-
-		return $this->storyblokIdSlugMapper->getFullSlugById($identifier);
 	}
 }

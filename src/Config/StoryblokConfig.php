@@ -12,9 +12,12 @@ final readonly class StoryblokConfig
 	 */
 	public function __construct (
 		string $spaceId = "",
+		#[\SensitiveParameter]
 		private ?string $managementToken = null,
+		#[\SensitiveParameter]
 		private ?string $contentToken = null,
 		private int $localeLevel = 0,
+		#[\SensitiveParameter]
 		public ?string $webhookSecret = null,
 		public bool $allowUrlWebhookSecret = false,
 	)

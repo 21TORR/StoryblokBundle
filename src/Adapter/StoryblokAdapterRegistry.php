@@ -56,4 +56,20 @@ readonly class StoryblokAdapterRegistry
 
 		return $storyblokAdapters;
 	}
+
+	/**
+	 *
+	 */
+	public function getByStoryblokSpaceId (string $spaceId) : ?AbstractStoryblokAdapter
+	{
+		foreach ($this->getAllAdapters() as $adapter)
+		{
+			if ($adapter->spaceId === $spaceId)
+			{
+				return $adapter;
+			}
+		}
+
+		return null;
+	}
 }
