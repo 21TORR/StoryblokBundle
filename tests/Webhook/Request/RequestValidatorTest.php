@@ -4,9 +4,17 @@ namespace Tests\Torr\Storyblok\Webhook\Request;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Config\StoryblokConfig;
+use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Story\StoryFactory;
 use Torr\Storyblok\Webhook\Request\RequestValidator;
 
 /**
@@ -146,11 +154,35 @@ final class RequestValidatorTest extends TestCase
 		);
 
 		$config = new StoryblokConfig(
+			spaceId: "12345",
 			webhookSecret: $secret,
 			allowUrlWebhookSecret: $allowUrlSecrets,
 		);
 
-		$validator = new RequestValidator($config, new NullLogger());
-		self::assertSame($expectedValid, $validator->isValidRequest($request, $urlToken));
+		$storyFactory = new StoryFactory(
+			self::createStub(ComponentManager::class),
+			self::createStub(ComponentContext::class),
+			self::createStub(LoggerInterface::class),
+		);
+
+		$storyblokAdapter = $this->getMockBuilder(AbstractStoryblokAdapter::class)
+			->setConstructorArgs([
+				$config,
+				self::createStub(HttpClientInterface::class),
+				$storyFactory,
+				self::createStub(ComponentManager::class),
+				self::createStub(RateLimiterFactoryInterface::class),
+				self::createStub(LoggerInterface::class),
+			])
+			->getMock();
+
+		$storyblokAdapterRegistry = $this->createMock(StoryblokAdapterRegistry::class);
+		$storyblokAdapterRegistry
+			->expects(self::once())
+			->method("getByStoryblokSpaceId")
+			->willReturn($storyblokAdapter);
+
+		$validator = new RequestValidator($storyblokAdapterRegistry, new NullLogger());
+		self::assertSame($expectedValid, $validator->isValidRequest($request, "12345", $urlToken));
 	}
 }
