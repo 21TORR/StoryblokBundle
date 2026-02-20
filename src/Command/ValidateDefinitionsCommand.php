@@ -34,7 +34,7 @@ final class ValidateDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Validates the local component definitions against Storyblok")
-			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.");
+			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be validated.");
 	}
 
 	/**

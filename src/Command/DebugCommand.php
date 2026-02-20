@@ -42,7 +42,7 @@ final class DebugCommand extends Command
 	protected function configure () : void
 	{
 		$this
-			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.");
+			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, info for all adapters will be shown.");
 	}
 
 	/**
@@ -75,6 +75,8 @@ final class DebugCommand extends Command
 			$io->newLine();
 		}
 
+		$this->showAssetProxyStats($io);
+
 		return $result;
 	}
 
@@ -86,7 +88,6 @@ final class DebugCommand extends Command
 			$io->newLine();
 
 			$this->showComponentsOverview($io, $adapter);
-			$this->showAssetProxyStats($io);
 
 			return true;
 		}
