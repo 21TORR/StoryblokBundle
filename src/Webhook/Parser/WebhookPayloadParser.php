@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Webhook\Parser;
 
 use Psr\Log\LoggerInterface;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Webhook\Action\WebhookAction;
 use Torr\Storyblok\Webhook\Exception\WebhookParseFailedException;
 use Torr\Storyblok\Webhook\Payload\AbstractWebhookPayload;
@@ -22,6 +23,7 @@ final readonly class WebhookPayloadParser
 	/**
 	 */
 	public function __construct (
+		private StoryblokAdapterRegistry $storyblokAdapterRegistry,
 		private LoggerInterface $logger,
 	) {}
 
@@ -54,6 +56,16 @@ final readonly class WebhookPayloadParser
 			$this->logger->error("Storyblok Webhook: received webhook for different space. Got id {provided}, but expected {expected}", [
 				"provided" => $payloadSpaceId,
 				"expected" => $spaceId,
+				"payload" => $payload,
+			]);
+
+			return null;
+		}
+
+		if (null === $this->storyblokAdapterRegistry->getByStoryblokSpaceId($spaceId))
+		{
+			$this->logger->error("Storyblok Webhook: no storyblok adapter found for space id {spaceId}", [
+				"spaceId" => $spaceId,
 				"payload" => $payload,
 			]);
 
