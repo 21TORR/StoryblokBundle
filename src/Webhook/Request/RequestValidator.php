@@ -4,33 +4,22 @@ namespace Torr\Storyblok\Webhook\Request;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 
 final readonly class RequestValidator
 {
 	/**
 	 */
 	public function __construct (
-		private StoryblokAdapterRegistry $storyblokAdapterRegistry,
+		private AbstractStoryblokAdapter $adapter,
 		private LoggerInterface $logger,
 	) {}
 
 	/**
 	 */
-	public function isValidRequest (Request $request, string $spaceId, ?string $urlSecret) : bool
+	public function isValidRequest (Request $request, ?string $urlSecret) : bool
 	{
-		$adapter = $this->storyblokAdapterRegistry->getByStoryblokSpaceId($spaceId);
-
-		if (null === $adapter)
-		{
-			$this->logger->critical("Storyblok Webhook Request Validator: wrong storyblok space id: {spaceId}. No Adapter found.", [
-				"spaceId" => $spaceId,
-			]);
-
-			return false;
-		}
-
-		$secret = (string) $adapter->config->webhookSecret;
+		$secret = (string) $this->adapter->config->webhookSecret;
 
 		if ($this->checkProperSignature($secret, $request))
 		{
@@ -47,7 +36,7 @@ final readonly class RequestValidator
 
 		if (null !== $urlSecret)
 		{
-			if ($adapter->config->allowUrlWebhookSecret)
+			if ($this->adapter->config->allowUrlWebhookSecret)
 			{
 				return $this->checkUrlSecret($secret, $urlSecret);
 			}
