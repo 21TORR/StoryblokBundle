@@ -21,6 +21,15 @@ final readonly class RequestValidator
 	{
 		$adapter = $this->storyblokAdapterRegistry->getByStoryblokSpaceId($spaceId);
 
+		if (null === $adapter)
+		{
+			$this->logger->critical("Storyblok Webhook Request Validator: wrong storyblok space id: {spaceId}. No Adapter found.", [
+				"spaceId" => $spaceId,
+			]);
+
+			return false;
+		}
+
 		$secret = (string) $adapter->config->webhookSecret;
 
 		if ($this->checkProperSignature($secret, $request))

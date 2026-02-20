@@ -32,13 +32,13 @@ final readonly class WebhookPayloadParser
 	{
 		$text = $payload["text"] ?? null;
 		$action = $payload["action"] ?? null;
-		$spaceId = $payload["space_id"] ?? null;
+		$payloadSpaceId = $payload["space_id"] ?? null;
 
 		// check basic structure
 		if (
 			!\is_string($text)
 			|| !\is_string($action)
-			|| !\is_int($spaceId)
+			|| !\is_int($payloadSpaceId)
 		)
 		{
 			$this->logger->error("Storyblok Webhook: could not parse basic structure", [
@@ -49,10 +49,10 @@ final readonly class WebhookPayloadParser
 		}
 
 		// check space id
-		if ($spaceId !== $spaceId)
+		if ((string) $payloadSpaceId !== $spaceId)
 		{
 			$this->logger->error("Storyblok Webhook: received webhook for different space. Got id {provided}, but expected {expected}", [
-				"provided" => $spaceId,
+				"provided" => $payloadSpaceId,
 				"expected" => $spaceId,
 				"payload" => $payload,
 			]);

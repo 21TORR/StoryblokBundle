@@ -91,7 +91,7 @@ final class ContentApi implements ResetInterface
 
 			$data = $response->toArray();
 
-			return $this->storyFactory->createFromApiData($data["story"]);
+			return $this->storyFactory->createFromApiData($data["story"], $this->config->getLocaleLevel());
 		}
 		catch (ExceptionInterface $exception)
 		{
