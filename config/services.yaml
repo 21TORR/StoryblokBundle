@@ -21,6 +21,7 @@ services:
              - ../src/RichText/LinkMarksRichTextTransformer.php
              - ../src/RichText/RichTextTransformer.php
              - ../src/TorrStoryblokBundle.php
+             - ../src/Webhook/Request/RequestValidator.php
 
     Torr\Storyblok\Assets\Proxy\AssetProxy:
         $storagePath: '%kernel.project_dir%/var/storyblok/assets'
