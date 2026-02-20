@@ -58,13 +58,18 @@ final class ValidateDefinitionsCommand extends Command
 
 		foreach ($adapters as $adapter)
 		{
-			$result = self::FAILURE === $this->validateDefinitions($io, $adapter) ? self::FAILURE : $result;
+			$validateDefinitionsSuccess = $this->validateDefinitions($io, $adapter);
+
+			if (!$validateDefinitionsSuccess)
+			{
+				$result = self::FAILURE;
+			}
 		}
 
 		return $result;
 	}
 
-	private function validateDefinitions (TorrStyle $io, AbstractStoryblokAdapter $adapter) : int
+	private function validateDefinitions (TorrStyle $io, AbstractStoryblokAdapter $adapter) : bool
 	{
 		$spaceInfo = $adapter->contentApi->getSpaceInfo();
 
@@ -82,14 +87,14 @@ final class ValidateDefinitionsCommand extends Command
 			$io->newLine(2);
 			$io->success("All definitions validated.");
 
-			return self::SUCCESS;
+			return true;
 		}
 		catch (ValidationFailedException $exception)
 		{
 			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
 			$io->error("Definitions validation failed");
 
-			return self::FAILURE;
+			return false;
 		}
 	}
 }
