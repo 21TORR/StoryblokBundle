@@ -18,7 +18,10 @@ use Torr\Storyblok\Manager\ComponentManager;
 
 use function Symfony\Component\String\u;
 
-#[AsCommand("storyblok:debug")]
+#[AsCommand(
+	"storyblok:debug",
+	description: "Displays debug info for the current Storyblok connection and config.",
+)]
 final class DebugCommand extends Command
 {
 	/**
@@ -39,7 +42,6 @@ final class DebugCommand extends Command
 	protected function configure () : void
 	{
 		$this
-			->setDescription("Displays debug info for the current Storyblok connection and config.")
 			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.");
 	}
 
