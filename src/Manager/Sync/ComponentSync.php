@@ -42,7 +42,7 @@ final class ComponentSync
 			$componentsToSync = $this->componentManager->getAllUsedComponentsInAdapter($adapter);
 
 			$io->writeln("• Normalizing all components");
-			$normalized = $this->componentNormalizer->normalize($componentsToSync);
+			$normalized = $this->componentNormalizer->normalize($componentsToSync, $adapter);
 			$io->writeln("<fg=green>✓</> done");
 
 			$toRun = [];
