@@ -7,6 +7,7 @@ use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Api\ManagementApi;
+use Torr\Storyblok\Api\Transformer\StoryblokIdSlugMapper;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Story\StoryFactory;
@@ -15,6 +16,8 @@ abstract class AbstractStoryblokAdapter
 {
 	public private(set) ContentApi $contentApi;
 	public private(set) ManagementApi $managementApi;
+	public private(set) StoryblokIdSlugMapper $idSlugMapper;
+	public private(set) string $spaceId;
 
 	public function __construct (
 		StoryblokConfig $config,
@@ -39,6 +42,9 @@ abstract class AbstractStoryblokAdapter
 			$storyblokManagementLimiter,
 			$logger,
 		);
+
+		$this->idSlugMapper = new StoryblokIdSlugMapper($this->contentApi);
+		$this->spaceId = (string) $config->getSpaceId();
 	}
 
 	/**
