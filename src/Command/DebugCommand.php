@@ -4,38 +4,43 @@ namespace Torr\Storyblok\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Torr\Cli\Console\Style\TorrStyle;
-use Torr\Storyblok\Api\ContentApi;
-use Torr\Storyblok\Api\ManagementApi;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Assets\Proxy\AssetProxy;
-use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
+use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Exception\StoryblokException;
 use Torr\Storyblok\Manager\ComponentManager;
 
 use function Symfony\Component\String\u;
 
-#[AsCommand(
-	"storyblok:debug",
-	description: "Displays debug info for the current Storyblok connection and config.",
-	// TODO v4: remove alias
-	aliases: ["storyblok:components:overview"],
-)]
+#[AsCommand("storyblok:debug")]
 final class DebugCommand extends Command
 {
 	/**
 	 *
 	 */
 	public function __construct (
-		private readonly ContentApi $contentApi,
-		private readonly ManagementApi $managementApi,
+		private readonly StoryblokAdapterRegistry $storyblokAdapterRegistry,
 		private readonly ComponentManager $componentManager,
 		private readonly AssetProxy $assetProxy,
 	)
 	{
 		parent::__construct();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function configure () : void
+	{
+		$this
+			->setDescription("Displays debug info for the current Storyblok connection and config.")
+			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.");
 	}
 
 	/**
@@ -47,27 +52,41 @@ final class DebugCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Debug");
 
-		// TODO v4: remove check
-		if ("storyblok:debug" !== $input->getFirstArgument())
+		/** @var string[] $adapterKeys */
+		$adapterKeys = $input->getArgument("adapterKeys");
+
+		$adapters = [] !== $adapterKeys
+			? array_map($this->storyblokAdapterRegistry->getByKey(...), $adapterKeys)
+			: $this->storyblokAdapterRegistry->getAllAdapters();
+
+		$result = self::SUCCESS;
+
+		foreach ($adapters as $adapter)
 		{
-			$message = \sprintf(
-				"The command `%s` is deprecated. Use `%s` instead.",
-				$input->getFirstArgument(),
-				"storyblok:debug",
-			);
-			trigger_deprecation("21torr/storyblok", "3.13.0", $message);
-			$io->caution($message);
+			$debugInfoSuccess = $this->debugInfo($io, $adapter);
+
+			if (!$debugInfoSuccess)
+			{
+				$result = self::FAILURE;
+			}
+
+			$io->newLine();
 		}
 
+		return $result;
+	}
+
+	private function debugInfo (TorrStyle $io, AbstractStoryblokAdapter $adapter) : bool
+	{
 		try
 		{
-			$this->showInfo($io);
+			$this->showInfo($io, $adapter);
 			$io->newLine();
 
-			$this->showComponentsOverview($io);
+			$this->showComponentsOverview($io, $adapter);
 			$this->showAssetProxyStats($io);
 
-			return self::SUCCESS;
+			return true;
 		}
 		catch (StoryblokException $exception)
 		{
@@ -76,16 +95,16 @@ final class DebugCommand extends Command
 				$exception->getMessage(),
 			));
 
-			return self::FAILURE;
+			return false;
 		}
 	}
 
 	/**
 	 * @throws StoryblokException
 	 */
-	private function showInfo (TorrStyle $io) : void
+	private function showInfo (TorrStyle $io, AbstractStoryblokAdapter $adapter) : void
 	{
-		$spaceInfo = $this->contentApi->getSpaceInfo();
+		$spaceInfo = $adapter->contentApi->getSpaceInfo();
 		$color = static fn (string $color, string|int $text) => \sprintf("<fg=%s>%s</>", $color, $text);
 
 		$io->definitionList(
@@ -102,9 +121,10 @@ final class DebugCommand extends Command
 	 */
 	private function showComponentsOverview (
 		TorrStyle $io,
+		AbstractStoryblokAdapter $adapter,
 	) : void
 	{
-		[$registered, $unregistered] = $this->fetchOverview($io->isVerbose());
+		[$registered, $unregistered] = $this->fetchOverview($adapter, $io->isVerbose());
 
 		if (!empty($registered))
 		{
@@ -130,16 +150,20 @@ final class DebugCommand extends Command
 	/**
 	 *
 	 */
-	private function fetchOverview (bool $verbose) : array
+	private function fetchOverview (AbstractStoryblokAdapter $adapter, bool $verbose) : array
 	{
 		$registered = [];
 		$unregistered = [];
+		$componentDetails = [];
 
-		foreach ($this->managementApi->fetchAllRegisteredComponents() as $componentKey)
+		foreach ($this->componentManager->getAllUsedComponentsInAdapter($adapter) as $component)
 		{
-			$details = $this->getComponentDetails($componentKey, $verbose);
+			$componentDetails[$component::getKey()] = $this->getComponentDetails($component, $verbose);
+		}
 
-			if (null === $details)
+		foreach ($adapter->managementApi->fetchAllRegisteredComponents() as $componentKey)
+		{
+			if (!isset($componentDetails[$componentKey]))
 			{
 				$unregistered[] = \sprintf("<fg=red>%s</>", $componentKey);
 				continue;
@@ -147,7 +171,7 @@ final class DebugCommand extends Command
 
 			$registered[] = [
 				\sprintf("<fg=yellow>%s</>", $componentKey),
-				...$details,
+				...$componentDetails[$componentKey],
 			];
 		}
 
@@ -157,7 +181,7 @@ final class DebugCommand extends Command
 	/**
 	 *
 	 */
-	private function getComponentDetails (string $componentKey, bool $verbose) : ?array
+	private function getComponentDetails (AbstractComponent $component, bool $verbose) : array
 	{
 		$renderClass = static function (?string $className) use ($verbose)
 		{
@@ -174,20 +198,11 @@ final class DebugCommand extends Command
 			return \sprintf("<fg=blue>%s</>", $className);
 		};
 
-		try
-		{
-			$component = $this->componentManager->getComponent($componentKey);
-
-			return [
-				$component->getDisplayName(),
-				$renderClass(get_debug_type($component)),
-				$renderClass($component->getStoryClass()),
-			];
-		}
-		catch (UnknownComponentKeyException)
-		{
-			return null;
-		}
+		return [
+			$component->getDisplayName(),
+			$renderClass(get_debug_type($component)),
+			$renderClass($component->getStoryClass()),
+		];
 	}
 
 	private function showAssetProxyStats (TorrStyle $io) : void
