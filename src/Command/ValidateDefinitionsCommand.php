@@ -34,7 +34,7 @@ final class ValidateDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Validates the local component definitions against Storyblok")
-			->addArgument("adapterKey", InputArgument::OPTIONAL, "Storyblok adapter key. If not set, all adapters will be synced.");
+			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.");
 	}
 
 	/**
@@ -45,14 +45,12 @@ final class ValidateDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
-		$adapterKey = $input->getArgument("adapterKey");
-		$adapters = $this->storyblokAdapterRegistry->getAllAdapters();
+		/** @var string[] $adapterKeys */
+		$adapterKeys = $input->getArgument("adapterKeys");
 
-		if (null !== $adapterKey)
-		{
-			\assert(\is_string($adapterKey));
-			$adapters = [$this->storyblokAdapterRegistry->getByKey($adapterKey)];
-		}
+		$adapters = [] !== $adapterKeys
+			? array_map($this->storyblokAdapterRegistry->getByKey(...), $adapterKeys)
+			: $this->storyblokAdapterRegistry->getAllAdapters();
 
 		$result = self::SUCCESS;
 
