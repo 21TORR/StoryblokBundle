@@ -2,24 +2,28 @@
 
 namespace Torr\Storyblok\Manager\Validator;
 
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Validation\ValidationFailedException;
+use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
 
-final class ComponentValidator
+final readonly class ComponentValidator
 {
 	/**
 	 */
 	public function __construct (
-		private readonly ComponentNormalizer $componentNormalizer,
+		private ComponentNormalizer $componentNormalizer,
+		private ComponentManager $componentManager,
 	) {}
 
-	public function validateDefinitions () : void
+	public function validateComponentsInAdapter (AbstractStoryblokAdapter $adapter) : void
 	{
 		try
 		{
-			$this->componentNormalizer->normalize();
+			$components = $this->componentManager->getAllUsedComponentsInAdapter($adapter);
+			$this->componentNormalizer->normalize($components);
 		}
 		catch (InvalidComponentConfigurationException|ApiRequestException $exception)
 		{
