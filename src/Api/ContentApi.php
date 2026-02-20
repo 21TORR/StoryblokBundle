@@ -342,7 +342,7 @@ final class ContentApi implements ResetInterface
 					throw new ContentRequestFailedException("Content request failed: invalid response structure");
 				}
 
-				$hydrated = $this->storyFactory->createFromApiData($storyData);
+				$hydrated = $this->storyFactory->createFromApiData($storyData, $this->config->getLocaleLevel());
 
 				if (null !== $hydrated)
 				{
