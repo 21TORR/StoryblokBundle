@@ -23,7 +23,7 @@ final readonly class ComponentValidator
 		try
 		{
 			$components = $this->componentManager->getAllUsedComponentsInAdapter($adapter);
-			$this->componentNormalizer->normalize($components);
+			$this->componentNormalizer->normalize($components, $adapter);
 		}
 		catch (InvalidComponentConfigurationException|ApiRequestException $exception)
 		{

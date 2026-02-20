@@ -2,8 +2,8 @@
 
 namespace Torr\Storyblok\Manager\Normalizer;
 
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Api\Data\ComponentImport;
-use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Manager\Sync\ComponentConfigResolver;
 
@@ -11,7 +11,6 @@ final class ComponentNormalizer
 {
 	public function __construct (
 		private readonly ComponentConfigResolver $componentConfigResolver,
-		private readonly ManagementApi $managementApi,
 	) {}
 
 	/**
@@ -21,7 +20,7 @@ final class ComponentNormalizer
 	 *
 	 * @return ComponentImport[]
 	 */
-	public function normalize (array $components) : array
+	public function normalize (array $components, AbstractStoryblokAdapter $adapter) : array
 	{
 		$normalized = [];
 
@@ -35,7 +34,7 @@ final class ComponentNormalizer
 			);
 
 			$config = $this->componentConfigResolver->resolveComponentConfig($component->toManagementApiData());
-			$config["component_group_uuid"] = $this->managementApi->getOrCreatedComponentGroupUuid($component->getComponentGroup());
+			$config["component_group_uuid"] = $adapter->managementApi->getOrCreatedComponentGroupUuid($component->getComponentGroup());
 
 			$normalized[] = new ComponentImport(
 				$formattedLabel,
