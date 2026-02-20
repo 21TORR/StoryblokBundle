@@ -38,7 +38,7 @@ final class SyncDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Syncs the local component definitions to storyblok")
-			->addArgument("adapterKey", InputArgument::OPTIONAL, "Storyblok adapter key")
+			->addArgument("adapterKey", InputArgument::OPTIONAL, "Storyblok adapter key. If not set, all adapters will be synced.")
 			->addOption("force", null, InputOption::VALUE_NONE, "Whether to force sync");
 	}
 
