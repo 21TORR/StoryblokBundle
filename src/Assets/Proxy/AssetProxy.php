@@ -9,8 +9,7 @@ use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Torr\Storyblok\Api\ContentApi;
-use Torr\Storyblok\Config\StoryblokConfig;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 
 /**
  * @final
@@ -18,9 +17,7 @@ use Torr\Storyblok\Config\StoryblokConfig;
 readonly class AssetProxy
 {
 	public function __construct (
-		private StoryblokConfig $config,
 		private HttpClientInterface $client,
-		private ContentApi $api,
 		private Filesystem $filesystem,
 		private string $storagePath,
 		private LoggerInterface $logger,
@@ -29,17 +26,21 @@ readonly class AssetProxy
 	/**
 	 * Returns the file path of the proxied file
 	 */
-	public function getFilePath (string $path) : ?string
+	public function getFilePath (
+		AbstractStoryblokAdapter $adapter,
+		string $path,
+	) : ?string
 	{
 		$targetPath = Path::join($this->storagePath, $path);
+		$api = $adapter->contentApi;
 
 		if (!is_file($targetPath))
 		{
 			$originUrl = \sprintf(
 				"https://a.storyblok.com/f/%s/%s?cv=%s",
-				$this->config->getSpaceId(),
+				$adapter->spaceId,
 				ltrim($path, "/"),
-				$this->api->getSpaceInfo()->getCacheVersion(),
+				$api->getSpaceInfo()->getCacheVersion(),
 			);
 
 			$this->logger->debug("Fetch proxied storyblok asset", [
