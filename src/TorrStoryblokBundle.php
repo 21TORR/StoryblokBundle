@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Component\AbstractComponent;
-use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleExtension;
 
@@ -22,16 +21,7 @@ final class TorrStoryblokBundle extends Bundle
 		return new StoryblokBundleExtension(
 			$this,
 			new StoryblokBundleConfiguration(),
-			static function (array $config, ContainerBuilder $container) : void
-			{
-				$container->getDefinition(StoryblokConfig::class)
-					->setArgument('$spaceId', $config["space_id"])
-					->setArgument('$managementToken', $config["management_token"])
-					->setArgument('$contentToken', $config["content_token"])
-					->setArgument('$localeLevel', $config["locale_level"])
-					->setArgument('$webhookSecret', $config["webhook"]["secret"])
-					->setArgument('$allowUrlWebhookSecret', $config["webhook"]["allow_url_secret"]);
-			},
+			static function (array $config, ContainerBuilder $container) : void {},
 			"storyblok",
 		);
 	}

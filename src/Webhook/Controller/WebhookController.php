@@ -23,13 +23,14 @@ final class WebhookController extends AbstractController
 		WebhookPayloadParser $payloadParser,
 		EventDispatcherInterface $dispatcher,
 		Request $request,
+		string $spaceId,
 		?string $urlSecret,
 	) : JsonResponse
 	{
 		// Trailing slashes at the end of the URL will cause the URL secret to contain an empty string. We're normalizing here.
 		$urlSecret = $urlSecret ?: null;
 
-		$isValidSignature = $requestValidator->isValidRequest($request, $urlSecret);
+		$isValidSignature = $requestValidator->isValidRequest($request, $spaceId, $urlSecret);
 
 		if (!$isValidSignature || !$request->isMethod("POST"))
 		{
@@ -48,7 +49,7 @@ final class WebhookController extends AbstractController
 
 		try
 		{
-			$payload = $payloadParser->parseFromRawArray($request->toArray());
+			$payload = $payloadParser->parseFromRawArray($request->toArray(), $spaceId);
 
 			if (null === $payload)
 			{
