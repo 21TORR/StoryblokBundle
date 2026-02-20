@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Hosting;
 
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Torr\Hosting\Event\ValidateAppEvent;
-use Torr\Storyblok\Api\ContentApi;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Exception\Config\InvalidConfigException;
 
 /**
@@ -16,7 +16,7 @@ readonly class ValidateStoryblokConfigListener
 	 *
 	 */
 	public function __construct (
-		private ContentApi $contentApi,
+		private StoryblokAdapterRegistry $storyblokAdapterRegistry,
 	) {}
 
 	/**
@@ -26,17 +26,34 @@ readonly class ValidateStoryblokConfigListener
 	public function onValidateApp (ValidateAppEvent $event) : void
 	{
 		$io = $event->io;
-		$io->write("• Checking Storyblok configuration ... ");
+		$io->write("• Checking Storyblok Adapter configurations ... ");
 
-		try
+		$adapters = $this->storyblokAdapterRegistry->getAllAdapters();
+
+		$io->comment(\sprintf(
+			"Found <fg=blue>%d %s</>:",
+			\count($adapters),
+			1 !== \count($adapters) ? "adapters" : "adapter",
+		));
+
+		foreach ($adapters as $adapter)
 		{
-			$this->contentApi->getSpaceInfo();
-			$io->writeln("<fg=green>valid</>");
-		}
-		catch (InvalidConfigException)
-		{
-			$io->writeln("<fg=red>invalid</>");
-			$event->markAppAsInvalid("Storyblok Config");
+			$io->write(\sprintf(
+				"• %s ... ",
+				$adapter->getDisplayName(),
+			));
+
+			try
+			{
+				$adapter->contentApi->getSpaceInfo();
+
+				$io->writeln("<fg=green>valid</>");
+			}
+			catch (InvalidConfigException)
+			{
+				$io->writeln("<fg=red>invalid</>");
+				$event->markAppAsInvalid("Storyblok Adapter Config");
+			}
 		}
 	}
 }
