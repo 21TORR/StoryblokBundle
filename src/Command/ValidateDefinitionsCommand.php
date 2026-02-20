@@ -34,7 +34,7 @@ final class ValidateDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Validates the local component definitions against Storyblok")
-			->addArgument("adapterKey", InputArgument::OPTIONAL, "Storyblok adapter key. If not set, all adapters will be synced.");
+			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be validated.");
 	}
 
 	/**
@@ -45,26 +45,29 @@ final class ValidateDefinitionsCommand extends Command
 		$io = new TorrStyle($input, $output);
 		$io->title("Storyblok: Sync Definitions");
 
-		$adapterKey = $input->getArgument("adapterKey");
-		$adapters = $this->storyblokAdapterRegistry->getAllAdapters();
+		/** @var string[] $adapterKeys */
+		$adapterKeys = $input->getArgument("adapterKeys");
 
-		if (null !== $adapterKey)
-		{
-			\assert(\is_string($adapterKey));
-			$adapters = [$this->storyblokAdapterRegistry->getByKey($adapterKey)];
-		}
+		$adapters = [] !== $adapterKeys
+			? array_map($this->storyblokAdapterRegistry->getByKey(...), $adapterKeys)
+			: $this->storyblokAdapterRegistry->getAllAdapters();
 
 		$result = self::SUCCESS;
 
 		foreach ($adapters as $adapter)
 		{
-			$result = self::FAILURE === $this->validateDefinitions($io, $adapter) ? self::FAILURE : $result;
+			$validateDefinitionsSuccess = $this->validateDefinitions($io, $adapter);
+
+			if (!$validateDefinitionsSuccess)
+			{
+				$result = self::FAILURE;
+			}
 		}
 
 		return $result;
 	}
 
-	private function validateDefinitions (TorrStyle $io, AbstractStoryblokAdapter $adapter) : int
+	private function validateDefinitions (TorrStyle $io, AbstractStoryblokAdapter $adapter) : bool
 	{
 		$spaceInfo = $adapter->contentApi->getSpaceInfo();
 
@@ -82,14 +85,14 @@ final class ValidateDefinitionsCommand extends Command
 			$io->newLine(2);
 			$io->success("All definitions validated.");
 
-			return self::SUCCESS;
+			return true;
 		}
 		catch (ValidationFailedException $exception)
 		{
 			$io->comment(\sprintf("<fg=red>ERROR</>\n%s", $exception->getMessage()));
 			$io->error("Definitions validation failed");
 
-			return self::FAILURE;
+			return false;
 		}
 	}
 }

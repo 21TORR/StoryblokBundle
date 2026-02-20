@@ -38,7 +38,7 @@ final class SyncDefinitionsCommand extends Command
 	{
 		$this
 			->setDescription("Syncs the local component definitions to storyblok")
-			->addArgument("adapterKey", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.")
+			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.")
 			->addOption("force", null, InputOption::VALUE_NONE, "Whether to force sync");
 	}
 
@@ -60,7 +60,7 @@ final class SyncDefinitionsCommand extends Command
 		}
 
 		/** @var string[] $adapterKeys */
-		$adapterKeys = $input->getArgument("adapterKey");
+		$adapterKeys = $input->getArgument("adapterKeys");
 
 		$adapters = [] !== $adapterKeys
 			? array_map($this->storyblokAdapterRegistry->getByKey(...), $adapterKeys)
