@@ -40,8 +40,8 @@ final class WebhookController extends AbstractController
 
 			return $this->json([
 				"ok" => false,
-				"error" => "invalid request",
-			], 403);
+				"error" => "unknown_adapter",
+			], 404);
 		}
 
 		$isValidSignature = $adapter->requestValidator->isValidRequest($request, $urlSecret);
