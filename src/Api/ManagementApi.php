@@ -559,6 +559,30 @@ final class ManagementApi
 		}
 	}
 
+	public function fetchStory (
+		int $storyId,
+	) : array
+	{
+		return $this->sendRequest("stories/{$storyId}");
+	}
+
+	public function updateStory (
+		int $storyId,
+		string|array $storyJson,
+	) : void
+	{
+		$options = new HttpOptions()
+			->setHeaders([
+				"Content-Type" => "application/json",
+				"Accept" => "application/json",
+			])
+			->setBody(
+				\is_array($storyJson) ? json_encode($storyJson, \JSON_THROW_ON_ERROR) : $storyJson,
+			);
+
+		$this->sendRequest("stories/{$storyId}", $options, "PUT");
+	}
+
 	/**
 	 *
 	 */
