@@ -6,7 +6,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
-use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Webhook\Request\RequestValidator;
 
@@ -152,11 +151,7 @@ final class RequestValidatorTest extends TestCase
 			allowUrlWebhookSecret: $allowUrlSecrets,
 		);
 
-		$storyblokAdapter = $this->createMock(AbstractStoryblokAdapter::class);
-		$reflection = new \ReflectionProperty(AbstractStoryblokAdapter::class, "config");
-		$reflection->setValue($storyblokAdapter, $config);
-
-		$validator = new RequestValidator($storyblokAdapter, new NullLogger());
+		$validator = new RequestValidator($config, new NullLogger());
 		self::assertSame($expectedValid, $validator->isValidRequest($request, $urlToken));
 	}
 }
