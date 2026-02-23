@@ -2,8 +2,7 @@
 
 namespace Torr\Storyblok\Manager\Sync\Diff;
 
-use SebastianBergmann\Diff\Differ;
-use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+use Jfcherng\Diff\DiffHelper;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 
 final class ComponentConfigDiffer
@@ -23,15 +22,6 @@ final class ComponentConfigDiffer
 	private const array IGNORED_LEVEL_2_KEYS = [
 		"id",
 	];
-	private readonly Differ $differ;
-
-	/**
-	 */
-	public function __construct ()
-	{
-		$builder = new UnifiedDiffOutputBuilder("");
-		$this->differ = new Differ($builder);
-	}
 
 	/**
 	 * @return string[]|null
@@ -41,9 +31,10 @@ final class ComponentConfigDiffer
 		array $localConfig,
 	) : ?array
 	{
-		$diff = trim($this->differ->diff(
+		$diff = trim(DiffHelper::calculate(
 			$this->formatAsJson($storyblokConfig),
 			$this->formatAsJson($localConfig),
+			"Unified",
 		));
 
 		if ("" === $diff)

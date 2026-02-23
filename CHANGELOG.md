@@ -1,3 +1,9 @@
+3.21.0
+======
+
+* (feature) Use new differ for rendering the component changes.
+
+
 3.20.2
 ======
 
