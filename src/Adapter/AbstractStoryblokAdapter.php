@@ -26,8 +26,8 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 	public private(set) string $spaceId;
 
 	public function __construct (
-		StoryblokConfig $config,
 		ContainerInterface $locator,
+		StoryblokConfig $config,
 	)
 	{
 		$client = $locator->get(HttpClientInterface::class);
