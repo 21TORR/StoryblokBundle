@@ -61,13 +61,14 @@ abstract class CompositeField extends AbstractGroupingElement
 		ComponentContext $context,
 		array $fullData,
 		?DataVisitorInterface $dataVisitor = null,
-	) : mixed
+	) : array
 	{
 		$transformed = [];
 
 		foreach ($this->fields as $name => $fieldDefinition)
 		{
 			$unprefixedName = preg_replace("~^(" . preg_quote($this->prefix, "~") . ")~", "", $name);
+			\assert(\is_string($unprefixedName));
 
 			$transformed[$unprefixedName] = $fieldDefinition->transformData(
 				$fullData[$name] ?? null,
