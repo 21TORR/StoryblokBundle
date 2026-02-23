@@ -575,10 +575,16 @@ final class ManagementApi
 			->setHeaders([
 				"Content-Type" => "application/json",
 				"Accept" => "application/json",
-			])
-			->setBody(
-				\is_array($storyJson) ? json_encode($storyJson, \JSON_THROW_ON_ERROR) : $storyJson,
-			);
+			]);
+
+		if (\is_array($storyJson))
+		{
+			$options->setJson($storyJson);
+		}
+		else
+		{
+			$options->setBody($storyJson);
+		}
 
 		$this->sendRequest("stories/{$storyId}", $options, "PUT");
 	}
