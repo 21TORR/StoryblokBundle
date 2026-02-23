@@ -64,7 +64,7 @@ readonly class StoryblokAdapterRegistry
 	{
 		foreach ($this->getAllAdapters() as $adapter)
 		{
-			if ($adapter->config->getSpaceId() === $spaceId)
+			if ($adapter->spaceId === $spaceId)
 			{
 				return $adapter;
 			}

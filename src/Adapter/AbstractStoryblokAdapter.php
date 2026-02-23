@@ -21,6 +21,7 @@ abstract class AbstractStoryblokAdapter
 	public private(set) StoryblokIdSlugMapper $idSlugMapper;
 	public private(set) StoryblokBackendUrlGenerator $storyblokBackendUrlGenerator;
 	public private(set) RequestValidator $requestValidator;
+	public private(set) string $spaceId;
 
 	public function __construct (
 		public private(set) StoryblokConfig $config,
@@ -33,25 +34,26 @@ abstract class AbstractStoryblokAdapter
 	{
 		$this->contentApi = new ContentApi(
 			$client,
-			$this->config,
+			$config,
 			$storyFactory,
 			$componentManager,
 			$logger,
 		);
 
 		$this->managementApi = new ManagementApi(
-			$this->config,
+			$config,
 			$client,
 			$storyblokManagementLimiter,
 			$logger,
 		);
 
 		$this->idSlugMapper = new StoryblokIdSlugMapper($this->contentApi);
-		$this->storyblokBackendUrlGenerator = new StoryblokBackendUrlGenerator($this->config);
+		$this->storyblokBackendUrlGenerator = new StoryblokBackendUrlGenerator($config);
 		$this->requestValidator = new RequestValidator(
 			$this,
 			$logger,
 		);
+		$this->spaceId = (string) $config->getSpaceId();
 	}
 
 	/**
