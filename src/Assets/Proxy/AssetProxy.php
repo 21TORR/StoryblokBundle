@@ -38,7 +38,7 @@ readonly class AssetProxy
 		{
 			$originUrl = \sprintf(
 				"https://a.storyblok.com/f/%s/%s?cv=%s",
-				$adapter->config->getSpaceId(),
+				$adapter->spaceId,
 				ltrim($path, "/"),
 				$api->getSpaceInfo()->getCacheVersion(),
 			);
