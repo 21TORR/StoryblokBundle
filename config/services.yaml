@@ -12,6 +12,8 @@ services:
              - ../src/Api/Transformer/StoryblokIdSlugMapper.php
              - ../src/Api/ContentApi.php
              - ../src/Api/ManagementApi.php
+             - ../src/Backend/StoryblokBackendUrlGenerator.php
+             - ../src/Config/StoryblokConfig.php
              - ../src/Exception
              - ../src/Field
              - ../src/Component/Filter
@@ -19,14 +21,7 @@ services:
              - ../src/RichText/LinkMarksRichTextTransformer.php
              - ../src/RichText/RichTextTransformer.php
              - ../src/TorrStoryblokBundle.php
-
-    Torr\Storyblok\Config\StoryblokConfig:
-        $spaceId: !abstract set via config
-        $managementToken: !abstract set via config
-        $contentToken: !abstract set via config
-        $localeLevel: !abstract set via config
-        $webhookSecret: !abstract set via config
-        $allowUrlWebhookSecret: !abstract set via config
+             - ../src/Webhook/Request/RequestValidator.php
 
     Torr\Storyblok\Assets\Proxy\AssetProxy:
         $storagePath: '%kernel.project_dir%/var/storyblok/assets'

@@ -8,9 +8,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Event\StoryblokWebhookEvent;
 use Torr\Storyblok\Webhook\Parser\WebhookPayloadParser;
-use Torr\Storyblok\Webhook\Request\RequestValidator;
 
 final class WebhookController extends AbstractController
 {
@@ -18,18 +18,33 @@ final class WebhookController extends AbstractController
 	 * Handles the incoming webhook from Storyblok
 	 */
 	public function webhook (
-		RequestValidator $requestValidator,
+		StoryblokAdapterRegistry $storyblokAdapterRegistry,
 		LoggerInterface $logger,
 		WebhookPayloadParser $payloadParser,
 		EventDispatcherInterface $dispatcher,
 		Request $request,
+		string $spaceId,
 		?string $urlSecret,
 	) : JsonResponse
 	{
 		// Trailing slashes at the end of the URL will cause the URL secret to contain an empty string. We're normalizing here.
 		$urlSecret = $urlSecret ?: null;
 
-		$isValidSignature = $requestValidator->isValidRequest($request, $urlSecret);
+		$adapter = $storyblokAdapterRegistry->getByStoryblokSpaceId($spaceId);
+
+		if (null === $adapter)
+		{
+			$logger->critical("Storyblok Webhook: No Adapter found for {spaceId}.", [
+				"spaceId" => $spaceId,
+			]);
+
+			return $this->json([
+				"ok" => false,
+				"error" => "unknown_adapter",
+			], 404);
+		}
+
+		$isValidSignature = $adapter->requestValidator->isValidRequest($request, $urlSecret);
 
 		if (!$isValidSignature || !$request->isMethod("POST"))
 		{
@@ -48,7 +63,7 @@ final class WebhookController extends AbstractController
 
 		try
 		{
-			$payload = $payloadParser->parseFromRawArray($request->toArray());
+			$payload = $payloadParser->parseFromRawArray($request->toArray(), $spaceId);
 
 			if (null === $payload)
 			{
