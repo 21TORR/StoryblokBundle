@@ -19,6 +19,7 @@ final class StoryMetaData
 		 * The component type of the story's component
 		 */
 		private readonly string $type,
+		public ?string $spaceId = null,
 	)
 	{
 		$this->previewData = $data["content"]["_editable"] ?? null;

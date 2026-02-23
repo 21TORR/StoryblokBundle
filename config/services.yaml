@@ -12,7 +12,6 @@ services:
              - ../src/Api/Transformer/StoryblokIdSlugMapper.php
              - ../src/Api/ContentApi.php
              - ../src/Api/ManagementApi.php
-             - ../src/Backend/StoryblokBackendUrlGenerator.php
              - ../src/Config/StoryblokConfig.php
              - ../src/Exception
              - ../src/Field
