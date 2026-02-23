@@ -4,9 +4,9 @@ namespace Torr\Storyblok\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Torr\BundleHelpers\Bundle\ConfigurableBundleExtension;
+use Torr\BundleHelpers\Bundle\BundleExtension;
 
-final class StoryblokBundleExtension extends ConfigurableBundleExtension implements PrependExtensionInterface
+final class StoryblokBundleExtension extends BundleExtension implements PrependExtensionInterface
 {
 	/**
 	 * @inheritDoc

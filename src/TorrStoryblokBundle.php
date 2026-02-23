@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Component\AbstractComponent;
-use Torr\Storyblok\DependencyInjection\StoryblokBundleConfiguration;
 use Torr\Storyblok\DependencyInjection\StoryblokBundleExtension;
 
 final class TorrStoryblokBundle extends Bundle
@@ -20,8 +19,6 @@ final class TorrStoryblokBundle extends Bundle
 	{
 		return new StoryblokBundleExtension(
 			$this,
-			new StoryblokBundleConfiguration(),
-			static function (array $config, ContainerBuilder $container) : void {},
 			"storyblok",
 		);
 	}
