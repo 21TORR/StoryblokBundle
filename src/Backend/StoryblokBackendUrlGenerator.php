@@ -13,12 +13,12 @@ final readonly class StoryblokBackendUrlGenerator
 	 */
 	public function generateStoryEditUrl (StoryInterface $story) : string
 	{
-		if (null === $story->getMetaData()->spaceId)
-		{
-			throw new \InvalidArgumentException("Story has no space id");
-		}
+		$metaData = $story->getMetaData();
 
-		return $this->generateStoryEditUrlById($story->getMetaData()->getId(), $story->getMetaData()->spaceId);
+		return $this->generateStoryEditUrlById(
+			$metaData->getId(),
+			$metaData->spaceId,
+		);
 	}
 
 	/**
