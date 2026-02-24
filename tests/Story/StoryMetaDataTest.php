@@ -47,10 +47,14 @@ final class StoryMetaDataTest extends TestCase
 	#[DataProvider("provideValidLocaleLevel")]
 	public function testValidLocaleLevel (int $localeLevel, string $fullSlug, ?string $expected) : void
 	{
-		$metaData = new StoryMetaData([
-			"full_slug" => $fullSlug,
-			"_locale_level" => $localeLevel,
-		], "test");
+		$metaData = new StoryMetaData(
+			data: [
+				"full_slug" => $fullSlug,
+				"_locale_level" => $localeLevel,
+			],
+			type: "test",
+			spaceId: "12345",
+		);
 
 		self::assertSame($expected, $metaData->getLocaleFromSlug());
 	}
