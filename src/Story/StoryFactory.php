@@ -25,7 +25,11 @@ final class StoryFactory
 	 *
 	 * @throws StoryHydrationFailed
 	 */
-	public function createFromApiData (array $data, int $localeLevel) : ?Story
+	public function createFromApiData (
+		array $data,
+		string $spaceId,
+		int $localeLevel,
+	) : ?Story
 	{
 		$type = $data["content"]["component"] ?? null;
 
@@ -73,7 +77,12 @@ final class StoryFactory
 
 			$data["_locale_level"] = $localeLevel;
 
-			$story = new $storyClass($data, $component, $this->storyblokContext);
+			$story = new $storyClass(
+				$data,
+				$spaceId,
+				$component,
+				$this->storyblokContext,
+			);
 			$story->validate($this->storyblokContext);
 
 			return $story;

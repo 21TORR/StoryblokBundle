@@ -15,12 +15,17 @@ abstract class Story implements StoryInterface
 	 */
 	final public function __construct (
 		array $data,
+		string $spaceId,
 		protected readonly AbstractComponent $rootComponent,
 		protected readonly ComponentContext $dataContext,
 	)
 	{
 		$this->content = $data["content"];
-		$this->metaData = new StoryMetaData($data, $this->rootComponent::getKey());
+		$this->metaData = new StoryMetaData(
+			data: $data,
+			type: $this->rootComponent::getKey(),
+			spaceId: $spaceId,
+		);
 	}
 
 	/**
