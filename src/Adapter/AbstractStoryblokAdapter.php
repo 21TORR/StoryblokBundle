@@ -10,7 +10,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Api\Transformer\StoryblokIdSlugMapper;
-use Torr\Storyblok\Backend\StoryblokBackendUrlGenerator;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Story\StoryFactory;
@@ -21,7 +20,6 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 	public private(set) ContentApi $contentApi;
 	public private(set) ManagementApi $managementApi;
 	public private(set) StoryblokIdSlugMapper $idSlugMapper;
-	public private(set) StoryblokBackendUrlGenerator $storyblokBackendUrlGenerator;
 	public private(set) RequestValidator $requestValidator;
 	public private(set) string $spaceId;
 
@@ -61,12 +59,11 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 		);
 
 		$this->idSlugMapper = new StoryblokIdSlugMapper($this->contentApi);
-		$this->storyblokBackendUrlGenerator = new StoryblokBackendUrlGenerator($config);
 		$this->requestValidator = new RequestValidator(
 			$config,
 			$logger,
 		);
-		$this->spaceId = (string) $config->getSpaceId();
+		$this->spaceId = $config->spaceId;
 	}
 
 	/**

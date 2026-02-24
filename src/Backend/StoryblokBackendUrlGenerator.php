@@ -2,17 +2,10 @@
 
 namespace Torr\Storyblok\Backend;
 
-use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Story\StoryInterface;
 
 final readonly class StoryblokBackendUrlGenerator
 {
-	/**
-	 */
-	public function __construct (
-		private StoryblokConfig $config,
-	) {}
-
 	/**
 	 * Generates the URL to the edit screen for the given story
 	 *
@@ -20,7 +13,12 @@ final readonly class StoryblokBackendUrlGenerator
 	 */
 	public function generateStoryEditUrl (StoryInterface $story) : string
 	{
-		return $this->generateStoryEditUrlById($story->getMetaData()->getId());
+		$metaData = $story->getMetaData();
+
+		return $this->generateStoryEditUrlById(
+			$metaData->getId(),
+			$metaData->spaceId,
+		);
 	}
 
 	/**
@@ -28,11 +26,11 @@ final readonly class StoryblokBackendUrlGenerator
 	 *
 	 * @api
 	 */
-	public function generateStoryEditUrlById (int $storyId) : string
+	public function generateStoryEditUrlById (int $storyId, string $spaceId) : string
 	{
 		return \sprintf(
 			"https://app.storyblok.com/#/me/spaces/%d/stories/0/0/%d",
-			$this->config->getSpaceId(),
+			$spaceId,
 			$storyId,
 		);
 	}
