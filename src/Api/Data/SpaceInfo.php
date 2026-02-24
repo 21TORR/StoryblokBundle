@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Api\Data;
 
 final class SpaceInfo
 {
-	private readonly int $spaceId;
+	private readonly string $spaceId;
 	private readonly string $name;
 	private readonly int $cacheVersion;
 
@@ -16,7 +16,7 @@ final class SpaceInfo
 	 */
 	public function __construct (array $data)
 	{
-		$this->spaceId = $data["id"];
+		$this->spaceId = (string) $data["id"];
 		$this->name = $data["name"];
 		$this->cacheVersion = $data["version"];
 		$this->languageCodes = $data["language_codes"];
@@ -25,7 +25,7 @@ final class SpaceInfo
 
 	/**
 	 */
-	public function getId () : int
+	public function getId () : string
 	{
 		return $this->spaceId;
 	}
