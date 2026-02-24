@@ -17,15 +17,16 @@ use Torr\Storyblok\Webhook\Request\RequestValidator;
 
 abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 {
-	public private(set) ContentApi $contentApi;
-	public private(set) ManagementApi $managementApi;
-	public private(set) StoryblokIdSlugMapper $idSlugMapper;
-	public private(set) RequestValidator $requestValidator;
-	public private(set) string $spaceId;
+	public readonly ContentApi $contentApi;
+	public readonly ManagementApi $managementApi;
+	public readonly StoryblokIdSlugMapper $idSlugMapper;
+	public readonly RequestValidator $requestValidator;
+	public readonly string $spaceId;
 
 	public function __construct (
 		ContainerInterface $locator,
-		StoryblokConfig $config,
+		/** @internal */
+		public readonly StoryblokConfig $config,
 	)
 	{
 		$client = $locator->get(HttpClientInterface::class);
@@ -45,14 +46,14 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 
 		$this->contentApi = new ContentApi(
 			$client,
-			$config,
+			$this->config,
 			$storyFactory,
 			$componentManager,
 			$logger,
 		);
 
 		$this->managementApi = new ManagementApi(
-			$config,
+			$this->config,
 			$client,
 			$rateLimiterFactory,
 			$logger,
@@ -60,10 +61,10 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 
 		$this->idSlugMapper = new StoryblokIdSlugMapper($this->contentApi);
 		$this->requestValidator = new RequestValidator(
-			$config,
+			$this->config,
 			$logger,
 		);
-		$this->spaceId = $config->spaceId;
+		$this->spaceId = $this->config->spaceId;
 	}
 
 	/**
