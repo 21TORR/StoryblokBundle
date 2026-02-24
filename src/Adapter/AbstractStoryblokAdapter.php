@@ -63,7 +63,7 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 			$config,
 			$logger,
 		);
-		$this->spaceId = (string) $config->getSpaceId();
+		$this->spaceId = $config->spaceId;
 	}
 
 	/**

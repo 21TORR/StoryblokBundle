@@ -42,7 +42,7 @@ final class ManagementApi
 		$this->client = new RetryableHttpClient(
 			$client->withOptions(
 				(new HttpOptions())
-					->setBaseUri(\sprintf(self::API_URL, $this->config->getSpaceId()))
+					->setBaseUri(\sprintf(self::API_URL, $this->config->spaceId))
 					->toArray(),
 			),
 		);
@@ -395,7 +395,7 @@ final class ManagementApi
 			$this->rateLimiter->consume()->wait();
 
 			$formattedOptions = $options->toArray();
-			$formattedOptions["headers"]["authorization"] = $this->config->getManagementToken();
+			$formattedOptions["headers"]["authorization"] = $this->config->managementToken;
 
 			$response = $this->client->request(
 				$method,
@@ -534,7 +534,7 @@ final class ManagementApi
 		{
 			$options = $this->generateBaseOptions()
 				->setHeaders([
-					"Authorization" => $this->config->getManagementToken(),
+					"Authorization" => $this->config->managementToken,
 					"Content-Type" => "application/json",
 					"Accept" => "application/json",
 				])
@@ -594,9 +594,9 @@ final class ManagementApi
 	 */
 	private function generateBaseOptions () : HttpOptions
 	{
-		return (new HttpOptions())
+		return new HttpOptions()
 			->setHeaders([
-				"Authorization" => $this->config->getManagementToken(),
+				"Authorization" => $this->config->managementToken,
 			]);
 	}
 }
