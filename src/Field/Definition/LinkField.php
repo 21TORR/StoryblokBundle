@@ -93,7 +93,7 @@ final class LinkField extends AbstractField
 						"linktype" => [
 							new NotNull(),
 							new Type("string"),
-							new Choice([
+							new Choice(choices: [
 								"asset",
 								"email",
 								"story",
