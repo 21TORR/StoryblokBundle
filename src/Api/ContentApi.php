@@ -72,6 +72,9 @@ final class ContentApi implements ResetInterface
 				$queryParameters["find_by"] = "uuid";
 			}
 
+			// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
+			ksort($queryParameters);
+
 			$response = $this->client->request(
 				"GET",
 				"stories/{$identifier}",
