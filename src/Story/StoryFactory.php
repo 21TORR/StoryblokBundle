@@ -3,7 +3,6 @@
 namespace Torr\Storyblok\Story;
 
 use Psr\Log\LoggerInterface;
-use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Story\ComponentWithoutStoryException;
@@ -18,7 +17,6 @@ final class StoryFactory
 	public function __construct (
 		private readonly ComponentManager $componentManager,
 		private readonly ComponentContext $storyblokContext,
-		private readonly StoryblokConfig $config,
 		private readonly LoggerInterface $logger,
 	) {}
 
@@ -27,7 +25,11 @@ final class StoryFactory
 	 *
 	 * @throws StoryHydrationFailed
 	 */
-	public function createFromApiData (array $data) : ?Story
+	public function createFromApiData (
+		array $data,
+		string $spaceId,
+		int $localeLevel,
+	) : ?Story
 	{
 		$type = $data["content"]["component"] ?? null;
 
@@ -73,9 +75,14 @@ final class StoryFactory
 				));
 			}
 
-			$data["_locale_level"] = $this->config->getLocaleLevel();
+			$data["_locale_level"] = $localeLevel;
 
-			$story = new $storyClass($data, $component, $this->storyblokContext);
+			$story = new $storyClass(
+				$data,
+				$spaceId,
+				$component,
+				$this->storyblokContext,
+			);
 			$story->validate($this->storyblokContext);
 
 			return $story;

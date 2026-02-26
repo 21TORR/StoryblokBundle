@@ -10,7 +10,7 @@ use Torr\Storyblok\Field\NestedFieldDefinitionInterface;
 final class FieldCollection
 {
 	/** @var array<string, FieldDefinitionInterface> */
-	private array $allFields = [];
+	public private(set) array $allFields = [];
 
 	public function __construct (
 		/** @var array<string, FieldDefinitionInterface> $rootFields */

@@ -19,7 +19,7 @@ final readonly class RequestValidator
 	 */
 	public function isValidRequest (Request $request, ?string $urlSecret) : bool
 	{
-		$secret = (string) $this->config->webhookSecret;
+		$secret = $this->config->webhookSecret ?? "";
 
 		if ($this->checkProperSignature($secret, $request))
 		{

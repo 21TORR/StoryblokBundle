@@ -1,13 +1,15 @@
 storyblok.webhook:
-    path: /webhook/{urlSecret}
+    path: /webhook/{spaceId}/{urlSecret}
     controller: Torr\Storyblok\Webhook\Controller\WebhookController::webhook
     requirements:
+        spaceId: \d+
         urlSecret: .*?
     defaults:
         urlSecret: ~
 
 storyblok.asset-proxy:
-    path: /asset/{path}
+    path: /asset/{spaceId}/{path}
     controller: Torr\Storyblok\Assets\Controller\AssetProxyController::proxyAsset
     requirements:
+        spaceId: \d+
         path: .+?

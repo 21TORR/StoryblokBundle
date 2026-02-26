@@ -1,3 +1,9 @@
+5.0.0 (unreleased)
+=====
+
+* (bug) Always sort query parameters when sending content API requests.
+
+
 3.21.1
 ======
 

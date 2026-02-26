@@ -63,7 +63,7 @@ final class ContentApi implements ResetInterface
 			$identifier = ltrim((string) $identifier, "/");
 
 			$queryParameters = [
-				"token" => $this->config->getContentToken(),
+				"token" => $this->config->contentToken,
 				"version" => $version->value,
 			];
 
@@ -71,6 +71,9 @@ final class ContentApi implements ResetInterface
 			{
 				$queryParameters["find_by"] = "uuid";
 			}
+
+			// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
+			ksort($queryParameters);
 
 			$response = $this->client->request(
 				"GET",
@@ -91,7 +94,11 @@ final class ContentApi implements ResetInterface
 
 			$data = $response->toArray();
 
-			return $this->storyFactory->createFromApiData($data["story"]);
+			return $this->storyFactory->createFromApiData(
+				data: $data["story"],
+				spaceId: $this->config->spaceId,
+				localeLevel: $this->config->getLocaleLevel(),
+			);
 		}
 		catch (ExceptionInterface $exception)
 		{
@@ -229,9 +236,9 @@ final class ContentApi implements ResetInterface
 			$response = $this->client->request(
 				"GET",
 				"spaces/me/",
-				(new HttpOptions())
+				new HttpOptions()
 					->setQuery([
-						"token" => $this->config->getContentToken(),
+						"token" => $this->config->contentToken,
 					])
 					->toArray(),
 			);
@@ -243,17 +250,17 @@ final class ContentApi implements ResetInterface
 			// for any content API requests. However, the management API is using the space id from the config.
 			// If you have a misconfiguration, you could send the management API requests and the content API requests
 			// to different spaces.
-			if ($spaceInfo->getId() !== $this->config->getSpaceId())
+			if ($spaceInfo->getId() !== $this->config->spaceId)
 			{
 				$this->logger->critical("Invalid storyblok config: configured space id is {configuredSpaceId}, but content token belongs to space {tokenSpaceId} ({name})", [
-					"configuredSpaceId" => $this->config->getSpaceId(),
+					"configuredSpaceId" => $this->config->spaceId,
 					"tokenSpaceId" => $spaceInfo->getId(),
 					"name" => $spaceInfo->getName(),
 				]);
 
 				throw new InvalidConfigException(\sprintf(
 					"Invalid storyblok config: configured space id is '%s', but content token belongs to space id '%s' (name '%s')",
-					$this->config->getSpaceId(),
+					$this->config->spaceId,
 					$spaceInfo->getId(),
 					$spaceInfo->getName(),
 				));
@@ -285,7 +292,7 @@ final class ContentApi implements ResetInterface
 		int $page = 1,
 	) : PaginatedApiResult
 	{
-		$query["token"] = $this->config->getContentToken();
+		$query["token"] = $this->config->contentToken;
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["page"] = $page;
 
@@ -342,7 +349,11 @@ final class ContentApi implements ResetInterface
 					throw new ContentRequestFailedException("Content request failed: invalid response structure");
 				}
 
-				$hydrated = $this->storyFactory->createFromApiData($storyData);
+				$hydrated = $this->storyFactory->createFromApiData(
+					data: $storyData,
+					spaceId: $this->config->spaceId,
+					localeLevel: $this->config->getLocaleLevel(),
+				);
 
 				if (null !== $hydrated)
 				{
@@ -436,7 +447,7 @@ final class ContentApi implements ResetInterface
 		int $page = 1,
 	) : PaginatedApiResult
 	{
-		$query["token"] = $this->config->getContentToken();
+		$query["token"] = $this->config->contentToken;
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["page"] = $page;
 
@@ -569,7 +580,7 @@ final class ContentApi implements ResetInterface
 		int $page = 1,
 	) : PaginatedApiResult
 	{
-		$query["token"] = $this->config->getContentToken();
+		$query["token"] = $this->config->contentToken;
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["page"] = $page;
 		$query["paginated"] = 1;

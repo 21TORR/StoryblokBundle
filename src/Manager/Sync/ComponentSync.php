@@ -3,11 +3,12 @@
 namespace Torr\Storyblok\Manager\Sync;
 
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Api\Data\ComponentImport;
-use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Exception\Api\ApiRequestException;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
+use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Normalizer\ComponentNormalizer;
 use Torr\Storyblok\Manager\Sync\Diff\ComponentConfigDiffer;
 
@@ -16,9 +17,9 @@ final class ComponentSync
 	/**
 	 */
 	public function __construct (
-		private readonly ManagementApi $managementApi,
 		private readonly ComponentNormalizer $componentNormalizer,
 		private readonly ComponentConfigDiffer $differ,
+		private readonly ComponentManager $componentManager,
 	) {}
 
 	/**
@@ -28,14 +29,20 @@ final class ComponentSync
 	 */
 	public function syncDefinitionsInteractively (
 		TorrStyle $io,
+		AbstractStoryblokAdapter $adapter,
 		bool $forceSync = false,
 	) : bool
 	{
 		try
 		{
-			$definitions = $this->managementApi->fetchComponentDefinitions();
+			$io->writeln("• Fetching current component definitions from Storyblok");
+			$definitions = $adapter->managementApi->fetchComponentDefinitions();
+
+			$io->writeln("• Determining components to sync");
+			$componentsToSync = $this->componentManager->getAllUsedComponentsInAdapter($adapter);
+
 			$io->writeln("• Normalizing all components");
-			$normalized = $this->componentNormalizer->normalize();
+			$normalized = $this->componentNormalizer->normalize($componentsToSync, $adapter);
 			$io->writeln("<fg=green>✓</> done");
 
 			$toRun = [];
@@ -85,7 +92,7 @@ final class ComponentSync
 				return false;
 			}
 
-			$this->syncComponents($io, $toRun);
+			$this->syncComponents($io, $adapter, $toRun);
 
 			return true;
 		}
@@ -126,13 +133,14 @@ final class ComponentSync
 	 */
 	private function syncComponents (
 		TorrStyle $io,
+		AbstractStoryblokAdapter $adapter,
 		array $normalizedComponents,
 	) : void
 	{
 		foreach ($normalizedComponents as $key => $config)
 		{
 			$io->write("• Syncing {$config->formattedLabel} ... ");
-			$performedAction = $this->managementApi->syncComponent($config->config);
+			$performedAction = $adapter->managementApi->syncComponent($config->config);
 			$io->writeln(\sprintf("%s <fg=green>✓</>", $performedAction->value));
 		}
 	}
