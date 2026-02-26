@@ -1,3 +1,9 @@
+3.21.1
+======
+
+* (improvement) Fix deprecation in `Choice` asserts.
+
+
 3.21.0
 ======
 
