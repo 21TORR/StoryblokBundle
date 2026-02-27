@@ -30,7 +30,7 @@ final class WebhookController extends AbstractController
 		// Trailing slashes at the end of the URL will cause the URL secret to contain an empty string. We're normalizing here.
 		$urlSecret = $urlSecret ?: null;
 
-		$adapter = $storyblokAdapterRegistry->getByStoryblokSpaceId($spaceId);
+		$adapter = $storyblokAdapterRegistry->getBySpaceId($spaceId);
 
 		if (null === $adapter)
 		{

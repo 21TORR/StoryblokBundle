@@ -87,7 +87,13 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 	 */
 	abstract public function getStandaloneComponentKeys () : array;
 
+	/**
+	 * Returns a human-readable name for this adapter
+	 */
 	abstract public function getDisplayName () : string;
 
+	/**
+	 * Renames a technical name for this adapter. Must be a valid "snail".
+	 */
 	abstract public static function getKey () : string;
 }

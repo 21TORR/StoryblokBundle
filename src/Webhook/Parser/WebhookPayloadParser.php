@@ -62,7 +62,7 @@ final readonly class WebhookPayloadParser
 			return null;
 		}
 
-		if (null === $this->storyblokAdapterRegistry->getByStoryblokSpaceId($spaceId))
+		if (null === $this->storyblokAdapterRegistry->getBySpaceId($spaceId))
 		{
 			$this->logger->error("Storyblok Webhook: no storyblok adapter found for space id {spaceId}", [
 				"spaceId" => $spaceId,
