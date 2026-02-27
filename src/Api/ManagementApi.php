@@ -353,6 +353,7 @@ final class ManagementApi
 		$page = 1;
 
 		do {
+			/** @var PaginatedApiResult<array> $result */
 			$result = $this->sendPaginatedRequest(
 				"assets",
 				$page,
@@ -412,6 +413,8 @@ final class ManagementApi
 		));
 	}
 
+	/**
+	 */
 	private function sendPaginatedRequest (
 		string $path,
 		int $page,
@@ -449,17 +452,19 @@ final class ManagementApi
 					"path" => $path,
 					"page" => $page,
 					"method" => $method,
-					"statusCode" => $response?->getStatusCode(),
+					"statusCode" => $response->getStatusCode(),
 					// use unchanged, to not leak the token
 					"options" => $options->toArray(),
-					"response" => $response?->getContent(false),
+					"response" => $response->getContent(false),
 				]);
 				throw new ApiRequestFailedException("Tried paginated API request, but no pagination headers were returned.");
 			}
 
+			$totalValues = (int) $headers["total"][0];
+
 			return new PaginatedApiResult(
 				(int) $headers["per-page"][0],
-				(int) ceil($headers["total"][0] / $perPage),
+				(int) ceil($totalValues / $perPage),
 				"" !== $response->getContent()
 					? $response->toArray()[$resultKey]
 					: [],

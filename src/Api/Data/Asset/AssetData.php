@@ -2,6 +2,8 @@
 
 namespace Torr\Storyblok\Api\Data\Asset;
 
+use Torr\Storyblok\Exception\Api\Data\InvalidAssetMetadataException;
+
 /**
  * @final
  */
@@ -64,7 +66,9 @@ readonly class AssetData
 	 */
 	public function getFolderId () : ?string
 	{
-		return (string) $this->data["asset_folder_id"];
+		return null !== $this->data["asset_folder_id"]
+			? (string) $this->data["asset_folder_id"]
+			: null;
 	}
 
 	/**
@@ -193,11 +197,19 @@ readonly class AssetData
 	/**
 	 *
 	 */
-	private function parseDate (string $value) : ?\DateTimeImmutable
+	private function parseDate (string $value) : \DateTimeImmutable
 	{
-		$timeZone = \DateTimeImmutable::createFromFormat("!Y-m-d\TH:i:s.ve", $value);
+		$parsed = \DateTimeImmutable::createFromFormat("!Y-m-d\TH:i:s.ve", $value);
 
-		return $timeZone ?: null;
+		if (!$parsed)
+		{
+			throw new InvalidAssetMetadataException(\sprintf(
+				"Could not parse value '%s' as date",
+				$value,
+			));
+		}
+
+		return $parsed;
 	}
 
 	/**
