@@ -16,6 +16,7 @@ use Torr\Storyblok\Api\Data\Asset\AssetData;
 use Torr\Storyblok\Api\Data\Asset\AssetFolder;
 use Torr\Storyblok\Api\Data\Asset\AssetFolderTree;
 use Torr\Storyblok\Api\Data\ComponentIdMap;
+use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
 use Torr\Storyblok\Exception\Api\DatasourceSyncFailedException;
@@ -344,6 +345,36 @@ final class ManagementApi
 	}
 
 	/**
+	 * @return AssetData[]
+	 */
+	public function fetchAllAssets () : array
+	{
+		$assets = [];
+		$page = 1;
+
+		do {
+			/** @var PaginatedApiResult<array> $result */
+			$result = $this->sendPaginatedRequest(
+				"assets",
+				$page,
+				1000,
+				"assets",
+			);
+
+			foreach ($result->entries as $entry)
+			{
+				$assets[] = new AssetData($entry);
+			}
+
+			++$page;
+			$maxPage = $result->totalPages;
+		}
+		while ($page <= $maxPage);
+
+		return $assets;
+	}
+
+	/**
 	 *
 	 */
 	public function updateAsset (
@@ -380,6 +411,88 @@ final class ManagementApi
 			"Could not find data source id for datasource '%s'",
 			$datasourceSlug,
 		));
+	}
+
+	/**
+	 */
+	private function sendPaginatedRequest (
+		string $path,
+		int $page,
+		int $perPage,
+		string $resultKey,
+		HttpOptions $options = new HttpOptions(),
+		string $method = "GET",
+	) : PaginatedApiResult
+	{
+		try
+		{
+			// ensure that we stay in the rate limit
+			$this->rateLimiter->consume()->wait();
+
+			$formattedOptions = $options->toArray();
+			$formattedOptions["headers"]["authorization"] = $this->config->managementToken;
+
+			$formattedOptions["query"] = [
+				...$formattedOptions["query"] ?? [],
+				"per-page" => $perPage,
+				"page" => $page,
+			];
+
+			$response = $this->client->request(
+				$method,
+				$path,
+				$formattedOptions,
+			);
+
+			$headers = $response->getHeaders();
+
+			if (!isset($headers["per-page"][0]) || !isset($headers["total"][0]))
+			{
+				$this->logger->error("Tried paginated API request, but no pagination headers were returned.", [
+					"path" => $path,
+					"page" => $page,
+					"method" => $method,
+					"statusCode" => $response->getStatusCode(),
+					// use unchanged, to not leak the token
+					"options" => $options->toArray(),
+					"response" => $response->getContent(false),
+				]);
+				throw new ApiRequestFailedException("Tried paginated API request, but no pagination headers were returned.");
+			}
+
+			$totalValues = (int) $headers["total"][0];
+
+			return new PaginatedApiResult(
+				(int) $headers["per-page"][0],
+				(int) ceil($totalValues / $perPage),
+				"" !== $response->getContent()
+					? $response->toArray()[$resultKey]
+					: [],
+			);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			$response = $exception instanceof HttpExceptionInterface
+				? $exception->getResponse()
+				: null;
+
+			$this->logger->error("Failed management request {method} '{path}': {message}", [
+				"method" => $method,
+				"path" => $path,
+				"message" => $exception->getMessage(),
+				"statusCode" => $response?->getStatusCode(),
+				// use unchanged, to not leak the token
+				"options" => $options->toArray(),
+				"response" => $response?->getContent(false),
+			]);
+
+			throw new ApiRequestFailedException(\sprintf(
+				"Failed management request %s '%s': %s",
+				$method,
+				$path,
+				$exception->getMessage(),
+			), previous: $exception);
+		}
 	}
 
 	/**
