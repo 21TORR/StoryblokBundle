@@ -27,6 +27,9 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 abstract class AbstractComponent
 {
 	private ?FieldCollection $fields = null;
+	public ComponentType $componentType {
+		get => $this->getComponentType();
+	}
 
 	/**
 	 * Returns the unique key for this component

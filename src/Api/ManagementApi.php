@@ -182,6 +182,8 @@ final class ManagementApi
 
 	/**
 	 * Returns the ids of all registered components
+	 *
+	 * @return string[]
 	 */
 	public function fetchAllRegisteredComponents () : array
 	{
