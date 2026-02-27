@@ -2,6 +2,8 @@
 =====
 
 * (bug) Always sort query parameters when sending content API requests.
+* (feature) Add `ManagementApi::fetchAllAssets()`.
+* (improvement) Add all relevant getters for `AssetData`.
 
 
 3.21.3

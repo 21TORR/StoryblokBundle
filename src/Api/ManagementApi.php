@@ -347,7 +347,7 @@ final class ManagementApi
 	/**
 	 * @return AssetData[]
 	 */
-	public function fetchAllAssetMetadata () : array
+	public function fetchAllAssets () : array
 	{
 		$assets = [];
 		$page = 1;
