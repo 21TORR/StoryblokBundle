@@ -3,7 +3,7 @@
 namespace Torr\Storyblok\Api\Data;
 
 /**
- * @template T
+ * @template T = mixed
  */
 final class PaginatedApiResult
 {
