@@ -60,7 +60,7 @@ readonly class StoryblokAdapterRegistry
 	/**
 	 *
 	 */
-	public function getByStoryblokSpaceId (string $spaceId) : ?AbstractStoryblokAdapter
+	public function getBySpaceId (string $spaceId) : ?AbstractStoryblokAdapter
 	{
 		foreach ($this->getAllAdapters() as $adapter)
 		{

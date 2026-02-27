@@ -24,7 +24,7 @@ class AssetProxyController extends AbstractController
 		string $path,
 	) : Response
 	{
-		$adapter = $adapterRegistry->getByStoryblokSpaceId($spaceId);
+		$adapter = $adapterRegistry->getBySpaceId($spaceId);
 
 		if (null === $adapter)
 		{
