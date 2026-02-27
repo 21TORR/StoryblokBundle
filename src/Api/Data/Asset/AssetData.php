@@ -36,7 +36,7 @@ readonly class AssetData
 	 */
 	public function getFrontendUrl () : string
 	{
-		return \str_replace(
+		return str_replace(
 			"https://s3.amazonaws.com/a.storyblok.com/",
 			"https://a.storyblok.com/",
 			$this->getOriginUrl(),
@@ -147,7 +147,6 @@ readonly class AssetData
 		return $this->normalizeString($this->data["source"]);
 	}
 
-
 	/**
 	 *
 	 */
@@ -169,7 +168,7 @@ readonly class AssetData
 	 */
 	public function getTags () : array
 	{
-		return \array_map(
+		return array_map(
 			static fn (array $tag) => $tag["name"],
 			$this->data["internal_tags_list"],
 		);
@@ -191,13 +190,13 @@ readonly class AssetData
 		return $this->data["meta_data"];
 	}
 
-
 	/**
 	 *
 	 */
 	private function parseDate (string $value) : ?\DateTimeImmutable
 	{
-		$timeZone = \DateTimeImmutable::createFromFormat("Y-m-d\TH:i:s.ve", $value);
+		$timeZone = \DateTimeImmutable::createFromFormat("!Y-m-d\TH:i:s.ve", $value);
+
 		return $timeZone ?: null;
 	}
 
