@@ -13,10 +13,9 @@ use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Assets\Proxy\AssetProxy;
 use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Debug\DebugInfoCliRenderer;
 use Torr\Storyblok\Exception\StoryblokException;
 use Torr\Storyblok\Manager\ComponentManager;
-
-use function Symfony\Component\String\u;
 
 #[AsCommand(
 	"storyblok:debug",
@@ -31,6 +30,7 @@ final class DebugCommand extends Command
 		private readonly StoryblokAdapterRegistry $storyblokAdapterRegistry,
 		private readonly ComponentManager $componentManager,
 		private readonly AssetProxy $assetProxy,
+		private readonly DebugInfoCliRenderer $infoRenderer,
 	)
 	{
 		parent::__construct();
@@ -56,6 +56,7 @@ final class DebugCommand extends Command
 
 		/** @var string[] $adapterKeys */
 		$adapterKeys = $input->getArgument("adapterKeys");
+		$verbose = $io->isVerbose();
 
 		$adapters = [] !== $adapterKeys
 			? array_map($this->storyblokAdapterRegistry->getByKey(...), $adapterKeys)
@@ -65,7 +66,7 @@ final class DebugCommand extends Command
 
 		foreach ($adapters as $adapter)
 		{
-			$debugInfoSuccess = $this->debugInfo($io, $adapter);
+			$debugInfoSuccess = $this->showAdapterDebugInfo($io, $adapter);
 
 			if (!$debugInfoSuccess)
 			{
@@ -75,19 +76,66 @@ final class DebugCommand extends Command
 			$io->newLine();
 		}
 
+		$this->showComponentLibrary($io, $verbose);
 		$this->showAssetProxyStats($io);
 
 		return $result;
 	}
 
-	private function debugInfo (TorrStyle $io, AbstractStoryblokAdapter $adapter) : bool
+	private function showAdapterDebugInfo (TorrStyle $io, AbstractStoryblokAdapter $adapter) : bool
 	{
 		try
 		{
-			$this->showInfo($io, $adapter);
+			$io->headline(\sprintf("Storyblok Adapter: %s", $adapter->getDisplayName()));
+
+			$this->showAdapterHeader($io, $adapter);
 			$io->newLine();
 
-			$this->showComponentsOverview($io, $adapter);
+			$io->section("Registered Components");
+			$usedComponents = $this->componentManager->getAllUsedComponentsInAdapter($adapter);
+			$rows = [];
+			usort(
+				$usedComponents,
+				static fn (AbstractComponent $a, AbstractComponent $b) => $a::getKey() <=> $b::getKey(),
+			);
+
+			foreach ($usedComponents as $component)
+			{
+				$rows[] = [
+					\sprintf("<fg=yellow>%s</>", $component::getKey()),
+					$component->getDisplayName(),
+					$this->infoRenderer->renderComponentType($component->componentType),
+				];
+			}
+
+			$io->table(
+				headers: [
+					"Key",
+					"Name",
+					"Type",
+				],
+				rows: $rows,
+			);
+
+			$unknownComponents = array_diff(
+				array_map(
+					static fn (AbstractComponent $component) => $component::getKey(),
+					$usedComponents,
+				),
+				$adapter->managementApi->fetchAllRegisteredComponents(),
+			);
+
+			if ([] !== $unknownComponents)
+			{
+				$io->block(
+					"Found unknown components in this space:",
+					"INFO",
+					'fg=white;bg=blue',
+					' ',
+					true,
+				);
+				$io->listing($unknownComponents);
+			}
 
 			return true;
 		}
@@ -105,12 +153,13 @@ final class DebugCommand extends Command
 	/**
 	 * @throws StoryblokException
 	 */
-	private function showInfo (TorrStyle $io, AbstractStoryblokAdapter $adapter) : void
+	private function showAdapterHeader (TorrStyle $io, AbstractStoryblokAdapter $adapter) : void
 	{
 		$spaceInfo = $adapter->contentApi->getSpaceInfo();
 		$color = static fn (string $color, string|int $text) => \sprintf("<fg=%s>%s</>", $color, $text);
 
 		$io->definitionList(
+			["Adapter Key" => $color("yellow", $adapter->getKey())],
 			["Space ID" => $color("magenta", $spaceInfo->getId())],
 			["Name" => $color("blue", $spaceInfo->getName())],
 			["Preview URL" => $spaceInfo->getDomain()],
@@ -122,95 +171,67 @@ final class DebugCommand extends Command
 	/**
 	 *
 	 */
-	private function showComponentsOverview (
-		TorrStyle $io,
-		AbstractStoryblokAdapter $adapter,
-	) : void
+	private function showComponentLibrary (TorrStyle $io, bool $showFQCN = false) : void
 	{
-		[$registered, $unregistered] = $this->fetchOverview($adapter, $io->isVerbose());
+		$io->headline("Component Library");
+		$io->comment("This is the list of all available components in the component manager. Regardless of whether they are actually used in any adapter");
 
-		if (!empty($registered))
+		$usedComponents = $this->getUsedComponents();
+		$table = $io->createTable()
+			->setHeaders([
+				"Usage",
+				"Key",
+				"Name",
+				"Type",
+				"Component",
+				"Story",
+			]);
+		$unused = [];
+
+		foreach ($this->componentManager->getAllComponents() as $component)
 		{
-			$io->section("Registered Components");
-			$io->table(
-				[
-					"Key",
-					"Name",
-					"Component",
-					"Story",
-				],
-				$registered,
-			);
+			$isUsed = \array_key_exists($component::getKey(), $usedComponents);
+
+			if (!$isUsed)
+			{
+				$unused[] = \sprintf("<fg=red>%s</>", $component::getKey());
+			}
+
+			$table->addRow([
+				\sprintf("<fg=yellow>%s</>", $component::getKey()),
+				$component->getDisplayName(),
+				$isUsed
+					? "<fg=green>used</>"
+					: "<fg=red>unused</>",
+				$this->infoRenderer->renderComponentType($component->componentType),
+				$this->infoRenderer->renderClassName(get_debug_type($component), $showFQCN),
+				$this->infoRenderer->renderClassName($component->getStoryClass(), $showFQCN),
+			]);
 		}
 
-		if (!empty($unregistered))
+		if ($showFQCN)
 		{
-			$io->section("Unknown Components");
-			$io->listing($unregistered);
+			$table->setVertical();
+		}
+
+		$table->render();
+
+		// display unused
+		if ([] !== $unused)
+		{
+			$io->newLine();
+			$io->headline("Unused Components");
+			$io->caution("Found unused but defined components");
+			$io->listing($unused);
 		}
 	}
 
 	/**
 	 *
 	 */
-	private function fetchOverview (AbstractStoryblokAdapter $adapter, bool $verbose) : array
-	{
-		$registered = [];
-		$unregistered = [];
-		$componentDetails = [];
-
-		foreach ($this->componentManager->getAllUsedComponentsInAdapter($adapter) as $component)
-		{
-			$componentDetails[$component::getKey()] = $this->getComponentDetails($component, $verbose);
-		}
-
-		foreach ($adapter->managementApi->fetchAllRegisteredComponents() as $componentKey)
-		{
-			if (!isset($componentDetails[$componentKey]))
-			{
-				$unregistered[] = \sprintf("<fg=red>%s</>", $componentKey);
-				continue;
-			}
-
-			$registered[] = [
-				\sprintf("<fg=yellow>%s</>", $componentKey),
-				...$componentDetails[$componentKey],
-			];
-		}
-
-		return [$registered, $unregistered];
-	}
-
-	/**
-	 *
-	 */
-	private function getComponentDetails (AbstractComponent $component, bool $verbose) : array
-	{
-		$renderClass = static function (?string $className) use ($verbose)
-		{
-			if (null === $className)
-			{
-				return "<fg=gray>—</>";
-			}
-
-			if (!$verbose)
-			{
-				$className = u($className)->afterLast("\\")->toString();
-			}
-
-			return \sprintf("<fg=blue>%s</>", $className);
-		};
-
-		return [
-			$component->getDisplayName(),
-			$renderClass(get_debug_type($component)),
-			$renderClass($component->getStoryClass()),
-		];
-	}
-
 	private function showAssetProxyStats (TorrStyle $io) : void
 	{
-		$io->section("Asset Proxy");
+		$io->headline("Asset Proxy");
 
 		[$filesCount, $totalStorage] = $this->findProxiedAssetStats();
 
@@ -247,5 +268,23 @@ final class DebugCommand extends Command
 			$filesCount,
 			$totalStorage,
 		];
+	}
+
+	/**
+	 * @return array<string, AbstractComponent>
+	 */
+	private function getUsedComponents () : array
+	{
+		$used = [];
+
+		foreach ($this->storyblokAdapterRegistry->getAllAdapters() as $adapter)
+		{
+			foreach ($this->componentManager->getAllUsedComponentsInAdapter($adapter) as $component)
+			{
+				$used[$component::getKey()] = $component;
+			}
+		}
+
+		return $used;
 	}
 }
