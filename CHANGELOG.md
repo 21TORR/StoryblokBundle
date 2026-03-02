@@ -1,3 +1,9 @@
+3.21.3
+======
+
+* (bug) Properly support '0' in `decimals` and `minValue` option for `NumberField`
+
+
 3.21.2
 ======
 
