@@ -41,6 +41,14 @@ final class NumberField extends AbstractField
 				));
 			}
 		}
+
+		if (null !== $this->decimals && $this->decimals < 0)
+		{
+			throw new InvalidFieldConfigurationException(\sprintf(
+				"Invalid number field config: decimals '%s' must be greater or equal to 0",
+				$this->decimals,
+			));
+		}
 	}
 
 	/**
@@ -65,7 +73,7 @@ final class NumberField extends AbstractField
 					"max_value" => $this->maxValue,
 					"decimals" => $this->decimals,
 					"steps" => $this->steps,
-				]),
+				], static fn ($value) => null !== $value),
 			],
 		);
 	}
