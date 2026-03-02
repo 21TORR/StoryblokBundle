@@ -6,6 +6,12 @@
 * (improvement) Add all relevant getters for `AssetData`.
 
 
+3.21.2
+======
+
+* (improvement) Support new config options `minValue`, `maxValue`, `decimals` and `steps` for `NumberField`s.
+
+
 3.21.1
 ======
 
