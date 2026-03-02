@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
+use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Visitor\DataVisitorInterface;
 
@@ -18,9 +19,28 @@ final class NumberField extends AbstractField
 		string $label,
 		int|float|null $defaultValue = null,
 		private readonly bool $exportTranslation = false,
+		private readonly float|int|null $minValue = null,
+		private readonly float|int|null $maxValue = null,
+		private readonly ?int $decimals = null,
+		private readonly float|int|null $steps = null,
 	)
 	{
 		parent::__construct($label, $defaultValue);
+
+		if (null !== $this->maxValue && null !== $this->minValue && null !== $this->steps)
+		{
+			$difference = $this->maxValue - $this->minValue;
+
+			if (fmod((float) $difference, (float) $this->steps) > 0)
+			{
+				throw new InvalidFieldConfigurationException(\sprintf(
+					"Invalid number field config: the max value '%s' should be min value '%s' + a multiple of steps '%s'",
+					$this->maxValue,
+					$this->minValue,
+					$this->steps,
+				));
+			}
+		}
 	}
 
 	/**
@@ -40,6 +60,12 @@ final class NumberField extends AbstractField
 			parent::toManagementApiData(),
 			[
 				"no_translate" => !$this->exportTranslation,
+				...array_filter([
+					"min_value" => $this->minValue,
+					"max_value" => $this->maxValue,
+					"decimals" => $this->decimals,
+					"steps" => $this->steps,
+				]),
 			],
 		);
 	}
