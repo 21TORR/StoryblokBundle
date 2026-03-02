@@ -6,6 +6,12 @@
 * (improvement) Add all relevant getters for `AssetData`.
 
 
+3.21.3
+======
+
+* (bug) Allow '0' in `decimals` option for `NumberField`
+
+
 3.21.2
 ======
 
