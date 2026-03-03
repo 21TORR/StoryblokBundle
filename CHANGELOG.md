@@ -1,3 +1,9 @@
+5.0.1
+=====
+
+* (improvement) Open up `ManagementApi::sendRequest()` to be public.
+
+
 5.0.0
 =====
 
