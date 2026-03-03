@@ -50,7 +50,12 @@ readonly class AssetData
 	 */
 	public function getFilename () : string
 	{
+		if (\array_key_exists("short_filename", $this->data))
+	{
 		return $this->data["short_filename"];
+	}
+
+		return \basename($this->getOriginUrl());
 	}
 
 	/**
