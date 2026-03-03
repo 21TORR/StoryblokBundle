@@ -51,9 +51,9 @@ readonly class AssetData
 	public function getFilename () : string
 	{
 		if (\array_key_exists("short_filename", $this->data))
-	{
-		return $this->data["short_filename"];
-	}
+		{
+			return $this->data["short_filename"];
+		}
 
 		return \basename($this->getOriginUrl());
 	}
@@ -225,5 +225,11 @@ readonly class AssetData
 		return "" !== $value
 			? $value
 			: null;
+	}
+
+
+	public function getSignedUrl () : ?string
+	{
+		return $this->data["signed_url"] ?? null;
 	}
 }
