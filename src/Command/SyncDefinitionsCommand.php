@@ -110,7 +110,7 @@ final class SyncDefinitionsCommand extends Command
 			$io->newLine(2);
 			$io->success("All done");
 
-			$this->dispatcher->dispatch(new StoryblokDefinitionsSyncedEvent());
+			$this->dispatcher->dispatch(new StoryblokDefinitionsSyncedEvent($io));
 
 			return true;
 		}
