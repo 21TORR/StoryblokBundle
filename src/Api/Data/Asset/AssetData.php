@@ -55,7 +55,7 @@ readonly class AssetData
 			return $this->data["short_filename"];
 		}
 
-		return \basename($this->getOriginUrl());
+		return basename($this->getOriginUrl());
 	}
 
 	/**
@@ -226,7 +226,6 @@ readonly class AssetData
 			? $value
 			: null;
 	}
-
 
 	public function getSignedUrl () : ?string
 	{

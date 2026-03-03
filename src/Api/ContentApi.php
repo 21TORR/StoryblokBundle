@@ -8,6 +8,7 @@ use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Torr\Storyblok\Api\Data\Asset\AssetData;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Api\Data\SpaceInfo;
 use Torr\Storyblok\Api\Data\StoryblokLink;
@@ -566,6 +567,53 @@ final class ContentApi implements ResetInterface
 		while ($currentPage->totalPages >= $page);
 
 		return $result;
+	}
+
+	/**
+	 *
+	 */
+	public function fetchSignedAssetUrl (string $assetUrl) : AssetData
+	{
+		try
+		{
+			$response = $this->client->request(
+				"GET",
+				"assets/me",
+				new HttpOptions()
+					->setQuery([
+						"filename" => $assetUrl,
+						"token" => "0iNsmBuE0XPITo490xiDqwtt",
+					])
+					->toArray(),
+			);
+
+			$data = $response->toArray();
+
+			if (!isset($data["asset"]) || !\is_array($data["asset"]))
+			{
+				$this->logger->error("Failed to fetch signed asset url: invalid response structure", [
+					"assetUrl" => $assetUrl,
+					"data" => $data,
+				]);
+
+				throw new ContentRequestFailedException("Content request failed: invalid response structure");
+			}
+
+			return new AssetData($data["asset"]);
+		}
+		catch (ExceptionInterface $exception)
+		{
+			$this->logger->error("Failed to fetch signed asset url: {message}", [
+				"assetUrl" => $assetUrl,
+				"message" => $exception->getMessage(),
+				"exception" => $exception,
+			]);
+
+			throw new ContentRequestFailedException(\sprintf(
+				"Content request 'fetch signed asset url' failed: %s",
+				$exception->getMessage(),
+			), previous: $exception);
+		}
 	}
 
 	/**
