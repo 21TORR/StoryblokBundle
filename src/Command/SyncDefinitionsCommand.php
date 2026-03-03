@@ -8,10 +8,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Hosting\Hosting\HostingEnvironment;
 use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
+use Torr\Storyblok\Api\ContentApi;
+use Torr\Storyblok\Event\StoryblokDefinitionsSyncedEvent;
 use Torr\Storyblok\Exception\Sync\SyncFailedException;
 use Torr\Storyblok\Exception\Validation\ValidationFailedException;
 use Torr\Storyblok\Manager\Sync\ComponentSync;
@@ -26,6 +29,7 @@ final class SyncDefinitionsCommand extends Command
 		private readonly ComponentSync $componentSync,
 		private readonly StoryblokAdapterRegistry $storyblokAdapterRegistry,
 		private readonly HostingEnvironment $environment,
+		private readonly EventDispatcherInterface $dispatcher,
 	)
 	{
 		parent::__construct();
@@ -105,6 +109,8 @@ final class SyncDefinitionsCommand extends Command
 
 			$io->newLine(2);
 			$io->success("All done");
+
+			$this->dispatcher->dispatch(new StoryblokDefinitionsSyncedEvent());
 
 			return true;
 		}
