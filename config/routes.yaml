@@ -1,8 +1,7 @@
 storyblok.webhook:
-    path: /webhook/{spaceId}/{urlSecret}
+    path: /webhook/{adapterKey}/{urlSecret}
     controller: Torr\Storyblok\Webhook\Controller\WebhookController::webhook
     requirements:
-        spaceId: \d+
         urlSecret: .*?
     defaults:
         urlSecret: ~

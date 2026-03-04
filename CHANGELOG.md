@@ -1,3 +1,9 @@
+5.1.1
+=====
+
+* (bug) Use the adapter key as the webhook token, not the space id.
+
+
 5.1.0
 =====
 
@@ -8,8 +14,9 @@
 5.0.0
 =====
 
-+ (bc) Remove global bundle config.
-+ (bc) Remove global `ContentApi` and `ManagementApi` services, as well as some others.
+* (bc) The Storyblok webhook URL has changed, it now contains the storyblok adapter key.
+* (bc) Remove global bundle config.
+* (bc) Remove global `ContentApi` and `ManagementApi` services, as well as some others.
 * (bug) Always sort query parameters when sending content API requests.
 * (feature) Add `ManagementApi::fetchAllAssets()`.
 * (improvement) Add all relevant getters for `AssetData`.

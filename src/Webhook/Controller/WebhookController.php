@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Event\StoryblokWebhookEvent;
+use Torr\Storyblok\Exception\Adapter\UnknownStoryblokAdapterException;
 use Torr\Storyblok\Webhook\Parser\WebhookPayloadParser;
 
 final class WebhookController extends AbstractController
@@ -23,19 +24,23 @@ final class WebhookController extends AbstractController
 		WebhookPayloadParser $payloadParser,
 		EventDispatcherInterface $dispatcher,
 		Request $request,
-		string $spaceId,
+		string $adapterKey,
 		?string $urlSecret,
 	) : JsonResponse
 	{
 		// Trailing slashes at the end of the URL will cause the URL secret to contain an empty string. We're normalizing here.
 		$urlSecret = $urlSecret ?: null;
 
-		$adapter = $storyblokAdapterRegistry->getBySpaceId($spaceId);
-
-		if (null === $adapter)
+		try
 		{
-			$logger->critical("Storyblok Webhook: No Adapter found for {spaceId}.", [
-				"spaceId" => $spaceId,
+			$adapter = $storyblokAdapterRegistry->getByKey($adapterKey);
+		}
+		catch (UnknownStoryblokAdapterException $exception)
+		{
+			$logger->critical("Storyblok Webhook: {message}", [
+				"adapterKey" => $adapterKey,
+				"message" => $exception->getMessage(),
+				"exception" => $exception,
 			]);
 
 			return $this->json([
@@ -63,7 +68,7 @@ final class WebhookController extends AbstractController
 
 		try
 		{
-			$payload = $payloadParser->parseFromRawArray($request->toArray(), $spaceId);
+			$payload = $payloadParser->parseFromRawArray($request->toArray(), $adapter->spaceId);
 
 			if (null === $payload)
 			{

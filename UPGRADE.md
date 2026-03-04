@@ -1,6 +1,7 @@
 3.x to 5.0
 ==========
 
+* The Storyblok webhook URL has changed, it now contains the storyblok adapter key.
 * Removed `storyblok:components:overview` command, use `storyblok:debug` instead.
 * Removed `ContentApi`, `ManagementApi`, `StoryblokIdSlugMapper` and `RequestValidator` services.
 * Added `AbstractStoryblokAdapter` to wrap a connection to a storyblok space. You can now have multiple connections to multiple spaces now.
