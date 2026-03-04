@@ -2,6 +2,7 @@
 =====
 
 * (bug) Use the adapter key as the webhook token, not the space id.
+* (improvement) Add app validator to check that adapter keys are valid "snail"s.
 
 
 5.1.0
