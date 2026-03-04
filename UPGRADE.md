@@ -1,10 +1,14 @@
-3.x to 4.0
+3.x to 5.0
 ==========
 
 * Removed `storyblok:components:overview` command, use `storyblok:debug` instead.
+* Removed `ContentApi`, `ManagementApi`, `StoryblokIdSlugMapper` and `RequestValidator` services.
+* Added `AbstractStoryblokAdapter` to wrap a connection to a storyblok space. You can now have multiple connections to multiple spaces now.
+* All services that use the previously global services now need either the space id (to get the adapter) or the adapter directly.
+* Removed the global storyblok bundle config. You now instead need to create the `StoryblokConfig` inside your adapter yourself.
 
 
-2.x to 4.0
+2.x to 5.0
 ==========
 
 * `AbstractField::enablePreview()` is removed, use `AbstractField::useAsAdminDisplayName()` instead.
