@@ -1,4 +1,4 @@
-5.0.0 (unreleased)
+5.0.0
 =====
 
 + (bc) Remove global bundle config.
