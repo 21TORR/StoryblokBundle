@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Hosting;
 
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Torr\Hosting\Event\ValidateAppEvent;
+use Torr\Snail\Snail\Snailer;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Exception\Config\InvalidConfigException;
 
@@ -26,7 +27,7 @@ readonly class ValidateStoryblokConfigListener
 	public function onValidateApp (ValidateAppEvent $event) : void
 	{
 		$io = $event->io;
-		$io->write("• Checking Storyblok Adapter configurations ... ");
+		$io->section("Storyblok: checking adapter configurations");
 
 		$adapters = $this->storyblokAdapterRegistry->getAllAdapters();
 
@@ -42,6 +43,13 @@ readonly class ValidateStoryblokConfigListener
 				"• %s ... ",
 				$adapter->getDisplayName(),
 			));
+
+			if (!Snailer::isValidSnail($adapter::getKey()))
+			{
+				$io->writeln(\sprintf("<fg=red>invalid key '%s'</> (key must be a valid 'snail')", $adapter::getKey()));
+				$event->markAppAsInvalid("Storyblok Adapter Config");
+				continue;
+			}
 
 			try
 			{
