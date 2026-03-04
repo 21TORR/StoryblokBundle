@@ -7,7 +7,7 @@ namespace Torr\Storyblok\Api\Data\Asset;
  */
 readonly class AssetFolderTree
 {
-	/** @var array<int, AssetFolder> */
+	/** @var array<string, AssetFolder> */
 	private array $idMap;
 
 	/** @var array<string, AssetFolder> */
@@ -46,7 +46,7 @@ readonly class AssetFolderTree
 	/**
 	 *
 	 */
-	public function getFolderById (int $id) : ?AssetFolder
+	public function getFolderById (int|string $id) : ?AssetFolder
 	{
 		return $this->idMap[$id] ?? null;
 	}

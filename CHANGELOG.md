@@ -1,3 +1,9 @@
+5.1.2
+=====
+
+* (bug) Consistently use `string`s for IDs from Storyblok.
+
+
 5.1.1
 =====
 
