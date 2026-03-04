@@ -1,7 +1,7 @@
 5.1.3
 =====
 
-* (improvement) Add `useDescriptionAsAlt` settin in `AssetField`.
+* (improvement) Add `useDescriptionAsAlt` setting in `AssetField`.
 
 
 5.1.2
