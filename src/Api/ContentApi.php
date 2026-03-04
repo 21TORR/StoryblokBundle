@@ -17,6 +17,7 @@ use Torr\Storyblok\Datasource\DatasourceEntry;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Exception\Config\InvalidConfigException;
+use Torr\Storyblok\Exception\Config\MissingConfigException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Release\ReleaseVersion;
@@ -574,6 +575,14 @@ final class ContentApi implements ResetInterface
 	 */
 	public function fetchSignedAssetUrl (string $assetUrl) : AssetData
 	{
+		if (null === $this->config->assetToken)
+		{
+			throw new MissingConfigException(\sprintf(
+				"Can't fetch signed asset url without asset token in adapter for space %s",
+				$this->config->spaceId,
+			));
+		}
+
 		try
 		{
 			$response = $this->client->request(
@@ -582,7 +591,7 @@ final class ContentApi implements ResetInterface
 				new HttpOptions()
 					->setQuery([
 						"filename" => $assetUrl,
-						"token" => "0iNsmBuE0XPITo490xiDqwtt",
+						"token" => $this->config->assetToken,
 					])
 					->toArray(),
 			);

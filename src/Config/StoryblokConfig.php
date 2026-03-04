@@ -18,6 +18,8 @@ final readonly class StoryblokConfig
 		#[\SensitiveParameter]
 		public ?string $webhookSecret = null,
 		public bool $allowUrlWebhookSecret = false,
+		#[\SensitiveParameter]
+		public ?string $assetToken = null,
 	)
 	{
 		if (!ctype_digit($this->spaceId))
