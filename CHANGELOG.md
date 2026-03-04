@@ -1,9 +1,12 @@
 5.0.0 (unreleased)
 =====
 
++ (bc) Remove global bundle config.
++ (bc) Remove global `ContentApi` and `ManagementApi` services, as well as some others.
 * (bug) Always sort query parameters when sending content API requests.
 * (feature) Add `ManagementApi::fetchAllAssets()`.
 * (improvement) Add all relevant getters for `AssetData`.
+* (feature) Add first support for private assets in the asset proxy.
 
 
 3.21.3

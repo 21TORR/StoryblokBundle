@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Api;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Exclude;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
@@ -24,10 +25,11 @@ use Torr\Storyblok\Release\ReleaseVersion;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Story\StoryFactory;
 
+#[Exclude]
 final class ContentApi implements ResetInterface
 {
-	private const API_URL = "https://api.storyblok.com/v2/cdn/";
-	private const STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
+	private const string API_URL = "https://api.storyblok.com/v2/cdn/";
+	private const string STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
 	private readonly HttpClientInterface $client;
 	private ?SpaceInfo $spaceInfo = null;
 
