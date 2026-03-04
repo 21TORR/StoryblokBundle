@@ -17,7 +17,7 @@ final class ComponentConfigResolverTest extends TestCase
 	 */
 	public function testResolving () : void
 	{
-		$manager = $this->createMock(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 		$resolver = new ComponentConfigResolver($manager);
 
 		$result = $resolver->resolveComponentConfig([
@@ -37,7 +37,7 @@ final class ComponentConfigResolverTest extends TestCase
 	 */
 	public function testResolvingWithEnabled () : void
 	{
-		$manager = $this->createMock(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 		$resolver = new ComponentConfigResolver($manager);
 
 		$result = $resolver->resolveComponentConfig([
