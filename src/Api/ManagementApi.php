@@ -579,7 +579,7 @@ final class ManagementApi
 		foreach ($response["asset_folders"] as $folderData)
 		{
 			$folders[$folderData["id"]] = new AssetFolder(
-				id: $folderData["id"],
+				id: (string) $folderData["id"],
 				name: $folderData["name"],
 				uuid: $folderData["uuid"],
 			);
