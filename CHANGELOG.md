@@ -1,3 +1,9 @@
+5.1.3
+=====
+
+* (improvement) Add `useDescriptionAsAlt` settin in `AssetField`.
+
+
 5.1.2
 =====
 

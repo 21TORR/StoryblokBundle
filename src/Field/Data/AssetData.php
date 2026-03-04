@@ -18,5 +18,10 @@ final class AssetData
 		public readonly bool $isExternal = false,
 		public readonly ?int $width = null,
 		public readonly ?int $height = null,
+		/**
+		 * The description is the text that can be entered at the usage of the field.
+		 * This flag controls whether the description should be used as alt text, if set.
+		 */
+		public readonly bool $useDescriptionAsAlt = true,
 	) {}
 }
