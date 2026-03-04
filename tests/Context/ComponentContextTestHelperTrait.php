@@ -23,10 +23,10 @@ trait ComponentContextTestHelperTrait
 	) : ComponentContext
 	{
 		return new ComponentContext(
-			$componentManager ?? $this->createMock(ComponentManager::class),
+			$componentManager ?? $this->createStub(ComponentManager::class),
 			$dataTransformer ?? new DataTransformer(),
 			$logger ?? new NullLogger(),
-			$validator ?? $this->createMock(DataValidator::class),
+			$validator ?? $this->createStub(DataValidator::class),
 			$imageDimensionsExtractor ?? new ImageDimensionsExtractor(),
 		);
 	}

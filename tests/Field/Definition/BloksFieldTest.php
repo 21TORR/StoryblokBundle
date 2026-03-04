@@ -24,7 +24,7 @@ final class BloksFieldTest extends TestCase
 	public function testInvalidComponents () : void
 	{
 		$field = new BloksField("test");
-		$manager = $this->createMock(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 
 		$context = $this->createDummyContext($manager);
 
@@ -81,7 +81,7 @@ final class BloksFieldTest extends TestCase
 			minimumNumberOfBloks: $minCount,
 			maximumNumberOfBloks: $maxCount,
 		);
-		$manager = $this->createMock(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 
 		$manager->method("getComponent")
 			->willReturnCallback(function (string $key)
@@ -91,7 +91,7 @@ final class BloksFieldTest extends TestCase
 					throw new UnknownComponentKeyException("test", "key");
 				}
 
-				return $this->createMock(AbstractComponent::class);
+				return $this->createStub(AbstractComponent::class);
 			});
 
 		$this->expectException(InvalidDataException::class);

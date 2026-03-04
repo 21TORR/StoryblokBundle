@@ -235,7 +235,7 @@ final class ChoiceFieldTest extends TestCase
 	private function createComponentContext () : ComponentContext
 	{
 		return new ComponentContext(
-			$this->createMock(ComponentManager::class),
+			self::createStub(ComponentManager::class),
 			new DataTransformer(),
 			new NullLogger(),
 			new DataValidator(),
