@@ -1,3 +1,10 @@
+5.1.0
+=====
+
+* (improvement) Open up `ManagementApi::sendRequest()` to be public.
+* (feature) Add `StoryblokDefinitionsSyncedEvent`.
+
+
 5.0.0
 =====
 

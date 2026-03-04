@@ -500,7 +500,7 @@ final class ManagementApi
 	/**
 	 * Sends the request and returns the response
 	 */
-	private function sendRequest (
+	public function sendRequest (
 		string $path,
 		HttpOptions $options = new HttpOptions(),
 		string $method = "GET",
