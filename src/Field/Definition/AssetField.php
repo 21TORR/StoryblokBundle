@@ -34,6 +34,11 @@ final class AssetField extends AbstractField
 		private readonly bool $allowMultiple = false,
 		private readonly bool $allowExternalUrl = false,
 		mixed $defaultValue = null,
+		/**
+		 * The description is the text that can be entered at the usage of the field.
+		 * This flag controls whether the description should be used as alt text, if set.
+		 */
+		private readonly bool $useDescriptionAsAlt = true,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -233,6 +238,7 @@ final class AssetField extends AbstractField
 			isExternal: $data["is_external_url"] ?? false,
 			width: $width,
 			height: $height,
+			useDescriptionAsAlt: $this->useDescriptionAsAlt,
 		);
 	}
 }
