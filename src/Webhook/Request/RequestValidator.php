@@ -3,9 +3,11 @@
 namespace Torr\Storyblok\Webhook\Request;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Exclude;
 use Symfony\Component\HttpFoundation\Request;
 use Torr\Storyblok\Config\StoryblokConfig;
 
+#[Exclude]
 final readonly class RequestValidator
 {
 	/**

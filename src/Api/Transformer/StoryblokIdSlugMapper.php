@@ -2,12 +2,14 @@
 
 namespace Torr\Storyblok\Api\Transformer;
 
+use Symfony\Component\DependencyInjection\Attribute\Exclude;
 use Symfony\Contracts\Service\ResetInterface;
 use Torr\Storyblok\Api\ContentApi;
 
 /**
  * @final
  */
+#[Exclude]
 class StoryblokIdSlugMapper implements ResetInterface
 {
 	/** @var array<string|int, string>|null */

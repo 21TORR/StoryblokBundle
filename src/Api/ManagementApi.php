@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Api;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Exclude;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Component\RateLimiter\LimiterInterface;
@@ -23,6 +24,7 @@ use Torr\Storyblok\Exception\Api\DatasourceSyncFailedException;
 use Torr\Storyblok\Exception\Api\TranslationsXmlFileImportFailedException;
 use Torr\Storyblok\Folder\FolderData;
 
+#[Exclude]
 final class ManagementApi
 {
 	private const API_URL = "https://mapi.storyblok.com/v1/spaces/%d/";
