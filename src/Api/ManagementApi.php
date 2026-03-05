@@ -349,17 +349,27 @@ final class ManagementApi
 	/**
 	 * @return AssetData[]
 	 */
-	public function fetchAllAssets () : array
+	public function fetchAllAssets (
+		?TorrStyle $io = null,
+	) : array
 	{
 		$assets = [];
 		$page = 1;
+		$maxPage = null;
 
 		do {
+			$io?->writeln(\sprintf(
+				"• Fetching all assets metadata page <fg=yellow>%s / %s</> for space <fg=blue>%s</>",
+				$page,
+				$maxPage ?? "(unknown)",
+				$this->config->spaceId,
+			));
+
 			/** @var PaginatedApiResult<array> $result */
 			$result = $this->sendPaginatedRequest(
 				"assets",
 				$page,
-				1000,
+				25, // seems to be the max allowed value
 				"assets",
 			);
 
@@ -463,11 +473,14 @@ final class ManagementApi
 			}
 
 			$totalValues = (int) $headers["total"][0];
+			// use value from headers, if we passed a perPage-value too large. Storyblok will automatically reduce it
+			// to the max allowed value
+			$perPage = (int) $headers["per-page"][0];
 
 			return new PaginatedApiResult(
-				(int) $headers["per-page"][0],
-				(int) ceil($totalValues / $perPage),
-				"" !== $response->getContent()
+				perPage: $perPage,
+				totalPages: (int) ceil($totalValues / $perPage),
+				entries: "" !== $response->getContent()
 					? $response->toArray()[$resultKey]
 					: [],
 			);
