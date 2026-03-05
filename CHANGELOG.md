@@ -1,3 +1,9 @@
+5.1.4
+=====
+
+* (bug) Fix invalid pagination handling `ManagementApi::sendPaginatedRequest()`.
+
+
 5.1.3
 =====
 
