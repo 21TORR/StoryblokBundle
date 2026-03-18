@@ -2,39 +2,41 @@
 
 namespace Torr\Storyblok\Folder;
 
-final class FolderData
+final readonly class FolderData
 {
 	/**
 	 */
 	public function __construct (
-		private readonly array $data,
+		private string $name,
+		private int $position,
+		private string $slug,
 	) {}
 
 	/**
 	 */
 	public function getName () : string
 	{
-		return $this->data["name"];
+		return $this->name;
 	}
 
 	/**
 	 */
 	public function getPosition () : int
 	{
-		return $this->data["position"];
+		return $this->position;
 	}
 
 	/**
 	 */
 	public function getFullSlug () : string
 	{
-		return $this->data["full_slug"];
+		return $this->slug;
 	}
 
 	/**
 	 */
 	public function getSlugSegments () : array
 	{
-		return explode("/", trim($this->getFullSlug(), "/"));
+		return explode("/", trim($this->slug, "/"));
 	}
 }

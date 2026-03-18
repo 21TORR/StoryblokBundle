@@ -20,6 +20,7 @@ use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Exception\Config\InvalidConfigException;
 use Torr\Storyblok\Exception\Config\MissingConfigException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
+use Torr\Storyblok\Folder\FolderData;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Release\ReleaseVersion;
 use Torr\Storyblok\Story\Story;
@@ -534,6 +535,92 @@ final class ContentApi implements ResetInterface
 				$exception->getMessage(),
 			), previous: $exception);
 		}
+	}
+
+	/**
+	 * Fetches all folders within the given path.
+	 *
+	 * @return list<FolderData>
+	 *
+	 * @throws ContentRequestFailedException
+	 */
+	public function fetchFoldersInPath (
+		string $slugPrefix = "",
+		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
+	) : array
+	{
+		$query = [
+			// force per_page to the maximum to minimize pagination
+			"per_page" => 1000,
+			"version" => $version->value,
+		];
+
+		if ("" !== $slugPrefix)
+		{
+			// include the trailing slash to exclude the base directory itself
+			$query["starts_with"] = trim($slugPrefix, "/") . "/";
+		}
+
+		$result = [];
+		$page = 1;
+
+		do
+		{
+			$currentPage = $this->fetchLinksResultPage($query, $page);
+
+			foreach ($currentPage->entries as $link)
+			{
+				if ($link->isFolder)
+				{
+					$result[] = new FolderData(
+						name: $link->name,
+						position: $link->position,
+						slug: $link->slug,
+					);
+				}
+			}
+
+			++$page;
+		}
+		while ($currentPage->totalPages >= $page);
+
+		return $result;
+	}
+
+	/**
+	 * Fetches the map of local url to folder name
+	 *
+	 * @return array<string, string> Map of local url to title
+	 *
+	 * @throws ContentRequestFailedException
+	 */
+	public function fetchFolderTitleMap (
+		string $slugPrefix = "",
+		ReleaseVersion $version = ReleaseVersion::PUBLISHED,
+	) : array
+	{
+		$folders = $this->fetchFoldersInPath($slugPrefix, $version);
+
+		$slugPrefix = "" !== $slugPrefix
+			? trim($slugPrefix, "/") . "/"
+			: "";
+
+		$map = [];
+		$replacement = "" !== $slugPrefix
+			? "~^" . preg_quote($slugPrefix, "~") . "~"
+			: null;
+
+		foreach ($folders as $folder)
+		{
+			// use heading slash to local url
+			$localSlug = null !== $replacement
+				? "/" . preg_replace($replacement, "", $folder->getFullSlug())
+				: "/" . $folder->getFullSlug();
+
+			$map[$localSlug] = $folder->getName();
+		}
+
+		return $map;
 	}
 
 	/**

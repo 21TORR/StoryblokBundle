@@ -1,3 +1,12 @@
+5.2.0
+=====
+
+* (feature) Add `ContentApi::fetchFoldersInPath()`, using a faster content api endpoint.
+* (feature) Add `ContentApi::fetchFolderTitleMap()`, using a faster content api endpoint.
+* (deprecation) Deprecate `ManagementApi::fetchFoldersInPath()` in favor of `ContentApi::fetchFoldersInPath()`.
+* (deprecation) Deprecate `ManagementApi::fetchFolderTitleMap()` in favor of `ContentApi::fetchFolderTitleMap()`.
+
+
 5.1.4
 =====
 
