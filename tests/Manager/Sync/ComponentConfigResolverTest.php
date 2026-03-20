@@ -4,6 +4,7 @@ namespace Tests\Torr\Storyblok\Manager\Sync;
 
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Component\Filter\ComponentFilter;
+use Torr\Storyblok\Exception\Validation\ValidationFailedException;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Sync\ComponentConfigResolver;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
@@ -52,5 +53,48 @@ final class ComponentConfigResolverTest extends TestCase
 		self::assertArrayHasKey("filter_enabled", $result);
 		self::assertArrayHasKey("last", $result);
 		self::assertArrayNotHasKey("ignore", $result);
+	}
+
+	/**
+	 */
+	public function testResolvingNestedConfig () : void
+	{
+		$filter = new ComponentFilter(["test"]);
+		$manager = self::createMock(ComponentManager::class);
+		$manager
+			->expects(self::once())
+			->method("getComponentKeysForFilter")
+			->with($filter)
+			->willReturn(["test"]);
+
+		$resolver = new ComponentConfigResolver($manager);
+
+		$result = $resolver->resolveComponentConfig([
+			"outer" => [
+				"nested_filter" => new ResolvableComponentFilter($filter, "filter_tags"),
+				"nested_scalar" => "abc",
+			],
+		]);
+
+		self::assertSame([
+			"outer" => [
+				"filter_tags" => ["test"],
+				"nested_scalar" => "abc",
+			],
+		], $result);
+	}
+
+	/**
+	 */
+	public function testResolvingWithInvalidTypeThrows () : void
+	{
+		$resolver = new ComponentConfigResolver(self::createStub(ComponentManager::class));
+
+		$this->expectException(ValidationFailedException::class);
+		$this->expectExceptionMessage("Invalid config value encountered: stdClass");
+
+		$resolver->resolveComponentConfig([
+			"invalid" => new \stdClass(),
+		]);
 	}
 }

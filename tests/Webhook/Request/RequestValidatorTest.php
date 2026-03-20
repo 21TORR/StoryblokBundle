@@ -156,4 +156,55 @@ final class RequestValidatorTest extends TestCase
 		$validator = new RequestValidator($config, new NullLogger());
 		self::assertSame($expectedValid, $validator->isValidRequest($request, $urlToken));
 	}
+
+	/**
+	 */
+	public function testIsValidRequestWithPayloadSignatureMatch () : void
+	{
+		$secret = "s3cr3t";
+		$payload = "{\"message\":\"signed payload\"}";
+
+		$request = new Request(
+			server: [
+				"HTTP_WEBHOOK_SIGNATURE" => hash_hmac("sha1", $payload, $secret),
+			],
+			content: $payload,
+		);
+
+		$config = new StoryblokConfig(
+			spaceId: "12345",
+			managementToken: "management",
+			contentToken: "content",
+			webhookSecret: $secret,
+		);
+
+		$validator = new RequestValidator($config, new NullLogger());
+		self::assertTrue($validator->isValidRequest($request, null));
+	}
+
+	/**
+	 */
+	public function testIsValidRequestWithPayloadSignatureMismatch () : void
+	{
+		$secret = "s3cr3t";
+		$payload = "{\"message\":\"signed payload\"}";
+		$otherPayload = "{\"message\":\"different payload\"}";
+
+		$request = new Request(
+			server: [
+				"HTTP_WEBHOOK_SIGNATURE" => hash_hmac("sha1", $otherPayload, $secret),
+			],
+			content: $payload,
+		);
+
+		$config = new StoryblokConfig(
+			spaceId: "12345",
+			managementToken: "management",
+			contentToken: "content",
+			webhookSecret: $secret,
+		);
+
+		$validator = new RequestValidator($config, new NullLogger());
+		self::assertFalse($validator->isValidRequest($request, null));
+	}
 }

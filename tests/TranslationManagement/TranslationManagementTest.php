@@ -5,6 +5,9 @@ namespace Tests\Torr\Storyblok\TranslationManagement;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Tiptap\Helper\FixBrokenLinksMarksHelper;
 use Torr\Storyblok\Tiptap\Transformer\RichTextHtmlTransformer;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
+use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
+use Torr\Storyblok\TranslationManagement\Exception\XliffInvalidException;
 use Torr\Storyblok\TranslationManagement\Normalizer\XliffNormalizer;
 use Torr\Storyblok\TranslationManagement\TranslatableContentExtractor;
 use Torr\Storyblok\TranslationManagement\TranslatableContentTranslator;
@@ -103,5 +106,128 @@ final class TranslationManagementTest extends TestCase
 		$storyTranslated = $translatableContentTranslator->translate($story, $translatableContentCollection);
 
 		self::assertSame($storyTranslatedExpected, $storyTranslated);
+	}
+
+	/**
+	 */
+	public function testDenormalizeInvalidXliffWithoutFileThrows () : void
+	{
+		$normalizer = new XliffNormalizer();
+
+		$this->expectException(XliffInvalidException::class);
+		$this->expectExceptionMessage("File tag missing");
+
+		$normalizer->denormalize(<<<'XML'
+			<?xml version="1.0" encoding="UTF-8"?>
+			<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="de" trgLang="en">
+			</xliff>
+			XML);
+	}
+
+	/**
+	 */
+	public function testDenormalizeInvalidXliffWithoutTargetThrows () : void
+	{
+		$normalizer = new XliffNormalizer();
+
+		$this->expectException(XliffInvalidException::class);
+		$this->expectExceptionMessage("Tag target missing in unit");
+
+		$normalizer->denormalize(<<<'XML'
+			<?xml version="1.0" encoding="UTF-8"?>
+			<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.1" srcLang="de" trgLang="en">
+				<file id="1" original="root/test">
+					<unit id="$..['content']">
+						<segment>
+							<source>text</source>
+						</segment>
+					</unit>
+				</file>
+			</xliff>
+			XML);
+	}
+
+	/**
+	 */
+	public function testTranslateSkipsMissingPath () : void
+	{
+		$story = [
+			"id" => 1,
+			"content" => [
+				"body" => [
+					[
+						"_uid" => "component-1",
+						"component" => "text-block",
+						"text" => "Original",
+					],
+				],
+			],
+		];
+
+		$collection = new TranslatableContentCollection(
+			id: "1",
+			url: "root/test",
+			language: "en",
+			data: [
+				new TranslatableContentElement("$..[?(@['_uid']=='missing')]['text']", "Updated"),
+			],
+		);
+
+		$translator = new TranslatableContentTranslator(new RichTextHtmlTransformer(new FixBrokenLinksMarksHelper()));
+		$translated = $translator->translate($story, $collection);
+
+		self::assertSame($story, $translated);
+	}
+
+	/**
+	 */
+	public function testTranslateRichTextField () : void
+	{
+		$story = [
+			"id" => 1,
+			"content" => [
+				"body" => [
+					[
+						"_uid" => "component-1",
+						"component" => "text-block",
+						"text" => [
+							"type" => "doc",
+							"content" => [
+								[
+									"type" => "paragraph",
+									"content" => [
+										[
+											"type" => "text",
+											"text" => "Original",
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+			],
+		];
+
+		$collection = new TranslatableContentCollection(
+			id: "1",
+			url: "root/test",
+			language: "en",
+			data: [
+				new TranslatableContentElement(
+					"$..[?(@['_uid']=='component-1')]['text']",
+					"<p>Updated</p>",
+				),
+			],
+		);
+
+		$translator = new TranslatableContentTranslator(new RichTextHtmlTransformer(new FixBrokenLinksMarksHelper()));
+		$translated = $translator->translate($story, $collection);
+
+		$richTextData = $translated["content"]["body"][0]["text"];
+
+		self::assertIsArray($richTextData);
+		self::assertSame("doc", $richTextData["type"]);
+		self::assertSame("Updated", $richTextData["content"][0]["content"][0]["text"]);
 	}
 }
