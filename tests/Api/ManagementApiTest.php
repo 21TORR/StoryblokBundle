@@ -154,7 +154,8 @@ final class ManagementApiTest extends TestCase
 	{
 		$api = $this->createApi(new MockHttpClient(
 			static fn () => new MockResponse("Server Error", [
-				"http_code" => 500,
+				// Use a non-retryable 4xx status to test exception wrapping without RetryableHttpClient backoff delays.
+				"http_code" => 418,
 			]),
 		));
 
@@ -376,7 +377,8 @@ final class ManagementApiTest extends TestCase
 	{
 		$api = $this->createApi(new MockHttpClient(
 			static fn () => new MockResponse("Server Error", [
-				"http_code" => 500,
+				// Use a non-retryable 4xx status to test exception wrapping without RetryableHttpClient backoff delays.
+				"http_code" => 418,
 			]),
 		));
 
