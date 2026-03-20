@@ -15,6 +15,7 @@ use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Config\InvalidConfigException;
+use Torr\Storyblok\Exception\Config\MissingConfigException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Definition\TextField;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
@@ -178,7 +179,252 @@ final class ContentApiTest extends TestCase
 
 	/**
 	 */
-	private function createApi (HttpClientInterface $httpClient) : ContentApi
+	public function testFetchDatasourceEntriesPaginatesAndUsesDimensionValue () : void
+	{
+		$api = $this->createApi(new MockHttpClient([
+			$this->createSpaceInfoResponse(),
+			new MockResponse((string) json_encode([
+				"datasource_entries" => [
+					[
+						"name" => "One",
+						"value" => "one",
+						"dimension_value" => null,
+					],
+				],
+			], \JSON_THROW_ON_ERROR), [
+				"response_headers" => [
+					"per-page: 1",
+					"total: 2",
+				],
+			]),
+			new MockResponse((string) json_encode([
+				"datasource_entries" => [
+					[
+						"name" => "Two",
+						"value" => "two",
+						"dimension_value" => "zwei",
+					],
+				],
+			], \JSON_THROW_ON_ERROR), [
+				"response_headers" => [
+					"per-page: 1",
+					"total: 2",
+				],
+			]),
+		]));
+
+		$entries = $api->fetchDatasourceEntries("labels", "de");
+
+		self::assertCount(2, $entries);
+		self::assertSame("One", $entries["one"]->label);
+		self::assertSame("one", $entries["one"]->value);
+		self::assertSame("Two", $entries["zwei"]->label);
+		self::assertSame("zwei", $entries["zwei"]->value);
+	}
+
+	/**
+	 */
+	public function testFetchFoldersInPathFiltersOnlyFolders () : void
+	{
+		$api = $this->createApi(new MockHttpClient([
+			$this->createSpaceInfoResponse(),
+			new MockResponse((string) json_encode([
+				"links" => [
+					[
+						"id" => 1,
+						"uuid" => "11111111-1111-1111-1111-111111111111",
+						"slug" => "news",
+						"name" => "News",
+						"is_folder" => true,
+						"position" => 10,
+					],
+					[
+						"id" => 2,
+						"uuid" => "22222222-2222-2222-2222-222222222222",
+						"slug" => "news/article",
+						"name" => "Article",
+						"is_folder" => false,
+						"position" => 20,
+					],
+				],
+			], \JSON_THROW_ON_ERROR), [
+				"response_headers" => [
+					"per-page: 1000",
+					"total: 2",
+				],
+			]),
+		]));
+
+		$folders = $api->fetchFoldersInPath("news");
+
+		self::assertCount(1, $folders);
+		self::assertSame("News", $folders[0]->getName());
+		self::assertSame("news", $folders[0]->getFullSlug());
+	}
+
+	/**
+	 */
+	public function testFetchFolderTitleMapUsesRelativeLocalPaths () : void
+	{
+		$api = $this->createApi(new MockHttpClient([
+			$this->createSpaceInfoResponse(),
+			new MockResponse((string) json_encode([
+				"links" => [
+					[
+						"id" => 1,
+						"uuid" => "11111111-1111-1111-1111-111111111111",
+						"slug" => "root/news",
+						"name" => "News",
+						"is_folder" => true,
+						"position" => 1,
+					],
+					[
+						"id" => 2,
+						"uuid" => "22222222-2222-2222-2222-222222222222",
+						"slug" => "root/about",
+						"name" => "About",
+						"is_folder" => true,
+						"position" => 2,
+					],
+				],
+			], \JSON_THROW_ON_ERROR), [
+				"response_headers" => [
+					"per-page: 1000",
+					"total: 2",
+				],
+			]),
+		]));
+
+		$map = $api->fetchFolderTitleMap("root");
+
+		self::assertSame([
+			"/news" => "News",
+			"/about" => "About",
+		], $map);
+	}
+
+	/**
+	 */
+	public function testFetchAllLinksReturnsLinkDtos () : void
+	{
+		$api = $this->createApi(new MockHttpClient([
+			$this->createSpaceInfoResponse(),
+			new MockResponse((string) json_encode([
+				"links" => [
+					[
+						"id" => 10,
+						"uuid" => "aaaaaaaa-1111-1111-1111-111111111111",
+						"slug" => "en/path/item",
+						"name" => "Item",
+						"is_folder" => false,
+						"position" => 5,
+					],
+				],
+			], \JSON_THROW_ON_ERROR), [
+				"response_headers" => [
+					"per-page: 1000",
+					"total: 1",
+				],
+			]),
+		]));
+
+		$links = $api->fetchAllLinks();
+
+		self::assertCount(1, $links);
+		self::assertSame("Item", $links[0]->name);
+		self::assertSame(["en", "path", "item"], $links[0]->getSlugSegments());
+	}
+
+	/**
+	 */
+	public function testFetchSignedAssetUrlThrowsIfAssetTokenMissing () : void
+	{
+		$api = $this->createApi(new MockHttpClient([]));
+
+		$this->expectException(MissingConfigException::class);
+		$this->expectExceptionMessage("Can't fetch signed asset url without asset token");
+
+		$api->fetchSignedAssetUrl("https://a.storyblok.com/f/123/file.jpg");
+	}
+
+	/**
+	 */
+	public function testFetchSignedAssetUrlReturnsAssetData () : void
+	{
+		$api = $this->createApi(
+			new MockHttpClient([
+				new MockResponse((string) json_encode([
+					"asset" => [
+						"id" => 11,
+						"filename" => "https://a.storyblok.com/f/123/file.jpg",
+						"signed_url" => "https://signed.example/asset",
+					],
+				], \JSON_THROW_ON_ERROR)),
+			]),
+			assetToken: "asset-token",
+		);
+
+		$asset = $api->fetchSignedAssetUrl("https://a.storyblok.com/f/123/file.jpg");
+
+		self::assertSame("11", $asset->getId());
+		self::assertSame("https://signed.example/asset", $asset->getSignedUrl());
+	}
+
+	/**
+	 */
+	public function testFetchSignedAssetUrlThrowsOnInvalidStructure () : void
+	{
+		$api = $this->createApi(
+			new MockHttpClient([
+				new MockResponse((string) json_encode([
+					"invalid" => true,
+				], \JSON_THROW_ON_ERROR)),
+			]),
+			assetToken: "asset-token",
+		);
+
+		$this->expectException(ContentRequestFailedException::class);
+		$this->expectExceptionMessage("invalid response structure");
+
+		$api->fetchSignedAssetUrl("https://a.storyblok.com/f/123/file.jpg");
+	}
+
+	/**
+	 */
+	public function testResetClearsCachedSpaceInfo () : void
+	{
+		$api = $this->createApi(new MockHttpClient([
+			new MockResponse((string) json_encode([
+				"space" => [
+					"id" => 12345,
+					"name" => "First Space",
+					"version" => 1,
+					"language_codes" => [],
+					"domain" => "first.example.com",
+				],
+			], \JSON_THROW_ON_ERROR)),
+			new MockResponse((string) json_encode([
+				"space" => [
+					"id" => 12345,
+					"name" => "Second Space",
+					"version" => 2,
+					"language_codes" => [],
+					"domain" => "second.example.com",
+				],
+			], \JSON_THROW_ON_ERROR)),
+		]));
+
+		self::assertSame("First Space", $api->getSpaceInfo()->getName());
+		self::assertSame("First Space", $api->getSpaceInfo()->getName());
+
+		$api->reset();
+
+		self::assertSame("Second Space", $api->getSpaceInfo()->getName());
+	}
+
+	/**
+	 */
+	private function createApi (HttpClientInterface $httpClient, ?string $assetToken = null) : ContentApi
 	{
 		$componentManager = $this->createComponentManager();
 		$context = new ComponentContext(
@@ -196,6 +442,7 @@ final class ContentApiTest extends TestCase
 				spaceId: "12345",
 				managementToken: "management-token",
 				contentToken: "content-token",
+				assetToken: $assetToken,
 			),
 			$storyFactory,
 			$componentManager,
@@ -233,6 +480,21 @@ final class ContentApiTest extends TestCase
 				"title" => "Title {$id}",
 			],
 		];
+	}
+
+	/**
+	 */
+	private function createSpaceInfoResponse () : MockResponse
+	{
+		return new MockResponse((string) json_encode([
+			"space" => [
+				"id" => 12345,
+				"name" => "Test Space",
+				"version" => 42,
+				"language_codes" => ["en"],
+				"domain" => "example.com",
+			],
+		], \JSON_THROW_ON_ERROR));
 	}
 }
 
