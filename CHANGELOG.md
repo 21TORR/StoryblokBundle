@@ -8,6 +8,7 @@
 * (improvement) Add `allow_target_blank` and `allow_custom_attributes` settings to `LinkField`.
 * (improvement) Add `allow_multiline` setting to `MarkdownField`.
 * (improvement) Add `inline_label` setting to `BooleanField`.
+* (improvement) Add management API data tests for all field types.
 
 
 5.1.4
