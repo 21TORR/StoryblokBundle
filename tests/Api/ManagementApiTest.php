@@ -389,7 +389,7 @@ final class ManagementApiTest extends TestCase
 	 */
 	private function createApi (MockHttpClient $httpClient) : ManagementApi
 	{
-		$limiter = $this->createStub(LimiterInterface::class);
+		$limiter = self::createStub(LimiterInterface::class);
 		$limiter->method("consume")->willReturn(new RateLimit(
 			availableTokens: 1,
 			retryAfter: new \DateTimeImmutable("-1 second"),
@@ -397,7 +397,7 @@ final class ManagementApiTest extends TestCase
 			limit: 1,
 		));
 
-		$rateLimiterFactory = $this->createStub(RateLimiterFactoryInterface::class);
+		$rateLimiterFactory = self::createStub(RateLimiterFactoryInterface::class);
 		$rateLimiterFactory
 			->method("create")
 			->willReturn($limiter);

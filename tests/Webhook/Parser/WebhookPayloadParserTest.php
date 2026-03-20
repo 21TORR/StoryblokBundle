@@ -4,12 +4,14 @@ namespace Tests\Torr\Storyblok\Webhook\Parser;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimit;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Tests\Torr\Storyblok\Webhook\Fixtures\TestWebhookAdapter;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Config\StoryblokConfig;
@@ -55,7 +57,7 @@ final class WebhookPayloadParserTest extends TestCase
 
 	/**
 	 */
-	#[DataProvider("provideTypedWebhookPayloads")]
+	#[DataProvider("provideParseTypedWebhookPayloads")]
 	public function testParseTypedWebhookPayloads (
 		array $payload,
 		string $expectedClass,
@@ -71,7 +73,7 @@ final class WebhookPayloadParserTest extends TestCase
 
 	/**
 	 */
-	public static function provideTypedWebhookPayloads () : iterable
+	public static function provideParseTypedWebhookPayloads () : iterable
 	{
 		yield "datasource" => [
 			[
@@ -234,14 +236,14 @@ final class WebhookPayloadParserTest extends TestCase
 	{
 		$componentManager = new ComponentManager(new ServiceLocator([]));
 		$logger = new NullLogger();
-		$rateLimiter = $this->createStub(LimiterInterface::class);
+		$rateLimiter = self::createStub(LimiterInterface::class);
 		$rateLimiter->method("consume")->willReturn(new RateLimit(
 			availableTokens: 1,
 			retryAfter: new \DateTimeImmutable("-1 second"),
 			accepted: true,
 			limit: 1,
 		));
-		$rateLimiterFactory = $this->createStub(RateLimiterFactoryInterface::class);
+		$rateLimiterFactory = self::createStub(RateLimiterFactoryInterface::class);
 		$rateLimiterFactory->method("create")->willReturn($rateLimiter);
 
 		$context = new ComponentContext(
@@ -254,11 +256,11 @@ final class WebhookPayloadParserTest extends TestCase
 		$storyFactory = new StoryFactory($componentManager, $context, $logger);
 
 		$locator = new ServiceLocator([
-			\Symfony\Contracts\HttpClient\HttpClientInterface::class => static fn () => new MockHttpClient(),
+			HttpClientInterface::class => static fn () => new MockHttpClient(),
 			StoryFactory::class => static fn () => $storyFactory,
 			ComponentManager::class => static fn () => $componentManager,
 			"limiter.storyblok_management" => static fn () => $rateLimiterFactory,
-			\Psr\Log\LoggerInterface::class => static fn () => $logger,
+			LoggerInterface::class => static fn () => $logger,
 		]);
 
 		return new TestWebhookAdapter(

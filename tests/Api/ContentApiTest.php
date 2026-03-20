@@ -535,7 +535,7 @@ final class TestStoryComponent extends AbstractComponent
 	}
 
 	#[\Override]
-	public function getStoryClass () : ?string
+	public function getStoryClass () : string
 	{
 		return TestStory::class;
 	}
@@ -570,7 +570,7 @@ final class OtherStoryComponent extends AbstractComponent
 	}
 
 	#[\Override]
-	public function getStoryClass () : ?string
+	public function getStoryClass () : string
 	{
 		return OtherStory::class;
 	}

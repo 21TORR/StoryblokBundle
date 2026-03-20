@@ -3,7 +3,9 @@
 namespace Tests\Torr\Storyblok\Manager\Sync;
 
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -11,6 +13,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimit;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Tests\Torr\Storyblok\Webhook\Fixtures\TestWebhookAdapter;
 use Torr\Cli\Console\Style\TorrStyle;
 use Torr\Storyblok\Component\AbstractComponent;
@@ -39,7 +42,7 @@ final class ComponentSyncTest extends TestCase
 	 */
 	public function testReturnsTrueIfNoComponentChanged () : void
 	{
-		$manager = $this->createStub(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 		$manager->method("getAllUsedComponentsInAdapter")->willReturn([]);
 
 		$io = $this->createIoMock();
@@ -60,7 +63,7 @@ final class ComponentSyncTest extends TestCase
 	 */
 	public function testReturnsFalseWhenUserAbortsSync () : void
 	{
-		$manager = $this->createStub(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 		$manager->method("getAllUsedComponentsInAdapter")->willReturn([
 			new ValidSyncComponent(),
 		]);
@@ -83,7 +86,7 @@ final class ComponentSyncTest extends TestCase
 	 */
 	public function testSyncsChangedComponentsWhenForced () : void
 	{
-		$manager = $this->createStub(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 		$manager->method("getAllUsedComponentsInAdapter")->willReturn([
 			new ValidSyncComponent(),
 		]);
@@ -114,7 +117,7 @@ final class ComponentSyncTest extends TestCase
 	 */
 	public function testWrapsInvalidConfigurationExceptionAsSyncFailed () : void
 	{
-		$manager = $this->createStub(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 		$manager->method("getAllUsedComponentsInAdapter")->willReturn([
 			new InvalidSyncComponent(),
 		]);
@@ -145,12 +148,13 @@ final class ComponentSyncTest extends TestCase
 
 	/**
 	 */
-	private function createIoMock () : TorrStyle
+	private function createIoMock () : TorrStyle&MockObject
 	{
 		$io = $this->getMockBuilder(TorrStyle::class)
 			->disableOriginalConstructor()
 			->onlyMethods(["writeln", "success", "confirm", "caution", "write", "newLine"])
 			->getMock();
+		\assert($io instanceof TorrStyle || $io instanceof MockObject);
 
 		$io->expects(self::any())->method("writeln");
 		$io->expects(self::any())->method("write");
@@ -166,14 +170,14 @@ final class ComponentSyncTest extends TestCase
 	{
 		$componentManager = new ComponentManager(new ServiceLocator([]));
 		$logger = new NullLogger();
-		$rateLimiter = $this->createStub(LimiterInterface::class);
+		$rateLimiter = self::createStub(LimiterInterface::class);
 		$rateLimiter->method("consume")->willReturn(new RateLimit(
 			availableTokens: 1,
 			retryAfter: new \DateTimeImmutable("-1 second"),
 			accepted: true,
 			limit: 1,
 		));
-		$rateLimiterFactory = $this->createStub(RateLimiterFactoryInterface::class);
+		$rateLimiterFactory = self::createStub(RateLimiterFactoryInterface::class);
 		$rateLimiterFactory->method("create")->willReturn($rateLimiter);
 
 		$context = new ComponentContext(
@@ -186,11 +190,11 @@ final class ComponentSyncTest extends TestCase
 		$storyFactory = new StoryFactory($componentManager, $context, $logger);
 
 		$locator = new ServiceLocator([
-			\Symfony\Contracts\HttpClient\HttpClientInterface::class => static fn () => new MockHttpClient($responses),
+			HttpClientInterface::class => static fn () => new MockHttpClient($responses),
 			StoryFactory::class => static fn () => $storyFactory,
 			ComponentManager::class => static fn () => $componentManager,
 			"limiter.storyblok_management" => static fn () => $rateLimiterFactory,
-			\Psr\Log\LoggerInterface::class => static fn () => $logger,
+			LoggerInterface::class => static fn () => $logger,
 		]);
 
 		return new TestWebhookAdapter(

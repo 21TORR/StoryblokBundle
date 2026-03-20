@@ -3,6 +3,7 @@
 namespace Tests\Torr\Storyblok\Command;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimit;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Tests\Torr\Storyblok\Webhook\Fixtures\TestWebhookAdapter;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Command\ValidateDefinitionsCommand;
@@ -76,7 +78,7 @@ final class ValidateDefinitionsCommandTest extends TestCase
 	 */
 	private function createValidatorWithUsedComponents (array $usedComponents) : ComponentValidator
 	{
-		$manager = $this->createStub(ComponentManager::class);
+		$manager = self::createStub(ComponentManager::class);
 		$manager
 			->method("getAllUsedComponentsInAdapter")
 			->willReturn($usedComponents);
@@ -93,14 +95,14 @@ final class ValidateDefinitionsCommandTest extends TestCase
 	{
 		$componentManager = new ComponentManager(new ServiceLocator([]));
 		$logger = new NullLogger();
-		$rateLimiter = $this->createStub(LimiterInterface::class);
+		$rateLimiter = self::createStub(LimiterInterface::class);
 		$rateLimiter->method("consume")->willReturn(new RateLimit(
 			availableTokens: 1,
 			retryAfter: new \DateTimeImmutable("-1 second"),
 			accepted: true,
 			limit: 1,
 		));
-		$rateLimiterFactory = $this->createStub(RateLimiterFactoryInterface::class);
+		$rateLimiterFactory = self::createStub(RateLimiterFactoryInterface::class);
 		$rateLimiterFactory->method("create")->willReturn($rateLimiter);
 
 		$context = new ComponentContext(
@@ -113,7 +115,7 @@ final class ValidateDefinitionsCommandTest extends TestCase
 		$storyFactory = new StoryFactory($componentManager, $context, $logger);
 
 		$locator = new ServiceLocator([
-			\Symfony\Contracts\HttpClient\HttpClientInterface::class => static fn () => new MockHttpClient([
+			HttpClientInterface::class => static fn () => new MockHttpClient([
 				new MockResponse((string) json_encode([
 					"space" => [
 						"id" => 12345,
@@ -127,7 +129,7 @@ final class ValidateDefinitionsCommandTest extends TestCase
 			StoryFactory::class => static fn () => $storyFactory,
 			ComponentManager::class => static fn () => $componentManager,
 			"limiter.storyblok_management" => static fn () => $rateLimiterFactory,
-			\Psr\Log\LoggerInterface::class => static fn () => $logger,
+			LoggerInterface::class => static fn () => $logger,
 		]);
 
 		return new TestWebhookAdapter(
