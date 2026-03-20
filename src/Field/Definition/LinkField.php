@@ -33,6 +33,8 @@ final class LinkField extends AbstractField
 		private readonly bool $allowAnchors = true,
 		private readonly ?string $internalLinkScope = null,
 		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
+		private readonly bool $allowTargetBlank = false,
+		private readonly bool $allowCustomAttributes = false,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -59,6 +61,8 @@ final class LinkField extends AbstractField
 				"show_anchor" => $this->allowAnchors,
 				"force_link_scope" => !empty($this->internalLinkScope),
 				"link_scope" => $this->internalLinkScope,
+				"allow_target_blank" => $this->allowTargetBlank,
+				"allow_custom_attributes" => $this->allowCustomAttributes,
 				"component_whitelist" => new ResolvableComponentFilter(
 					$this->allowedComponents,
 					"component_whitelist",

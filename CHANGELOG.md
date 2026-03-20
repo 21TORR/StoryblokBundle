@@ -5,6 +5,9 @@
 * (feature) Add `ContentApi::fetchFolderTitleMap()`, using a faster content api endpoint.
 * (deprecation) Deprecate `ManagementApi::fetchFoldersInPath()` in favor of `ContentApi::fetchFoldersInPath()`.
 * (deprecation) Deprecate `ManagementApi::fetchFolderTitleMap()` in favor of `ContentApi::fetchFolderTitleMap()`.
+* (improvement) Add `allow_target_blank` and `allow_custom_attributes` settings to `LinkField`.
+* (improvement) Add `allow_multiline` setting to `MarkdownField`.
+* (improvement) Add `inline_label` setting to `BooleanField`.
 
 
 5.1.4

@@ -20,6 +20,7 @@ final class MarkdownField extends AbstractField
 		private readonly ?int $maxLength = null,
 		private readonly bool $isRightToLeft = false,
 		private readonly bool $exportTranslation = true,
+		private readonly bool $allowMultiline = true,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -44,6 +45,7 @@ final class MarkdownField extends AbstractField
 				"rich_markdown" => $this->hasRichMarkdown,
 				"rtl" => $this->isRightToLeft,
 				"max_length" => $this->maxLength,
+				"allow_multiline" => $this->allowMultiline,
 				"no_translate" => !$this->exportTranslation,
 			],
 		);
