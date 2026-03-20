@@ -7,10 +7,16 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
+use Torr\Storyblok\Field\Choices\DatasourceChoices;
+use Torr\Storyblok\Field\Choices\LanguagesChoices;
+use Torr\Storyblok\Field\Choices\RemoteJsonChoices;
 use Torr\Storyblok\Field\Choices\StaticChoices;
+use Torr\Storyblok\Field\Choices\StoryChoices;
 use Torr\Storyblok\Field\Definition\ChoiceField;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
+use Torr\Storyblok\Management\ManagementApiData;
 use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 use Torr\Storyblok\Transformer\DataTransformer;
 use Torr\Storyblok\Validator\DataValidator;
 
@@ -242,4 +248,159 @@ final class ChoiceFieldTest extends TestCase
 			new ImageDimensionsExtractor(),
 		);
 	}
+
+	// region Management API Data
+
+	private static function getApiData (ChoiceField $field) : array
+	{
+		$apiData = new ManagementApiData();
+		$field->registerManagementApiData("field", $apiData);
+
+		return $apiData->getFullConfig()["field"];
+	}
+
+	public function testManagementApiDefaultsSingleSelect () : void
+	{
+		$actual = self::getApiData(new ChoiceField("My Label", new StaticChoices([])));
+
+		self::assertSame("option", $actual["type"]);
+		self::assertSame("My Label", $actual["display_name"]);
+		self::assertNull($actual["default_value"]);
+		self::assertNull($actual["description"]);
+		self::assertFalse($actual["tooltip"]);
+		self::assertFalse($actual["translatable"]);
+		self::assertFalse($actual["required"]);
+		self::assertNull($actual["regex"]);
+		// choice fields are never exported for translation
+		self::assertTrue($actual["no_translate"]);
+		self::assertNull($actual["min_options"]);
+		self::assertNull($actual["max_options"]);
+	}
+
+	public function testManagementApiDefaultsMultiSelect () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new StaticChoices([]), allowMultiselect: true));
+
+		self::assertSame("options", $actual["type"]);
+	}
+
+	public function testMinMaxOptionsAreStrings () : void
+	{
+		$actual = self::getApiData(new ChoiceField(
+			"label",
+			new StaticChoices([]),
+			allowMultiselect: true,
+			minimumNumberOfOptions: 1,
+			maximumNumberOfOptions: 3,
+		));
+
+		// Storyblok requires these as strings, not integers
+		self::assertSame("1", $actual["min_options"]);
+		self::assertSame("3", $actual["max_options"]);
+	}
+
+	public function testStaticChoices () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new StaticChoices([
+			"Option A" => "a",
+			"Option B" => "b",
+		])));
+
+		self::assertSame(
+			[
+				["name" => "Option A", "value" => "a"],
+				["name" => "Option B", "value" => "b"],
+			],
+			$actual["options"],
+		);
+		self::assertFalse($actual["exclude_empty_option"]);
+	}
+
+	public function testStaticChoicesHideEmptyOption () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new StaticChoices([], showEmptyOption: false)));
+
+		self::assertTrue($actual["exclude_empty_option"]);
+	}
+
+	public function testDatasourceChoices () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new DatasourceChoices("my-datasource")));
+
+		self::assertSame("internal", $actual["source"]);
+		self::assertSame("my-datasource", $actual["datasource_slug"]);
+		self::assertFalse($actual["exclude_empty_option"]);
+	}
+
+	public function testDatasourceChoicesHideEmptyOption () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new DatasourceChoices("ds", showEmptyOption: false)));
+
+		self::assertTrue($actual["exclude_empty_option"]);
+	}
+
+	public function testRemoteJsonChoices () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new RemoteJsonChoices("https://example.com/options.json")));
+
+		self::assertSame("external", $actual["source"]);
+		self::assertSame("https://example.com/options.json", $actual["external_datasource"]);
+		self::assertFalse($actual["exclude_empty_option"]);
+	}
+
+	public function testRemoteJsonChoicesHideEmptyOption () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new RemoteJsonChoices("https://example.com/options.json", showEmptyOption: false)));
+
+		self::assertTrue($actual["exclude_empty_option"]);
+	}
+
+	public function testLanguagesChoices () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new LanguagesChoices()));
+
+		self::assertSame("internal_languages", $actual["source"]);
+		self::assertFalse($actual["exclude_empty_option"]);
+	}
+
+	public function testLanguagesChoicesHideEmptyOption () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new LanguagesChoices(showEmptyOption: false)));
+
+		self::assertTrue($actual["exclude_empty_option"]);
+	}
+
+	public function testStoryChoicesDefaults () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new StoryChoices()));
+
+		self::assertSame("internal_stories", $actual["source"]);
+		self::assertSame("", $actual["folder_slug"]);
+		self::assertSame("link", $actual["entry_appearance"]);
+		self::assertFalse($actual["allow_advanced_search"]);
+		self::assertInstanceOf(ResolvableComponentFilter::class, $actual["filter_content_type"]);
+	}
+
+	public function testStoryChoicesCard () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new StoryChoices(displayAsCard: true)));
+
+		self::assertSame("card", $actual["entry_appearance"]);
+	}
+
+	public function testStoryChoicesAdvancedSearch () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new StoryChoices(allowAdvancedSearch: true)));
+
+		self::assertTrue($actual["allow_advanced_search"]);
+	}
+
+	public function testStoryChoicesRestrictToPath () : void
+	{
+		$actual = self::getApiData(new ChoiceField("label", new StoryChoices(restrictToPath: "blog/")));
+
+		self::assertSame("blog/", $actual["folder_slug"]);
+	}
+
+	// endregion
 }

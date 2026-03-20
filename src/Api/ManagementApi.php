@@ -123,9 +123,19 @@ final class ManagementApi
 	 * Fetches the map of local url to folder name
 	 *
 	 * @return array<string, string> Map of local url to title
+	 *
+	 * @deprecated use {@see ContentApi::fetchFolderTitleMap()} instead, which uses a faster content api endpoint
 	 */
 	public function fetchFolderTitleMap (string $slugPrefix) : array
 	{
+		trigger_deprecation(
+			"21torr/storyblok-bundle",
+			"5.2.0",
+			'"%s::fetchFolderTitleMap()" is deprecated, use "%s::fetchFolderTitleMap()" instead, which uses a faster content api endpoint.',
+			self::class,
+			ContentApi::class,
+		);
+
 		$folders = $this->fetchFoldersInPath($slugPrefix);
 
 		// include the trailing slash, to exclude the base directory
@@ -155,9 +165,19 @@ final class ManagementApi
 	 * Fetches all folders in a given slug path
 	 *
 	 * @return list<FolderData>
+	 *
+	 * @deprecated use {@see ContentApi::fetchFoldersInPath()} instead, which uses a faster content api endpoint
 	 */
 	public function fetchFoldersInPath (string $slugPrefix) : array
 	{
+		trigger_deprecation(
+			"21torr/storyblok-bundle",
+			"5.2.0",
+			'"%s::fetchFoldersInPath()" is deprecated, use "%s::fetchFoldersInPath()" instead, which uses a faster content api endpoint.',
+			self::class,
+			ContentApi::class,
+		);
+
 		// include the trailing slash, to exclude the base directory
 		$slugPrefix = "" !== $slugPrefix
 			? trim($slugPrefix, "/") . "/"
@@ -177,7 +197,11 @@ final class ManagementApi
 		// @todo paginate here
 		foreach ($stories as $entry)
 		{
-			$result[] = new FolderData($entry);
+			$result[] = new FolderData(
+				name: $entry["name"],
+				position: $entry["position"],
+				slug: $entry["full_slug"],
+			);
 		}
 
 		return $result;

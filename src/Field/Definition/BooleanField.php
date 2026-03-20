@@ -21,6 +21,7 @@ final class BooleanField extends AbstractField
 	public function __construct (
 		string $label,
 		private readonly bool $defaultValue = false,
+		private readonly ?string $inlineLabel = null,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -32,6 +33,19 @@ final class BooleanField extends AbstractField
 	protected function getInternalStoryblokType () : FieldType
 	{
 		return FieldType::Boolean;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function toManagementApiData () : array
+	{
+		return array_replace(
+			parent::toManagementApiData(),
+			[
+				"inline_label" => $this->inlineLabel,
+			],
+		);
 	}
 
 	/**

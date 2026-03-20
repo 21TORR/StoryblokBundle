@@ -1,3 +1,16 @@
+5.2.0
+=====
+
+* (feature) Add `ContentApi::fetchFoldersInPath()`, using a faster content api endpoint.
+* (feature) Add `ContentApi::fetchFolderTitleMap()`, using a faster content api endpoint.
+* (deprecation) Deprecate `ManagementApi::fetchFoldersInPath()` in favor of `ContentApi::fetchFoldersInPath()`.
+* (deprecation) Deprecate `ManagementApi::fetchFolderTitleMap()` in favor of `ContentApi::fetchFolderTitleMap()`.
+* (improvement) Add `allow_target_blank` and `allow_custom_attributes` settings to `LinkField`.
+* (improvement) Add `allow_multiline` setting to `MarkdownField`.
+* (improvement) Add `inline_label` setting to `BooleanField`.
+* (improvement) Add management API data tests for all field types.
+
+
 5.1.4
 =====
 
