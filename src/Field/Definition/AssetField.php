@@ -20,6 +20,8 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
  */
 final class AssetField extends AbstractField
 {
+	public const array ALL_FILE_TYPES = [];
+
 	/**
 	 * @inheritDoc
 	 */
@@ -30,7 +32,7 @@ final class AssetField extends AbstractField
 		 *
 		 * @var AssetFileType[]
 		 */
-		private readonly array $fileTypes = [],
+		private readonly array $fileTypes = self::ALL_FILE_TYPES,
 		private readonly bool $allowMultiple = false,
 		private readonly bool $allowExternalUrl = false,
 		mixed $defaultValue = null,
