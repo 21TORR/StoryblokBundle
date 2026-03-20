@@ -97,7 +97,7 @@ final class LinkFieldTest extends TestCase
 		}
 	}
 
-	public static function provideAllowedComponents () : iterable
+	public static function provideAllowedComponentsProducesResolvableFilter () : iterable
 	{
 		yield "empty filter (unrestricted)" => [
 			new ComponentFilter(),
@@ -112,7 +112,7 @@ final class LinkFieldTest extends TestCase
 		];
 	}
 
-	#[DataProvider("provideAllowedComponents")]
+	#[DataProvider("provideAllowedComponentsProducesResolvableFilter")]
 	public function testAllowedComponentsProducesResolvableFilter (ComponentFilter $filter) : void
 	{
 		$actual = self::getApiData(new LinkField("label", allowedComponents: $filter));

@@ -91,11 +91,11 @@ final class TextFieldTest extends TestCase
 
 		$actual = self::getApiData($field);
 
-		self::assertSame(true, $actual["translatable"]);
-		self::assertSame(true, $actual["required"]);
+		self::assertTrue($actual["translatable"]);
+		self::assertTrue($actual["required"]);
 		self::assertSame("^[a-z]+$", $actual["regex"]);
 		self::assertSame("Help text", $actual["description"]);
-		self::assertSame(true, $actual["tooltip"]);
+		self::assertTrue($actual["tooltip"]);
 	}
 
 	public function testDescriptionWithoutTooltip () : void
@@ -106,6 +106,6 @@ final class TextFieldTest extends TestCase
 		$actual = self::getApiData($field);
 
 		self::assertSame("Help text", $actual["description"]);
-		self::assertSame(false, $actual["tooltip"]);
+		self::assertFalse($actual["tooltip"]);
 	}
 }

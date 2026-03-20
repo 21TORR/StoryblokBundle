@@ -177,7 +177,7 @@ final class AssetFieldTest extends TestCase
 
 	/**
 	 * @param AssetFileType[] $fileTypes
-	 * @param string[] $expected
+	 * @param string[]        $expected
 	 */
 	#[DataProvider("provideFileTypes")]
 	public function testFileTypes (array $fileTypes, array $expected) : void

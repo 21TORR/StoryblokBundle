@@ -145,7 +145,7 @@ final class BloksFieldTest extends TestCase
 		self::assertSame(5, $actual["maximum"]);
 	}
 
-	public static function provideAllowedComponents () : iterable
+	public static function provideAllowedComponentsProducesResolvableFilter () : iterable
 	{
 		yield "empty filter (unrestricted)" => [
 			new ComponentFilter(),
@@ -160,7 +160,7 @@ final class BloksFieldTest extends TestCase
 		];
 	}
 
-	#[DataProvider("provideAllowedComponents")]
+	#[DataProvider("provideAllowedComponentsProducesResolvableFilter")]
 	public function testAllowedComponentsProducesResolvableFilter (ComponentFilter $filter) : void
 	{
 		$actual = self::getApiData(new BloksField("label", allowedComponents: $filter));

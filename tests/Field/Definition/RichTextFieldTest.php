@@ -87,7 +87,7 @@ final class RichTextFieldTest extends TestCase
 		);
 	}
 
-	public static function provideAllowedComponents () : iterable
+	public static function provideAllowedComponentsProducesResolvableFilter () : iterable
 	{
 		yield "empty filter (unrestricted)" => [
 			new ComponentFilter(),
@@ -102,7 +102,7 @@ final class RichTextFieldTest extends TestCase
 		];
 	}
 
-	#[DataProvider("provideAllowedComponents")]
+	#[DataProvider("provideAllowedComponentsProducesResolvableFilter")]
 	public function testAllowedComponentsProducesResolvableFilter (ComponentFilter $filter) : void
 	{
 		$actual = self::getApiData(new RichTextField("label", allowedComponents: $filter));
