@@ -228,6 +228,19 @@ final class TranslationManagementTest extends TestCase
 
 		self::assertIsArray($richTextData);
 		self::assertSame("doc", $richTextData["type"]);
-		self::assertSame("Updated", $richTextData["content"][0]["content"][0]["text"]);
+
+		$documentContent = $richTextData["content"] ?? null;
+		self::assertIsArray($documentContent);
+
+		$firstBlock = $documentContent[0] ?? null;
+		self::assertIsArray($firstBlock);
+
+		$blockContent = $firstBlock["content"] ?? null;
+		self::assertIsArray($blockContent);
+
+		$firstText = $blockContent[0] ?? null;
+		self::assertIsArray($firstText);
+
+		self::assertSame("Updated", $firstText["text"] ?? null);
 	}
 }
