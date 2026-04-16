@@ -16,6 +16,7 @@ readonly class AssetProxyUrlGenerator
 	public function __construct (
 		private UrlGeneratorInterface $urlGenerator,
 		private UriSigner $uriSigner,
+		private StoryblokAssetUrlParser $assetUrlParser,
 	) {}
 
 	/**
@@ -23,15 +24,17 @@ readonly class AssetProxyUrlGenerator
 	 */
 	public function rewriteAssetUrl (string $storyblokUrl) : string
 	{
-		// if it's not a storyblok URL, just return
-		if (!preg_match('~^https://a.storyblok.com/f/(?<spaceId>\d+)/(?P<path>.+)$~D', $storyblokUrl, $matches))
+		$parsedAssetUrl = $this->assetUrlParser->parse($storyblokUrl);
+
+		// if it's not a Storyblok asset URL, just return
+		if (null === $parsedAssetUrl)
 		{
 			return $storyblokUrl;
 		}
 
 		$url = $this->urlGenerator->generate("storyblok.asset-proxy", [
-			"spaceId" => $matches["spaceId"],
-			"path" => $matches['path'],
+			"spaceId" => $parsedAssetUrl->spaceId,
+			"path" => $parsedAssetUrl->path,
 		], UrlGeneratorInterface::ABSOLUTE_URL);
 
 		return $this->uriSigner->sign($url, null);

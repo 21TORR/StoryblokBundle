@@ -87,7 +87,7 @@ readonly class AssetData
 	/**
 	 *
 	 */
-	public function getMimeType () : string
+	public function getMimeType () : ?string
 	{
 		return $this->data["content_type"];
 	}
