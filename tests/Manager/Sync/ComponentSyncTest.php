@@ -154,7 +154,6 @@ final class ComponentSyncTest extends TestCase
 			->disableOriginalConstructor()
 			->onlyMethods(["writeln", "success", "confirm", "caution", "write", "newLine"])
 			->getMock();
-		\assert($io instanceof TorrStyle || $io instanceof MockObject);
 
 		$io->expects(self::any())->method("writeln");
 		$io->expects(self::any())->method("write");
