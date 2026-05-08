@@ -1,3 +1,9 @@
+5.2.1
+=====
+
+* (improvement) Add more settings for `RichTextField`.
+
+
 5.2.0
 =====
 
