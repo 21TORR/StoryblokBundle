@@ -31,6 +31,8 @@ final class RichTextField extends AbstractField
 		private readonly ComponentFilter $allowedComponents = new ComponentFilter(),
 		private readonly array $toolbarOptions = [],
 		private readonly array $styleOptions = [],
+		private readonly ?string $restrictLinksToFolder = null,
+		private readonly bool $allowCustomLinkAttributes = false,
 		/**
 		 * Allows migration text content from text fields to a rich text field.
 		 */
@@ -78,7 +80,11 @@ final class RichTextField extends AbstractField
 					"restrict_components",
 				),
 				"style_options" => $formattedStyleOptions,
+				"allow_custom_attributes" => $this->allowCustomLinkAttributes,
 				// can't set the `no_translate` field, as it is always enabled
+				...array_filter([
+					"link_scope" => $this->restrictLinksToFolder,
+				]),
 			],
 		);
 	}
