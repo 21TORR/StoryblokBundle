@@ -59,6 +59,12 @@ final class ChoiceFieldTest extends TestCase
 			1,
 		];
 
+		yield "single select: required + allow missing, null" => [
+			(new ChoiceField("label", $defaultChoices, false))
+				->enableValidation(allowMissingData: true),
+			null,
+		];
+
 		yield "multi select: optional, null" => [
 			new ChoiceField("label", $defaultChoices, true),
 			null,
@@ -78,6 +84,23 @@ final class ChoiceFieldTest extends TestCase
 			(new ChoiceField("label", $defaultChoices, true))
 				->enableValidation(),
 			["key1", "key2"],
+		];
+
+		yield "multi select: required + allow missing, null" => [
+			(new ChoiceField("label", $defaultChoices, true))
+				->enableValidation(allowMissingData: true),
+			null,
+		];
+
+		yield "multi select: min + allow missing, null" => [
+			new ChoiceField(
+				"label",
+				$defaultChoices,
+				true,
+				minimumNumberOfOptions: 2,
+			)
+				->enableValidation(allowMissingData: true),
+			null,
 		];
 
 		yield "multi select: normalization" => [
@@ -166,6 +189,12 @@ final class ChoiceFieldTest extends TestCase
 		yield "multi select: required, empty array" => [
 			(new ChoiceField("label", $defaultChoices, true))
 				->enableValidation(),
+			[],
+		];
+
+		yield "multi select: required + allow missing, empty array" => [
+			(new ChoiceField("label", $defaultChoices, true))
+				->enableValidation(allowMissingData: true),
 			[],
 		];
 

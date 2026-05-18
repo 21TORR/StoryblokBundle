@@ -1,3 +1,9 @@
+5.2.2
+=====
+
+* (bug) Respect `allowMissingData` in `ChoiceField` validation for single-select and multi-select fields.
+
+
 5.2.1
 =====
 

@@ -142,7 +142,7 @@ final class ChoiceField extends AbstractField
 			$this,
 			$data,
 			[
-				$this->required
+				!$this->allowMissingData && $this->required
 					? new NotNull()
 					: null,
 			],
@@ -165,6 +165,8 @@ final class ChoiceField extends AbstractField
 	 */
 	private function validateMultiSelect (ComponentContext $context, array $contentPath, mixed $data) : void
 	{
+		$isMissingData = null === $data;
+
 		// first validate basic structure
 		if (null !== $data)
 		{
@@ -198,7 +200,10 @@ final class ChoiceField extends AbstractField
 		// collect constraints for content
 		$constraints = $this->choices->getValidationConstraints(true);
 
-		if ($this->required || null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
+		if (
+			(!$isMissingData || !$this->allowMissingData)
+			&& ($this->required || null !== $this->minimumNumberOfOptions || null !== $this->maximumNumberOfOptions)
+		)
 		{
 			$constraints[] = new Count(
 				min: $this->minimumNumberOfOptions ?? ($this->required ? 1 : null),
