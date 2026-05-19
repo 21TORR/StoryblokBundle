@@ -6,5 +6,6 @@ final class ExternalLinkData
 {
 	public function __construct (
 		public readonly string $url,
+		public readonly array $fullData,
 	) {}
 }

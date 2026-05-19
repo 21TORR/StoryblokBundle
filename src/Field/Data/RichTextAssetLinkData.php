@@ -10,5 +10,6 @@ final class RichTextAssetLinkData
 		public readonly ?string $anchor,
 		public readonly ?string $target,
 		public readonly ?array $custom,
+		public readonly array $fullData,
 	) {}
 }

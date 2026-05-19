@@ -1,3 +1,9 @@
+5.2.4
+=====
+
+* (improvement) Pass `fullData` in all link variants.
+
+
 5.2.3
 =====
 

@@ -6,5 +6,6 @@ final class EmailLinkData
 {
 	public function __construct (
 		public readonly string $email,
+		public readonly array $fullData,
 	) {}
 }
