@@ -8,5 +8,6 @@ final class AssetLinkData
 		public readonly string $url,
 		public readonly ?int $width,
 		public readonly ?int $height,
+		public readonly array $fullData,
 	) {}
 }

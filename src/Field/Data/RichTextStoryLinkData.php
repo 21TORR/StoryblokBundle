@@ -8,5 +8,6 @@ final class RichTextStoryLinkData
 		public readonly ?string $uuid,
 		public readonly ?string $anchor,
 		public readonly ?string $target,
+		public readonly array $fullData,
 	) {}
 }

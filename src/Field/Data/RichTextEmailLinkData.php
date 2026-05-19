@@ -9,5 +9,6 @@ final class RichTextEmailLinkData
 		public readonly string $email,
 		public readonly ?string $anchor,
 		public readonly ?string $target,
+		public readonly array $fullData,
 	) {}
 }

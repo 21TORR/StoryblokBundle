@@ -38,6 +38,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 				uuid: $uuid,
 				anchor: $data["anchor"] ?? null,
 				target: $data["target"],
+				fullData: $data,
 			);
 		}
 
@@ -51,6 +52,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 					email: $email,
 					anchor: $data["anchor"] ?? null,
 					target: $data["target"],
+					fullData: $data,
 				)
 				: null;
 		}
@@ -70,6 +72,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 				anchor: $data["anchor"] ?? null,
 				target: $data["target"],
 				custom: $data["custom"] ?? null,
+				fullData: $data,
 			);
 		}
 
@@ -82,6 +85,7 @@ final class LinkMarksRichTextTransformer extends RichTextTransformer
 				href: $href,
 				anchor: $data["anchor"] ?? null,
 				target: $data["target"],
+				fullData: $data,
 			)
 			: null;
 	}

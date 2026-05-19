@@ -178,7 +178,7 @@ final class LinkField extends AbstractField
 			$email = $context->normalizeOptionalString($data["email"]);
 
 			return null !== $email
-				? new EmailLinkData($email)
+				? new EmailLinkData($email, $data)
 				: null;
 		}
 
@@ -193,14 +193,14 @@ final class LinkField extends AbstractField
 
 			[$width, $height] = $context->extractImageDimensions($url);
 
-			return new AssetLinkData($url, $width, $height);
+			return new AssetLinkData($url, $width, $height, $data);
 		}
 
 		// "url" === $data["linktype"]
 		$url = $context->normalizeOptionalString($data["url"]);
 
 		return null !== $url
-			? new ExternalLinkData($url)
+			? new ExternalLinkData($url, $data)
 			: null;
 	}
 }

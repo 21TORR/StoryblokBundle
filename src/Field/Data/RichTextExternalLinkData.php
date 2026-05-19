@@ -9,5 +9,6 @@ final class RichTextExternalLinkData
 		public readonly string $href,
 		public readonly ?string $anchor,
 		public readonly ?string $target,
+		public readonly array $fullData,
 	) {}
 }
