@@ -1,3 +1,9 @@
+5.2.3
+=====
+
+* (improvement) Allow setting `allowLinksOpeningInNewWindow` in `RichTextField`s. 
+
+
 5.2.2
 =====
 

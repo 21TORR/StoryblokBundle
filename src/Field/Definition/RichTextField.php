@@ -34,9 +34,10 @@ final class RichTextField extends AbstractField
 		private readonly ?string $restrictLinksToFolder = null,
 		private readonly bool $allowCustomLinkAttributes = false,
 		/**
-		 * Allows migration text content from text fields to a rich text field.
+		 * Allows migrating text content from text fields to a rich text field.
 		 */
 		private readonly bool $automaticallyTransformNonRichTextContent = false,
+		private readonly bool $allowLinksOpeningInNewWindow = true,
 	)
 	{
 		parent::__construct($label, $defaultValue);
@@ -81,6 +82,7 @@ final class RichTextField extends AbstractField
 				),
 				"style_options" => $formattedStyleOptions,
 				"allow_custom_attributes" => $this->allowCustomLinkAttributes,
+				"allow_target_blank" => $this->allowLinksOpeningInNewWindow,
 				// can't set the `no_translate` field, as it is always enabled
 				...array_filter([
 					"link_scope" => $this->restrictLinksToFolder,
