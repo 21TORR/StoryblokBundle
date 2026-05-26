@@ -732,7 +732,7 @@ final class ManagementApi
 
 		if (\is_string($storyJson))
 		{
-			trigger_deprecation("nucleus/storyblokbundle", "5.2.5", "Passing the story content as string is deprecated, pass the array instead.");
+			trigger_deprecation("nucleus/storyblokbundle", "5.2.5", "Passing the story content as string is deprecated, pass as array instead.");
 			$storyJson = json_decode($storyJson, true, flags: \JSON_THROW_ON_ERROR);
 			\assert(\is_array($storyJson));
 		}
