@@ -1,3 +1,9 @@
+5.2.5
+=====
+
+* (bug) Fix asset metadata structure when translating Stories.
+
+
 5.2.4
 =====
 
