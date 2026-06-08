@@ -1,3 +1,9 @@
+5.x to 6.0
+==========
+
+* Update calls to `ManagementApi::updateStory()` to not pass a json encoded string anymore, pass as array directly.
+  
+
 3.x to 5.0
 ==========
 
@@ -7,7 +13,6 @@
 * Added `AbstractStoryblokAdapter` to wrap a connection to a storyblok space. You can now have multiple connections to multiple spaces now.
 * All services that use the previously global services now need either the space id (to get the adapter) or the adapter directly.
 * Removed the global storyblok bundle config. You now instead need to create the `StoryblokConfig` inside your adapter yourself.
-* Update calls to `ManagementApi::updateStory()` to not pass a json encoded string anymore, pass as array directly. 
 
 
 2.x to 5.0
