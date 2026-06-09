@@ -1,3 +1,9 @@
+5.x to 6.0
+==========
+
+* Update calls to `ManagementApi::updateStory()` to not pass a json encoded string anymore, pass as array directly.
+  
+
 3.x to 5.0
 ==========
 

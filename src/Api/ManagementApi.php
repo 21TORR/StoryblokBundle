@@ -23,6 +23,7 @@ use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
 use Torr\Storyblok\Exception\Api\DatasourceSyncFailedException;
 use Torr\Storyblok\Exception\Api\TranslationsXmlFileImportFailedException;
 use Torr\Storyblok\Folder\FolderData;
+use Torr\Storyblok\TranslationManagement\Service\AssetStructureFixerService;
 
 #[Exclude]
 final class ManagementApi
@@ -31,6 +32,7 @@ final class ManagementApi
 	private readonly HttpClientInterface $client;
 	private ?ComponentIdMap $componentIdMap = null;
 	private readonly LimiterInterface $rateLimiter;
+	private readonly AssetStructureFixerService $assetStructureFixer;
 
 	/**
 	 */
@@ -49,6 +51,7 @@ final class ManagementApi
 					->toArray(),
 			),
 		);
+		$this->assetStructureFixer = new AssetStructureFixerService();
 	}
 
 	/**
@@ -722,25 +725,41 @@ final class ManagementApi
 
 	public function updateStory (
 		int $storyId,
-		string|array $storyJson,
+		array|string $storyJson,
 	) : void
 	{
-		$options = new HttpOptions()
-			->setHeaders([
-				"Content-Type" => "application/json",
-				"Accept" => "application/json",
+		$this->rateLimiter->consume()->wait();
+
+		if (\is_string($storyJson))
+		{
+			trigger_deprecation("nucleus/storyblokbundle", "5.2.5", "Passing the story content as string is deprecated, pass as array instead.");
+			$storyJson = json_decode($storyJson, true, flags: \JSON_THROW_ON_ERROR);
+			\assert(\is_array($storyJson));
+		}
+
+		$storyJson = $this->assetStructureFixer->fixStoryblokAssetStructure($storyJson);
+
+		try
+		{
+			$options = $this->generateBaseOptions()
+				->setJson($storyJson)
+				->toArray();
+
+			$this->client->request("PUT", "stories/{$storyId}", $options)->getContent();
+		}
+		catch (\Throwable $e)
+		{
+			$this->logger->error("Update story failed for story {storyId}: {message}", [
+				"storyId" => $storyId,
+				"message" => $e->getMessage(),
+				"exception" => $e,
 			]);
 
-		if (\is_array($storyJson))
-		{
-			$options->setJson($storyJson);
+			throw new ApiRequestFailedException(
+				\sprintf("Update story failed for story: %s", $storyId),
+				previous: $e,
+			);
 		}
-		else
-		{
-			$options->setBody($storyJson);
-		}
-
-		$this->sendRequest("stories/{$storyId}", $options, "PUT");
 	}
 
 	/**

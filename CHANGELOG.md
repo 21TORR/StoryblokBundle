@@ -1,3 +1,10 @@
+5.2.5
+=====
+
+* (bug) Fix asset metadata structure when translating stories.
+* (deprecation) Deprecate passing json string to `ManagementApi::updateStory()`.
+
+
 5.2.4
 =====
 
