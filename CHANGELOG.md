@@ -1,3 +1,9 @@
+5.2.6
+=====
+
+* (bug) Fix missing reset of `ContentApi` and `StoryblokIdSlugMapper`.
+
+
 5.2.5
 =====
 
