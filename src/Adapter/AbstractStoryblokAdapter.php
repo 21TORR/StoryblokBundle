@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Api\ManagementApi;
@@ -15,7 +16,7 @@ use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Story\StoryFactory;
 use Torr\Storyblok\Webhook\Request\RequestValidator;
 
-abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
+abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, ResetInterface
 {
 	public readonly ContentApi $contentApi;
 	public readonly ManagementApi $managementApi;
@@ -96,4 +97,15 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface
 	 * Renames a technical name for this adapter. Must be a valid "snail".
 	 */
 	abstract public static function getKey () : string;
+
+	/**
+	 *
+	 */
+	#[\Override]
+	public function reset () : void
+	{
+		// pass reset calls to nested services
+		$this->contentApi->reset();
+		$this->idSlugMapper->reset();
+	}
 }
