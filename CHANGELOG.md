@@ -1,4 +1,4 @@
-5.2.7 (unreleased)
+5.2.7
 =====
 
 * (improvement) Explicitly pass the `cv` when fetching single stories to avoid the redirect.
