@@ -63,6 +63,7 @@ final class ContentApi implements ResetInterface
 			$identifier = ltrim((string) $identifier, "/");
 
 			$queryParameters = [
+				"cv" => $this->getSpaceInfo()->getCacheVersion(),
 				"token" => $this->config->getContentToken(),
 				"version" => $version->value,
 			];
@@ -71,6 +72,9 @@ final class ContentApi implements ResetInterface
 			{
 				$queryParameters["find_by"] = "uuid";
 			}
+
+			// Prevent a redirect from the API by sorting all of our query parameters alphabetically first
+			ksort($queryParameters);
 
 			$response = $this->client->request(
 				"GET",
