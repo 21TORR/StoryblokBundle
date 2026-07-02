@@ -2,6 +2,7 @@
 =====
 
 * (improvement) Explicitly pass the `cv` when fetching single stories to avoid the redirect.
+* (internal) Add tests for management API data.
 
 
 
