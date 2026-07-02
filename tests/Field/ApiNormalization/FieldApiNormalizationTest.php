@@ -20,6 +20,8 @@ use Torr\Storyblok\Field\Group\FieldGroup;
 
 /**
  * @final
+ *
+ * @internal
  */
 class FieldApiNormalizationTest extends TestCase
 {
@@ -337,7 +339,6 @@ class FieldApiNormalizationTest extends TestCase
 		];
 	}
 
-
 	/**
 	 */
 	#[DataProvider("provideTransform")]
@@ -345,15 +346,14 @@ class FieldApiNormalizationTest extends TestCase
 	{
 		$component = $this->createComponent($fields);
 
-		self::assertSame($expectedSchema, $component->toManagementApiData()["schema"]);
+		static::assertSame($expectedSchema, $component->toManagementApiData()["schema"]);
 	}
 
 	/**
 	 */
-	private function createComponent (array $fields)
+	private function createComponent (array $fields) : AbstractComponent
 	{
-		return new class ($fields) extends AbstractComponent
-		{
+		return new class($fields) extends AbstractComponent {
 			public function __construct (
 				private readonly array $fields,
 			) {}
