@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Manager\Sync\Diff;
 
 use Jfcherng\Diff\DiffHelper;
+use Jfcherng\Diff\Renderer\RendererConstant;
 use Torr\Storyblok\Exception\InvalidComponentConfigurationException;
 
 final class ComponentConfigDiffer
@@ -34,7 +35,9 @@ final class ComponentConfigDiffer
 		$diff = trim(DiffHelper::calculate(
 			$this->formatAsJson($storyblokConfig),
 			$this->formatAsJson($localConfig),
-			"Unified",
+			rendererOptions: [
+				"cliColorization" => RendererConstant::CLI_COLOR_DISABLE,
+			],
 		));
 
 		if ("" === $diff)
