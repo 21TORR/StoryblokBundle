@@ -198,6 +198,37 @@ class FieldApiNormalizationTest extends TestCase
 			],
 		];
 
+		yield "editortab" => [
+			["field" => new EditorTab("Label", ["field_inner" => new TextField("Inner")])],
+			[
+				"field" => [
+					"type" => "tab",
+					"display_name" => "Label",
+					"default_value" => null,
+					"description" => null,
+					"tooltip" => false,
+					"translatable" => false,
+					"regex" => null,
+					"keys" => ["field_inner"],
+					"pos" => 0,
+				],
+				"field_inner" => [
+					"type" => "text",
+					"display_name" => "Inner",
+					"default_value" => null,
+					"description" => null,
+					"tooltip" => false,
+					"translatable" => false,
+					"required" => false,
+					"regex" => null,
+					"rtl" => false,
+					"max_length" => null,
+					"no_translate" => false,
+					"pos" => 1,
+				],
+			],
+		];
+
 		yield "tab" => [
 			["field" => new EditorTab("Label", ["field_inner" => new TextField("Inner")])],
 			[
