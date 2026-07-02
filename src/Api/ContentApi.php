@@ -70,6 +70,7 @@ final class ContentApi implements ResetInterface
 			$queryParameters = [
 				"token" => $this->config->contentToken,
 				"version" => $version->value,
+				"cv" => $this->getSpaceInfo()->getCacheVersion(),
 			];
 
 			if (preg_match(self::STORYBLOK_UUID_REGEX, $identifier))

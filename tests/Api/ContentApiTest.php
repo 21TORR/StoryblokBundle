@@ -36,9 +36,20 @@ final class ContentApiTest extends TestCase
 	{
 		$api = $this->createApi(
 			new MockHttpClient(
-				static fn () => new MockResponse("", [
-					"http_code" => 404,
-				]),
+				[
+					new MockResponse(\json_encode([
+						"space" => [
+							"id" => "12345",
+							"name" => "Test",
+							"version" => 123,
+							"language_codes" => ["de"],
+							"domain" => "example.test",
+						],
+					])),
+					new MockResponse("", [
+						"http_code" => 404,
+					]),
+				],
 			),
 		);
 
