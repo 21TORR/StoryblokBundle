@@ -36,7 +36,7 @@ final class ComponentConfigDiffer
 			$this->formatAsJson($storyblokConfig),
 			$this->formatAsJson($localConfig),
 			rendererOptions: [
-				"cliColorization" => RendererConstant::CLI_COLOR_DISABLE
+				"cliColorization" => RendererConstant::CLI_COLOR_DISABLE,
 			],
 		));
 

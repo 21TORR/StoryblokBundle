@@ -37,7 +37,7 @@ final class ContentApiTest extends TestCase
 		$api = $this->createApi(
 			new MockHttpClient(
 				[
-					new MockResponse(\json_encode([
+					new MockResponse(json_encode([
 						"space" => [
 							"id" => "12345",
 							"name" => "Test",
