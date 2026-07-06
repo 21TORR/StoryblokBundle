@@ -7,78 +7,34 @@ use Torr\Storyblok\Translation\LocaleHelper;
 
 final readonly class DocumentMetaData extends AbstractMetaData
 {
-	private readonly array $data;
-	private readonly array $slugSegments;
-	private readonly ?string $previewData;
+	private array $slugSegments;
+	public string $fullSlug;
 
 	/**
+	 * @param array<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int}> $alternates
 	 */
 	public function __construct (
-		array $data,
-		/**
-		 * The component type of the story's component
-		 */
-		private readonly string $type,
-		public readonly string $spaceId,
-	)
-	{
-		$this->previewData = $data["content"]["_editable"] ?? null;
-		unset($data["content"]);
-		$this->data = $data;
-		$this->slugSegments = explode("/", rtrim($data["full_slug"], "/"));
+		string $uuid,
+		string $type,
+		?string $previewData,
+		public string $name,
+		string $fullSlug,
+		public \DateTimeImmutable $createdAt,
+		public ?\DateTimeImmutable $firstPublishedAt,
+		public ?\DateTimeImmutable  $publishedAt,
+		public string $id,
+		public bool $isStartPage,
+		public string $locale,
+		public ?int $position,
+		private array $alternates,
+		string $spaceId,
+		public int $localeLevel,
+	) {
+		parent::__construct($uuid, $type, $spaceId, $previewData);
+		$this->fullSlug = rtrim($fullSlug, "/");
+		$this->slugSegments = explode("/", $this->fullSlug);
 	}
 
-	/**
-	 *
-	 */
-	public function getName () : string
-	{
-		return $this->data["name"];
-	}
-
-	/**
-	 *
-	 */
-	public function getCreatedAt () : \DateTimeImmutable
-	{
-		return $this->parseDate($this->data["created_at"]);
-	}
-
-	/**
-	 *
-	 */
-	public function getFirstPublishedAt () : ?\DateTimeImmutable
-	{
-		return null !== $this->data["first_published_at"]
-			? $this->parseDate($this->data["first_published_at"])
-			: null;
-	}
-
-	/**
-	 *
-	 */
-	public function getPublishedAt () : ?\DateTimeImmutable
-	{
-		return null !== $this->data["published_at"]
-			? $this->parseDate($this->data["published_at"])
-			: null;
-	}
-
-	/**
-	 *
-	 */
-	public function getId () : int
-	{
-		return $this->data["id"];
-	}
-
-	/**
-	 *
-	 */
-	public function getUuid () : string
-	{
-		return $this->data["uuid"];
-	}
 
 	/**
 	 *
@@ -88,40 +44,10 @@ final readonly class DocumentMetaData extends AbstractMetaData
 		return $this->slugSegments[\count($this->slugSegments) - 1];
 	}
 
-	/**
-	 * The full slug of the story
-	 */
-	public function getFullSlug () : string
-	{
-		return implode("/", $this->slugSegments);
-	}
-
-	/**
-	 *
-	 */
-	public function isStartPage () : bool
-	{
-		return $this->data["is_startpage"];
-	}
-
-	/**
-	 *
-	 */
-	public function getLocale () : string
-	{
-		return $this->data["lang"];
-	}
-
-	/**
-	 */
-	public function getType () : string
-	{
-		return $this->type;
-	}
 
 	/**
 	 * Returns the slug of the parent
-	 * (without trailing slash).
+	 * (without a trailing slash).
 	 */
 	public function getParentSlug () : ?string
 	{
@@ -136,47 +62,13 @@ final readonly class DocumentMetaData extends AbstractMetaData
 	 */
 	public function getLocaleFromSlug () : ?string
 	{
-		$localeLevel = $this->data["_locale_level"];
-		\assert(\is_int($localeLevel));
-
-		$firstSegment = $this->slugSegments[$localeLevel] ?? null;
+		$firstSegment = $this->slugSegments[$this->localeLevel] ?? null;
 
 		return null !== $firstSegment && LocaleHelper::isValidLocale($firstSegment)
 			? $firstSegment
 			: null;
 	}
 
-	/**
-	 * @return string[]
-	 */
-	public function getSlugSegments () : array
-	{
-		return $this->slugSegments;
-	}
-
-	/**
-	 */
-	private function parseDate (string $date) : \DateTimeImmutable
-	{
-		$parsed = \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC3339_EXTENDED, $date);
-
-		if (false === $parsed)
-		{
-			throw new StoryHydrationFailed(\sprintf(
-				"Could not parse date: %s",
-				$date,
-			));
-		}
-
-		return $parsed;
-	}
-
-	/**
-	 */
-	public function getPosition () : ?int
-	{
-		return $this->data["position"] ?? null;
-	}
 
 	/**
 	 * @return list<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int, locale: ?string}>
@@ -184,14 +76,11 @@ final readonly class DocumentMetaData extends AbstractMetaData
 	public function getAlternateLanguages () : array
 	{
 		$result = [];
-		$localeLevel = $this->data["_locale_level"];
-		\assert(\is_int($localeLevel));
 
-		/** @var array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int} $alternate */
-		foreach (($this->data["alternates"] ?? []) as $alternate)
+		foreach ($this->alternates as $alternate)
 		{
 			$slugSegments = explode("/", rtrim($alternate["full_slug"], "/"));
-			$locale = $slugSegments[$localeLevel];
+			$locale = $slugSegments[$this->localeLevel];
 
 			$alternate["locale"] = LocaleHelper::isValidLocale($locale)
 				? $locale

@@ -64,7 +64,7 @@ readonly class ComponentDefinitionLoader
 
 		return null !== $blok
 			? $this->transformBlok($reflectionClass, $blok)
-			: $this->transformDocument($storyClass, $document);
+			: $this->transformDocument($reflectionClass, $document);
 	}
 
 	/**
@@ -82,6 +82,7 @@ readonly class ComponentDefinitionLoader
 		}
 
 		return new ComponentDefinition(
+			storyClass: $storyClass->getName(),
 			label: $blok->label,
 			key: $blok->key,
 			type: ComponentType::Nested,
@@ -104,6 +105,7 @@ readonly class ComponentDefinitionLoader
 		}
 
 		return new ComponentDefinition(
+			storyClass: $storyClass->getName(),
 			label: $document->label,
 			key: $document->key,
 			type: ComponentType::Standalone,

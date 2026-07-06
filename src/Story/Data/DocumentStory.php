@@ -12,12 +12,12 @@ use Torr\Storyblok\Story\MetaData\DocumentMetaData;
 #[Exclude]
 abstract class DocumentStory
 {
-	public private(set) DocumentMetaData $metaData
+	public DocumentMetaData $metaData
 	{
 		get => $this->metaData;
 		set (DocumentMetaData $metaData)
 		{
-			if (null !== $this->metaData)
+			if (isset($this->metaData))
 			{
 				throw new InvalidStoryInitializationException("Can't initialize document multiple times");
 			}

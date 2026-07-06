@@ -28,7 +28,9 @@ readonly class FieldDefinitionLoader
 				key: $field->key,
 				label: $field->label,
 				type: $field->getType(),
+				propertyPath: $property->getName(),
 				data: $field->getManagementApiData(),
+				field: $field,
 			),
 		];
 	}

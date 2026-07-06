@@ -3,7 +3,6 @@
 namespace Torr\Storyblok\Story\MetaData;
 
 /**
- * @final
  */
 readonly abstract class AbstractMetaData
 {
@@ -16,7 +15,6 @@ readonly abstract class AbstractMetaData
 		 */
 		public string $type,
 		public string $spaceId,
-		protected array $data,
 		public ?string $previewData,
 	) {}
 }

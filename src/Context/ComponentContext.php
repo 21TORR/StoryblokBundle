@@ -14,16 +14,16 @@ use Torr\Storyblok\Validator\DataValidator;
 /**
  * @final
  */
-class ComponentContext
+readonly class ComponentContext
 {
 	/**
 	 */
 	public function __construct (
-		public readonly ComponentManager $componentManager,
-		public readonly DataTransformer $dataTransformer,
-		public readonly LoggerInterface $logger,
-		public readonly DataValidator $validator,
-		public readonly ImageDimensionsExtractor $imageDimensionsExtractor,
+		public ComponentManager $componentManager,
+		public DataTransformer $dataTransformer,
+		public LoggerInterface $logger,
+		public DataValidator $validator,
+		public ImageDimensionsExtractor $imageDimensionsExtractor,
 	) {}
 
 	/**

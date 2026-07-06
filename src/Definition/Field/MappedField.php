@@ -2,6 +2,7 @@
 
 namespace Torr\Storyblok\Definition\Field;
 
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\FieldType;
 
 abstract readonly class MappedField
@@ -29,5 +30,15 @@ abstract readonly class MappedField
 			"display_name" => $this->label,
 			"default_value" => $this->defaultValue,
 		];
+	}
+
+	/**
+	 */
+	public function transformStoryblokValue (
+		mixed $value,
+		ComponentContext $context,
+	) : mixed
+	{
+		return $value;
 	}
 }

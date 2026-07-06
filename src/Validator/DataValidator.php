@@ -13,9 +13,9 @@ use Torr\Storyblok\Field\FieldDefinitionInterface;
 /**
  * @final
  */
-class DataValidator
+readonly class DataValidator
 {
-	private readonly ValidatorInterface $validator;
+	public ValidatorInterface $validator;
 
 	/**
 	 */
