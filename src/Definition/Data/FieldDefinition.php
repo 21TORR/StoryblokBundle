@@ -2,19 +2,19 @@
 
 namespace Torr\Storyblok\Definition\Data;
 
-use Torr\Storyblok\Component\Config\ComponentType;
+use Torr\Storyblok\Field\FieldType;
 
 /**
  * @final
  */
-readonly class ComponentDefinition
+readonly class FieldDefinition
 {
 	/**
 	 */
 	public function __construct (
-		public string $label,
 		public string $key,
-		public ComponentType $type,
-		public array $fields,
+		public string $label,
+		public FieldType $type,
+		public array $data,
 	) {}
 }

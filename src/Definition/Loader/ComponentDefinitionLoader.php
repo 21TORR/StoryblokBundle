@@ -2,9 +2,9 @@
 
 namespace Torr\Storyblok\Definition\Loader;
 
-use Torr\Storyblok\Attribute\AttributeLoader;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
+use Torr\Storyblok\Definition\Exception\DuplicateFieldDefinitionException;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Mapping\Blok;
 use Torr\Storyblok\Definition\Mapping\Document;
@@ -19,7 +19,7 @@ readonly class ComponentDefinitionLoader
 	/**
 	 */
 	public function __construct (
-		private AttributeLoader $attributeLoader,
+		private FieldDefinitionLoader $fieldDefinitionLoader,
 	) {}
 
 	/**
@@ -27,8 +27,9 @@ readonly class ComponentDefinitionLoader
 	 */
 	public function loadDefinition (string $storyClass) : ?ComponentDefinition
 	{
-		$blok = $this->attributeLoader->loadBlok($storyClass);
-		$document = $this->attributeLoader->loadDocument($storyClass);
+		$reflectionClass = new \ReflectionClass($storyClass);
+		$blok = $this->loadAttribute($reflectionClass, Blok::class);
+		$document = $this->loadAttribute($reflectionClass, Document::class);
 
 		if (null === $blok && null === $document)
 		{
@@ -62,20 +63,20 @@ readonly class ComponentDefinitionLoader
 		}
 
 		return null !== $blok
-			? $this->transformBlok($storyClass, $blok)
+			? $this->transformBlok($reflectionClass, $blok)
 			: $this->transformDocument($storyClass, $document);
 	}
 
 	/**
 	 *
 	 */
-	private function transformBlok (string $storyClass, Blok $blok) : ComponentDefinition
+	private function transformBlok (\ReflectionClass $storyClass, Blok $blok) : ComponentDefinition
 	{
-		if (!\is_a($storyClass, BlokStory::class, true))
+		if (!\is_a($storyClass->getName(), BlokStory::class, true))
 		{
 			throw new InvalidComponentDefinitionException(\sprintf(
 				"Blok component '%s' must extend '%s'",
-				$storyClass,
+				$storyClass->getName(),
 				BlokStory::class,
 			));
 		}
@@ -84,19 +85,20 @@ readonly class ComponentDefinitionLoader
 			label: $blok->label,
 			key: $blok->key,
 			type: ComponentType::Nested,
+			fields: $this->loadFields($storyClass),
 		);
 	}
 
 	/**
 	 *
 	 */
-	private function transformDocument (string $storyClass, Document $document) : ComponentDefinition
+	private function transformDocument (\ReflectionClass $storyClass, Document $document) : ComponentDefinition
 	{
-		if (!\is_a($storyClass, DocumentStory::class, true))
+		if (!\is_a($storyClass->getName(), DocumentStory::class, true))
 		{
 			throw new InvalidComponentDefinitionException(\sprintf(
 				"Document component '%s' must extend '%s'",
-				$storyClass,
+				$storyClass->getName(),
 				DocumentStory::class,
 			));
 		}
@@ -105,6 +107,46 @@ readonly class ComponentDefinitionLoader
 			label: $document->label,
 			key: $document->key,
 			type: ComponentType::Standalone,
+			fields: $this->loadFields($storyClass),
 		);
+	}
+
+	/**
+	 *
+	 */
+	private function loadFields (\ReflectionClass $class) : array
+	{
+		$fields = [];
+
+		foreach ($class->getProperties() as $property)
+		{
+			foreach ($this->fieldDefinitionLoader->loadFieldDefinitions($property) as $key => $definition)
+			{
+				if (\array_key_exists($key, $fields))
+				{
+					throw new DuplicateFieldDefinitionException(\sprintf(
+						"Class '%s' has multiple fields with the same key '%s'",
+						$class->getName(),
+						$key,
+					));
+				}
+
+				$fields[$key] = $definition;
+			}
+		}
+
+		return $fields;
+	}
+
+
+	/**
+	 * @template AttributeType of object
+	 * @param class-string<AttributeType> $attribute
+	 *
+	 * @return AttributeType|null
+	 */
+	private function loadAttribute (\ReflectionClass $storyClass, string $attribute) : ?object
+	{
+		return $storyClass->getAttributes($attribute)[0]?->newInstance() ?? null;
 	}
 }
