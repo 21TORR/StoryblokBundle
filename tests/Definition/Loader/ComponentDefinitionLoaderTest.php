@@ -3,6 +3,7 @@
 namespace Tests\Torr\Storyblok\Definition\Loader;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Torr\Storyblok\Fixtures\Components\Empty\EmptyClass;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokAndDocumentSet;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingBaseClass;
@@ -74,7 +75,7 @@ class ComponentDefinitionLoaderTest extends TestCase
 	 *
 	 */
 	#[DataProvider("provideInvalidBaseDefinition")]
-	public function testInvalidBaseDefinition (string $class, string $expectedMessage) : void
+	public function testInvalidBaseDefinition (string $storyClass, string $expectedMessage) : void
 	{
 		$this->expectException(InvalidComponentDefinitionException::class);
 		$this->expectExceptionMessage($expectedMessage);
@@ -82,6 +83,18 @@ class ComponentDefinitionLoaderTest extends TestCase
 		$attributesHelper = new AttributeLoader();
 		$loader = new ComponentDefinitionLoader($attributesHelper);
 
-		$loader->loadDefinition($class);
+		$loader->loadDefinition($storyClass);
+	}
+
+
+	/**
+	 *
+	 */
+	public function testEmpty () : void
+	{
+		$attributesHelper = new AttributeLoader();
+		$loader = new ComponentDefinitionLoader($attributesHelper);
+
+		self::assertNull($loader->loadDefinition(EmptyClass::class));
 	}
 }
