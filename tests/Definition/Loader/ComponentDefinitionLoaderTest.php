@@ -3,6 +3,7 @@
 namespace Tests\Torr\Storyblok\Definition\Loader;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokAndDocumentSet;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingBaseClass;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissingAttribute;
@@ -26,7 +27,7 @@ class ComponentDefinitionLoaderTest extends TestCase
 		yield "blok, missing attribute" => [
 			BlokMissingAttribute::class,
 			\sprintf(
-				'Blok component %s must have attribute %s set',
+				"Blok component '%s' must have attribute '%s'",
 				BlokMissingAttribute::class,
 				Blok::class,
 			),
@@ -35,7 +36,7 @@ class ComponentDefinitionLoaderTest extends TestCase
 		yield "blok, missing base class" => [
 			BlokMissingBaseClass::class,
 			\sprintf(
-				'Blok component %s must extend %s',
+				"Blok component '%s' must extend '%s'",
 				BlokMissingBaseClass::class,
 				BlokStory::class,
 			),
@@ -44,7 +45,7 @@ class ComponentDefinitionLoaderTest extends TestCase
 		yield "document, missing attribute" => [
 			DocumentMissingAttribute::class,
 			\sprintf(
-				'Document component %s must have attribute %s set',
+				"Document component '%s' must have attribute '%s'",
 				DocumentMissingAttribute::class,
 				Document::class,
 			),
@@ -53,9 +54,17 @@ class ComponentDefinitionLoaderTest extends TestCase
 		yield "document, missing base class" => [
 			DocumentMissingBaseClass::class,
 			\sprintf(
-				'Document component %s must extend %s',
+				"Document component '%s' must extend '%s'",
 				DocumentMissingBaseClass::class,
 				DocumentStory::class,
+			),
+		];
+
+		yield "document and blok set" => [
+			BlokAndDocumentSet::class,
+			\sprintf(
+				"Class '%s' can't be both document and blok. Remove one of the attribute.",
+				BlokAndDocumentSet::class,
 			),
 		];
 	}

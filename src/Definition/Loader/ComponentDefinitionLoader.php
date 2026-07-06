@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Definition\Loader;
 
 use Torr\Storyblok\Attribute\AttributeLoader;
+use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Mapping\Blok;
@@ -34,7 +35,7 @@ readonly class ComponentDefinitionLoader
 			if (\is_a($storyClass, BlokStory::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
-					"Blok component %s must have attribute %s set",
+					"Blok component '%s' must have attribute '%s'",
 					$storyClass,
 					Blok::class,
 				));
@@ -43,9 +44,9 @@ readonly class ComponentDefinitionLoader
 			if (\is_a($storyClass, DocumentStory::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
-					"Document component %s must have attribute %s set",
+					"Document component '%s' must have attribute '%s'",
 					$storyClass,
-					Document::class,
+					Document::class
 				));
 			}
 
@@ -55,9 +56,7 @@ readonly class ComponentDefinitionLoader
 		if (null !== $blok && null !== $document)
 		{
 			throw new InvalidComponentDefinitionException(\sprintf(
-				"Can't use both %s and %s on class %s",
-				Blok::class,
-				Document::class,
+				"Class '%s' can't be both document and blok. Remove one of the attribute.",
 				$storyClass,
 			));
 		}
@@ -75,7 +74,7 @@ readonly class ComponentDefinitionLoader
 		if (!\is_a($storyClass, BlokStory::class, true))
 		{
 			throw new InvalidComponentDefinitionException(\sprintf(
-				"Blok component %s must extend %s",
+				"Blok component '%s' must extend '%s'",
 				$storyClass,
 				BlokStory::class,
 			));
@@ -84,6 +83,7 @@ readonly class ComponentDefinitionLoader
 		return new ComponentDefinition(
 			label: $blok->label,
 			key: $blok->key,
+			type: ComponentType::Nested,
 		);
 	}
 
@@ -95,7 +95,7 @@ readonly class ComponentDefinitionLoader
 		if (!\is_a($storyClass, DocumentStory::class, true))
 		{
 			throw new InvalidComponentDefinitionException(\sprintf(
-				"Document component %s must extend %s",
+				"Document component '%s' must extend '%s'",
 				$storyClass,
 				DocumentStory::class,
 			));
@@ -104,6 +104,7 @@ readonly class ComponentDefinitionLoader
 		return new ComponentDefinition(
 			label: $document->label,
 			key: $document->key,
+			type: ComponentType::Standalone,
 		);
 	}
 }
