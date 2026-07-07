@@ -12,6 +12,7 @@ readonly class Blok
 	 */
 	public function __construct (
 		public string $key,
-		public string $label
+		public string $label,
+		public ?string $displayAdmin = null,
 	) {}
 }

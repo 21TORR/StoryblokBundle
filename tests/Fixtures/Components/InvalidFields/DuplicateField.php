@@ -13,7 +13,7 @@ use Torr\Storyblok\Story\Data\BlokStory;
 #[Blok("test", "test")]
 class DuplicateField extends BlokStory
 {
-	#[TextField("field", "field")]
-	#[IntegerField("field2", "field2")]
+	#[TextField("field", key: "field")]
+	#[IntegerField("field2", key: "field2")]
 	public string $text;
 }

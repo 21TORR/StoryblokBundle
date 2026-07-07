@@ -20,7 +20,6 @@ readonly class DebugInfoCliRenderer
 		{
 			ComponentType::Nested => "<fg=blue>nested</>",
 			ComponentType::Standalone => "<fg=magenta>standalone</>",
-			ComponentType::Universal => "<fg=red>universal</>",
 		};
 	}
 

@@ -5,6 +5,7 @@ namespace Tests\Torr\Storyblok\Story\Hydrator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Torr\Storyblok\Story\Hydrator\MetaDataHydrator;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Story\MetaData\BlokMetaData;
 use Torr\Storyblok\Story\MetaData\DocumentMetaData;
 
 class MetaDataHydratorTest extends TestCase
@@ -12,7 +13,7 @@ class MetaDataHydratorTest extends TestCase
 	/**
 	 *
 	 */
-	public static function provideValid () : iterable
+	public static function provideValidDocumentMetaData () : iterable
 	{
 		yield "small" => [
 			[
@@ -254,13 +255,63 @@ class MetaDataHydratorTest extends TestCase
 	/**
 	 *
 	 */
-	#[DataProvider("provideValid")]
-	public function testValid (array $data, DocumentMetaData $expected, array $expectedAlternateLanguages = []) : void
+	#[DataProvider("provideValidDocumentMetaData")]
+	public function testValidDocumentMetaData (array $data, DocumentMetaData $expected, array $expectedAlternateLanguages = []) : void
 	{
 		$hydrator = new MetaDataHydrator();
 		$metaData = $hydrator->hydrateDocumentMetaData($data, "123", 0);
 
 		self::assertEquals($expected, $metaData);
 		self::assertSame($expectedAlternateLanguages, $metaData->getAlternateLanguages());
+	}
+
+	public static function provideValidBlokMetaData () : iterable
+	{
+		yield "simple" => [
+			[
+				"cta" => [],
+				"_uid" => "c33acdbe-6d1b-4303-8941-ee59a3861e80",
+				"component" => "rich-text-block",
+				"background" => "none",
+				"secondCtaType" => "secondary",
+			],
+			new BlokMetaData(
+				uuid: "c33acdbe-6d1b-4303-8941-ee59a3861e80",
+				type: "rich-text-block",
+				spaceId: "123",
+			)
+		];
+
+		yield "draft" => [
+			[
+				"cta" => [],
+				"_uid" => "c33acdbe-6d1b-4303-8941-ee59a3861e80",
+				"component" => "rich-text-block",
+				"background" => "none",
+				"secondCtaType" => "secondary",
+				"_editable" => "<--#storyblok-->"
+			],
+			new BlokMetaData(
+				uuid: "c33acdbe-6d1b-4303-8941-ee59a3861e80",
+				type: "rich-text-block",
+				spaceId: "123",
+				previewData: "<--#storyblok-->",
+			)
+		];
+	}
+
+	/**
+	 *
+	 */
+	#[DataProvider("provideValidBlokMetaData")]
+	public function testValidBlokMetaData (
+		array $data,
+		BlokMetaData $expected,
+	) : void
+	{
+		$hydrator = new MetaDataHydrator();
+		$metaData = $hydrator->hydrateBlokMetaData($data, "123");
+
+		self::assertEquals($expected, $metaData);
 	}
 }

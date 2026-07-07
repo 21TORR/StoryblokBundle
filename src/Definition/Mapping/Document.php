@@ -2,6 +2,8 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
+use Torr\Storyblok\Definition\Data\AdminUiSettings;
+
 /**
  * @final
  */
@@ -12,6 +14,7 @@ readonly class Document
 	 */
 	public function __construct (
 		public string $key,
-		public string $label
+		public string $label,
+		public ?AdminUiSettings $adminUi = null,
 	) {}
 }

@@ -12,6 +12,6 @@ use Torr\Storyblok\Story\Data\DocumentStory;
 #[Document("simple", "simple")]
 class Simple extends DocumentStory
 {
-	#[TextField("text", "Text")]
+	#[TextField("Text")]
 	public ?string $text;
 }

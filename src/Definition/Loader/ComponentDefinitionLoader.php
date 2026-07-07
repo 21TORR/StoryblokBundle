@@ -4,6 +4,8 @@ namespace Torr\Storyblok\Definition\Loader;
 
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
+use Torr\Storyblok\Definition\Data\EmbedDefinition;
+use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\DuplicateFieldDefinitionException;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Mapping\Blok;
@@ -25,7 +27,10 @@ readonly class ComponentDefinitionLoader
 	/**
 	 *
 	 */
-	public function loadDefinition (string $storyClass) : ?ComponentDefinition
+	public function loadDefinition (
+		DefinitionRegistry $registry,
+		string $storyClass,
+	) : ?ComponentDefinition
 	{
 		$reflectionClass = new \ReflectionClass($storyClass);
 		$blok = $this->loadAttribute($reflectionClass, Blok::class);
@@ -63,14 +68,25 @@ readonly class ComponentDefinitionLoader
 		}
 
 		return null !== $blok
-			? $this->transformBlok($reflectionClass, $blok)
-			: $this->transformDocument($reflectionClass, $document);
+			? $this->transformBlok($registry, $reflectionClass, $blok)
+			: $this->transformDocument($registry, $reflectionClass, $document);
 	}
+
+	public function loadEmbedDefinition (DefinitionRegistry $registry, string $embedClass) : EmbedDefinition
+	{
+		return new EmbedDefinition(
+			embeddedClass: $embedClass,
+			label: "bah",
+			key: $embedClass,
+			fields: $this->loadFields($registry, new \ReflectionClass($embedClass)),
+		);
+	}
+
 
 	/**
 	 *
 	 */
-	private function transformBlok (\ReflectionClass $storyClass, Blok $blok) : ComponentDefinition
+	private function transformBlok (DefinitionRegistry $registry, \ReflectionClass $storyClass, Blok $blok) : ComponentDefinition
 	{
 		if (!\is_a($storyClass->getName(), BlokStory::class, true))
 		{
@@ -86,14 +102,18 @@ readonly class ComponentDefinitionLoader
 			label: $blok->label,
 			key: $blok->key,
 			type: ComponentType::Nested,
-			fields: $this->loadFields($storyClass),
+			fields: $this->loadFields($registry, $storyClass),
 		);
 	}
 
 	/**
 	 *
 	 */
-	private function transformDocument (\ReflectionClass $storyClass, Document $document) : ComponentDefinition
+	private function transformDocument (
+		DefinitionRegistry $registry,
+		\ReflectionClass $storyClass,
+		Document $document,
+	) : ComponentDefinition
 	{
 		if (!\is_a($storyClass->getName(), DocumentStory::class, true))
 		{
@@ -109,20 +129,23 @@ readonly class ComponentDefinitionLoader
 			label: $document->label,
 			key: $document->key,
 			type: ComponentType::Standalone,
-			fields: $this->loadFields($storyClass),
+			fields: $this->loadFields($registry, $storyClass),
 		);
 	}
 
 	/**
 	 *
 	 */
-	private function loadFields (\ReflectionClass $class) : array
+	private function loadFields (
+		DefinitionRegistry $registry,
+		\ReflectionClass $class,
+	) : array
 	{
 		$fields = [];
 
 		foreach ($class->getProperties() as $property)
 		{
-			foreach ($this->fieldDefinitionLoader->loadFieldDefinitions($property) as $key => $definition)
+			foreach ($this->fieldDefinitionLoader->loadFieldDefinitions($registry, $property) as $key => $definition)
 			{
 				if (\array_key_exists($key, $fields))
 				{

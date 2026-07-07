@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Story\Hydrator;
 
 use Symfony\Component\PropertyAccess\Exception\AccessException;
+use Symfony\Component\PropertyAccess\Exception\InvalidTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
@@ -12,6 +13,7 @@ use Torr\Storyblok\Story\Data\DocumentStory;
 use Torr\Storyblok\Story\Exception\BrokenStoryDataException;
 use Torr\Storyblok\Story\Exception\InaccessiblePropertyException;
 use Torr\Storyblok\Story\Exception\UnknownComponentException;
+use Torr\Storyblok\Story\Exception\UnknownEmbedException;
 
 /**
  * @final
@@ -31,13 +33,13 @@ readonly class StoryHydrator
 	/**
 	 *
 	 */
-	public function hydrateDocument (array $data, string $spaceId, int $localeLevel) : BlokStory|DocumentStory|null
+	public function hydrateDocument (array $data, string $spaceId, int $localeLevel) : DocumentStory
 	{
 		$type = $data["content"]["component"] ?? null;
 
 		if (!\is_string($type))
 		{
-			throw new BrokenStoryDataException("Could not hydrate story: missing component type");
+			throw new BrokenStoryDataException("Could not hydrate document story: missing component type");
 		}
 
 		$definition = $this->definitionRegistry->getByKey($type);
@@ -55,7 +57,7 @@ readonly class StoryHydrator
 		if (!$story instanceof DocumentStory)
 		{
 			throw new BrokenStoryDataException(\sprintf(
-				"Tried to instantiate document story, but got blok story at '%s'",
+				"Tried to instantiate document story, but got '%s'",
 				$definition->storyClass,
 			));
 		}
@@ -71,17 +73,88 @@ readonly class StoryHydrator
 		return $story;
 	}
 
+	public function hydrateBlok (array $data) : BlokStory
+	{
+		$type = $data["component"] ?? null;
+
+		if (!\is_string($type))
+		{
+			throw new BrokenStoryDataException("Could not hydrate blok story: missing component type");
+		}
+
+		$definition = $this->definitionRegistry->getByKey($type);
+
+		if (null === $definition)
+		{
+			throw new UnknownComponentException(\sprintf(
+				"Could not hydrate story: unknown component '%s'",
+				$type,
+			));
+		}
+
+		$story = new \ReflectionClass($definition->storyClass)->newInstance();
+
+		if (!$story instanceof BlokStory)
+		{
+			throw new BrokenStoryDataException(\sprintf(
+				"Tried to instantiate blok story, but got '%s'",
+				$definition->storyClass,
+			));
+		}
+
+		\assert($story instanceof BlokStory);
+		$story->metaData = $this->metaDataHydrator->hydrateBlokMetaData($data);
+
+		foreach ($definition->fields as $field)
+		{
+			$this->hydrateValue($story, $field, $data);
+		}
+
+		return $story;
+	}
+
+
+	public function hydrateEmbed (string $embedClass, string $contentPathPrefix, array $data) : object
+	{
+		$definition = $this->definitionRegistry->getEmbeddedDefinition($embedClass);
+
+		if (null === $definition)
+		{
+			throw new UnknownEmbedException(\sprintf(
+				"Could not hydrate story: unknown component '%s'",
+				$embedClass,
+			));
+		}
+
+		$story = new \ReflectionClass($embedClass)->newInstance();
+
+		foreach ($definition->fields as $field)
+		{
+			$this->hydrateValue($story, $field, $data, $contentPathPrefix);
+		}
+
+		return $story;
+	}
+
 
 
 	/**
 	 */
-	private function hydrateValue (object $story, FieldDefinition $definition, array $data) : void
+	private function hydrateValue (
+		object $story,
+		FieldDefinition $definition,
+		array $data,
+		string $contentPathPrefix = "",
+	) : void
 	{
 		try
 		{
-			$transformedValue = $definition->transformStoryblokValue(
-				$data[$definition->key] ?? null,
-				$this->componentContext,
+			$transformedValue = $definition->field->transformStoryblokValue(
+				contentPath: $contentPathPrefix . $definition->key,
+				storyData: $data,
+				definition: $definition,
+				context: $this->componentContext,
+				hydrator: $this,
 			);
 
 			$this->accessor->setValue($story, $definition->propertyPath, $transformedValue);
@@ -90,9 +163,21 @@ readonly class StoryHydrator
 		{
 			throw new InaccessiblePropertyException(
 				message: \sprintf(
-					"Can't find a way to hydrate value of property '%s' in class '%s'",
-					$definition->propertyPath,
+					"Can't find a way to hydrate value of property '%s::\$%s'",
 					$story::class,
+					$definition->propertyPath,
+				),
+				previous: $exception,
+			);
+		}
+		catch (InvalidTypeException $exception)
+		{
+			throw new InaccessiblePropertyException(
+				message: \sprintf(
+					"Can't find a way to hydrate value of property '%s::\$%s': %s",
+					$story::class,
+					$definition->propertyPath,
+					$exception->getMessage(),
 				),
 				previous: $exception,
 			);

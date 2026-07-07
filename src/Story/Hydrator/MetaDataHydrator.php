@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Story\Exception\BrokenStoryDataException;
+use Torr\Storyblok\Story\MetaData\BlokMetaData;
 use Torr\Storyblok\Story\MetaData\DocumentMetaData;
 
 /**
@@ -59,6 +60,7 @@ readonly class MetaDataHydrator
 						new Collection(
 							fields: [
 								"_editable" => [
+									new NotNull(),
 									new Type("string"),
 								],
 							],
@@ -174,6 +176,56 @@ readonly class MetaDataHydrator
 			alternates: $data["alternates"],
 			spaceId: $spaceId,
 			localeLevel: $localeLevel,
+		);
+	}
+
+	/**
+	 */
+	public function hydrateBlokMetaData (
+		array $data,
+	) : BlokMetaData
+	{
+		$isValid = $this->validator->validate($data, [
+			new NotNull(),
+			new Collection(
+				fields: [
+					"_uid" => [
+						new NotNull(),
+						new Type("string"),
+					],
+					"component" => [
+						new NotNull(),
+						new Type("string"),
+					],
+				],
+				allowExtraFields: true,
+				allowMissingFields: false,
+			),
+			new Collection(
+				fields: [
+					"_editable" => [
+						new NotNull(),
+						new Type("string"),
+					],
+				],
+				allowExtraFields: true,
+				allowMissingFields: true,
+			),
+		]);
+
+		if (\count($isValid) > 0)
+		{
+			throw new BrokenStoryDataException(\sprintf(
+				"Invalid document meta data: %s",
+				$isValid,
+			));
+		}
+
+		return new BlokMetaData(
+			uuid: $data["_uid"],
+			type: $data["component"],
+			spaceId: "0",
+			previewData: $data["_editable"] ?? null,
 		);
 	}
 

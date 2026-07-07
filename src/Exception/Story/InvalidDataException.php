@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Exception\Story;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Exception\StoryblokException;
 use Torr\Storyblok\Field\FieldDefinitionInterface;
 
@@ -13,10 +14,10 @@ final class InvalidDataException extends \RuntimeException implements StoryblokE
 	 */
 	public function __construct (
 		string $message,
-		/** @var string[]|null $contentPath */
-		public readonly ?array $contentPath = null,
-		public readonly FieldDefinitionInterface|AbstractComponent|null $field = null,
-		public readonly mixed $data = null,
+		/** @var string[]|null $propertyHierarchy */
+		public readonly ?array $propertyHierarchy = null,
+		public readonly ?MappedField $field = null,
+		public readonly mixed $fieldValue = null,
 		public readonly ?ConstraintViolationListInterface $violations = null,
 		?\Throwable $previous = null,
 	)

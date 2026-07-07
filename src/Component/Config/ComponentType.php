@@ -4,9 +4,9 @@ namespace Torr\Storyblok\Component\Config;
 
 enum ComponentType
 {
+	// "Universal" not supported by design
 	case Standalone;
 	case Nested;
-	case Universal;
 
 	public function toManagementApiData () : array
 	{
@@ -18,10 +18,6 @@ enum ComponentType
 			],
 			self::Nested => [
 				"is_root" => false,
-				"is_nestable" => true,
-			],
-			self::Universal => [
-				"is_root" => true,
 				"is_nestable" => true,
 			],
 		};

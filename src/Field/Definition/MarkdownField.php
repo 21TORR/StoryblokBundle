@@ -79,7 +79,7 @@ final class MarkdownField extends AbstractField
 	{
 		\assert(null === $data || \is_string($data));
 
-		$transformed = $context->dataTransformer->normalizeOptionalString($data);
+		$transformed = $context->normalizeOptionalString($data);
 
 		$dataVisitor?->onDataVisit($this, $transformed);
 

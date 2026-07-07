@@ -15,6 +15,6 @@ readonly abstract class AbstractMetaData
 		 */
 		public string $type,
 		public string $spaceId,
-		public ?string $previewData,
+		public ?string $previewData = null,
 	) {}
 }

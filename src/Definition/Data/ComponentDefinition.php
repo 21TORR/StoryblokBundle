@@ -5,11 +5,12 @@ namespace Torr\Storyblok\Definition\Data;
 use Torr\Storyblok\Component\Config\ComponentType;
 
 /**
- * @final
+ * The definition of a whole component
  */
-readonly class ComponentDefinition
+final readonly class ComponentDefinition
 {
 	/**
+	 * @param array<string, FieldDefinition> $fields
 	 */
 	public function __construct (
 		public string $storyClass,
@@ -18,4 +19,11 @@ readonly class ComponentDefinition
 		public ComponentType $type,
 		public array $fields,
 	) {}
+
+	/**
+	 */
+	public function getField (string $key) : ?FieldDefinition
+	{
+		return $this->fields[$key] ?? null;
+	}
 }

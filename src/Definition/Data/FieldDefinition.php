@@ -4,32 +4,33 @@ namespace Torr\Storyblok\Definition\Data;
 
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Field\MappedField;
+use Torr\Storyblok\Definition\Mapping\Required;
+use Torr\Storyblok\Definition\Mapping\Translatable;
 use Torr\Storyblok\Field\FieldType;
+use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 
 /**
- * @final
+ * Definition of a single field
  */
-readonly class FieldDefinition
+final readonly class FieldDefinition
 {
 	/**
 	 */
 	public function __construct (
 		public string $key,
 		public string $label,
-		public FieldType $type,
 		public string $propertyPath,
 		public array $data,
 		public MappedField $field,
+		public mixed $propertyType,
+		public ?Required $required = null,
+		public ?Translatable $translatable = null,
 	) {}
-
 
 	/**
 	 */
-	public function transformStoryblokValue (
-		mixed $value,
-		ComponentContext $context,
-	) : mixed
+	public function getFieldType () : FieldType
 	{
-		return $this->field->transformStoryblokValue($value, $context);
+		return $this->field->getType();
 	}
 }

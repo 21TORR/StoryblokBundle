@@ -3,6 +3,10 @@
 namespace Torr\Storyblok\Definition;
 
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
+use Torr\Storyblok\Definition\Data\EmbedDefinition;
+use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
+use Torr\Storyblok\Story\Data\BlokStory;
+use Torr\Storyblok\Story\Data\DocumentStory;
 
 /**
  * @final
@@ -11,31 +15,57 @@ class DefinitionRegistry
 {
 	private array $byStoryClass = [];
 	private array $byKey = [];
+	private array $embeddedRegistry = [];
 
 	/**
 	 * @param iterable<ComponentDefinition> $definitions
 	 */
 	public function __construct (
-		iterable $definitions = [],
-	)
-	{
-		foreach ($definitions as $definition)
-		{
-			$this->byKey[$definition->key] = $definition;
-			$this->byKey[$definition->storyClass] = $definition;
-		}
-	}
+		private readonly ComponentDefinitionLoader $definitionLoader,
+	) {}
 
 	/**
+	 * @param class-string<BlokStory|DocumentStory> $storyClass
 	 * @return $this
 	 */
-	public function register (ComponentDefinition $definition) : self
+	public function register (string $storyClass) : self
 	{
+		if (array_key_exists($storyClass, $this->byStoryClass))
+		{
+			return $this;
+		}
+
+		$definition = $this->definitionLoader->loadDefinition($this, $storyClass);
 		$this->byKey[$definition->key] = $definition;
 		$this->byStoryClass[$definition->storyClass] = $definition;
 
 		return $this;
 	}
+
+	/**
+	 * @return $this
+	 */
+	public function registerEmbedded (string $embeddedClass) : self
+	{
+		if (\array_key_exists($embeddedClass, $this->embeddedRegistry))
+		{
+			return $this;
+		}
+
+		$definition = $this->definitionLoader->loadEmbedDefinition($this, $embeddedClass);
+		$this->embeddedRegistry[$definition->embeddedClass] = $definition;
+
+		return $this;
+	}
+
+
+	/**
+	 */
+	public function getByKey (string $key) : ?ComponentDefinition
+	{
+		return $this->byKey[$key] ?? null;
+	}
+
 
 	/**
 	 */
@@ -44,10 +74,8 @@ class DefinitionRegistry
 		return $this->byStoryClass[$storyClass] ?? null;
 	}
 
-	/**
-	 */
-	public function getByKey (string $key) : ?ComponentDefinition
+	public function getEmbeddedDefinition (string $embeddedClass) : ?EmbedDefinition
 	{
-		return $this->byKey[$key] ?? null;
+		return $this->embeddedRegistry[$embeddedClass] ?? null;
 	}
 }
