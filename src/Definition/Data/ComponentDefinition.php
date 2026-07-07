@@ -10,13 +10,13 @@ use Torr\Storyblok\Component\Config\ComponentType;
 final readonly class ComponentDefinition
 {
 	/**
-	 * @param array<string, FieldDefinition> $fields
 	 */
 	public function __construct (
 		public string $storyClass,
 		public string $label,
 		public string $key,
 		public ComponentType $type,
+		/** @var array<string, FieldDefinition> $fields */
 		public array $fields,
 	) {}
 
