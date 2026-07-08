@@ -31,4 +31,9 @@ final readonly class FieldDefinition
 	{
 		return $this->field->getType();
 	}
+
+	public function getFieldDefinitions ()
+	{
+
+	}
 }

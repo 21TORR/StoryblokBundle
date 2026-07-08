@@ -4,6 +4,7 @@ namespace Tests\Torr\Storyblok\Definition\Loader;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Tests\Torr\Storyblok\Fixtures\Components\FieldSortOrder;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidFields\DuplicateField;
 use Tests\Torr\Storyblok\Fixtures\Field\ComponentWithTextField;
 use Torr\Storyblok\Definition\DefinitionRegistry;
@@ -48,7 +49,33 @@ class FieldDefinitionsLoaderTest extends TestCase
 		$this->expectException(InvalidFieldDefinitionException::class);
 		$this->expectExceptionMessage($expectedException);
 
-		$loader = new ComponentDefinitionLoader(new FieldDefinitionLoader());
-		$loader->loadDefinition($storyClass);
+		$registry = $this->createRegistry()
+			->register($storyClass);
+	}
+
+
+	public function testSortOrder () : void
+	{
+		$registry = $this->createRegistry()
+			->register(FieldSortOrder::class);
+
+		$definition = $registry->getByStoryClass(FieldSortOrder::class);
+		dump($definition->fields);
+		self::assertCount(4, $definition->fields);
+		self::assertSame("first", $definition->fields[0]->key);
+		self::assertSame("nested_label", $definition->fields[1]->key);
+		self::assertSame("nested_link", $definition->fields[2]->key);
+		self::assertSame("last", $definition->fields[3]->key);
+	}
+
+	/**
+	 */
+	private function createRegistry () : DefinitionRegistry
+	{
+		return new DefinitionRegistry(
+			new ComponentDefinitionLoader(
+				new FieldDefinitionLoader(),
+			),
+		);
 	}
 }

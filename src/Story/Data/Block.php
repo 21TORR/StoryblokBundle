@@ -7,7 +7,6 @@ use Torr\Storyblok\Story\Exception\InvalidStoryInitializationException;
 use Torr\Storyblok\Story\MetaData\BlockMetaData;
 
 /**
- * @final
  */
 #[Exclude]
 abstract class Block

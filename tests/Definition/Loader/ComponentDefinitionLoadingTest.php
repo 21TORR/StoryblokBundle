@@ -20,7 +20,6 @@ use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
-use Torr\Storyblok\Definition\Mapping\NestedBlock;
 use Torr\Storyblok\Definition\Mapping\Component;
 use Torr\Storyblok\Story\Data\Block;
 use Torr\Storyblok\Story\Data\Story;

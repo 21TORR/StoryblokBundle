@@ -16,7 +16,7 @@ final readonly class ComponentDefinition
 		public string $key,
 		public string $label,
 		public ComponentType $type,
-		/** @var array<string, FieldDefinition> $fields */
+		/** @var array<string, FieldDefinition|EmbedDefinition> $fields */
 		public array $fields,
 	) {}
 
