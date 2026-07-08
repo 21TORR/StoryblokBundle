@@ -8,10 +8,10 @@ use Torr\Storyblok\Definition\Data\EmbedDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\DuplicateFieldDefinitionException;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
-use Torr\Storyblok\Definition\Mapping\Blok;
-use Torr\Storyblok\Definition\Mapping\Document;
-use Torr\Storyblok\Story\Data\BlokStory;
-use Torr\Storyblok\Story\Data\DocumentStory;
+use Torr\Storyblok\Definition\Mapping\NestedBlock;
+use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
+use Torr\Storyblok\Story\Data\NestedStory;
+use Torr\Storyblok\Story\Data\StandaloneStory;
 
 /**
  * @final
@@ -33,26 +33,26 @@ readonly class ComponentDefinitionLoader
 	) : ?ComponentDefinition
 	{
 		$reflectionClass = new \ReflectionClass($storyClass);
-		$blok = $this->loadAttribute($reflectionClass, Blok::class);
-		$document = $this->loadAttribute($reflectionClass, Document::class);
+		$blok = $this->loadAttribute($reflectionClass, NestedBlock::class);
+		$document = $this->loadAttribute($reflectionClass, StandaloneBlock::class);
 
 		if (null === $blok && null === $document)
 		{
-			if (\is_a($storyClass, BlokStory::class, true))
+			if (is_a($storyClass, NestedStory::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
 					"Blok component '%s' must have attribute '%s'",
 					$storyClass,
-					Blok::class,
+					NestedBlock::class,
 				));
 			}
 
-			if (\is_a($storyClass, DocumentStory::class, true))
+			if (is_a($storyClass, StandaloneStory::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
 					"Document component '%s' must have attribute '%s'",
 					$storyClass,
-					Document::class
+					StandaloneBlock::class,
 				));
 			}
 
@@ -82,18 +82,17 @@ readonly class ComponentDefinitionLoader
 		);
 	}
 
-
 	/**
 	 *
 	 */
-	private function transformBlok (DefinitionRegistry $registry, \ReflectionClass $storyClass, Blok $blok) : ComponentDefinition
+	private function transformBlok (DefinitionRegistry $registry, \ReflectionClass $storyClass, NestedBlock $blok) : ComponentDefinition
 	{
-		if (!\is_a($storyClass->getName(), BlokStory::class, true))
+		if (!is_a($storyClass->getName(), NestedStory::class, true))
 		{
 			throw new InvalidComponentDefinitionException(\sprintf(
 				"Blok component '%s' must extend '%s'",
 				$storyClass->getName(),
-				BlokStory::class,
+				NestedStory::class,
 			));
 		}
 
@@ -112,15 +111,15 @@ readonly class ComponentDefinitionLoader
 	private function transformDocument (
 		DefinitionRegistry $registry,
 		\ReflectionClass $storyClass,
-		Document $document,
+		StandaloneBlock $document,
 	) : ComponentDefinition
 	{
-		if (!\is_a($storyClass->getName(), DocumentStory::class, true))
+		if (!is_a($storyClass->getName(), StandaloneStory::class, true))
 		{
 			throw new InvalidComponentDefinitionException(\sprintf(
 				"Document component '%s' must extend '%s'",
 				$storyClass->getName(),
-				DocumentStory::class,
+				StandaloneStory::class,
 			));
 		}
 
@@ -163,9 +162,9 @@ readonly class ComponentDefinitionLoader
 		return $fields;
 	}
 
-
 	/**
 	 * @template AttributeType of object
+	 *
 	 * @param class-string<AttributeType> $attribute
 	 *
 	 * @return AttributeType|null

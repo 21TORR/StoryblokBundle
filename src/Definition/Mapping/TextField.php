@@ -27,9 +27,7 @@ readonly class TextField extends MappedField
 	)
 	{
 		parent::__construct($label, $key, $defaultValue);
-
 	}
-
 
 	/**
 	 *
@@ -68,12 +66,12 @@ readonly class TextField extends MappedField
 		FieldDefinition $fieldDefinition,
 		ComponentContext $context,
 		array $contentPathHierarchy,
-	)
+	) : void
 	{
 		$value = $storyData[$contentPath] ?? null;
 
 		$context->ensureDataIsValid($contentPath, $storyData, $this, $contentPathHierarchy, [
-			//!$this->allowMissingData && $this->required ? new NotNull() : null,
+			// !$this->allowMissingData && $this->required ? new NotNull() : null,
 			new Type("string"),
 			// We can't validate the length here, as it is not guaranteed if you add
 			// the max-length after content was added.

@@ -4,13 +4,13 @@ namespace Tests\Torr\Storyblok\Fixtures\Block;
 
 use Torr\Storyblok\Content\RichText;
 use Torr\Storyblok\Definition\Mapping as Storyblok;
-use Torr\Storyblok\Story\Data\BlokStory;
+use Torr\Storyblok\Story\Data\NestedStory;
 
 /**
  * @final
  */
-#[Storyblok\Blok("rich-text-block", "RTE")]
-class RichTextBlock extends BlokStory
+#[Storyblok\NestedBlock("rich-text-block", "RTE")]
+class RichTextBlock extends NestedStory
 {
 	#[Storyblok\RichTextField("Content")]
 	public RichText $content;

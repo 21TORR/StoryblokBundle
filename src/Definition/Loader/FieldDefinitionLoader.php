@@ -20,7 +20,7 @@ readonly class FieldDefinitionLoader
 	 */
 	public function loadFieldDefinitions (
 		DefinitionRegistry $registry,
-		\ReflectionProperty $property
+		\ReflectionProperty $property,
 	) : array
 	{
 		$field = $this->fetchFieldAttribute($property);
@@ -36,9 +36,9 @@ readonly class FieldDefinitionLoader
 
 			if (null === $type)
 			{
-				throw new InvalidFieldDefinitionException(\sprintf(
+				throw new InvalidFieldDefinitionException(
 					"Properties with an Embed Field may only use a single property type",
-				));
+				);
 			}
 
 			$registry->registerEmbedded((string) $type);
@@ -74,7 +74,6 @@ readonly class FieldDefinitionLoader
 		];
 	}
 
-
 	/**
 	 *
 	 */
@@ -84,7 +83,7 @@ readonly class FieldDefinitionLoader
 
 		foreach ($property->getAttributes() as $attribute)
 		{
-			if (\is_a($attribute->getName(), MappedField::class, true))
+			if (is_a($attribute->getName(), MappedField::class, true))
 			{
 				if (null !== $field)
 				{
@@ -103,9 +102,9 @@ readonly class FieldDefinitionLoader
 		return $field;
 	}
 
-
 	/**
 	 * @template AttributeType of object
+	 *
 	 * @param class-string<AttributeType> $attribute
 	 *
 	 * @return AttributeType|null

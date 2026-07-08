@@ -2,16 +2,15 @@
 
 namespace Torr\Storyblok\Story\MetaData;
 
-use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Translation\LocaleHelper;
 
-final readonly class DocumentMetaData extends AbstractMetaData
+final readonly class StandaloneStoryMetaData extends AbstractMetaData
 {
 	private array $slugSegments;
 	public string $fullSlug;
 
 	/**
-	 * @param array<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int}> $alternates
+	 * @param list<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int}> $alternates
 	 */
 	public function __construct (
 		string $uuid,
@@ -21,7 +20,7 @@ final readonly class DocumentMetaData extends AbstractMetaData
 		string $fullSlug,
 		public \DateTimeImmutable $createdAt,
 		public ?\DateTimeImmutable $firstPublishedAt,
-		public ?\DateTimeImmutable  $publishedAt,
+		public ?\DateTimeImmutable $publishedAt,
 		public string $id,
 		public bool $isStartPage,
 		public string $locale,
@@ -35,7 +34,6 @@ final readonly class DocumentMetaData extends AbstractMetaData
 		$this->slugSegments = explode("/", $this->fullSlug);
 	}
 
-
 	/**
 	 *
 	 */
@@ -43,7 +41,6 @@ final readonly class DocumentMetaData extends AbstractMetaData
 	{
 		return $this->slugSegments[\count($this->slugSegments) - 1];
 	}
-
 
 	/**
 	 * Returns the slug of the parent
@@ -68,7 +65,6 @@ final readonly class DocumentMetaData extends AbstractMetaData
 			? $firstSegment
 			: null;
 	}
-
 
 	/**
 	 * @return list<array{id: int, name: string, slug: string, published: bool, full_slug: string, is_folder: bool, parent_id: int, locale: ?string}>

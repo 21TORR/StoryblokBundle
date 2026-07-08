@@ -2,15 +2,15 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components;
 
-use Torr\Storyblok\Definition\Mapping\Document;
+use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
 use Torr\Storyblok\Definition\Mapping\TextField;
-use Torr\Storyblok\Story\Data\DocumentStory;
+use Torr\Storyblok\Story\Data\StandaloneStory;
 
 /**
  * @final
  */
-#[Document("simple", "Simple Label")]
-class Simple extends DocumentStory
+#[StandaloneBlock("simple", "Simple Label")]
+class Simple extends StandaloneStory
 {
 	#[TextField("Text")]
 	public ?string $text;

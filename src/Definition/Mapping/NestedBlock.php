@@ -2,19 +2,17 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
-use Torr\Storyblok\Definition\Data\AdminUiSettings;
-
 /**
  * @final
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-readonly class Document
+readonly class NestedBlock
 {
 	/**
 	 */
 	public function __construct (
 		public string $key,
 		public string $label,
-		public ?AdminUiSettings $adminUi = null,
+		public ?string $displayAdmin = null,
 	) {}
 }

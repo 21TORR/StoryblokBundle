@@ -8,9 +8,9 @@ use Torr\Storyblok\Field\FieldType;
 /**
  * @final
  */
-//#[\Attribute(\Attribute::TARGET_PROPERTY)]
-//readonly class IntegerField extends MappedField
-//{
+// #[\Attribute(\Attribute::TARGET_PROPERTY)]
+// readonly class IntegerField extends MappedField
+// {
 //	/**
 //	 */
 //	public function __construct (
@@ -54,5 +54,5 @@ use Torr\Storyblok\Field\FieldType;
 //		);
 //	}
 //
-//}
+// }
 //

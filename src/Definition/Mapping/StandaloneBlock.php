@@ -2,17 +2,19 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
+use Torr\Storyblok\Definition\Data\AdminUiSettings;
+
 /**
  * @final
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-readonly class Blok
+readonly class StandaloneBlock
 {
 	/**
 	 */
 	public function __construct (
 		public string $key,
 		public string $label,
-		public ?string $displayAdmin = null,
+		public ?AdminUiSettings $adminUi = null,
 	) {}
 }

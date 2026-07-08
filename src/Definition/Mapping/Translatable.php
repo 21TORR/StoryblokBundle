@@ -2,12 +2,10 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
-use Attribute;
-
 /**
  * @final
  */
-#[Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 readonly class Translatable
 {
 }

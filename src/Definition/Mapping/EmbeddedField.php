@@ -6,7 +6,6 @@ use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Story\Exception\BrokenStoryDataException;
 use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 
 /**
@@ -24,7 +23,6 @@ readonly class EmbeddedField extends MappedField
 	{
 		parent::__construct($label, $key);
 	}
-
 
 	/**
 	 *

@@ -2,11 +2,11 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition;
 
-use Torr\Storyblok\Story\Data\BlokStory;
+use Torr\Storyblok\Story\Data\NestedStory;
 
 /**
  * @final
  */
-class BlokMissingAttribute extends BlokStory
+class NestedMissingAttribute extends NestedStory
 {
 }

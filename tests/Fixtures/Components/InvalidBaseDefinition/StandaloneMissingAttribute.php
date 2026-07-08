@@ -2,11 +2,11 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition;
 
-use Torr\Storyblok\Story\Data\DocumentStory;
+use Torr\Storyblok\Story\Data\StandaloneStory;
 
 /**
  * @final
  */
-class DocumentMissingAttribute extends DocumentStory
+class StandaloneMissingAttribute extends StandaloneStory
 {
 }

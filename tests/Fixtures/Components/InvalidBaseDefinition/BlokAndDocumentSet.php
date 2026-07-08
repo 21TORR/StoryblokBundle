@@ -2,14 +2,14 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition;
 
-use Torr\Storyblok\Definition\Mapping\Blok;
-use Torr\Storyblok\Definition\Mapping\Document;
+use Torr\Storyblok\Definition\Mapping\NestedBlock;
+use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
 
 /**
  * @final
  */
-#[Blok("test", "test")]
-#[Document("test", "test")]
+#[NestedBlock("test", "test")]
+#[StandaloneBlock("test", "test")]
 class BlokAndDocumentSet
 {
 }

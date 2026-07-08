@@ -2,12 +2,12 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition;
 
-use Torr\Storyblok\Definition\Mapping\Document;
+use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
 
 /**
  * @final
  */
-#[Document(
+#[StandaloneBlock(
 	key: "document",
 	label: "Document",
 )]

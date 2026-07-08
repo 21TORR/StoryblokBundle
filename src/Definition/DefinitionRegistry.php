@@ -5,8 +5,8 @@ namespace Torr\Storyblok\Definition;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\Data\EmbedDefinition;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
-use Torr\Storyblok\Story\Data\BlokStory;
-use Torr\Storyblok\Story\Data\DocumentStory;
+use Torr\Storyblok\Story\Data\NestedStory;
+use Torr\Storyblok\Story\Data\StandaloneStory;
 
 /**
  * @final
@@ -18,19 +18,19 @@ class DefinitionRegistry
 	private array $embeddedRegistry = [];
 
 	/**
-	 * @param iterable<ComponentDefinition> $definitions
 	 */
 	public function __construct (
 		private readonly ComponentDefinitionLoader $definitionLoader,
 	) {}
 
 	/**
-	 * @param class-string<BlokStory|DocumentStory> $storyClass
+	 * @param class-string<NestedStory|StandaloneStory> $storyClass
+	 *
 	 * @return $this
 	 */
 	public function register (string $storyClass) : self
 	{
-		if (array_key_exists($storyClass, $this->byStoryClass))
+		if (\array_key_exists($storyClass, $this->byStoryClass))
 		{
 			return $this;
 		}
@@ -58,14 +58,12 @@ class DefinitionRegistry
 		return $this;
 	}
 
-
 	/**
 	 */
 	public function getByKey (string $key) : ?ComponentDefinition
 	{
 		return $this->byKey[$key] ?? null;
 	}
-
 
 	/**
 	 */

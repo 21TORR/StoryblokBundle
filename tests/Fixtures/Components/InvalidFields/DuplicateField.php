@@ -2,16 +2,16 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidFields;
 
-use Torr\Storyblok\Definition\Mapping\Blok;
 use Torr\Storyblok\Definition\Mapping\IntegerField;
+use Torr\Storyblok\Definition\Mapping\NestedBlock;
 use Torr\Storyblok\Definition\Mapping\TextField;
-use Torr\Storyblok\Story\Data\BlokStory;
+use Torr\Storyblok\Story\Data\NestedStory;
 
 /**
  * @final
  */
-#[Blok("test", "test")]
-class DuplicateField extends BlokStory
+#[NestedBlock("test", "test")]
+class DuplicateField extends NestedStory
 {
 	#[TextField("field", key: "field")]
 	#[IntegerField("field2", key: "field2")]

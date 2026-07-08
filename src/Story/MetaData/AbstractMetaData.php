@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Story\MetaData;
 
 /**
  */
-readonly abstract class AbstractMetaData
+abstract readonly class AbstractMetaData
 {
 	/**
 	 */

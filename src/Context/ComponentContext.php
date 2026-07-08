@@ -18,8 +18,6 @@ readonly class ComponentContext
 	public ImageDimensionsExtractor $imageDimensionsExtractor;
 
 	/**
-	 * @param ImageDimensionsExtractor $imageDimensionsExtractor
-	 * @param ImageDimensionsExtractor|null $imageDimensionsExtractor
 	 */
 	public function __construct (
 		?ImageDimensionsExtractor $imageDimensionsExtractor = null,
@@ -33,12 +31,11 @@ readonly class ComponentContext
 		$this->imageDimensionsExtractor = $imageDimensionsExtractor ?? new ImageDimensionsExtractor();
 	}
 
-
 	/**
 	 * Ensures that the given data is valid
 	 *
-	 * @param list<Constraint|null> $constraints
 	 * @param string[]              $contentPathHierarchy The path to the given content element
+	 * @param list<Constraint|null> $constraints
 	 *
 	 * @return void|never
 	 *

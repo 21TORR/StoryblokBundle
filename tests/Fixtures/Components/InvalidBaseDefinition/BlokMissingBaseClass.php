@@ -2,12 +2,12 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition;
 
-use Torr\Storyblok\Definition\Mapping\Blok;
+use Torr\Storyblok\Definition\Mapping\NestedBlock;
 
 /**
  * @final
  */
-#[Blok(
+#[NestedBlock(
 	key: "blok",
 	label: "Blok",
 )]

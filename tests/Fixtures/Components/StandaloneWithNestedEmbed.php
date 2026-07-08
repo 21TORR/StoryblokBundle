@@ -4,13 +4,13 @@ namespace Tests\Torr\Storyblok\Fixtures\Components;
 
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbedWithNestedEmbed;
 use Torr\Storyblok\Definition\Mapping as Storyblok;
-use Torr\Storyblok\Story\Data\DocumentStory;
+use Torr\Storyblok\Story\Data\StandaloneStory;
 
 /**
  * @final
  */
-#[Storyblok\Document("with-nested-embed", "With NestedEmbed")]
-class DocumentWithNestedEmbed extends DocumentStory
+#[Storyblok\StandaloneBlock("with-nested-embed", "With NestedEmbed")]
+class StandaloneWithNestedEmbed extends StandaloneStory
 {
 	#[Storyblok\TextField("Headline")]
 	public string $headline;

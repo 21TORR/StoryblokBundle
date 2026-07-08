@@ -3,26 +3,29 @@
 namespace Tests\Torr\Storyblok\Definition\Loader;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Tests\Torr\Storyblok\Fixtures\Components\Empty\EmptyClass;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokAndDocumentSet;
-use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingBaseClass;
-use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissingBaseClass;
+use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\NestedMissingAttribute;
+use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\StandaloneMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
-use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
-use Torr\Storyblok\Definition\Mapping\Blok;
-use Torr\Storyblok\Definition\Mapping\Document;
-use Torr\Storyblok\Story\Data\BlokStory;
-use Torr\Storyblok\Story\Data\DocumentStory;
+use Torr\Storyblok\Definition\Mapping\NestedBlock;
+use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
+use Torr\Storyblok\Story\Data\NestedStory;
+use Torr\Storyblok\Story\Data\StandaloneStory;
 
-class ComponentDefinitionLoadingTest extends TestCase
+/**
+ * @internal
+ */
+final class ComponentDefinitionLoadingTest extends TestCase
 {
 	/**
 	 *
@@ -30,11 +33,11 @@ class ComponentDefinitionLoadingTest extends TestCase
 	public static function provideInvalidBaseDefinition () : iterable
 	{
 		yield "blok, missing attribute" => [
-			BlokMissingAttribute::class,
+			NestedMissingAttribute::class,
 			\sprintf(
 				"Blok component '%s' must have attribute '%s'",
-				BlokMissingAttribute::class,
-				Blok::class,
+				NestedMissingAttribute::class,
+				NestedBlock::class,
 			),
 		];
 
@@ -43,16 +46,16 @@ class ComponentDefinitionLoadingTest extends TestCase
 			\sprintf(
 				"Blok component '%s' must extend '%s'",
 				BlokMissingBaseClass::class,
-				BlokStory::class,
+				NestedStory::class,
 			),
 		];
 
 		yield "document, missing attribute" => [
-			DocumentMissingAttribute::class,
+			StandaloneMissingAttribute::class,
 			\sprintf(
 				"Document component '%s' must have attribute '%s'",
-				DocumentMissingAttribute::class,
-				Document::class,
+				StandaloneMissingAttribute::class,
+				StandaloneBlock::class,
 			),
 		];
 
@@ -61,7 +64,7 @@ class ComponentDefinitionLoadingTest extends TestCase
 			\sprintf(
 				"Document component '%s' must extend '%s'",
 				DocumentMissingBaseClass::class,
-				DocumentStory::class,
+				StandaloneStory::class,
 			),
 		];
 
@@ -73,7 +76,6 @@ class ComponentDefinitionLoadingTest extends TestCase
 			),
 		];
 	}
-
 
 	/**
 	 *
@@ -87,7 +89,6 @@ class ComponentDefinitionLoadingTest extends TestCase
 		$registry = $this->createRegistry();
 		$registry->register($storyClass);
 	}
-
 
 	/**
 	 *
@@ -112,11 +113,10 @@ class ComponentDefinitionLoadingTest extends TestCase
 				key: "simple",
 				label: "Simple Label",
 				type: ComponentType::Standalone,
-				fields: []
+				fields: [],
 			),
 		];
 	}
-
 
 	/**
 	 *
@@ -127,7 +127,6 @@ class ComponentDefinitionLoadingTest extends TestCase
 		ComponentDefinition $expected,
 	) : void
 	{
-
 		$registry = $this->createRegistry();
 		$registry->register($storyClass);
 		$actual = $registry->getByStoryClass($storyClass);
@@ -137,7 +136,6 @@ class ComponentDefinitionLoadingTest extends TestCase
 		self::assertSame($expected->label, $actual->label);
 		self::assertSame($expected->type, $actual->type);
 	}
-
 
 	private function createRegistry () : DefinitionRegistry
 	{

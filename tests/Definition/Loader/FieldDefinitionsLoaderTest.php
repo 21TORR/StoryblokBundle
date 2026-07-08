@@ -13,16 +13,17 @@ use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 
 /**
  * @final
+ *
+ * @internal
  */
 class FieldDefinitionsLoaderTest extends TestCase
 {
-	public function testText ()
+	public function testText () : void
 	{
 		$loader = new ComponentDefinitionLoader(new FieldDefinitionLoader());
 
 		$component = $loader->loadDefinition(self::createMock(DefinitionRegistry::class), ComponentWithTextField::class);
 	}
-
 
 	/**
 	 *
@@ -37,7 +38,6 @@ class FieldDefinitionsLoaderTest extends TestCase
 			),
 		];
 	}
-
 
 	/**
 	 *

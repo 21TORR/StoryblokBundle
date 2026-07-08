@@ -2,18 +2,10 @@
 
 namespace Torr\Storyblok\Field\Definition;
 
-use Symfony\Component\Validator\Constraints\All;
-use Symfony\Component\Validator\Constraints\Collection;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Component\Filter\ComponentFilter;
-use Torr\Storyblok\Context\ComponentContext;
-use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
-use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
-use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 /**
  * The `no_translate` option doesn't make sense here, as the field itself has no content and the content is
@@ -64,6 +56,4 @@ final class BloksField extends AbstractField
 	{
 		return FieldType::Bloks;
 	}
-
-
 }

@@ -3,10 +3,8 @@
 namespace Torr\Storyblok\Exception\Story;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Exception\StoryblokException;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
 
 final class InvalidDataException extends \RuntimeException implements StoryblokException
 {

@@ -2,12 +2,10 @@
 
 namespace Torr\Storyblok\Definition\Data;
 
-use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Definition\Mapping\Required;
 use Torr\Storyblok\Definition\Mapping\Translatable;
 use Torr\Storyblok\Field\FieldType;
-use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 
 /**
  * Definition of a single field

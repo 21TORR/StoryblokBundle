@@ -8,9 +8,9 @@ use Torr\Storyblok\Field\FieldType;
 /**
  * @final
  */
-//#[\Attribute(\Attribute::TARGET_PROPERTY)]
-//readonly class FloatField extends MappedField
-//{
+// #[\Attribute(\Attribute::TARGET_PROPERTY)]
+// readonly class FloatField extends MappedField
+// {
 //	/**
 //	 */
 //	public function __construct (
@@ -55,4 +55,4 @@ use Torr\Storyblok\Field\FieldType;
 //		);
 //	}
 //
-//}
+// }

@@ -44,7 +44,7 @@ abstract readonly class MappedField
 		FieldDefinition $fieldDefinition,
 		ComponentContext $context,
 		array $contentPathHierarchy,
-	) {}
+	) : void {}
 
 	/**
 	 */

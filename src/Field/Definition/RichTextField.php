@@ -151,7 +151,6 @@ final class RichTextField extends AbstractField
 		return $transformed;
 	}
 
-
 	/**
 	 * Checks whether the given content is empty
 	 */

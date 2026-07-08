@@ -3,12 +3,15 @@
 namespace Tests\Torr\Storyblok\Story\Hydrator;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Torr\Storyblok\Story\Hydrator\MetaDataHydrator;
 use PHPUnit\Framework\TestCase;
-use Torr\Storyblok\Story\MetaData\BlokMetaData;
-use Torr\Storyblok\Story\MetaData\DocumentMetaData;
+use Torr\Storyblok\Story\Hydrator\MetaDataHydrator;
+use Torr\Storyblok\Story\MetaData\NestedStoryMetaData;
+use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
 
-class MetaDataHydratorTest extends TestCase
+/**
+ * @internal
+ */
+final class MetaDataHydratorTest extends TestCase
 {
 	/**
 	 *
@@ -43,9 +46,9 @@ class MetaDataHydratorTest extends TestCase
 				"path" => null,
 				"alternates" => [],
 				"default_full_slug" => null,
-				"translated_slugs" => null
+				"translated_slugs" => null,
 			],
-			new DocumentMetaData(
+			new StandaloneStoryMetaData(
 				uuid: "8a2d7e40-0ce0-46e7-9f6c-f90ae5e11993",
 				type: "simple",
 				previewData: null,
@@ -76,7 +79,7 @@ class MetaDataHydratorTest extends TestCase
 					"_uid" => "4f1ab87c-f8dc-4a08-930e-3ba9c0960e50",
 					"component" => "simple",
 					"text" => "abc",
-					"_editable" => "<!--#storyblok#-->"
+					"_editable" => "<!--#storyblok#-->",
 				],
 				"slug" => "link-test",
 				"full_slug" => "link-test",
@@ -93,9 +96,9 @@ class MetaDataHydratorTest extends TestCase
 				"path" => null,
 				"alternates" => [],
 				"default_full_slug" => null,
-				"translated_slugs" => null
+				"translated_slugs" => null,
 			],
-			new DocumentMetaData(
+			new StandaloneStoryMetaData(
 				uuid: "8a2d7e40-0ce0-46e7-9f6c-f90ae5e11993",
 				type: "simple",
 				previewData: "<!--#storyblok#-->",
@@ -170,9 +173,9 @@ class MetaDataHydratorTest extends TestCase
 					],
 				],
 				"default_full_slug" => null,
-				"translated_slugs" => null
+				"translated_slugs" => null,
 			],
-			new DocumentMetaData(
+			new StandaloneStoryMetaData(
 				uuid: "8a2d7e40-0ce0-46e7-9f6c-f90ae5e11993",
 				type: "simple",
 				previewData: null,
@@ -248,7 +251,7 @@ class MetaDataHydratorTest extends TestCase
 					"parent_id" => 442226519,
 					'locale' => 'fr-fr',
 				],
-			]
+			],
 		];
 	}
 
@@ -256,10 +259,10 @@ class MetaDataHydratorTest extends TestCase
 	 *
 	 */
 	#[DataProvider("provideValidDocumentMetaData")]
-	public function testValidDocumentMetaData (array $data, DocumentMetaData $expected, array $expectedAlternateLanguages = []) : void
+	public function testValidDocumentMetaData (array $data, StandaloneStoryMetaData $expected, array $expectedAlternateLanguages = []) : void
 	{
 		$hydrator = new MetaDataHydrator();
-		$metaData = $hydrator->hydrateDocumentMetaData($data, "123", 0);
+		$metaData = $hydrator->hydrateStandaloneStoryMetaData($data, "123", 0);
 
 		self::assertEquals($expected, $metaData);
 		self::assertSame($expectedAlternateLanguages, $metaData->getAlternateLanguages());
@@ -275,11 +278,11 @@ class MetaDataHydratorTest extends TestCase
 				"background" => "none",
 				"secondCtaType" => "secondary",
 			],
-			new BlokMetaData(
+			new NestedStoryMetaData(
 				uuid: "c33acdbe-6d1b-4303-8941-ee59a3861e80",
 				type: "rich-text-block",
 				spaceId: "123",
-			)
+			),
 		];
 
 		yield "draft" => [
@@ -289,14 +292,14 @@ class MetaDataHydratorTest extends TestCase
 				"component" => "rich-text-block",
 				"background" => "none",
 				"secondCtaType" => "secondary",
-				"_editable" => "<--#storyblok-->"
+				"_editable" => "<--#storyblok-->",
 			],
-			new BlokMetaData(
+			new NestedStoryMetaData(
 				uuid: "c33acdbe-6d1b-4303-8941-ee59a3861e80",
 				type: "rich-text-block",
 				spaceId: "123",
 				previewData: "<--#storyblok-->",
-			)
+			),
 		];
 	}
 
@@ -306,11 +309,11 @@ class MetaDataHydratorTest extends TestCase
 	#[DataProvider("provideValidBlokMetaData")]
 	public function testValidBlokMetaData (
 		array $data,
-		BlokMetaData $expected,
+		NestedStoryMetaData $expected,
 	) : void
 	{
 		$hydrator = new MetaDataHydrator();
-		$metaData = $hydrator->hydrateBlokMetaData($data, "123");
+		$metaData = $hydrator->hydrateNestedStoryMetaData($data, "123");
 
 		self::assertEquals($expected, $metaData);
 	}

@@ -11,9 +11,9 @@ use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 /**
  * @final
  */
-//#[\Attribute(\Attribute::TARGET_PROPERTY)]
-//readonly class BloksField extends MappedField
-//{
+// #[\Attribute(\Attribute::TARGET_PROPERTY)]
+// readonly class BloksField extends MappedField
+// {
 //	/**
 //	 */
 //	public function __construct (
@@ -71,4 +71,4 @@ use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 //
 //		return $result;
 //	}
-//}
+// }

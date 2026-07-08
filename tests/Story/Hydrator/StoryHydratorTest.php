@@ -2,13 +2,13 @@
 
 namespace Tests\Torr\Storyblok\Story\Hydrator;
 
-use Psr\Log\NullLogger;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Torr\Storyblok\Fixtures\Block\RichTextBlock;
-use Tests\Torr\Storyblok\Fixtures\Components\DocumentWithNestedEmbed;
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbeddedValue;
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbedWithNestedEmbed;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
+use Tests\Torr\Storyblok\Fixtures\Components\StandaloneWithNestedEmbed;
 use Tests\Torr\Storyblok\Fixtures\Components\WithBlocks;
 use Tests\Torr\Storyblok\Fixtures\Components\WithEmbed;
 use Torr\Storyblok\Context\ComponentContext;
@@ -17,10 +17,12 @@ use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Story\Hydrator\MetaDataHydrator;
 use Torr\Storyblok\Story\Hydrator\StoryHydrator;
-use PHPUnit\Framework\TestCase;
-use Torr\Storyblok\Story\MetaData\DocumentMetaData;
+use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
 
-class StoryHydratorTest extends TestCase
+/**
+ * @internal
+ */
+final class StoryHydratorTest extends TestCase
 {
 	/**
 	 *
@@ -56,14 +58,13 @@ class StoryHydratorTest extends TestCase
 			"path" => null,
 			"alternates" => [],
 			"default_full_slug" => null,
-    		"translated_slugs" => null
+			"translated_slugs" => null,
 		], "123", 1);
 
 		self::assertInstanceOf(Simple::class, $story);
 		self::assertSame("abc", $story->text);
-		self::assertInstanceOf(DocumentMetaData::class, $story->metaData);
+		self::assertInstanceOf(StandaloneStoryMetaData::class, $story->metaData);
 	}
-
 
 	public function testBloksField () : void
 	{
@@ -72,12 +73,13 @@ class StoryHydratorTest extends TestCase
 			WithBlocks::class,
 			RichTextBlock::class,
 		]);
-		$data = \json_decode(<<<'JSON'
-			{"name":"Test 2","created_at":"2025-03-11T18:03:14.638Z","published_at":"2026-07-06T12:15:06.086Z","updated_at":"2026-07-06T12:15:06.099Z","id":638706691,"uuid":"a7dd19a3-599c-47a2-88f3-296457eaa74d","content":{"_uid":"a9c06856-3d7d-4d2c-9ef3-9af20783b9e2","blocks":[{"cta":[],"_uid":"c33acdbe-6d1b-4303-8941-ee59a3861e80","content":{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"text":"This is a richtext","type":"text"}]}]},"component":"rich-text-block","background":"none","secondCtaType":"secondary","_editable":"\u003c!--#storyblok#{\"name\": \"rich-text-block\", \"space\": \"264311\", \"uid\": \"c33acdbe-6d1b-4303-8941-ee59a3861e80\", \"id\": \"638706691\"}--\u003e"}],"headline":"Headline","component":"with-blocks","_editable":"\u003c!--#storyblok#{\"name\": \"with-blocks\", \"space\": \"264311\", \"uid\": \"a9c06856-3d7d-4d2c-9ef3-9af20783b9e2\", \"id\": \"638706691\"}--\u003e"},"slug":"test-2","full_slug":"test-2","sort_by_date":null,"position":-20,"tag_list":[],"is_startpage":false,"parent_id":null,"meta_data":null,"group_id":"0ac3b725-088f-4b2b-8d65-a1609a00f0b9","first_published_at":"2025-03-11T18:03:59.588Z","release_id":null,"lang":"default","path":null,"alternates":[],"default_full_slug":null,"translated_slugs":null}
-		JSON,
+		$data = json_decode(
+			<<<'JSON'
+					{"name":"Test 2","created_at":"2025-03-11T18:03:14.638Z","published_at":"2026-07-06T12:15:06.086Z","updated_at":"2026-07-06T12:15:06.099Z","id":638706691,"uuid":"a7dd19a3-599c-47a2-88f3-296457eaa74d","content":{"_uid":"a9c06856-3d7d-4d2c-9ef3-9af20783b9e2","blocks":[{"cta":[],"_uid":"c33acdbe-6d1b-4303-8941-ee59a3861e80","content":{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"text":"This is a richtext","type":"text"}]}]},"component":"rich-text-block","background":"none","secondCtaType":"secondary","_editable":"\u003c!--#storyblok#{\"name\": \"rich-text-block\", \"space\": \"264311\", \"uid\": \"c33acdbe-6d1b-4303-8941-ee59a3861e80\", \"id\": \"638706691\"}--\u003e"}],"headline":"Headline","component":"with-blocks","_editable":"\u003c!--#storyblok#{\"name\": \"with-blocks\", \"space\": \"264311\", \"uid\": \"a9c06856-3d7d-4d2c-9ef3-9af20783b9e2\", \"id\": \"638706691\"}--\u003e"},"slug":"test-2","full_slug":"test-2","sort_by_date":null,"position":-20,"tag_list":[],"is_startpage":false,"parent_id":null,"meta_data":null,"group_id":"0ac3b725-088f-4b2b-8d65-a1609a00f0b9","first_published_at":"2025-03-11T18:03:59.588Z","release_id":null,"lang":"default","path":null,"alternates":[],"default_full_slug":null,"translated_slugs":null}
+				JSON,
 			true,
 			512,
-			JSON_THROW_ON_ERROR,
+			\JSON_THROW_ON_ERROR,
 		);
 
 		$story = $hydrator->hydrateDocument($data, "123", 1);
@@ -90,18 +92,18 @@ class StoryHydratorTest extends TestCase
 		self::assertSame("secondary", $story->blocks[0]->cta2);
 	}
 
-
-	public function testEmbed ()
+	public function testEmbed () : void
 	{
 		$hydrator = $this->createHydrator([
 			WithEmbed::class,
 		]);
-		$data = \json_decode(<<<'JSON'
-			{"name":"With Embed","created_at":"2026-07-06T12:28:05.150Z","published_at":"2026-07-06T12:28:16.628Z","updated_at":"2026-07-06T12:28:16.637Z","id":195179664003534,"uuid":"0f1e4d20-3b3d-4125-9e92-58f08d6863c8","content":{"_uid":"2df6e808-70f2-4bec-a08e-b5b047d99beb","headline":"Headline","component":"with-embed","nested_link":"Nested Link","nested_label":"Nested Label"},"slug":"with-embed","full_slug":"with-embed","sort_by_date":null,"position":-70,"tag_list":[],"is_startpage":false,"parent_id":null,"meta_data":null,"group_id":"08b0375c-e571-4c9b-a499-c8c01a11bd61","first_published_at":"2026-07-06T12:28:16.628Z","release_id":null,"lang":"default","path":null,"alternates":[],"default_full_slug":null,"translated_slugs":null}
-		JSON,
+		$data = json_decode(
+			<<<'JSON'
+					{"name":"With Embed","created_at":"2026-07-06T12:28:05.150Z","published_at":"2026-07-06T12:28:16.628Z","updated_at":"2026-07-06T12:28:16.637Z","id":195179664003534,"uuid":"0f1e4d20-3b3d-4125-9e92-58f08d6863c8","content":{"_uid":"2df6e808-70f2-4bec-a08e-b5b047d99beb","headline":"Headline","component":"with-embed","nested_link":"Nested Link","nested_label":"Nested Label"},"slug":"with-embed","full_slug":"with-embed","sort_by_date":null,"position":-70,"tag_list":[],"is_startpage":false,"parent_id":null,"meta_data":null,"group_id":"08b0375c-e571-4c9b-a499-c8c01a11bd61","first_published_at":"2026-07-06T12:28:16.628Z","release_id":null,"lang":"default","path":null,"alternates":[],"default_full_slug":null,"translated_slugs":null}
+				JSON,
 			true,
 			512,
-			JSON_THROW_ON_ERROR,
+			\JSON_THROW_ON_ERROR,
 		);
 
 		$story = $hydrator->hydrateDocument($data, "123", 1);
@@ -113,55 +115,54 @@ class StoryHydratorTest extends TestCase
 		self::assertSame("Nested Link", $story->embed->link);
 	}
 
-
-	public function testNestedEmbed ()
+	public function testNestedEmbed () : void
 	{
 		$hydrator = $this->createHydrator([
-			DocumentWithNestedEmbed::class,
+			StandaloneWithNestedEmbed::class,
 		]);
-		$data = \json_decode(
+		$data = json_decode(
 			<<<'JSON'
-				{
-					"name": "With NestedEmbed",
-					"created_at": "2026-07-06T12:28:05.150Z",
-					"published_at": "2026-07-06T12:28:16.628Z",
-					"updated_at": "2026-07-06T12:28:16.637Z",
-					"id": 195179664003534,
-					"uuid": "0f1e4d20-3b3d-4125-9e92-58f08d6863c8",
-					"content": {
-						"_uid": "2df6e808-70f2-4bec-a08e-b5b047d99beb",
-						"headline": "Headline",
-						"component": "with-nested-embed",
-						"nested_headline": "Nested Headline",
-						"nested_inner_link": "Nested Link",
-						"nested_inner_label": "Nested Label"
-					},
-					"slug": "test",
-					"full_slug": "test",
-					"sort_by_date": null,
-					"position": -70,
-					"tag_list": [],
-					"is_startpage": false,
-					"parent_id": null,
-					"meta_data": null,
-					"group_id": "08b0375c-e571-4c9b-a499-c8c01a11bd61",
-					"first_published_at": "2026-07-06T12:28:16.628Z",
-					"release_id": null,
-					"lang": "default",
-					"path": null,
-					"alternates": [],
-					"default_full_slug": null,
-					"translated_slugs": null
-				}
-			JSON,
+					{
+						"name": "With NestedEmbed",
+						"created_at": "2026-07-06T12:28:05.150Z",
+						"published_at": "2026-07-06T12:28:16.628Z",
+						"updated_at": "2026-07-06T12:28:16.637Z",
+						"id": 195179664003534,
+						"uuid": "0f1e4d20-3b3d-4125-9e92-58f08d6863c8",
+						"content": {
+							"_uid": "2df6e808-70f2-4bec-a08e-b5b047d99beb",
+							"headline": "Headline",
+							"component": "with-nested-embed",
+							"nested_headline": "Nested Headline",
+							"nested_inner_link": "Nested Link",
+							"nested_inner_label": "Nested Label"
+						},
+						"slug": "test",
+						"full_slug": "test",
+						"sort_by_date": null,
+						"position": -70,
+						"tag_list": [],
+						"is_startpage": false,
+						"parent_id": null,
+						"meta_data": null,
+						"group_id": "08b0375c-e571-4c9b-a499-c8c01a11bd61",
+						"first_published_at": "2026-07-06T12:28:16.628Z",
+						"release_id": null,
+						"lang": "default",
+						"path": null,
+						"alternates": [],
+						"default_full_slug": null,
+						"translated_slugs": null
+					}
+				JSON,
 			true,
 			512,
-			JSON_THROW_ON_ERROR,
+			\JSON_THROW_ON_ERROR,
 		);
 
 		$story = $hydrator->hydrateDocument($data, "123", 1);
 
-		self::assertInstanceOf(DocumentWithNestedEmbed::class, $story);
+		self::assertInstanceOf(StandaloneWithNestedEmbed::class, $story);
 		self::assertSame("Headline", $story->headline);
 		self::assertInstanceOf(EmbedWithNestedEmbed::class, $story->embed);
 		self::assertSame("Nested Headline", $story->embed->headline);

@@ -12,9 +12,9 @@ use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 /**
  * @final
  */
-//#[\Attribute(\Attribute::TARGET_PROPERTY)]
-//readonly class RichTextField extends MappedField
-//{
+// #[\Attribute(\Attribute::TARGET_PROPERTY)]
+// readonly class RichTextField extends MappedField
+// {
 //	/**
 //	 *
 //	 */
@@ -56,4 +56,4 @@ use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 //			? new RichText($value)
 //			: null;
 //	}
-//}
+// }

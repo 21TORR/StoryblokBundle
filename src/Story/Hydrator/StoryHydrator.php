@@ -8,8 +8,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
-use Torr\Storyblok\Story\Data\BlokStory;
-use Torr\Storyblok\Story\Data\DocumentStory;
+use Torr\Storyblok\Story\Data\NestedStory;
+use Torr\Storyblok\Story\Data\StandaloneStory;
 use Torr\Storyblok\Story\Exception\BrokenStoryDataException;
 use Torr\Storyblok\Story\Exception\InaccessiblePropertyException;
 use Torr\Storyblok\Story\Exception\UnknownComponentException;
@@ -29,11 +29,10 @@ readonly class StoryHydrator
 		private MetaDataHydrator $metaDataHydrator,
 	) {}
 
-
 	/**
 	 *
 	 */
-	public function hydrateDocument (array $data, string $spaceId, int $localeLevel) : DocumentStory
+	public function hydrateDocument (array $data, string $spaceId, int $localeLevel) : StandaloneStory
 	{
 		$type = $data["content"]["component"] ?? null;
 
@@ -54,7 +53,7 @@ readonly class StoryHydrator
 
 		$story = new \ReflectionClass($definition->storyClass)->newInstance();
 
-		if (!$story instanceof DocumentStory)
+		if (!$story instanceof StandaloneStory)
 		{
 			throw new BrokenStoryDataException(\sprintf(
 				"Tried to instantiate document story, but got '%s'",
@@ -62,8 +61,8 @@ readonly class StoryHydrator
 			));
 		}
 
-		\assert($story instanceof DocumentStory);
-		$story->metaData = $this->metaDataHydrator->hydrateDocumentMetaData($data, $spaceId, $localeLevel);
+		\assert($story instanceof StandaloneStory);
+		$story->metaData = $this->metaDataHydrator->hydrateStandaloneStoryMetaData($data, $spaceId, $localeLevel);
 
 		foreach ($definition->fields as $field)
 		{
@@ -73,7 +72,7 @@ readonly class StoryHydrator
 		return $story;
 	}
 
-	public function hydrateBlok (array $data) : BlokStory
+	public function hydrateBlok (array $data) : NestedStory
 	{
 		$type = $data["component"] ?? null;
 
@@ -94,7 +93,7 @@ readonly class StoryHydrator
 
 		$story = new \ReflectionClass($definition->storyClass)->newInstance();
 
-		if (!$story instanceof BlokStory)
+		if (!$story instanceof NestedStory)
 		{
 			throw new BrokenStoryDataException(\sprintf(
 				"Tried to instantiate blok story, but got '%s'",
@@ -102,8 +101,8 @@ readonly class StoryHydrator
 			));
 		}
 
-		\assert($story instanceof BlokStory);
-		$story->metaData = $this->metaDataHydrator->hydrateBlokMetaData($data);
+		\assert($story instanceof NestedStory);
+		$story->metaData = $this->metaDataHydrator->hydrateNestedStoryMetaData($data);
 
 		foreach ($definition->fields as $field)
 		{
@@ -112,7 +111,6 @@ readonly class StoryHydrator
 
 		return $story;
 	}
-
 
 	public function hydrateEmbed (string $embedClass, string $contentPathPrefix, array $data) : object
 	{
@@ -135,8 +133,6 @@ readonly class StoryHydrator
 
 		return $story;
 	}
-
-
 
 	/**
 	 */

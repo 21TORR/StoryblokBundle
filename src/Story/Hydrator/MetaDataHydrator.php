@@ -10,8 +10,8 @@ use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Story\Exception\BrokenStoryDataException;
-use Torr\Storyblok\Story\MetaData\BlokMetaData;
-use Torr\Storyblok\Story\MetaData\DocumentMetaData;
+use Torr\Storyblok\Story\MetaData\NestedStoryMetaData;
+use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
 
 /**
  * @final
@@ -26,19 +26,19 @@ readonly class MetaDataHydrator
 	{
 		// We don't use the validator from the DI container here,
 		// as in debug it will be a traceable validator that logs
-		// every call. As we are producing A TON of calls here
-		// this will hugely increase the memory consumption.
+		// every call. As we are producing A TON of calls here,
+		// this would otherwise hugely increase the memory consumption.
 		$this->validator = Validation::createValidator();
 	}
 
 	/**
 	 *
 	 */
-	public function hydrateDocumentMetaData (
+	public function hydrateStandaloneStoryMetaData (
 		array $data,
 		string $spaceId,
 		int $localeLevel,
-	) : DocumentMetaData
+	) : StandaloneStoryMetaData
 	{
 		$isValid = $this->validator->validate($data, [
 			new NotNull(),
@@ -156,7 +156,7 @@ readonly class MetaDataHydrator
 			));
 		}
 
-		return new DocumentMetaData(
+		return new StandaloneStoryMetaData(
 			uuid: $data["uuid"],
 			type: $data["content"]["component"],
 			previewData: $data["content"]["_editable"] ?? null,
@@ -181,9 +181,9 @@ readonly class MetaDataHydrator
 
 	/**
 	 */
-	public function hydrateBlokMetaData (
+	public function hydrateNestedStoryMetaData (
 		array $data,
-	) : BlokMetaData
+	) : NestedStoryMetaData
 	{
 		$isValid = $this->validator->validate($data, [
 			new NotNull(),
@@ -221,7 +221,7 @@ readonly class MetaDataHydrator
 			));
 		}
 
-		return new BlokMetaData(
+		return new NestedStoryMetaData(
 			uuid: $data["_uid"],
 			type: $data["component"],
 			spaceId: "0",
