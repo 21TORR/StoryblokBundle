@@ -4,6 +4,6 @@ namespace Torr\Storyblok\Story\MetaData;
 
 /**
  */
-final readonly class NestedStoryMetaData extends AbstractMetaData
+final readonly class BlockMetaData extends AbstractMetaData
 {
 }

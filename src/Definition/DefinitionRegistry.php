@@ -5,8 +5,8 @@ namespace Torr\Storyblok\Definition;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\Data\EmbedDefinition;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
-use Torr\Storyblok\Story\Data\NestedStory;
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Story\Data\Block;
+use Torr\Storyblok\Story\Data\Story;
 
 /**
  * @final
@@ -24,7 +24,7 @@ class DefinitionRegistry
 	) {}
 
 	/**
-	 * @param class-string<NestedStory|StandaloneStory> $storyClass
+	 * @param class-string<Block|Story> $storyClass
 	 *
 	 * @return $this
 	 */

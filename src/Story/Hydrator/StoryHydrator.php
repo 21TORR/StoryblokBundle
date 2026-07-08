@@ -8,8 +8,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
-use Torr\Storyblok\Story\Data\NestedStory;
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Story\Data\Block;
+use Torr\Storyblok\Story\Data\Story;
 use Torr\Storyblok\Story\Exception\BrokenStoryDataException;
 use Torr\Storyblok\Story\Exception\InaccessiblePropertyException;
 use Torr\Storyblok\Story\Exception\UnknownComponentException;
@@ -32,7 +32,7 @@ readonly class StoryHydrator
 	/**
 	 *
 	 */
-	public function hydrateDocument (array $data, string $spaceId, int $localeLevel) : StandaloneStory
+	public function hydrateDocument (array $data, string $spaceId, int $localeLevel) : Story
 	{
 		$type = $data["content"]["component"] ?? null;
 
@@ -53,7 +53,7 @@ readonly class StoryHydrator
 
 		$story = new \ReflectionClass($definition->storyClass)->newInstance();
 
-		if (!$story instanceof StandaloneStory)
+		if (!$story instanceof Story)
 		{
 			throw new BrokenStoryDataException(\sprintf(
 				"Tried to instantiate document story, but got '%s'",
@@ -61,7 +61,7 @@ readonly class StoryHydrator
 			));
 		}
 
-		\assert($story instanceof StandaloneStory);
+		\assert($story instanceof Story);
 		$story->metaData = $this->metaDataHydrator->hydrateStandaloneStoryMetaData($data, $spaceId, $localeLevel);
 
 		foreach ($definition->fields as $field)
@@ -72,7 +72,7 @@ readonly class StoryHydrator
 		return $story;
 	}
 
-	public function hydrateBlok (array $data) : NestedStory
+	public function hydrateBlok (array $data) : Block
 	{
 		$type = $data["component"] ?? null;
 
@@ -93,7 +93,7 @@ readonly class StoryHydrator
 
 		$story = new \ReflectionClass($definition->storyClass)->newInstance();
 
-		if (!$story instanceof NestedStory)
+		if (!$story instanceof Block)
 		{
 			throw new BrokenStoryDataException(\sprintf(
 				"Tried to instantiate blok story, but got '%s'",
@@ -101,7 +101,7 @@ readonly class StoryHydrator
 			));
 		}
 
-		\assert($story instanceof NestedStory);
+		\assert($story instanceof Block);
 		$story->metaData = $this->metaDataHydrator->hydrateNestedStoryMetaData($data);
 
 		foreach ($definition->fields as $field)

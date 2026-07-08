@@ -8,10 +8,9 @@ use Torr\Storyblok\Definition\Data\EmbedDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\DuplicateFieldDefinitionException;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
-use Torr\Storyblok\Definition\Mapping\NestedBlock;
-use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
-use Torr\Storyblok\Story\Data\NestedStory;
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Definition\Mapping\Component;
+use Torr\Storyblok\Story\Data\Block;
+use Torr\Storyblok\Story\Data\Story;
 
 /**
  * @final
@@ -33,45 +32,54 @@ readonly class ComponentDefinitionLoader
 	) : ?ComponentDefinition
 	{
 		$reflectionClass = new \ReflectionClass($storyClass);
-		$blok = $this->loadAttribute($reflectionClass, NestedBlock::class);
-		$document = $this->loadAttribute($reflectionClass, StandaloneBlock::class);
+		$component = $this->loadAttribute($reflectionClass, Component::class);
 
-		if (null === $blok && null === $document)
+		if (null === $component)
 		{
-			if (is_a($storyClass, NestedStory::class, true))
+			if (is_a($storyClass, Block::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
-					"Blok component '%s' must have attribute '%s'",
+					"Block component '%s' must have attribute '%s'",
 					$storyClass,
-					NestedBlock::class,
+					Component::class,
 				));
 			}
 
-			if (is_a($storyClass, StandaloneStory::class, true))
+			if (is_a($storyClass, Story::class, true))
 			{
 				throw new InvalidComponentDefinitionException(\sprintf(
-					"Document component '%s' must have attribute '%s'",
+					"Story component '%s' must have attribute '%s'",
 					$storyClass,
-					StandaloneBlock::class,
+					Component::class,
 				));
 			}
 
 			return null;
 		}
 
-		if (null !== $blok && null !== $document)
+		$componentType = match (true)
 		{
-			throw new InvalidComponentDefinitionException(\sprintf(
-				"Class '%s' can't be both document and blok. Remove one of the attribute.",
+			\is_a($storyClass, Story::class, true) => ComponentType::Standalone,
+			\is_a($storyClass, Block::class, true) => ComponentType::Nested,
+			default => throw new InvalidComponentDefinitionException(\sprintf(
+				"Storyblok component '%s' must either extend '%s' or '%s'",
 				$storyClass,
-			));
-		}
+				Story::class,
+				Block::class,
+			)),
+		};
 
-		return null !== $blok
-			? $this->transformBlok($registry, $reflectionClass, $blok)
-			: $this->transformDocument($registry, $reflectionClass, $document);
+		return new ComponentDefinition(
+			storyClass: $storyClass,
+			key: $component->key,
+			label: $component->label,
+			type: $componentType,
+			fields: $this->loadFields($registry, $reflectionClass),
+		);
 	}
 
+	/**
+	 */
 	public function loadEmbedDefinition (DefinitionRegistry $registry, string $embedClass) : EmbedDefinition
 	{
 		return new EmbedDefinition(
@@ -82,55 +90,6 @@ readonly class ComponentDefinitionLoader
 		);
 	}
 
-	/**
-	 *
-	 */
-	private function transformBlok (DefinitionRegistry $registry, \ReflectionClass $storyClass, NestedBlock $blok) : ComponentDefinition
-	{
-		if (!is_a($storyClass->getName(), NestedStory::class, true))
-		{
-			throw new InvalidComponentDefinitionException(\sprintf(
-				"Blok component '%s' must extend '%s'",
-				$storyClass->getName(),
-				NestedStory::class,
-			));
-		}
-
-		return new ComponentDefinition(
-			storyClass: $storyClass->getName(),
-			key: $blok->key,
-			label: $blok->label,
-			type: ComponentType::Nested,
-			fields: $this->loadFields($registry, $storyClass),
-		);
-	}
-
-	/**
-	 *
-	 */
-	private function transformDocument (
-		DefinitionRegistry $registry,
-		\ReflectionClass $storyClass,
-		StandaloneBlock $document,
-	) : ComponentDefinition
-	{
-		if (!is_a($storyClass->getName(), StandaloneStory::class, true))
-		{
-			throw new InvalidComponentDefinitionException(\sprintf(
-				"Document component '%s' must extend '%s'",
-				$storyClass->getName(),
-				StandaloneStory::class,
-			));
-		}
-
-		return new ComponentDefinition(
-			storyClass: $storyClass->getName(),
-			key: $document->key,
-			label: $document->label,
-			type: ComponentType::Standalone,
-			fields: $this->loadFields($registry, $storyClass),
-		);
-	}
 
 	/**
 	 *

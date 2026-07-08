@@ -2,17 +2,17 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Field;
 
-use Torr\Storyblok\Definition\Mapping\NestedBlock;
+use Torr\Storyblok\Definition\Mapping\Component;
 use Torr\Storyblok\Definition\Mapping\Required;
 use Torr\Storyblok\Definition\Mapping\TextField;
 use Torr\Storyblok\Definition\Mapping\Translatable;
-use Torr\Storyblok\Story\Data\NestedStory;
+use Torr\Storyblok\Story\Data\Block;
 
 /**
  * @final
  */
-#[NestedBlock("test", "test")]
-class ComponentWithTextField extends NestedStory
+#[Component("test", "test")]
+class ComponentWithTextField extends Block
 {
 	#[TextField("Field")]
 	#[Required]

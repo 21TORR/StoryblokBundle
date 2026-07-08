@@ -2,15 +2,11 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition;
 
-use Torr\Storyblok\Definition\Mapping\NestedBlock;
+use Torr\Storyblok\Story\Data\Block;
 
 /**
  * @final
  */
-#[NestedBlock(
-	key: "blok",
-	label: "Blok",
-)]
-class BlokMissingBaseClass
+class BlockMissingAttribute extends Block
 {
 }

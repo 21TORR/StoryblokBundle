@@ -2,11 +2,15 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition;
 
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Definition\Mapping\Component;
 
 /**
  * @final
  */
-class StandaloneMissingAttribute extends StandaloneStory
+#[Component(
+	key: "blok",
+	label: "Blok",
+)]
+class MissingBaseClass
 {
 }

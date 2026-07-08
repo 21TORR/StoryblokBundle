@@ -4,18 +4,18 @@ namespace Torr\Storyblok\Story\Data;
 
 use Symfony\Component\DependencyInjection\Attribute\Exclude;
 use Torr\Storyblok\Story\Exception\InvalidStoryInitializationException;
-use Torr\Storyblok\Story\MetaData\NestedStoryMetaData;
+use Torr\Storyblok\Story\MetaData\StoryMetaData;
 
 /**
- * @final
+ *
  */
 #[Exclude]
-abstract class NestedStory
+abstract class Story
 {
-	public NestedStoryMetaData $metaData
+	public StoryMetaData $metaData
 		{
 		get => $this->metaData;
-		set(NestedStoryMetaData $metaData)
+		set(StoryMetaData $metaData)
 		{
 			if (isset($this->metaData))
 			{

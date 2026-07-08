@@ -3,13 +3,13 @@
 namespace Tests\Torr\Storyblok\Fixtures\Components;
 
 use Torr\Storyblok\Definition\Mapping as Storyblok;
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Story\Data\Story;
 
 /**
  * @final
  */
-#[Storyblok\StandaloneBlock("with-blocks", "With Blocks")]
-class WithBlocks extends StandaloneStory
+#[Storyblok\Component("with-blocks", "With Blocks")]
+class WithBlocks extends Story
 {
 	#[Storyblok\TextField("Headline")]
 	public string $headline;

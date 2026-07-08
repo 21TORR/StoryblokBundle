@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Story\MetaData;
 
 use Torr\Storyblok\Translation\LocaleHelper;
 
-final readonly class StandaloneStoryMetaData extends AbstractMetaData
+final readonly class StoryMetaData extends AbstractMetaData
 {
 	private array $slugSegments;
 	public string $fullSlug;

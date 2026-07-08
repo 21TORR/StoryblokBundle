@@ -8,7 +8,7 @@ use Tests\Torr\Storyblok\Fixtures\NestedBlock\RichTextBlock;
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbeddedValue;
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbedWithNestedEmbed;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
-use Tests\Torr\Storyblok\Fixtures\Components\StandaloneWithNestedEmbed;
+use Tests\Torr\Storyblok\Fixtures\Components\WithNestedEmbed;
 use Tests\Torr\Storyblok\Fixtures\Components\WithBlocks;
 use Tests\Torr\Storyblok\Fixtures\Components\WithEmbed;
 use Torr\Storyblok\Context\ComponentContext;
@@ -17,7 +17,7 @@ use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Story\Hydrator\MetaDataHydrator;
 use Torr\Storyblok\Story\Hydrator\StoryHydrator;
-use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
+use Torr\Storyblok\Story\MetaData\StoryMetaData;
 
 /**
  * @internal
@@ -63,7 +63,7 @@ final class StoryHydratorTest extends TestCase
 
 		self::assertInstanceOf(Simple::class, $story);
 		self::assertSame("abc", $story->text);
-		self::assertInstanceOf(StandaloneStoryMetaData::class, $story->metaData);
+		self::assertInstanceOf(StoryMetaData::class, $story->metaData);
 	}
 
 	public function testBloksField () : void
@@ -118,7 +118,7 @@ final class StoryHydratorTest extends TestCase
 	public function testNestedEmbed () : void
 	{
 		$hydrator = $this->createHydrator([
-			StandaloneWithNestedEmbed::class,
+			WithNestedEmbed::class,
 		]);
 		$data = json_decode(
 			<<<'JSON'
@@ -162,7 +162,7 @@ final class StoryHydratorTest extends TestCase
 
 		$story = $hydrator->hydrateDocument($data, "123", 1);
 
-		self::assertInstanceOf(StandaloneWithNestedEmbed::class, $story);
+		self::assertInstanceOf(WithNestedEmbed::class, $story);
 		self::assertSame("Headline", $story->headline);
 		self::assertInstanceOf(EmbedWithNestedEmbed::class, $story->embed);
 		self::assertSame("Nested Headline", $story->embed->headline);

@@ -2,16 +2,16 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components;
 
-use Torr\Storyblok\Definition\Mapping\NestedBlock;
-use Torr\Storyblok\Story\Data\NestedStory;
+use Torr\Storyblok\Definition\Mapping\Component;
+use Torr\Storyblok\Story\Data\Block;
 
 /**
  * @final
  */
-#[NestedBlock(
+#[Component(
 	key: "full-nested-block",
 	label: "Full Nested Block",
 )]
-class FullNestedBlock extends NestedStory
+class FullNestedBlock extends Block
 {
 }

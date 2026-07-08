@@ -2,19 +2,18 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
-use Torr\Storyblok\Definition\Data\AdminUiSettings;
-
 /**
- * @final
+ * The attribute for defining a component.
+ *
+ * The type of the component is resolved using the base class of the component class.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-readonly class StandaloneBlock
+final readonly class Component
 {
 	/**
 	 */
 	public function __construct (
 		public string $key,
 		public string $label,
-		public ?AdminUiSettings $adminUi = null,
 	) {}
 }

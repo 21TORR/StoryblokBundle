@@ -6,12 +6,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tests\Torr\Storyblok\Fixtures\Components\Empty\EmptyClass;
 use Tests\Torr\Storyblok\Fixtures\Components\FullNestedBlock;
-use Tests\Torr\Storyblok\Fixtures\Components\FullStandaloneBlock;
+use Tests\Torr\Storyblok\Fixtures\Components\FullBlock;
+use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlockMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokAndDocumentSet;
-use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingBaseClass;
+use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\MissingBaseClass;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissingBaseClass;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\NestedMissingAttribute;
-use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\StandaloneMissingAttribute;
+use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\StoryMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
@@ -20,9 +21,9 @@ use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Definition\Mapping\NestedBlock;
-use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
-use Torr\Storyblok\Story\Data\NestedStory;
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Definition\Mapping\Component;
+use Torr\Storyblok\Story\Data\Block;
+use Torr\Storyblok\Story\Data\Story;
 
 /**
  * @internal
@@ -34,47 +35,31 @@ final class ComponentDefinitionLoadingTest extends TestCase
 	 */
 	public static function provideInvalidBaseDefinition () : iterable
 	{
-		yield "blok, missing attribute" => [
-			NestedMissingAttribute::class,
+		yield "block, missing attribute" => [
+			BlockMissingAttribute::class,
 			\sprintf(
-				"Blok component '%s' must have attribute '%s'",
-				NestedMissingAttribute::class,
-				NestedBlock::class,
-			),
-		];
-
-		yield "blok, missing base class" => [
-			BlokMissingBaseClass::class,
-			\sprintf(
-				"Blok component '%s' must extend '%s'",
-				BlokMissingBaseClass::class,
-				NestedStory::class,
+				"Block component '%s' must have attribute '%s'",
+				BlockMissingAttribute::class,
+				Component::class,
 			),
 		];
 
 		yield "document, missing attribute" => [
-			StandaloneMissingAttribute::class,
+			StoryMissingAttribute::class,
 			\sprintf(
-				"Document component '%s' must have attribute '%s'",
-				StandaloneMissingAttribute::class,
-				StandaloneBlock::class,
+				"Story component '%s' must have attribute '%s'",
+				StoryMissingAttribute::class,
+				Component::class,
 			),
 		];
 
-		yield "document, missing base class" => [
-			DocumentMissingBaseClass::class,
+		yield "missing base class" => [
+			MissingBaseClass::class,
 			\sprintf(
-				"Document component '%s' must extend '%s'",
-				DocumentMissingBaseClass::class,
-				StandaloneStory::class,
-			),
-		];
-
-		yield "document and blok set" => [
-			BlokAndDocumentSet::class,
-			\sprintf(
-				"Class '%s' can't be both document and blok. Remove one of the attribute.",
-				BlokAndDocumentSet::class,
+				"Storyblok component '%s' must either extend '%s' or '%s'",
+				MissingBaseClass::class,
+				Story::class,
+				Block::class,
 			),
 		];
 	}
@@ -120,9 +105,9 @@ final class ComponentDefinitionLoadingTest extends TestCase
 		];
 
 		yield "full standalone" => [
-			FullStandaloneBlock::class,
+			FullBlock::class,
 			new ComponentDefinition(
-				storyClass: FullStandaloneBlock::class,
+				storyClass: FullBlock::class,
 				key: "full-standalone-block",
 				label: "Full Standalone Block",
 				type: ComponentType::Standalone,

@@ -2,16 +2,16 @@
 
 namespace Tests\Torr\Storyblok\Fixtures\Components;
 
-use Torr\Storyblok\Definition\Mapping\StandaloneBlock;
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Definition\Mapping\Component;
+use Torr\Storyblok\Story\Data\Story;
 
 /**
  * @final
  */
-#[StandaloneBlock(
+#[Component(
 	key: "full-standalone-block",
 	label: "Full Standalone Block",
 )]
-class FullStandaloneBlock extends StandaloneStory
+class FullBlock extends Story
 {
 }

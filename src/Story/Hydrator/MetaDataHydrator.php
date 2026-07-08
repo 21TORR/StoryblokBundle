@@ -10,8 +10,8 @@ use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
 use Torr\Storyblok\Story\Exception\BrokenStoryDataException;
-use Torr\Storyblok\Story\MetaData\NestedStoryMetaData;
-use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
+use Torr\Storyblok\Story\MetaData\BlockMetaData;
+use Torr\Storyblok\Story\MetaData\StoryMetaData;
 
 /**
  * @final
@@ -38,7 +38,7 @@ readonly class MetaDataHydrator
 		array $data,
 		string $spaceId,
 		int $localeLevel,
-	) : StandaloneStoryMetaData
+	) : StoryMetaData
 	{
 		$isValid = $this->validator->validate($data, [
 			new NotNull(),
@@ -156,7 +156,7 @@ readonly class MetaDataHydrator
 			));
 		}
 
-		return new StandaloneStoryMetaData(
+		return new StoryMetaData(
 			uuid: $data["uuid"],
 			type: $data["content"]["component"],
 			previewData: $data["content"]["_editable"] ?? null,
@@ -183,7 +183,7 @@ readonly class MetaDataHydrator
 	 */
 	public function hydrateNestedStoryMetaData (
 		array $data,
-	) : NestedStoryMetaData
+	) : BlockMetaData
 	{
 		$isValid = $this->validator->validate($data, [
 			new NotNull(),
@@ -221,7 +221,7 @@ readonly class MetaDataHydrator
 			));
 		}
 
-		return new NestedStoryMetaData(
+		return new BlockMetaData(
 			uuid: $data["_uid"],
 			type: $data["component"],
 			spaceId: "0",

@@ -4,12 +4,12 @@ namespace Tests\Torr\Storyblok\Fixtures\Components;
 
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbeddedValue;
 use Torr\Storyblok\Definition\Mapping as Storyblok;
-use Torr\Storyblok\Story\Data\StandaloneStory;
+use Torr\Storyblok\Story\Data\Story;
 
 /**
  * @final
  */
-#[Storyblok\StandaloneBlock(
+#[Storyblok\Component(
 	key: "with-embed",
 	label: "With Embed",
 )]
@@ -18,7 +18,7 @@ use Torr\Storyblok\Story\Data\StandaloneStory;
 	icon: "...",
 	iconColor: "red",
 )]
-class WithEmbed extends StandaloneStory
+class WithEmbed extends Story
 {
 	#[Storyblok\TextField("Headline")]
 	#[Storyblok\Required(regexp: "\d+")]

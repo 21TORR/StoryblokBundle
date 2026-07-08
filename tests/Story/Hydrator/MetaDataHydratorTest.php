@@ -5,8 +5,8 @@ namespace Tests\Torr\Storyblok\Story\Hydrator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Story\Hydrator\MetaDataHydrator;
-use Torr\Storyblok\Story\MetaData\NestedStoryMetaData;
-use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
+use Torr\Storyblok\Story\MetaData\BlockMetaData;
+use Torr\Storyblok\Story\MetaData\StoryMetaData;
 
 /**
  * @internal
@@ -48,7 +48,7 @@ final class MetaDataHydratorTest extends TestCase
 				"default_full_slug" => null,
 				"translated_slugs" => null,
 			],
-			new StandaloneStoryMetaData(
+			new StoryMetaData(
 				uuid: "8a2d7e40-0ce0-46e7-9f6c-f90ae5e11993",
 				type: "simple",
 				previewData: null,
@@ -98,7 +98,7 @@ final class MetaDataHydratorTest extends TestCase
 				"default_full_slug" => null,
 				"translated_slugs" => null,
 			],
-			new StandaloneStoryMetaData(
+			new StoryMetaData(
 				uuid: "8a2d7e40-0ce0-46e7-9f6c-f90ae5e11993",
 				type: "simple",
 				previewData: "<!--#storyblok#-->",
@@ -175,7 +175,7 @@ final class MetaDataHydratorTest extends TestCase
 				"default_full_slug" => null,
 				"translated_slugs" => null,
 			],
-			new StandaloneStoryMetaData(
+			new StoryMetaData(
 				uuid: "8a2d7e40-0ce0-46e7-9f6c-f90ae5e11993",
 				type: "simple",
 				previewData: null,
@@ -259,7 +259,7 @@ final class MetaDataHydratorTest extends TestCase
 	 *
 	 */
 	#[DataProvider("provideValidDocumentMetaData")]
-	public function testValidDocumentMetaData (array $data, StandaloneStoryMetaData $expected, array $expectedAlternateLanguages = []) : void
+	public function testValidDocumentMetaData (array $data, StoryMetaData $expected, array $expectedAlternateLanguages = []) : void
 	{
 		$hydrator = new MetaDataHydrator();
 		$metaData = $hydrator->hydrateStandaloneStoryMetaData($data, "123", 0);
@@ -278,7 +278,7 @@ final class MetaDataHydratorTest extends TestCase
 				"background" => "none",
 				"secondCtaType" => "secondary",
 			],
-			new NestedStoryMetaData(
+			new BlockMetaData(
 				uuid: "c33acdbe-6d1b-4303-8941-ee59a3861e80",
 				type: "rich-text-block",
 				spaceId: "123",
@@ -294,7 +294,7 @@ final class MetaDataHydratorTest extends TestCase
 				"secondCtaType" => "secondary",
 				"_editable" => "<--#storyblok-->",
 			],
-			new NestedStoryMetaData(
+			new BlockMetaData(
 				uuid: "c33acdbe-6d1b-4303-8941-ee59a3861e80",
 				type: "rich-text-block",
 				spaceId: "123",
@@ -309,7 +309,7 @@ final class MetaDataHydratorTest extends TestCase
 	#[DataProvider("provideValidBlokMetaData")]
 	public function testValidBlokMetaData (
 		array $data,
-		NestedStoryMetaData $expected,
+		BlockMetaData $expected,
 	) : void
 	{
 		$hydrator = new MetaDataHydrator();

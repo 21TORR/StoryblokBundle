@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Definition\Mapping;
 
 /**
  * @final
+ * @deprecated
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 readonly class NestedBlock

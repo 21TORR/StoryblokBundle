@@ -5,7 +5,7 @@ namespace Tests\Torr\Storyblok\Story;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
-use Torr\Storyblok\Story\MetaData\StandaloneStoryMetaData;
+use Torr\Storyblok\Story\MetaData\StoryMetaData;
 
 /**
  * @internal
@@ -48,7 +48,7 @@ final class StoryMetaDataTest extends TestCase
 	#[DataProvider("provideValidLocaleLevel")]
 	public function testValidLocaleLevel (int $localeLevel, string $fullSlug, ?string $expected) : void
 	{
-		$metaData = new StandaloneStoryMetaData(
+		$metaData = new StoryMetaData(
 			data: [
 				"full_slug" => $fullSlug,
 				"_locale_level" => $localeLevel,
@@ -64,7 +64,7 @@ final class StoryMetaDataTest extends TestCase
 	 */
 	public function testCreatedAtInvalidDateThrows () : void
 	{
-		$metaData = new StandaloneStoryMetaData(
+		$metaData = new StoryMetaData(
 			data: [
 				"full_slug" => "de/test",
 				"_locale_level" => 0,
@@ -84,7 +84,7 @@ final class StoryMetaDataTest extends TestCase
 	 */
 	public function testGetTranslatedDocumentsMapping () : void
 	{
-		$metaData = new StandaloneStoryMetaData(
+		$metaData = new StoryMetaData(
 			data: [
 				"full_slug" => "de/root/test",
 				"_locale_level" => 0,
@@ -132,7 +132,7 @@ final class StoryMetaDataTest extends TestCase
 	 */
 	public function testParentSlugWithoutTrailingSlash () : void
 	{
-		$metaData = new StandaloneStoryMetaData(
+		$metaData = new StoryMetaData(
 			data: [
 				"full_slug" => "root/child/",
 				"_locale_level" => 0,
@@ -148,7 +148,7 @@ final class StoryMetaDataTest extends TestCase
 	 */
 	public function testPreviewDataExtraction () : void
 	{
-		$metaData = new StandaloneStoryMetaData(
+		$metaData = new StoryMetaData(
 			data: [
 				"full_slug" => "de/test",
 				"_locale_level" => 0,
