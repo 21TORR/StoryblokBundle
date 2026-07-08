@@ -4,7 +4,7 @@ namespace Tests\Torr\Storyblok\Definition\Loader;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Tests\Torr\Storyblok\Fixtures\Components\FieldSortOrder;
+use Tests\Torr\Storyblok\Fixtures\Components\FieldOrder\FieldSortOrder;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidFields\DuplicateField;
 use Tests\Torr\Storyblok\Fixtures\Field\ComponentWithTextField;
 use Torr\Storyblok\Definition\DefinitionRegistry;

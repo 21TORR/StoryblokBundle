@@ -3,13 +3,13 @@
 namespace Tests\Torr\Storyblok\Management;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\Torr\Storyblok\Fixtures\Components\FieldSortOrder;
+use PHPUnit\Framework\TestCase;
+use Tests\Torr\Storyblok\Fixtures\Components\FieldOrder\FieldSortOrder;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Management\ManagementApiGenerator;
-use PHPUnit\Framework\TestCase;
 
 class ManagementApiGeneratorTest extends TestCase
 {
@@ -81,7 +81,17 @@ class ManagementApiGeneratorTest extends TestCase
 	{
 		yield "single embeds" => [
 			FieldSortOrder::class,
-			["first", "nested_label", "nested_link", "last"],
+			[
+				"outer1",
+				"indirect_first",
+				"indirect_inner_a",
+				"indirect_inner_b",
+				"indirect_second",
+				"outer2",
+				"direct_a",
+				"direct_b",
+				"outer3",
+			],
 		];
 	}
 
@@ -104,6 +114,7 @@ class ManagementApiGeneratorTest extends TestCase
 		$apiGenerator = new ManagementApiGenerator($registry);
 		$actual = $apiGenerator->generateManagementApiPayload($definition);
 
+		dump(\array_keys($actual["schema"]));
 		self::assertSame($expectedFieldsOrder, \array_keys($actual["schema"]));
 	}
 }

@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Torr\Storyblok\Fixtures\Components;
+namespace Tests\Torr\Storyblok\Fixtures\Components\FieldOrder;
 
-use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbeddedValue;
 use Torr\Storyblok\Definition\Mapping as Storyblok;
 use Torr\Storyblok\Story\Data\Story;
 
@@ -16,11 +15,17 @@ use Torr\Storyblok\Story\Data\Story;
 class FieldSortOrder extends Story
 {
 	#[Storyblok\TextField("First")]
-	public string $first;
+	public string $outer1;
 
-	#[Storyblok\EmbeddedField("test", key: "nested_")]
-	public EmbeddedValue $embed;
+	#[Storyblok\EmbeddedField("test")]
+	public FieldOrderOuterEmbed $indirect;
+
+	#[Storyblok\TextField("Middle")]
+	public string $outer2;
+
+	#[Storyblok\EmbeddedField("test")]
+	public FieldOrderInnerEmbed $direct;
 
 	#[Storyblok\TextField("Last")]
-	public string $last;
+	public string $outer3;
 }
