@@ -14,18 +14,24 @@ use Torr\Storyblok\Story\Data\Story;
 )]
 class FieldSortOrder extends Story
 {
-	#[Storyblok\TextField("First")]
+	#[Storyblok\TextField("Test")]
 	public string $outer1;
 
-	#[Storyblok\EmbeddedField("test")]
+	#[Storyblok\EmbeddedField("Test")]
 	public FieldOrderOuterEmbed $indirect;
 
-	#[Storyblok\TextField("Middle")]
+	#[Storyblok\TextField("Test")]
 	public string $outer2;
 
-	#[Storyblok\EmbeddedField("test")]
+	#[Storyblok\EmbeddedField("Test")]
 	public FieldOrderInnerEmbed $direct;
 
-	#[Storyblok\TextField("Last")]
+	#[Storyblok\TextField("Test")]
 	public string $outer3;
+
+	#[Storyblok\EmbeddedField("Test", group: true)]
+	public FieldOrderOuterGroupEmbed $group;
+
+	#[Storyblok\TextField("Test")]
+	public string $outer4;
 }

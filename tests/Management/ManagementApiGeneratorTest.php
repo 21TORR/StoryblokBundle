@@ -91,6 +91,12 @@ class ManagementApiGeneratorTest extends TestCase
 				"direct_a",
 				"direct_b",
 				"outer3",
+				"group_first",
+				"group_inner_a",
+				"group_inner_b",
+				"group_second",
+				"group", // the group itself
+				"outer4",
 			],
 		];
 	}

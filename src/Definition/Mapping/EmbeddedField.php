@@ -19,6 +19,7 @@ readonly class EmbeddedField extends MappedField
 	public function __construct (
 		string $label,
 		?string $key = null,
+		public bool $group = false,
 	)
 	{
 		parent::__construct($label, $key);
@@ -42,6 +43,7 @@ readonly class EmbeddedField extends MappedField
 		return array_replace(
 			parent::toManagementApiData(),
 			[
+				"keys" => [],
 			],
 		);
 	}

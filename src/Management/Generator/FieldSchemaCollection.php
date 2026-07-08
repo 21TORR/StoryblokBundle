@@ -6,6 +6,7 @@ use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Mapping\EmbeddedField;
 use Torr\Storyblok\Management\Exception\ComponentManagementDataGenerationFailedException;
+use function PHPUnit\Framework\assertSame;
 
 /**
  */
@@ -19,24 +20,29 @@ final class FieldSchemaCollection
 		private readonly DefinitionRegistry $registry,
 	) {}
 
-
-	public function add (FieldDefinition $definition, string $keyPrefix = "") : void
+	/**
+	 * @return string[] the keys of the added schemas
+	 */
+	public function add (FieldDefinition $definition, string $keyPrefix = "") : array
 	{
 		if ($definition->mapping instanceof EmbeddedField)
 		{
-			$this->addEmbed($definition, $keyPrefix);
-			return;
+			return $this->addEmbed($definition, $keyPrefix);
 		}
 
-		$this->addFieldSchema($definition, $keyPrefix);
+		return $this->addFieldSchema($definition, $keyPrefix);
 	}
 
 	/**
-	 *
+	 * @return string[] the keys of the added schemas
 	 */
-	private function addEmbed (FieldDefinition $definition, string $keyPrefix = "") : void
+	private function addEmbed (FieldDefinition $definition, string $keyPrefix = "") : array
 	{
 		$embeddedDefinition = $this->registry->getEmbeddedDefinition($definition->propertyType);
+		$mapping = $definition->mapping;
+		\assert($mapping instanceof EmbeddedField);
+
+		$result = [];
 
 		if (null === $embeddedDefinition)
 		{
@@ -48,26 +54,35 @@ final class FieldSchemaCollection
 			);
 		}
 
-		$keyPrefix .= $definition->key;
+		$keyPrefix .= $definition->key . "_";
 
 		foreach ($embeddedDefinition->fields as $field)
 		{
-			$this->add($field, $keyPrefix);
+			$addedFields = $this->add($field, $keyPrefix);
+
+			$result = \array_merge($result, $addedFields);
 		}
+
+		if ($mapping->group)
+		{
+			$this->addSchema($definition->key, [
+				...$definition->mapping->toManagementApiData(),
+				"keys" => $result,
+			]);
+		}
+
+		return $result;
 	}
 
 	/**
+	 * @return string[] the keys of the added schemas
 	 */
-	public function addFieldSchema (FieldDefinition $field, string $keyPrefix = "") : void
+	public function addFieldSchema (FieldDefinition $field, string $keyPrefix = "") : array
 	{
-		$mapping = $field->mapping;
+		$fullFieldKey = $keyPrefix . $field->key;
+		$this->addSchema($keyPrefix . $field->key, $field->mapping->toManagementApiData());
 
-		$this->addSchema($keyPrefix . $field->key, [
-			"type" => $mapping->getType()->value,
-			"display_name" => $field->label,
-			"default_value" => $mapping->defaultValue,
-			...$mapping->toManagementApiData(),
-		]);
+		return [$fullFieldKey];
 	}
 
 	/**

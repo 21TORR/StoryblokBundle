@@ -42,7 +42,7 @@ readonly class FieldDefinitionLoader
 			}
 
 			$registry->registerEmbedded((string) $type);
-			$key = $field->key ?? $property->getName() . "_";
+			$key = $field->key ?? $property->getName();
 
 			return [
 				$key => new FieldDefinition(
