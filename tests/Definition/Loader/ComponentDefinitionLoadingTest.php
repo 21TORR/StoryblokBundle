@@ -5,6 +5,8 @@ namespace Tests\Torr\Storyblok\Definition\Loader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tests\Torr\Storyblok\Fixtures\Components\Empty\EmptyClass;
+use Tests\Torr\Storyblok\Fixtures\Components\FullNestedBlock;
+use Tests\Torr\Storyblok\Fixtures\Components\FullStandaloneBlock;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokAndDocumentSet;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingBaseClass;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissingBaseClass;
@@ -113,6 +115,28 @@ final class ComponentDefinitionLoadingTest extends TestCase
 				key: "simple",
 				label: "Simple Label",
 				type: ComponentType::Standalone,
+				fields: [],
+			),
+		];
+
+		yield "full standalone" => [
+			FullStandaloneBlock::class,
+			new ComponentDefinition(
+				storyClass: FullStandaloneBlock::class,
+				key: "full-standalone-block",
+				label: "Full Standalone Block",
+				type: ComponentType::Standalone,
+				fields: [],
+			),
+		];
+
+		yield "full nested" => [
+			FullNestedBlock::class,
+			new ComponentDefinition(
+				storyClass: FullNestedBlock::class,
+				key: "full-nested-block",
+				label: "Full Nested Block",
+				type: ComponentType::Nested,
 				fields: [],
 			),
 		];

@@ -4,7 +4,7 @@ namespace Tests\Torr\Storyblok\Story\Hydrator;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Tests\Torr\Storyblok\Fixtures\Block\RichTextBlock;
+use Tests\Torr\Storyblok\Fixtures\NestedBlock\RichTextBlock;
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbeddedValue;
 use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbedWithNestedEmbed;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;

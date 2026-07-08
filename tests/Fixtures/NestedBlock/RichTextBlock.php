@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Torr\Storyblok\Fixtures\Block;
+namespace Tests\Torr\Storyblok\Fixtures\NestedBlock;
 
 use Torr\Storyblok\Content\RichText;
 use Torr\Storyblok\Definition\Mapping as Storyblok;
