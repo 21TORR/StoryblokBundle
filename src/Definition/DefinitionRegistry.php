@@ -74,6 +74,9 @@ class DefinitionRegistry
 		return $this->byStoryClass[$storyClass] ?? null;
 	}
 
+	/**
+	 *
+	 */
 	public function getEmbeddedDefinition (string $embeddedClass) : ?EmbedDefinition
 	{
 		return $this->embeddedRegistry[$embeddedClass] ?? null;

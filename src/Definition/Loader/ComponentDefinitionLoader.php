@@ -99,8 +99,8 @@ readonly class ComponentDefinitionLoader
 
 		return new ComponentDefinition(
 			storyClass: $storyClass->getName(),
-			label: $blok->label,
 			key: $blok->key,
+			label: $blok->label,
 			type: ComponentType::Nested,
 			fields: $this->loadFields($registry, $storyClass),
 		);
@@ -126,8 +126,8 @@ readonly class ComponentDefinitionLoader
 
 		return new ComponentDefinition(
 			storyClass: $storyClass->getName(),
-			label: $document->label,
 			key: $document->key,
+			label: $document->label,
 			type: ComponentType::Standalone,
 			fields: $this->loadFields($registry, $storyClass),
 		);

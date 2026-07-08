@@ -13,8 +13,8 @@ final readonly class ComponentDefinition
 	 */
 	public function __construct (
 		public string $storyClass,
-		public string $label,
 		public string $key,
+		public string $label,
 		public ComponentType $type,
 		/** @var array<string, FieldDefinition> $fields */
 		public array $fields,

@@ -9,7 +9,7 @@ use Torr\Storyblok\Story\Data\DocumentStory;
 /**
  * @final
  */
-#[Document("simple", "simple")]
+#[Document("simple", "Simple Label")]
 class Simple extends DocumentStory
 {
 	#[TextField("Text")]

@@ -9,16 +9,20 @@ use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingAt
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\BlokMissingBaseClass;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissingBaseClass;
-use Torr\Storyblok\Attribute\AttributeLoader;
+use Tests\Torr\Storyblok\Fixtures\Components\Simple;
+use Torr\Storyblok\Component\Config\ComponentType;
+use Torr\Storyblok\Definition\Data\ComponentDefinition;
+use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Definition\Mapping\Blok;
 use Torr\Storyblok\Definition\Mapping\Document;
 use Torr\Storyblok\Story\Data\BlokStory;
 use Torr\Storyblok\Story\Data\DocumentStory;
 
-class ComponentDefinitionLoaderTest extends TestCase
+class ComponentDefinitionLoadingTest extends TestCase
 {
 	/**
 	 *
@@ -80,10 +84,8 @@ class ComponentDefinitionLoaderTest extends TestCase
 		$this->expectException(InvalidComponentDefinitionException::class);
 		$this->expectExceptionMessage($expectedMessage);
 
-		$attributesHelper = new AttributeLoader();
-		$loader = new ComponentDefinitionLoader($attributesHelper);
-
-		$loader->loadDefinition($storyClass);
+		$registry = $this->createRegistry();
+		$registry->register($storyClass);
 	}
 
 
@@ -92,9 +94,57 @@ class ComponentDefinitionLoaderTest extends TestCase
 	 */
 	public function testEmpty () : void
 	{
-		$attributesHelper = new AttributeLoader();
-		$loader = new ComponentDefinitionLoader($attributesHelper);
+		$registry = $this->createRegistry();
+		$registry->register(EmptyClass::class);
 
-		self::assertNull($loader->loadDefinition(EmptyClass::class));
+		self::assertNull($registry->getByStoryClass(EmptyClass::class));
+	}
+
+	/**
+	 *
+	 */
+	public static function provideValidBaseDefinition () : iterable
+	{
+		yield "simple" => [
+			Simple::class,
+			new ComponentDefinition(
+				storyClass: Simple::class,
+				key: "simple",
+				label: "Simple Label",
+				type: ComponentType::Standalone,
+				fields: []
+			),
+		];
+	}
+
+
+	/**
+	 *
+	 */
+	#[DataProvider("provideValidBaseDefinition")]
+	public function testValidBaseDefinition (
+		string $storyClass,
+		ComponentDefinition $expected,
+	) : void
+	{
+
+		$registry = $this->createRegistry();
+		$registry->register($storyClass);
+		$actual = $registry->getByStoryClass($storyClass);
+
+		self::assertSame($expected->storyClass, $actual->storyClass);
+		self::assertSame($expected->key, $actual->key);
+		self::assertSame($expected->label, $actual->label);
+		self::assertSame($expected->type, $actual->type);
+	}
+
+
+	private function createRegistry () : DefinitionRegistry
+	{
+		return new DefinitionRegistry(
+			new ComponentDefinitionLoader(
+				new FieldDefinitionLoader(),
+			),
+		);
 	}
 }
