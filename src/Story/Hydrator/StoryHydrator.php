@@ -145,7 +145,7 @@ readonly class StoryHydrator
 	{
 		try
 		{
-			$transformedValue = $definition->field->transformStoryblokValue(
+			$transformedValue = $definition->mapping->transformStoryblokValue(
 				contentPath: $contentPathPrefix . $definition->key,
 				storyData: $data,
 				definition: $definition,

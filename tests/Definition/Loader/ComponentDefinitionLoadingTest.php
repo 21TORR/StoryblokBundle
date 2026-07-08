@@ -145,6 +145,9 @@ final class ComponentDefinitionLoadingTest extends TestCase
 		self::assertSame($expected->type, $actual->type);
 	}
 
+	/**
+	 *
+	 */
 	private function createRegistry () : DefinitionRegistry
 	{
 		return new DefinitionRegistry(

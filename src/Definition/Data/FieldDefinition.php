@@ -19,7 +19,7 @@ final readonly class FieldDefinition
 		public string $label,
 		public string $propertyPath,
 		public array $data,
-		public MappedField $field,
+		public MappedField $mapping,
 		public mixed $propertyType,
 		public ?Required $required = null,
 		public ?Translatable $translatable = null,
@@ -29,7 +29,7 @@ final readonly class FieldDefinition
 	 */
 	public function getFieldType () : FieldType
 	{
-		return $this->field->getType();
+		return $this->mapping->getType();
 	}
 
 	public function getFieldDefinitions ()
