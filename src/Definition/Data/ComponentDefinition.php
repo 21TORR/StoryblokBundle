@@ -18,6 +18,7 @@ final readonly class ComponentDefinition
 		public ComponentType $type,
 		/** @var array<string, FieldDefinition|EmbedDefinition> $fields */
 		public array $fields,
+		public ?string $description = null,
 	) {}
 
 	/**

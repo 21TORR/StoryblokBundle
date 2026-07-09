@@ -11,6 +11,7 @@ use Torr\Storyblok\Story\Data\Story;
 #[Component(
 	key: "full-standalone-block",
 	label: "Full Standalone Block",
+	description: "This is my description",
 )]
 class FullBlock extends Story
 {

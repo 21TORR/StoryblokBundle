@@ -32,8 +32,7 @@ readonly class ManagementApiGenerator
 		return [
 			"name" => $component->key,
 			"display_name" => $component->label,
-			/** @todo add */
-			"description" => null,
+			"description" => $component->description,
 			...$component->type->toManagementApiData(),
 			"schema" => $schemaCollection->schemas,
 		];

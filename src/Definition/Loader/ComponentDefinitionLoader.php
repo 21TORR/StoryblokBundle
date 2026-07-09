@@ -75,6 +75,7 @@ readonly class ComponentDefinitionLoader
 			label: $component->label,
 			type: $componentType,
 			fields: $this->loadFields($registry, $reflectionClass),
+			description: $component->description,
 		);
 	}
 

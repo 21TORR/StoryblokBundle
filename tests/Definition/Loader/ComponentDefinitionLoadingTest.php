@@ -111,6 +111,7 @@ final class ComponentDefinitionLoadingTest extends TestCase
 				label: "Full Standalone Block",
 				type: ComponentType::Standalone,
 				fields: [],
+				description: "This is my description",
 			),
 		];
 

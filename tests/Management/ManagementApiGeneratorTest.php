@@ -120,7 +120,6 @@ class ManagementApiGeneratorTest extends TestCase
 		$apiGenerator = new ManagementApiGenerator($registry);
 		$actual = $apiGenerator->generateManagementApiPayload($definition);
 
-		dump(\array_keys($actual["schema"]));
 		self::assertSame($expectedFieldsOrder, \array_keys($actual["schema"]));
 	}
 }

@@ -15,5 +15,6 @@ final readonly class Component
 	public function __construct (
 		public string $key,
 		public string $label,
+		public ?string $description = null,
 	) {}
 }
