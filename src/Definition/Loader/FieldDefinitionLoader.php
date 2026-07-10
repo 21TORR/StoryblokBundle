@@ -47,9 +47,7 @@ readonly class FieldDefinitionLoader
 			return [
 				$key => new FieldDefinition(
 					key: $key,
-					label: $field->label,
 					propertyPath: $property->getName(),
-					data: $field->toManagementApiData(),
 					mapping: $field,
 					propertyType: (string) $type,
 					required: $this->fetchFirstAttribute($property, Required::class),
@@ -63,9 +61,7 @@ readonly class FieldDefinitionLoader
 		return [
 			$key => new FieldDefinition(
 				key: $key,
-				label: $field->label,
 				propertyPath: $property->getName(),
-				data: $field->toManagementApiData(),
 				mapping: $field,
 				propertyType: null,
 				required: $this->fetchFirstAttribute($property, Required::class),

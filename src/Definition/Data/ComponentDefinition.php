@@ -19,6 +19,8 @@ final readonly class ComponentDefinition
 		/** @var array<string, FieldDefinition|EmbedDefinition> $fields */
 		public array $fields,
 		public ?string $description = null,
+		public array $tags = [],
+		public string|\BackedEnum|null $folder = null,
 	) {}
 
 	/**

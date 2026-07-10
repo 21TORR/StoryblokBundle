@@ -11,8 +11,6 @@ readonly class Required
 	/**
 	 */
 	public function __construct (
-		public bool $required = true,
-		public ?string $regexp = null,
 		public bool $allowMissingData = false,
 	) {}
 }

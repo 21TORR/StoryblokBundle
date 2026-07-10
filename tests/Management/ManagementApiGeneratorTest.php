@@ -30,11 +30,11 @@ class ManagementApiGeneratorTest extends TestCase
 					"text" => [
 						"type" => "text",
 						"display_name" => "Text",
-						"default_value" => null,
 						"rtl" => false,
 						"pos" => 0,
 						"max_length" => null,
 						"no_translate" => false,
+						"required" => false,
 					],
 				],
 			],
@@ -59,7 +59,7 @@ class ManagementApiGeneratorTest extends TestCase
 		$apiGenerator = new ManagementApiGenerator($registry);
 		$actual = $apiGenerator->generateManagementApiPayload($definition);
 
-		self::assertEquals($expected, $actual);
+		self::assertEquals($expected, $actual->toArray());
 	}
 
 	/**
@@ -120,6 +120,6 @@ class ManagementApiGeneratorTest extends TestCase
 		$apiGenerator = new ManagementApiGenerator($registry);
 		$actual = $apiGenerator->generateManagementApiPayload($definition);
 
-		self::assertSame($expectedFieldsOrder, \array_keys($actual["schema"]));
+		self::assertSame($expectedFieldsOrder, \array_keys($actual->toArray()["schema"]));
 	}
 }

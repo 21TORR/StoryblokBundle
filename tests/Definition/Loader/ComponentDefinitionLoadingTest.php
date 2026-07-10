@@ -14,6 +14,7 @@ use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\DocumentMissi
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\NestedMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidBaseDefinition\StoryMissingAttribute;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
+use Tests\Torr\Storyblok\Fixtures\Group\ComponentGroupFixture;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
@@ -112,6 +113,8 @@ final class ComponentDefinitionLoadingTest extends TestCase
 				type: ComponentType::Standalone,
 				fields: [],
 				description: "This is my description",
+				tags: ["tag1", "tag2"],
+				folder: ComponentGroupFixture::Folder,
 			),
 		];
 
@@ -123,6 +126,8 @@ final class ComponentDefinitionLoadingTest extends TestCase
 				label: "Full Nested Block",
 				type: ComponentType::Nested,
 				fields: [],
+				tags: [],
+				folder: "folder2",
 			),
 		];
 	}

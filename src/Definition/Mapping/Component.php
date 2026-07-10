@@ -16,5 +16,8 @@ final readonly class Component
 		public string $key,
 		public string $label,
 		public ?string $description = null,
+		/** @var array<string|\BackedEnum> */
+		public array $tags = [],
+		public \BackedEnum|string|null $folder = null,
 	) {}
 }

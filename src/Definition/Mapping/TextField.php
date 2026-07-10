@@ -2,11 +2,13 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
+use Storyblok\ManagementApi\Data\Fields\Schema\FieldGeneric;
+use Storyblok\ManagementApi\Data\Fields\Schema\FieldText;
+use Storyblok\ManagementApi\Data\Fields\Schema\FieldTextarea;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\Field\MappedField;
-use Torr\Storyblok\Field\FieldType;
 
 /**
  * @final
@@ -17,44 +19,47 @@ readonly class TextField extends MappedField
 	/**
 	 */
 	public function __construct (
-		string $label,
-		private bool $multiline = false,
-		private ?int $maxLength = null,
-		private bool $isRightToLeft = false,
-		private bool $exportTranslation = true,
+		public string $label,
+		public bool $multiline = false,
+		public ?string $regex = null,
+		public ?int $maxLength = null,
+		public bool $isRightToLeft = false,
+		public bool $exportTranslation = true,
 		?string $key = null,
-		?string $defaultValue = null,
+		public ?string $defaultValue = null,
+		public bool $translatable = true,
 	)
 	{
-		parent::__construct($label, $key, $defaultValue);
+		parent::__construct($key);
 	}
 
 	/**
 	 *
 	 */
 	#[\Override]
-	public function getType () : FieldType
+	public function createApiData (string $key) : FieldGeneric
 	{
-		return $this->multiline
-			? FieldType::TextArea
-			: FieldType::Text;
+		$field = $this->multiline
+			? new FieldTextarea($key)
+			: new FieldText($key);
+
+		if (null !== $this->defaultValue)
+		{
+			$field->setDefaultValue($this->defaultValue);
+		}
+
+		if (null !== $this->regex)
+		{
+			$field->setRegex($this->regex);
+		}
+
+		return $field
+			->setDisplayName($this->label)
+			->set("max_length", $this->maxLength)
+			->set("rtl", $this->isRightToLeft)
+			->setNoTranslate(!$this->translatable);
 	}
 
-	/**
-	 *
-	 */
-	#[\Override]
-	public function toManagementApiData () : array
-	{
-		return array_replace(
-			parent::toManagementApiData(),
-			[
-				"rtl" => $this->isRightToLeft,
-				"max_length" => $this->maxLength,
-				"no_translate" => !$this->exportTranslation,
-			],
-		);
-	}
 
 	/**
 	 *

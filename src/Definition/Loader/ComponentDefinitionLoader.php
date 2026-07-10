@@ -76,6 +76,8 @@ readonly class ComponentDefinitionLoader
 			type: $componentType,
 			fields: $this->loadFields($registry, $reflectionClass),
 			description: $component->description,
+			tags: \array_map($this->resolveEnum(...), $component->tags),
+			folder: $this->resolveEnum($component->folder),
 		);
 	}
 
@@ -132,5 +134,16 @@ readonly class ComponentDefinitionLoader
 	private function loadAttribute (\ReflectionClass $storyClass, string $attribute) : ?object
 	{
 		return $storyClass->getAttributes($attribute)[0]?->newInstance() ?? null;
+	}
+
+	/**
+	 * @param string|\BackedEnum|null $value
+	 * @phpstan-return $value is null ? null : string
+	 */
+	private function resolveEnum (string|\BackedEnum|null $value) : ?string
+	{
+		return $value instanceof \BackedEnum
+			? $value->value
+			: $value;
 	}
 }

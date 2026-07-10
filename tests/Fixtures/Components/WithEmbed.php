@@ -13,11 +13,6 @@ use Torr\Storyblok\Story\Data\Story;
 	key: "with-embed",
 	label: "With Embed",
 )]
-#[Storyblok\BlokAdminUi(
-	previewField: "headline",
-	icon: "...",
-	iconColor: "red",
-)]
 class WithEmbed extends Story
 {
 	#[Storyblok\TextField("Headline")]

@@ -2,6 +2,9 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
+use Storyblok\ManagementApi\Data\Fields\Schema\FieldGeneric;
+use Storyblok\ManagementApi\Data\Fields\Schema\FieldInterface;
+use Storyblok\ManagementApi\Data\Fields\Schema\FieldSection;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\Field\MappedField;
@@ -17,36 +20,29 @@ readonly class EmbeddedField extends MappedField
 	/**
 	 */
 	public function __construct (
-		string $label,
+		public string $label,
 		?string $key = null,
 		public bool $group = false,
 	)
 	{
-		parent::__construct($label, $key);
+		parent::__construct($key);
 	}
 
 	/**
 	 *
 	 */
 	#[\Override]
-	public function getType () : FieldType
+	public function createApiData (string $key) : ?FieldGeneric
 	{
-		return FieldType::Section;
+		if $this->group)
+		{
+			return new FieldSection($key)
+				->setDisplayName($this->label);
+		}
+
+		return null;
 	}
 
-	/**
-	 *
-	 */
-	#[\Override]
-	public function toManagementApiData () : array
-	{
-		return array_replace(
-			parent::toManagementApiData(),
-			[
-				"keys" => [],
-			],
-		);
-	}
 
 	/**
 	 *

@@ -11,6 +11,7 @@ use Torr\Storyblok\Story\Data\Block;
 #[Component(
 	key: "full-nested-block",
 	label: "Full Nested Block",
+	folder: "folder2",
 )]
 class FullNestedBlock extends Block
 {

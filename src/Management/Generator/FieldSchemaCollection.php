@@ -2,22 +2,22 @@
 
 namespace Torr\Storyblok\Management\Generator;
 
+use Storyblok\ManagementApi\Data\Component;
+use Storyblok\ManagementApi\Data\Fields\Schema\FieldSection;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Mapping\EmbeddedField;
 use Torr\Storyblok\Management\Exception\ComponentManagementDataGenerationFailedException;
-use function PHPUnit\Framework\assertSame;
 
 /**
  */
 final class FieldSchemaCollection
 {
-	public private(set) array $schemas = [];
-
 	/**
 	 */
 	public function __construct (
 		private readonly DefinitionRegistry $registry,
+		private readonly Component $apiComponent,
 	) {}
 
 	/**
@@ -42,7 +42,7 @@ final class FieldSchemaCollection
 		$mapping = $definition->mapping;
 		\assert($mapping instanceof EmbeddedField);
 
-		$result = [];
+		$addedKeys = [];
 
 		if (null === $embeddedDefinition)
 		{
@@ -60,18 +60,18 @@ final class FieldSchemaCollection
 		{
 			$addedFields = $this->add($field, $keyPrefix);
 
-			$result = \array_merge($result, $addedFields);
+			$addedKeys = \array_merge($addedKeys, $addedFields);
 		}
 
-		if ($mapping->group)
+		$sectionComponent = $definition->createApiData($definition->key)
+			?->set("keys", $addedKeys);
+
+		if (null !== $sectionComponent)
 		{
-			$this->addSchema($definition->key, [
-				...$definition->mapping->toManagementApiData(),
-				"keys" => $result,
-			]);
+			$this->apiComponent->appendField($sectionComponent);
 		}
 
-		return $result;
+		return $addedKeys;
 	}
 
 	/**
@@ -80,7 +80,7 @@ final class FieldSchemaCollection
 	public function addFieldSchema (FieldDefinition $field, string $keyPrefix = "") : array
 	{
 		$fullFieldKey = $keyPrefix . $field->key;
-		$this->addSchema($keyPrefix . $field->key, $field->mapping->toManagementApiData());
+		$this->apiComponent->appendField($field->createApiData($fullFieldKey));
 
 		return [$fullFieldKey];
 	}
