@@ -2,7 +2,6 @@
 
 namespace Torr\Storyblok\Management;
 
-use Storyblok\ManagementApi\Data\Component;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Management\Generator\FieldSchemaCollection;
@@ -21,20 +20,21 @@ readonly class ManagementApiGenerator
 	/**
 	 *
 	 */
-	public function generateManagementApiPayload (ComponentDefinition $component) : Component
+	public function generateManagementApiPayload (ComponentDefinition $component) : array
 	{
-		$apiComponent = $component->type->toManagementApiComponent()
-			->setName($component->key)
-			->setDisplayName($component->label)
-			->set("description", $component->description);
-
-		$schemaCollection = new FieldSchemaCollection($this->registry, $apiComponent);
+		$schemaCollection = new FieldSchemaCollection($this->registry);
 
 		foreach ($component->fields as $field)
 		{
 			$schemaCollection->add($field);
 		}
 
-		return $apiComponent;
+		return [
+			"name" => $component->key,
+			"display_name" => $component->label,
+			"description" => $component->description,
+			...$component->type->createManagementApiData(),
+			"schema" => $schemaCollection->schemas,
+		];
 	}
 }

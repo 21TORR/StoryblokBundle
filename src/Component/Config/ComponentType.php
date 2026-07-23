@@ -2,8 +2,6 @@
 
 namespace Torr\Storyblok\Component\Config;
 
-use Storyblok\ManagementApi\Data\Component;
-
 enum ComponentType
 {
 	// "Universal" not supported by design
@@ -12,12 +10,18 @@ enum ComponentType
 
 	/**
 	 */
-	public function toManagementApiComponent () : Component
+	public function createManagementApiData () : array
 	{
 		return match ($this)
 		{
-			self::Standalone => Component::contentType("empty"),
-			self::Nested => Component::nestable("empty"),
+			self::Standalone => [
+				"is_root" => true,
+				"is_nestable" => false,
+			],
+			self::Nested => [
+				"is_root" => false,
+				"is_nestable" => true,
+			],
 		};
 	}
 }

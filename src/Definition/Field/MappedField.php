@@ -2,9 +2,9 @@
 
 namespace Torr\Storyblok\Definition\Field;
 
-use Storyblok\ManagementApi\Data\Fields\Schema\FieldGeneric;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
+use Torr\Storyblok\Field\FieldType;
 use Torr\Storyblok\Story\Hydrator\StoryHydrator;
 
 abstract readonly class MappedField
@@ -13,13 +13,19 @@ abstract readonly class MappedField
 	 */
 	public function __construct (
 		public ?string $key = null,
+		public string $label,
 	) {}
+
+	/**
+	 * Returns the Storyblok type
+	 */
+	abstract public function getType () : FieldType;
 
 
 	/**
 	 * Returns the field data VO for the API
 	 */
-	abstract public function createApiData (string $key) : ?FieldGeneric;
+	abstract public function createManagementApiData () : ?array;
 
 
 	/**
@@ -44,5 +50,20 @@ abstract readonly class MappedField
 	) : mixed
 	{
 		return $storyData[$contentPath] ?? null;
+	}
+
+	/**
+	 */
+	protected function mergeManagementData (array $config) : array
+	{
+		$filtered = \array_filter(
+			$config,
+			static fn (mixed $value) => null !== $value,
+		);
+
+		$filtered["type"] = $this->getType()->value;
+		$filtered["display_name"] = $this->label;
+
+		return $filtered;
 	}
 }

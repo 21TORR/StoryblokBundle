@@ -2,7 +2,6 @@
 
 namespace Torr\Storyblok\Definition\Data;
 
-use Storyblok\ManagementApi\Data\Fields\Schema\FieldGeneric;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Definition\Mapping\Required;
 use Torr\Storyblok\Definition\Mapping\Translatable;
@@ -27,9 +26,18 @@ final readonly class FieldDefinition
 	/**
 	 * Returns the field data VO for the API
 	 */
-	public function createApiData (string $key) : ?FieldGeneric
+	public function createApiData (string $key) : ?array
 	{
-		return $this->mapping->createApiData($key)
-			?->setRequired(null !== $this->required);
+		$apiData = $this->mapping->createManagementApiData($key);
+
+		if (null === $apiData)
+		{
+			return null;
+		}
+
+		$apiData["required"] = null !== $this->required;
+		$apiData["no_translate"] = null === $this->translatable;
+
+		return $apiData;
 	}
 }

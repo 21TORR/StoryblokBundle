@@ -2,13 +2,11 @@
 
 namespace Torr\Storyblok\Definition\Mapping;
 
-use Storyblok\ManagementApi\Data\Fields\Schema\FieldGeneric;
-use Storyblok\ManagementApi\Data\Fields\Schema\FieldText;
-use Storyblok\ManagementApi\Data\Fields\Schema\FieldTextarea;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\Field\MappedField;
+use Torr\Storyblok\Field\FieldType;
 
 /**
  * @final
@@ -19,45 +17,42 @@ readonly class TextField extends MappedField
 	/**
 	 */
 	public function __construct (
-		public string $label,
+		string $label,
 		public bool $multiline = false,
 		public ?string $regex = null,
 		public ?int $maxLength = null,
 		public bool $isRightToLeft = false,
-		public bool $exportTranslation = true,
 		?string $key = null,
 		public ?string $defaultValue = null,
-		public bool $translatable = true,
 	)
 	{
-		parent::__construct($key);
+		parent::__construct($key, $label);
 	}
 
 	/**
 	 *
 	 */
 	#[\Override]
-	public function createApiData (string $key) : FieldGeneric
+	public function getType () : FieldType
 	{
-		$field = $this->multiline
-			? new FieldTextarea($key)
-			: new FieldText($key);
+		return $this->multiline
+			? FieldType::TextArea
+			: FieldType::Text;
+	}
 
-		if (null !== $this->defaultValue)
-		{
-			$field->setDefaultValue($this->defaultValue);
-		}
 
-		if (null !== $this->regex)
-		{
-			$field->setRegex($this->regex);
-		}
-
-		return $field
-			->setDisplayName($this->label)
-			->set("max_length", $this->maxLength)
-			->set("rtl", $this->isRightToLeft)
-			->setNoTranslate(!$this->translatable);
+	/**
+	 *
+	 */
+	#[\Override]
+	public function createManagementApiData () : array
+	{
+		return $this->mergeManagementData([
+			"default_value" => $this->defaultValue,
+			"max_length" => $this->maxLength,
+			"rtl" => $this->isRightToLeft,
+			"regex" => $this->regex,
+		]);
 	}
 
 
@@ -73,8 +68,6 @@ readonly class TextField extends MappedField
 		array $contentPathHierarchy,
 	) : void
 	{
-		$value = $storyData[$contentPath] ?? null;
-
 		$context->ensureDataIsValid($contentPath, $storyData, $this, $contentPathHierarchy, [
 			// !$this->allowMissingData && $this->required ? new NotNull() : null,
 			new Type("string"),

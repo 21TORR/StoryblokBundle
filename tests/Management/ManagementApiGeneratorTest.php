@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tests\Torr\Storyblok\Fixtures\Components\FieldOrder\FieldSortOrder;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
+use Tests\Torr\Storyblok\Fixtures\Components\SimpleTranslatable;
 use Torr\Storyblok\Definition\DefinitionRegistry;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
@@ -32,9 +33,29 @@ class ManagementApiGeneratorTest extends TestCase
 						"display_name" => "Text",
 						"rtl" => false,
 						"pos" => 0,
-						"max_length" => null,
-						"no_translate" => false,
+						"no_translate" => true,
 						"required" => false,
+					],
+				],
+			],
+		];
+
+		yield "simple translatable" => [
+			SimpleTranslatable::class,
+			[
+				"name" => "simple-translatable",
+				"display_name" => "Simple Translatable Label",
+				"description" => null,
+				"is_root" => true,
+				"is_nestable" => false,
+				"schema" => [
+					"text" => [
+						"type" => "text",
+						"display_name" => "Text",
+						"rtl" => false,
+						"pos" => 0,
+						"no_translate" => false,
+						"required" => true,
 					],
 				],
 			],
@@ -59,7 +80,7 @@ class ManagementApiGeneratorTest extends TestCase
 		$apiGenerator = new ManagementApiGenerator($registry);
 		$actual = $apiGenerator->generateManagementApiPayload($definition);
 
-		self::assertEquals($expected, $actual->toArray());
+		self::assertEquals($expected, $actual);
 	}
 
 	/**
@@ -120,6 +141,6 @@ class ManagementApiGeneratorTest extends TestCase
 		$apiGenerator = new ManagementApiGenerator($registry);
 		$actual = $apiGenerator->generateManagementApiPayload($definition);
 
-		self::assertSame($expectedFieldsOrder, \array_keys($actual->toArray()["schema"]));
+		self::assertSame($expectedFieldsOrder, \array_keys($actual["schema"]));
 	}
 }
