@@ -1,3 +1,9 @@
+5.2.8
+=====
+
+* (bug) Trim trailing slashes from story slug.
+
+
 5.2.7
 =====
 
