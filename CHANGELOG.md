@@ -1,3 +1,9 @@
+5.2.9
+=====
+
+* (bug) Parse `DateTimeField`s as UTC date. 
+
+
 5.2.8
 =====
 
