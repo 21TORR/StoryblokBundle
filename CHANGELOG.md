@@ -1,6 +1,12 @@
 3.21.3
 ======
 
+* (bug) Parse `DateTimeField`s as UTC date.
+
+
+3.21.3
+======
+
 * (bug) Properly support '0' in `decimals` and `minValue` option for `NumberField`
 
 
