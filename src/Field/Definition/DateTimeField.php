@@ -11,7 +11,7 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 
 final class DateTimeField extends AbstractField
 {
-	private const DATE_TIME_FORMAT = "Y-m-d H:i";
+	private const string DATE_TIME_FORMAT = "Y-m-d H:i";
 
 	/**
 	 * @inheritDoc
@@ -28,6 +28,7 @@ final class DateTimeField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	protected function toManagementApiData () : array
 	{
 		return array_replace(
@@ -43,6 +44,7 @@ final class DateTimeField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	protected function getInternalStoryblokType () : FieldType
 	{
 		return FieldType::DateTime;
@@ -51,6 +53,7 @@ final class DateTimeField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function validateData (ComponentContext $context, array $contentPath, mixed $data, array $fullData) : void
 	{
 		$context->ensureDataIsValid(
@@ -68,6 +71,7 @@ final class DateTimeField extends AbstractField
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function transformData (
 		mixed $data,
 		ComponentContext $context,
@@ -81,7 +85,7 @@ final class DateTimeField extends AbstractField
 		$data = $context->normalizeOptionalString($data);
 
 		$transformed = null !== $data
-			? \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data)
+			? \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data, new \DateTimeZone("UTC"))
 			: null;
 
 		if (false === $transformed)
