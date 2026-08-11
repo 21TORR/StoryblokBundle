@@ -87,7 +87,7 @@ final class SyncDefinitionsCommand extends Command
 	/**
 	 *
 	 */
-	private function syncComponents (
+	public function syncComponents (
 		TorrStyle $io,
 		bool $sync,
 		AbstractStoryblokAdapter $adapter,
