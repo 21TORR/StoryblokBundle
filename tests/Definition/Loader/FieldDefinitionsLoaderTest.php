@@ -53,7 +53,6 @@ class FieldDefinitionsLoaderTest extends TestCase
 			->register($storyClass);
 	}
 
-
 	public function testSortOrder () : void
 	{
 		$registry = $this->createRegistry()
@@ -61,11 +60,11 @@ class FieldDefinitionsLoaderTest extends TestCase
 
 		$definition = $registry->getByStoryClass(FieldSortOrder::class);
 		dump($definition->fields);
-		self::assertCount(4, $definition->fields);
-		self::assertSame("first", $definition->fields[0]->key);
-		self::assertSame("nested_label", $definition->fields[1]->key);
-		self::assertSame("nested_link", $definition->fields[2]->key);
-		self::assertSame("last", $definition->fields[3]->key);
+		static::assertCount(4, $definition->fields);
+		static::assertSame("first", $definition->fields[0]->key);
+		static::assertSame("nested_label", $definition->fields[1]->key);
+		static::assertSame("nested_link", $definition->fields[2]->key);
+		static::assertSame("last", $definition->fields[3]->key);
 	}
 
 	/**

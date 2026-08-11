@@ -2,7 +2,6 @@
 
 namespace Torr\Storyblok\Definition\Data;
 
-use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Exception\InvalidFieldDefinitionException;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Definition\Mapping\Required;
@@ -32,7 +31,6 @@ final readonly class FieldDefinition
 			));
 		}
 	}
-
 
 	/**
 	 * Returns the field data VO for the API

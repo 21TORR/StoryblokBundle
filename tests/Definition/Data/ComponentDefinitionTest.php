@@ -2,14 +2,16 @@
 
 namespace Tests\Torr\Storyblok\Definition\Data;
 
+use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
-use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 
-class ComponentDefinitionTest extends TestCase
+/**
+ * @internal
+ */
+final class ComponentDefinitionTest extends TestCase
 {
-
 	/**
 	 *
 	 */

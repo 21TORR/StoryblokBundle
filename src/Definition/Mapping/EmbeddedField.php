@@ -34,7 +34,6 @@ readonly class EmbeddedField extends MappedField
 		return FieldType::Section;
 	}
 
-
 	/**
 	 *
 	 */
@@ -45,7 +44,6 @@ readonly class EmbeddedField extends MappedField
 			? $this->mergeManagementData([])
 			: null;
 	}
-
 
 	/**
 	 *

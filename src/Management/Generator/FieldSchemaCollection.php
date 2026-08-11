@@ -49,7 +49,7 @@ final class FieldSchemaCollection
 				\sprintf(
 					"Could not find embedded definition for '%s'",
 					$definition->propertyType,
-				)
+				),
 			);
 		}
 
@@ -59,7 +59,7 @@ final class FieldSchemaCollection
 		{
 			$addedFields = $this->add($field, $keyPrefix);
 
-			$addedKeys = \array_merge($addedKeys, $addedFields);
+			$addedKeys = array_merge($addedKeys, $addedFields);
 		}
 
 		$sectionComponent = $definition->createApiData($definition->key);

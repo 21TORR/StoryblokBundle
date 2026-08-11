@@ -21,12 +21,10 @@ abstract readonly class MappedField
 	 */
 	abstract public function getType () : FieldType;
 
-
 	/**
 	 * Returns the field data VO for the API
 	 */
 	abstract public function createManagementApiData () : ?array;
-
 
 	/**
 	 * @param string[] $contentPathHierarchy The path to the given element
@@ -56,7 +54,7 @@ abstract readonly class MappedField
 	 */
 	protected function mergeManagementData (array $config) : array
 	{
-		$filtered = \array_filter(
+		$filtered = array_filter(
 			$config,
 			static fn (mixed $value) => null !== $value,
 		);

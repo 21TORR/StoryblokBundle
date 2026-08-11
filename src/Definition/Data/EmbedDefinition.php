@@ -13,7 +13,7 @@ final readonly class EmbedDefinition
 		public string $embeddedClass,
 		public string $label,
 		public string $key,
-		/** @var array<string, FieldDefinition|EmbedDefinition> $fields */
+		/** @var array<string, FieldDefinition|self> $fields */
 		public array $fields,
 	) {}
 }

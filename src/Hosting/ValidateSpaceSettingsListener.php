@@ -5,8 +5,8 @@ namespace Torr\Storyblok\Hosting;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Torr\Hosting\Event\ValidateAppEvent;
 use Torr\Snail\Snail\Snailer;
-use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Adapter\Exception\InvalidSpaceSettingsException;
+use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 
 /**
  * @final

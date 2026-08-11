@@ -2,14 +2,17 @@
 
 namespace Tests\Torr\Storyblok\Definition\Data;
 
-use Torr\Storyblok\Definition\Data\FieldDefinition;
 use PHPUnit\Framework\TestCase;
+use Torr\Storyblok\Definition\Data\FieldDefinition;
 use Torr\Storyblok\Definition\Exception\InvalidFieldDefinitionException;
 use Torr\Storyblok\Definition\Mapping\TextField;
 
-class FieldDefinitionTest extends TestCase
+/**
+ * @internal
+ */
+final class FieldDefinitionTest extends TestCase
 {
-	public function testReservedKey ()
+	public function testReservedKey () : void
 	{
 		$this->expectException(InvalidFieldDefinitionException::class);
 		$this->expectExceptionMessage("Can't use field name 'component' as it is a reserved name.");

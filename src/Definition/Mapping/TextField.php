@@ -40,7 +40,6 @@ readonly class TextField extends MappedField
 			: FieldType::Text;
 	}
 
-
 	/**
 	 *
 	 */
@@ -54,7 +53,6 @@ readonly class TextField extends MappedField
 			"regex" => $this->regex,
 		]);
 	}
-
 
 	/**
 	 *

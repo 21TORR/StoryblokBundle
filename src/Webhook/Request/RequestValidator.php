@@ -6,7 +6,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Exclude;
 use Symfony\Component\HttpFoundation\Request;
 use Torr\Storyblok\Adapter\SpaceSettings;
-use Torr\Storyblok\Config\StoryblokConfig;
 
 #[Exclude]
 final readonly class RequestValidator

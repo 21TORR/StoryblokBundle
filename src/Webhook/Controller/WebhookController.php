@@ -8,9 +8,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Torr\Storyblok\Adapter\Exception\UnknownStoryblokAdapterException;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Event\StoryblokWebhookEvent;
-use Torr\Storyblok\Adapter\Exception\UnknownStoryblokAdapterException;
 use Torr\Storyblok\Webhook\Parser\WebhookPayloadParser;
 
 final class WebhookController extends AbstractController

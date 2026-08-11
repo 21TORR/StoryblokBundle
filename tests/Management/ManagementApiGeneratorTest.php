@@ -12,7 +12,10 @@ use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Management\ManagementApiGenerator;
 
-class ManagementApiGeneratorTest extends TestCase
+/**
+ * @internal
+ */
+final class ManagementApiGeneratorTest extends TestCase
 {
 	/**
 	 *
@@ -122,7 +125,6 @@ class ManagementApiGeneratorTest extends TestCase
 		];
 	}
 
-
 	/**
 	 *
 	 */
@@ -130,7 +132,7 @@ class ManagementApiGeneratorTest extends TestCase
 	public function testFieldSortOrder (
 		string $componentClass,
 		array $expectedFieldsOrder,
-	)
+	) : void
 	{
 		$registry = $this->createRegistry();
 		$registry->register($componentClass);
@@ -141,6 +143,6 @@ class ManagementApiGeneratorTest extends TestCase
 		$apiGenerator = new ManagementApiGenerator($registry);
 		$actual = $apiGenerator->generateManagementApiPayload($definition);
 
-		self::assertSame($expectedFieldsOrder, \array_keys($actual["schema"]));
+		self::assertSame($expectedFieldsOrder, array_keys($actual["schema"]));
 	}
 }

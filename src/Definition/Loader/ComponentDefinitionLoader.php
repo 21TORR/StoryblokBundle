@@ -59,8 +59,8 @@ readonly class ComponentDefinitionLoader
 
 		$componentType = match (true)
 		{
-			\is_a($storyClass, Story::class, true) => ComponentType::Standalone,
-			\is_a($storyClass, Block::class, true) => ComponentType::Nested,
+			is_a($storyClass, Story::class, true) => ComponentType::Standalone,
+			is_a($storyClass, Block::class, true) => ComponentType::Nested,
 			default => throw new InvalidComponentDefinitionException(\sprintf(
 				"Storyblok component '%s' must either extend '%s' or '%s'",
 				$storyClass,
@@ -76,7 +76,7 @@ readonly class ComponentDefinitionLoader
 			type: $componentType,
 			fields: $this->loadFields($registry, $reflectionClass),
 			description: $component->description,
-			tags: \array_map($this->resolveEnum(...), $component->tags),
+			tags: array_map($this->resolveEnum(...), $component->tags),
 			folder: $this->resolveEnum($component->folder),
 		);
 	}
@@ -92,7 +92,6 @@ readonly class ComponentDefinitionLoader
 			fields: $this->loadFields($registry, new \ReflectionClass($embedClass)),
 		);
 	}
-
 
 	/**
 	 *
@@ -137,7 +136,6 @@ readonly class ComponentDefinitionLoader
 	}
 
 	/**
-	 * @param string|\BackedEnum|null $value
 	 * @phpstan-return $value is null ? null : string
 	 */
 	private function resolveEnum (string|\BackedEnum|null $value) : ?string
