@@ -158,23 +158,23 @@ readonly class MetaDataHydrator
 
 		return new StoryMetaData(
 			uuid: $data["uuid"],
+			id: (string) $data["id"],
 			type: $data["content"]["component"],
-			previewData: $data["content"]["_editable"] ?? null,
 			name: $data["name"],
 			fullSlug: $data["full_slug"],
 			createdAt: $this->parseDate($data["created_at"]),
+			spaceId: $spaceId,
+			previewData: $data["content"]["_editable"] ?? null,
 			firstPublishedAt: null !== $data["first_published_at"]
 				? $this->parseDate($data["first_published_at"])
 				: null,
 			publishedAt: null !== $data["published_at"]
 				? $this->parseDate($data["published_at"])
 				: null,
-			id: (string) $data["id"],
 			isStartPage: $data["is_startpage"],
 			locale: $data["lang"],
 			position: $data["position"] ?? null,
 			alternates: $data["alternates"],
-			spaceId: $spaceId,
 			localeLevel: $localeLevel,
 		);
 	}
@@ -183,6 +183,8 @@ readonly class MetaDataHydrator
 	 */
 	public function hydrateNestedStoryMetaData (
 		array $data,
+		/** @todo actually implement */
+		string $spaceId = "0",
 	) : BlockMetaData
 	{
 		$isValid = $this->validator->validate($data, [
@@ -224,7 +226,7 @@ readonly class MetaDataHydrator
 		return new BlockMetaData(
 			uuid: $data["_uid"],
 			type: $data["component"],
-			spaceId: "0",
+			spaceId: $spaceId,
 			previewData: $data["_editable"] ?? null,
 		);
 	}

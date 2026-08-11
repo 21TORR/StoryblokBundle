@@ -14,20 +14,20 @@ final readonly class StoryMetaData extends AbstractMetaData
 	 */
 	public function __construct (
 		string $uuid,
+		public string $id,
 		string $type,
-		?string $previewData,
 		public string $name,
 		string $fullSlug,
 		public \DateTimeImmutable $createdAt,
-		public ?\DateTimeImmutable $firstPublishedAt,
-		public ?\DateTimeImmutable $publishedAt,
-		public string $id,
-		public bool $isStartPage,
-		public string $locale,
-		public ?int $position,
-		private array $alternates,
 		string $spaceId,
-		public int $localeLevel,
+		?string $previewData = null,
+		public ?\DateTimeImmutable $firstPublishedAt = null,
+		public ?\DateTimeImmutable $publishedAt = null,
+		public bool $isStartPage = false,
+		public string $locale = "Default",
+		public ?int $position = null,
+		private array $alternates = [],
+		public int $localeLevel = 0,
 	) {
 		parent::__construct($uuid, $type, $spaceId, $previewData);
 		$this->fullSlug = rtrim($fullSlug, "/");

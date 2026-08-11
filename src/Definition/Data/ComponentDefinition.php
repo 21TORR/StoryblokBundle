@@ -11,6 +11,7 @@ use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 final readonly class ComponentDefinition
 {
 	/**
+	 * @throws InvalidComponentDefinitionException when there are no fields
 	 */
 	public function __construct (
 		public string $storyClass,

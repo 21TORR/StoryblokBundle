@@ -9,9 +9,9 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimit;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Torr\Storyblok\Adapter\SpaceSettings;
 use Torr\Storyblok\Api\Data\ApiActionPerformed;
 use Torr\Storyblok\Api\ManagementApi;
-use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
 use Torr\Storyblok\Exception\Api\DatasourceSyncFailedException;
 use Torr\Storyblok\Exception\Api\TranslationsXmlFileImportFailedException;
@@ -405,7 +405,7 @@ final class ManagementApiTest extends TestCase
 			->willReturn($limiter);
 
 		return new ManagementApi(
-			new StoryblokConfig(
+			new SpaceSettings(
 				spaceId: "12345",
 				managementToken: "management-token",
 				contentToken: "content-token",
