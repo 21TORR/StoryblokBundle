@@ -1,3 +1,9 @@
+5.3.0
+=====
+
+* (improvement) Require PHP 8.5+ and Symfony 8.0+
+
+
 5.2.9
 =====
 
