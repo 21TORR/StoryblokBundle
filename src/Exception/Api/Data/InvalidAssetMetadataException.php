@@ -7,6 +7,6 @@ use Torr\Storyblok\Exception\StoryblokException;
 /**
  * @final
  */
-class InvalidAssetMetadataException extends \RuntimeException implements StoryblokException
+class InvalidAssetMetadataException extends StoryblokException
 {
 }

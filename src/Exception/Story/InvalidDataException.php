@@ -6,7 +6,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Exception\StoryblokException;
 
-final class InvalidDataException extends \RuntimeException implements StoryblokException
+final class InvalidDataException extends StoryblokException
 {
 	/**
 	 */

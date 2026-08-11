@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Exception\Adapter;
+namespace Torr\Storyblok\Adapter\Exception;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-final class UnknownStoryblokAdapterException extends \InvalidArgumentException implements StoryblokException
+final class UnknownStoryblokAdapterException extends StoryblokException
 {
 	/**
 	 * @inheritDoc

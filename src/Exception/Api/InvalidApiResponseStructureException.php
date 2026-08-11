@@ -2,6 +2,6 @@
 
 namespace Torr\Storyblok\Exception\Api;
 
-final class InvalidApiResponseStructureException extends \InvalidArgumentException implements ApiRequestException
+final class InvalidApiResponseStructureException extends ApiRequestException
 {
 }

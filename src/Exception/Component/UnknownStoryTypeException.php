@@ -4,6 +4,6 @@ namespace Torr\Storyblok\Exception\Component;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-final class UnknownStoryTypeException extends \InvalidArgumentException implements StoryblokException
+final class UnknownStoryTypeException extends StoryblokException
 {
 }

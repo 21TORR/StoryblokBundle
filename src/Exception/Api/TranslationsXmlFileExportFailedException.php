@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Exception\Api;
 
-final class TranslationsXmlFileExportFailedException extends \RuntimeException implements ApiRequestException
+final class TranslationsXmlFileExportFailedException extends ApiRequestException
 {
 	public function __construct (
 		string $storyId,

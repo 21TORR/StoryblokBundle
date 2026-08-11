@@ -2,6 +2,6 @@
 
 namespace Torr\Storyblok\Exception\Api;
 
-final class ContentRequestFailedException extends \RuntimeException implements ApiRequestException
+final class ContentRequestFailedException extends ApiRequestException
 {
 }

@@ -4,6 +4,6 @@ namespace Torr\Storyblok\Exception\Config;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-final class MissingConfigException extends \RuntimeException implements StoryblokException
+final class MissingConfigException extends StoryblokException
 {
 }

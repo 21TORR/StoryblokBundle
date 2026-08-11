@@ -2,6 +2,6 @@
 
 namespace Torr\Storyblok\Exception\Api;
 
-final class DatasourceSyncFailedException extends \InvalidArgumentException implements ApiRequestException
+final class DatasourceSyncFailedException extends ApiRequestException
 {
 }

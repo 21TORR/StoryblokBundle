@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Adapter;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use Torr\Storyblok\Exception\Adapter\UnknownStoryblokAdapterException;
+use Torr\Storyblok\Adapter\Exception\UnknownStoryblokAdapterException;
 
 /**
  * @final

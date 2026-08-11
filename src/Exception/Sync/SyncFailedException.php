@@ -4,6 +4,6 @@ namespace Torr\Storyblok\Exception\Sync;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-final class SyncFailedException extends \RuntimeException implements StoryblokException
+final class SyncFailedException extends StoryblokException
 {
 }

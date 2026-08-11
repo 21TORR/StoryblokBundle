@@ -2,6 +2,7 @@
 ==========
 
 * Update calls to `ManagementApi::updateStory()` to not pass a json encoded string anymore, pass as array directly.
+* Class `StoryblockConfig` was renamed to `SpaceSettings` (and the namespace has changed).
   
 
 3.x to 5.0

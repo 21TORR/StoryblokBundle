@@ -4,7 +4,7 @@ namespace Torr\Storyblok\Exception\Component;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-final class UnknownComponentKeyException extends \InvalidArgumentException implements StoryblokException
+final class UnknownComponentKeyException extends StoryblokException
 {
 	/**
 	 * @inheritDoc

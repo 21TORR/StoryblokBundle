@@ -4,6 +4,6 @@ namespace Torr\Storyblok\Exception\Api;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-interface ApiRequestException extends StoryblokException
+class ApiRequestException extends StoryblokException
 {
 }

@@ -4,6 +4,6 @@ namespace Torr\Storyblok\Exception\Story;
 
 use Torr\Storyblok\Exception\StoryblokException;
 
-class StoryHydrationFailed extends \RuntimeException implements StoryblokException
+class StoryHydrationFailed extends StoryblokException
 {
 }

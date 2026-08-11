@@ -6,12 +6,12 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Torr\Hosting\Event\ValidateAppEvent;
 use Torr\Snail\Snail\Snailer;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
-use Torr\Storyblok\Exception\Config\InvalidConfigException;
+use Torr\Storyblok\Adapter\Exception\InvalidSpaceSettingsException;
 
 /**
  * @final
  */
-readonly class ValidateStoryblokConfigListener
+readonly class ValidateSpaceSettingsListener
 {
 	/**
 	 *
@@ -27,7 +27,7 @@ readonly class ValidateStoryblokConfigListener
 	public function onValidateApp (ValidateAppEvent $event) : void
 	{
 		$io = $event->io;
-		$io->section("Storyblok: checking adapter configurations");
+		$io->section("Storyblok: checking adapter space settings");
 
 		$adapters = $this->storyblokAdapterRegistry->getAllAdapters();
 
@@ -47,7 +47,7 @@ readonly class ValidateStoryblokConfigListener
 			if (!Snailer::isValidSnail($adapter::getKey()))
 			{
 				$io->writeln(\sprintf("<fg=red>invalid key '%s'</> (key must be a valid 'snail')", $adapter::getKey()));
-				$event->markAppAsInvalid("Storyblok Adapter Config");
+				$event->markAppAsInvalid("Storyblok Adapter Space Settings");
 				continue;
 			}
 
@@ -57,10 +57,10 @@ readonly class ValidateStoryblokConfigListener
 
 				$io->writeln("<fg=green>valid</>");
 			}
-			catch (InvalidConfigException)
+			catch (InvalidSpaceSettingsException)
 			{
 				$io->writeln("<fg=red>invalid</>");
-				$event->markAppAsInvalid("Storyblok Adapter Config");
+				$event->markAppAsInvalid("Storyblok Space Settings");
 			}
 		}
 	}
