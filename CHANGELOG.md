@@ -2,6 +2,7 @@
 =====
 
 * (improvement) Require PHP 8.5+ and Symfony 8.0+
+* (feature) Integrate definitions sync into app deploy hooks.
 
 
 5.2.9
