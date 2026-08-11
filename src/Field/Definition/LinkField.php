@@ -191,7 +191,7 @@ final class LinkField extends AbstractField
 				return null;
 			}
 
-			[$width, $height] = $context->extractImageDimensions($url);
+			[$width, $height] = $context->imageDimensionsExtractor->extractImageDimensions($url);
 
 			return new AssetLinkData($url, $width, $height, $data);
 		}

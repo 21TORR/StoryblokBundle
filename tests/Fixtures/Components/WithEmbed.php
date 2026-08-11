@@ -1,0 +1,25 @@
+<?php declare(strict_types=1);
+
+namespace Tests\Torr\Storyblok\Fixtures\Components;
+
+use Tests\Torr\Storyblok\Fixtures\Components\Embed\EmbeddedValue;
+use Torr\Storyblok\Definition\Mapping as Storyblok;
+use Torr\Storyblok\Story\Data\Story;
+
+/**
+ * @final
+ */
+#[Storyblok\Component(
+	key: "with-embed",
+	label: "With Embed",
+)]
+class WithEmbed extends Story
+{
+	#[Storyblok\TextField("Headline", regex: "\d+")]
+	#[Storyblok\Required]
+	#[Storyblok\Translatable]
+	public string $headline;
+
+	#[Storyblok\EmbeddedField("test", key: "nested_")]
+	public EmbeddedValue $embed;
+}

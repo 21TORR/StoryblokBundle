@@ -2,67 +2,94 @@
 
 namespace Torr\Storyblok\Context;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraint;
-use Torr\Storyblok\Component\AbstractComponent;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Torr\Storyblok\Definition\Field\MappedField;
+use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
-use Torr\Storyblok\Manager\ComponentManager;
-use Torr\Storyblok\Transformer\DataTransformer;
-use Torr\Storyblok\Validator\DataValidator;
 
 /**
  * @final
  */
-class ComponentContext
+readonly class ComponentContext
 {
+	public ValidatorInterface $validator;
+	public ImageDimensionsExtractor $imageDimensionsExtractor;
+
 	/**
 	 */
 	public function __construct (
-		public readonly ComponentManager $componentManager,
-		public readonly DataTransformer $dataTransformer,
-		public readonly LoggerInterface $logger,
-		public readonly DataValidator $validator,
-		public readonly ImageDimensionsExtractor $imageDimensionsExtractor,
-	) {}
+		?ImageDimensionsExtractor $imageDimensionsExtractor = null,
+	)
+	{
+		// We don't use the validator from the DI container here,
+		// as in debug it will be a traceable validator that logs
+		// every call. As we are producing A TON of calls here
+		// this will hugely increase the memory consumption.
+		$this->validator = Validation::createValidator();
+		$this->imageDimensionsExtractor = $imageDimensionsExtractor ?? new ImageDimensionsExtractor();
+	}
 
 	/**
-	 * @see DataValidator::ensureDataIsValid()
+	 * Ensures that the given data is valid
 	 *
-	 * @param string[]              $contentPath
+	 * @param string[]              $contentPathHierarchy The path to the given content element
 	 * @param list<Constraint|null> $constraints
+	 *
+	 * @return void|never
+	 *
+	 * @throws InvalidDataException
 	 */
 	public function ensureDataIsValid (
-		array $contentPath,
-		FieldDefinitionInterface $field,
-		mixed $data,
+		string $contentPath,
+		array $storyData,
+		?MappedField $field,
+		array $contentPathHierarchy,
 		array $constraints,
 	) : void
 	{
-		$this->validator->ensureDataIsValid($contentPath, $field, $data, $constraints);
+		$fieldValue = $storyData[$contentPath] ?? null;
+
+		// filter all disabled constraints
+		$constraints = array_filter($constraints);
+
+		if (empty($constraints))
+		{
+			return;
+		}
+
+		$violations = $this->validator->validate($fieldValue, $constraints);
+
+		if (\count($violations) > 0)
+		{
+			throw new InvalidDataException(
+				\sprintf(
+					"Invalid data found at '%s':\n%s",
+					implode(" → ", $contentPathHierarchy),
+					$violations,
+				),
+				$contentPathHierarchy,
+				$field,
+				$fieldValue,
+				$violations,
+			);
+		}
 	}
 
 	/**
-	 * @see ComponentManager::getComponent()
-	 */
-	public function getComponentByKey (string $key) : AbstractComponent
-	{
-		return $this->componentManager->getComponent($key);
-	}
-
-	/**
-	 * @see DataTransformer::normalizeOptionalString()
+	 *
 	 */
 	public function normalizeOptionalString (?string $value) : ?string
 	{
-		return $this->dataTransformer->normalizeOptionalString($value);
-	}
+		if (null === $value)
+		{
+			return null;
+		}
 
-	/**
-	 * @return array{int|null, int|null}
-	 */
-	public function extractImageDimensions (string $imageUrl) : array
-	{
-		return $this->imageDimensionsExtractor->extractImageDimensions($imageUrl);
+		// Normalize to null. Trim for checking, but don't trim data if is not empty, just to be sure.
+		return "" !== trim($value)
+			? $value
+			: null;
 	}
 }

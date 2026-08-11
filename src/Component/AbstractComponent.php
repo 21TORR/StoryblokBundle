@@ -300,7 +300,6 @@ abstract class AbstractComponent
 			"color" => $definition->iconBackgroundColor,
 			"icon" => $definition->icon?->value,
 			"description" => $definition->description,
-			...$this->getComponentType()->toManagementApiData(),
 		];
 	}
 

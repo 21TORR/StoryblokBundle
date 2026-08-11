@@ -226,7 +226,7 @@ final class AssetField extends AbstractField
 			return null;
 		}
 
-		[$width, $height] = $context->extractImageDimensions($assetUrl);
+		[$width, $height] = $context->imageDimensionsExtractor->extractImageDimensions($assetUrl);
 
 		return new AssetData(
 			url: $assetUrl,

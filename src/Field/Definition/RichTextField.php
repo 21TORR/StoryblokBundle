@@ -152,36 +152,6 @@ final class RichTextField extends AbstractField
 	}
 
 	/**
-	 * Transforms data of all embedded bloks
-	 */
-	private function fetchBlockDataMap (
-		array $content,
-		ComponentContext $context,
-		?DataVisitorInterface $dataVisitor = null,
-	) : array
-	{
-		$map = [];
-
-		foreach ($content as $section)
-		{
-			if ("blok" !== $section["type"])
-			{
-				continue;
-			}
-
-			$items = $section["attrs"]["body"] ?? [];
-
-			foreach ($items as $blok)
-			{
-				$component = $context->getComponentByKey($blok["component"]);
-				$map[$blok["_uid"]] = $component->transformData($blok, $context, $dataVisitor);
-			}
-		}
-
-		return $map;
-	}
-
-	/**
 	 * Checks whether the given content is empty
 	 */
 	private function contentIsEmpty (array $data) : bool

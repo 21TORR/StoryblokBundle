@@ -16,10 +16,10 @@ final class TextField extends AbstractField
 	public function __construct (
 		string $label,
 		?string $defaultValue = null,
-		private readonly bool $multiline = false,
-		private readonly ?int $maxLength = null,
-		private readonly bool $isRightToLeft = false,
-		private readonly bool $exportTranslation = true,
+		public readonly bool $multiline = false,
+		public readonly ?int $maxLength = null,
+		public readonly bool $isRightToLeft = false,
+		public readonly bool $exportTranslation = true,
 	)
 	{
 		parent::__construct($label, $defaultValue);

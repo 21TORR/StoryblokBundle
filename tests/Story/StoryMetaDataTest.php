@@ -5,7 +5,7 @@ namespace Tests\Torr\Storyblok\Story;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Exception\Story\StoryHydrationFailed;
-use Torr\Storyblok\Story\StoryMetaData;
+use Torr\Storyblok\Story\MetaData\StoryMetaData;
 
 /**
  * @internal

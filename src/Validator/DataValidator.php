@@ -3,19 +3,17 @@
 namespace Torr\Storyblok\Validator;
 
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Torr\Storyblok\Component\AbstractComponent;
+use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
-use Torr\Storyblok\Field\FieldDefinitionInterface;
 
 /**
  * @final
  */
-class DataValidator
+readonly class DataValidator
 {
-	private readonly ValidatorInterface $validator;
+	public ValidatorInterface $validator;
 
 	/**
 	 */
@@ -40,8 +38,8 @@ class DataValidator
 	 */
 	public function ensureDataIsValid (
 		array $contentPath,
-		FieldDefinitionInterface|AbstractComponent|null $field,
-		mixed $data,
+		?MappedField $field,
+		array $storyData,
 		array $constraints,
 	) : void
 	{
@@ -53,7 +51,7 @@ class DataValidator
 			return;
 		}
 
-		$violations = $this->validator->validate($data, $constraints);
+		$violations = $this->validator->validate($storyData, $constraints);
 
 		if (\count($violations) > 0)
 		{
@@ -61,13 +59,11 @@ class DataValidator
 				\sprintf(
 					"Invalid data found at '%s':\n%s",
 					implode(" → ", $contentPath),
-					$violations instanceof ConstraintViolationList
-						? (string) $violations
-						: "n/a",
+					$violations,
 				),
 				$contentPath,
 				$field,
-				$data,
+				$storyData,
 				$violations,
 			);
 		}
