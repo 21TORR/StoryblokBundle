@@ -7,6 +7,6 @@ use Torr\Storyblok\Exception\StoryblokException;
 /**
  * @final
  */
-class InvalidStoryInitializationException extends \RuntimeException implements StoryblokException
+class InvalidStoryInitializationException extends StoryblokException
 {
 }

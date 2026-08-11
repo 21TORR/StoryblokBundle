@@ -7,7 +7,7 @@ use Torr\Storyblok\TranslationManagement\Data\TranslatableComponentDataCollectio
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentElement;
 use Torr\Storyblok\TranslationManagement\Exception\StoryInvalidException;
-use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
+use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementException;
 use Torr\Storyblok\TranslationManagement\Validator\StoryValidator;
 
 final readonly class TranslatableContentExtractor
@@ -20,7 +20,7 @@ final readonly class TranslatableContentExtractor
 	 * @param array                       $story  Storyblok management API story data
 	 * @param array<string, list<string>> $config <component-key, <fieldnames>>
 	 *
-	 * @throws TranslationManagementExceptionInterface
+	 * @throws TranslationManagementException
 	 * @throws StoryInvalidException
 	 * @throws \JsonException
 	 */

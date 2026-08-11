@@ -5,6 +5,6 @@ namespace Torr\Storyblok\Story\Exception;
 /**
  * @final
  */
-class BrokenStoryDataException extends \RuntimeException implements StoryException
+class BrokenStoryDataException extends StoryException
 {
 }

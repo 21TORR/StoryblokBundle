@@ -5,6 +5,6 @@ namespace Torr\Storyblok\Story\Exception;
 /**
  * @final
  */
-class InaccessiblePropertyException extends \RuntimeException implements StoryException
+class InaccessiblePropertyException extends StoryException
 {
 }

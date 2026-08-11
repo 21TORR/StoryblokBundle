@@ -8,7 +8,7 @@ use Torr\Storyblok\Tiptap\Transformer\RichTextHtmlTransformer;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableComponentData;
 use Torr\Storyblok\TranslationManagement\Data\TranslatableContentCollection;
 use Torr\Storyblok\TranslationManagement\Exception\StoryUpdateException;
-use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementExceptionInterface;
+use Torr\Storyblok\TranslationManagement\Exception\TranslationManagementException;
 
 final readonly class TranslatableContentTranslator
 {
@@ -21,7 +21,7 @@ final readonly class TranslatableContentTranslator
 	 *
 	 * @return array Updated story data for storyblok management api
 	 *
-	 * @throws TranslationManagementExceptionInterface
+	 * @throws TranslationManagementException
 	 * @throws InvalidJsonException
 	 */
 	public function translate (array $story, TranslatableContentCollection $translatableContentCollection) : array

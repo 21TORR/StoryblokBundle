@@ -5,6 +5,6 @@ namespace Torr\Storyblok\Definition\Exception;
 /**
  * @final
  */
-class InvalidComponentDefinitionException extends \InvalidArgumentException implements ComponentDefinitionException
+class InvalidComponentDefinitionException extends ComponentDefinitionException
 {
 }

@@ -5,8 +5,7 @@ namespace Torr\Storyblok\Definition\Exception;
 use Torr\Storyblok\Exception\StoryblokException;
 
 /**
- * @final
  */
-interface ComponentDefinitionException extends StoryblokException
+class ComponentDefinitionException extends StoryblokException
 {
 }

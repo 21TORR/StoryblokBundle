@@ -2,5 +2,5 @@
 
 namespace Torr\Storyblok\TranslationManagement\Exception;
 
-final class XliffExportException extends \RuntimeException implements TranslationManagementExceptionInterface
+final class XliffExportException extends TranslationManagementException
 {}

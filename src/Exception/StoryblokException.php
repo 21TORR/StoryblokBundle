@@ -2,6 +2,5 @@
 
 namespace Torr\Storyblok\Exception;
 
-class StoryblokException extends \Exception
-{
-}
+abstract class StoryblokException extends \Exception
+{}

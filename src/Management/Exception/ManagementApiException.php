@@ -5,8 +5,7 @@ namespace Torr\Storyblok\Management\Exception;
 use Torr\Storyblok\Exception\StoryblokException;
 
 /**
- * @final
  */
-interface ManagementApiException extends StoryblokException
+abstract class ManagementApiException extends StoryblokException
 {
 }

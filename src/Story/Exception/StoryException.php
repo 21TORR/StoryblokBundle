@@ -5,8 +5,7 @@ namespace Torr\Storyblok\Story\Exception;
 use Torr\Storyblok\Exception\StoryblokException;
 
 /**
- * @final
+ *
  */
-interface StoryException extends StoryblokException
-{
-}
+abstract class StoryException extends StoryblokException
+{}

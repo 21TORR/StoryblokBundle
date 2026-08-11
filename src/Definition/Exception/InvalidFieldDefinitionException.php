@@ -5,6 +5,6 @@ namespace Torr\Storyblok\Definition\Exception;
 /**
  * @final
  */
-class InvalidFieldDefinitionException extends \InvalidArgumentException implements ComponentDefinitionException
+class InvalidFieldDefinitionException extends ComponentDefinitionException
 {
 }

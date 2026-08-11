@@ -2,5 +2,5 @@
 
 namespace Torr\Storyblok\TranslationManagement\Exception;
 
-final class StoryInvalidException extends \RuntimeException implements TranslationManagementExceptionInterface
+final class StoryInvalidException extends TranslationManagementException
 {}

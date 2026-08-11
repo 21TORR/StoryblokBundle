@@ -5,6 +5,6 @@ namespace Torr\Storyblok\Story\Exception;
 /**
  * @final
  */
-class UnknownEmbedException extends \RuntimeException implements StoryException
+class UnknownEmbedException extends StoryException
 {
 }

@@ -5,6 +5,6 @@ namespace Torr\Storyblok\Management\Exception;
 /**
  * @final
  */
-class ComponentManagementDataGenerationFailedException extends \InvalidArgumentException implements ManagementApiException
+class ComponentManagementDataGenerationFailedException extends ManagementApiException
 {
 }
