@@ -15,8 +15,8 @@ use Torr\Storyblok\Story\Data\Story;
 )]
 class WithEmbed extends Story
 {
-	#[Storyblok\TextField("Headline")]
-	#[Storyblok\Required(regexp: "\d+")]
+	#[Storyblok\TextField("Headline", regex: "\d+")]
+	#[Storyblok\Required]
 	#[Storyblok\Translatable]
 	public string $headline;
 
