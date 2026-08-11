@@ -9,15 +9,15 @@ use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Torr\Storyblok\Adapter\SpaceSettings;
 use Torr\Storyblok\Api\Data\Asset\AssetData;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Api\Data\SpaceInfo;
 use Torr\Storyblok\Api\Data\StoryblokLink;
-use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Datasource\DatasourceEntry;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
-use Torr\Storyblok\Exception\Config\InvalidConfigException;
+use Torr\Storyblok\Adapter\Exception\InvalidSpaceSettingsException;
 use Torr\Storyblok\Exception\Config\MissingConfigException;
 use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Folder\FolderData;
@@ -38,7 +38,7 @@ final class ContentApi implements ResetInterface
 	 */
 	public function __construct (
 		HttpClientInterface $client,
-		private readonly StoryblokConfig $config,
+		private readonly SpaceSettings $spaceSettings,
 		private readonly StoryFactory $storyFactory,
 		private readonly ComponentManager $componentManager,
 		private readonly LoggerInterface $logger,
@@ -68,7 +68,7 @@ final class ContentApi implements ResetInterface
 			$identifier = ltrim((string) $identifier, "/");
 
 			$queryParameters = [
-				"token" => $this->config->contentToken,
+				"token" => $this->spaceSettings->contentToken,
 				"version" => $version->value,
 				"cv" => $this->getSpaceInfo()->getCacheVersion(),
 			];
@@ -102,8 +102,8 @@ final class ContentApi implements ResetInterface
 
 			return $this->storyFactory->createFromApiData(
 				data: $data["story"],
-				spaceId: $this->config->spaceId,
-				localeLevel: $this->config->getLocaleLevel(),
+				spaceId: $this->spaceSettings->spaceId,
+				localeLevel: $this->spaceSettings->getLocaleLevel(),
 			);
 		}
 		catch (ExceptionInterface $exception)
@@ -227,7 +227,7 @@ final class ContentApi implements ResetInterface
 	}
 
 	/**
-	 * @throws InvalidConfigException
+	 * @throws InvalidSpaceSettingsException
 	 * @throws ContentRequestFailedException
 	 */
 	public function getSpaceInfo () : SpaceInfo
@@ -244,7 +244,7 @@ final class ContentApi implements ResetInterface
 				"spaces/me/",
 				new HttpOptions()
 					->setQuery([
-						"token" => $this->config->contentToken,
+						"token" => $this->spaceSettings->contentToken,
 					])
 					->toArray(),
 			);
@@ -256,17 +256,17 @@ final class ContentApi implements ResetInterface
 			// for any content API requests. However, the management API is using the space id from the config.
 			// If you have a misconfiguration, you could send the management API requests and the content API requests
 			// to different spaces.
-			if ($spaceInfo->getId() !== $this->config->spaceId)
+			if ($spaceInfo->getId() !== $this->spaceSettings->spaceId)
 			{
 				$this->logger->critical("Invalid storyblok config: configured space id is {configuredSpaceId}, but content token belongs to space {tokenSpaceId} ({name})", [
-					"configuredSpaceId" => $this->config->spaceId,
+					"configuredSpaceId" => $this->spaceSettings->spaceId,
 					"tokenSpaceId" => $spaceInfo->getId(),
 					"name" => $spaceInfo->getName(),
 				]);
 
-				throw new InvalidConfigException(\sprintf(
+				throw new InvalidSpaceSettingsException(\sprintf(
 					"Invalid storyblok config: configured space id is '%s', but content token belongs to space id '%s' (name '%s')",
-					$this->config->spaceId,
+					$this->spaceSettings->spaceId,
 					$spaceInfo->getId(),
 					$spaceInfo->getName(),
 				));
@@ -298,7 +298,7 @@ final class ContentApi implements ResetInterface
 		int $page = 1,
 	) : PaginatedApiResult
 	{
-		$query["token"] = $this->config->contentToken;
+		$query["token"] = $this->spaceSettings->contentToken;
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["page"] = $page;
 
@@ -357,8 +357,8 @@ final class ContentApi implements ResetInterface
 
 				$hydrated = $this->storyFactory->createFromApiData(
 					data: $storyData,
-					spaceId: $this->config->spaceId,
-					localeLevel: $this->config->getLocaleLevel(),
+					spaceId: $this->spaceSettings->spaceId,
+					localeLevel: $this->spaceSettings->getLocaleLevel(),
 				);
 
 				if (null !== $hydrated)
@@ -453,7 +453,7 @@ final class ContentApi implements ResetInterface
 		int $page = 1,
 	) : PaginatedApiResult
 	{
-		$query["token"] = $this->config->contentToken;
+		$query["token"] = $this->spaceSettings->contentToken;
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["page"] = $page;
 
@@ -665,11 +665,11 @@ final class ContentApi implements ResetInterface
 	 */
 	public function fetchSignedAssetUrl (string $assetUrl) : AssetData
 	{
-		if (null === $this->config->assetToken)
+		if (null === $this->spaceSettings->assetToken)
 		{
 			throw new MissingConfigException(\sprintf(
 				"Can't fetch signed asset url without asset token in adapter for space %s",
-				$this->config->spaceId,
+				$this->spaceSettings->spaceId,
 			));
 		}
 
@@ -681,7 +681,7 @@ final class ContentApi implements ResetInterface
 				new HttpOptions()
 					->setQuery([
 						"filename" => $assetUrl,
-						"token" => $this->config->assetToken,
+						"token" => $this->spaceSettings->assetToken,
 					])
 					->toArray(),
 			);
@@ -727,7 +727,7 @@ final class ContentApi implements ResetInterface
 		int $page = 1,
 	) : PaginatedApiResult
 	{
-		$query["token"] = $this->config->contentToken;
+		$query["token"] = $this->spaceSettings->contentToken;
 		$query["cv"] = $this->getSpaceInfo()->getCacheVersion();
 		$query["page"] = $page;
 		$query["paginated"] = 1;

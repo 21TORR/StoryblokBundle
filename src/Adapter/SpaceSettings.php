@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Config;
+namespace Torr\Storyblok\Adapter;
 
 use Torr\Storyblok\Exception\Config\MissingConfigException;
 
-final readonly class StoryblokConfig
+readonly class SpaceSettings
 {
 	/**
 	 */

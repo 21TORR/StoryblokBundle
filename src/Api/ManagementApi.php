@@ -12,13 +12,13 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Storyblok\Adapter\SpaceSettings;
 use Torr\Storyblok\Api\Data\ApiActionPerformed;
 use Torr\Storyblok\Api\Data\Asset\AssetData;
 use Torr\Storyblok\Api\Data\Asset\AssetFolder;
 use Torr\Storyblok\Api\Data\Asset\AssetFolderTree;
 use Torr\Storyblok\Api\Data\ComponentIdMap;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
-use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Exception\Api\ApiRequestFailedException;
 use Torr\Storyblok\Exception\Api\DatasourceSyncFailedException;
 use Torr\Storyblok\Exception\Api\TranslationsXmlFileImportFailedException;
@@ -37,7 +37,7 @@ final class ManagementApi
 	/**
 	 */
 	public function __construct (
-		private readonly StoryblokConfig $config,
+		private readonly SpaceSettings $spaceSettings,
 		HttpClientInterface $client,
 		RateLimiterFactoryInterface $storyblokManagementLimiter,
 		private readonly LoggerInterface $logger,
@@ -47,7 +47,7 @@ final class ManagementApi
 		$this->client = new RetryableHttpClient(
 			$client->withOptions(
 				(new HttpOptions())
-					->setBaseUri(\sprintf(self::API_URL, $this->config->spaceId))
+					->setBaseUri(\sprintf(self::API_URL, $this->spaceSettings->spaceId))
 					->toArray(),
 			),
 		);
@@ -389,7 +389,7 @@ final class ManagementApi
 				"• Fetching all assets metadata page <fg=yellow>%s / %s</> for space <fg=blue>%s</>",
 				$page,
 				$maxPage ?? "(unknown)",
-				$this->config->spaceId,
+				$this->spaceSettings->spaceId,
 			));
 
 			/** @var PaginatedApiResult<array> $result */
@@ -469,7 +469,7 @@ final class ManagementApi
 			$this->rateLimiter->consume()->wait();
 
 			$formattedOptions = $options->toArray();
-			$formattedOptions["headers"]["authorization"] = $this->config->managementToken;
+			$formattedOptions["headers"]["authorization"] = $this->spaceSettings->managementToken;
 
 			$formattedOptions["query"] = [
 				...$formattedOptions["query"] ?? [],
@@ -552,7 +552,7 @@ final class ManagementApi
 			$this->rateLimiter->consume()->wait();
 
 			$formattedOptions = $options->toArray();
-			$formattedOptions["headers"]["authorization"] = $this->config->managementToken;
+			$formattedOptions["headers"]["authorization"] = $this->spaceSettings->managementToken;
 
 			$response = $this->client->request(
 				$method,
@@ -691,7 +691,7 @@ final class ManagementApi
 		{
 			$options = $this->generateBaseOptions()
 				->setHeaders([
-					"Authorization" => $this->config->managementToken,
+					"Authorization" => $this->spaceSettings->managementToken,
 					"Content-Type" => "application/json",
 					"Accept" => "application/json",
 				])
@@ -769,7 +769,7 @@ final class ManagementApi
 	{
 		return new HttpOptions()
 			->setHeaders([
-				"Authorization" => $this->config->managementToken,
+				"Authorization" => $this->spaceSettings->managementToken,
 			]);
 	}
 }

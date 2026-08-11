@@ -11,7 +11,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Api\ManagementApi;
 use Torr\Storyblok\Api\Transformer\StoryblokIdSlugMapper;
-use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Story\StoryFactory;
 use Torr\Storyblok\Webhook\Request\RequestValidator;
@@ -27,7 +26,7 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 	public function __construct (
 		ContainerInterface $locator,
 		/** @internal */
-		public readonly StoryblokConfig $config,
+		public readonly SpaceSettings $spaceSettings,
 	)
 	{
 		$client = $locator->get(HttpClientInterface::class);
@@ -47,14 +46,14 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 
 		$this->contentApi = new ContentApi(
 			$client,
-			$this->config,
+			$this->spaceSettings,
 			$storyFactory,
 			$componentManager,
 			$logger,
 		);
 
 		$this->managementApi = new ManagementApi(
-			$this->config,
+			$this->spaceSettings,
 			$client,
 			$rateLimiterFactory,
 			$logger,
@@ -62,10 +61,10 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 
 		$this->idSlugMapper = new StoryblokIdSlugMapper($this->contentApi);
 		$this->requestValidator = new RequestValidator(
-			$this->config,
+			$this->spaceSettings,
 			$logger,
 		);
-		$this->spaceId = $this->config->spaceId;
+		$this->spaceId = $this->spaceSettings->spaceId;
 	}
 
 	/**
