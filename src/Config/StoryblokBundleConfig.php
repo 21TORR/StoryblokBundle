@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Config;
 /**
  * @final
  */
-readonly class StoryblokBundleSettings
+readonly class StoryblokBundleConfig
 {
 	/**
 	 */

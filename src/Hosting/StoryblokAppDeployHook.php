@@ -7,7 +7,7 @@ use Torr\Hosting\Deployment\TaskCli;
 use Torr\Hosting\Hosting\HostingEnvironment;
 use Torr\Storyblok\Adapter\StoryblokAdapterRegistry;
 use Torr\Storyblok\Command\SyncDefinitionsCommand;
-use Torr\Storyblok\Config\StoryblokBundleSettings;
+use Torr\Storyblok\Config\StoryblokBundleConfig;
 
 /**
  * @final
@@ -18,7 +18,7 @@ readonly class StoryblokAppDeployHook implements DeployAppHookInterface
 	 */
 	public function __construct (
 		private HostingEnvironment $environment,
-		private StoryblokBundleSettings $settings,
+		private StoryblokBundleConfig $settings,
 		private StoryblokAdapterRegistry $adapterRegistry,
 		private SyncDefinitionsCommand $syncDefinitionsCommand,
 	) {}

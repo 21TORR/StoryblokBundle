@@ -5,7 +5,7 @@ namespace Torr\Storyblok\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Torr\BundleHelpers\Bundle\BundleExtension;
-use Torr\Storyblok\Config\StoryblokBundleSettings;
+use Torr\Storyblok\Config\StoryblokBundleConfig;
 
 final class StoryblokBundleExtension extends BundleExtension implements PrependExtensionInterface
 {
@@ -18,7 +18,7 @@ final class StoryblokBundleExtension extends BundleExtension implements PrependE
 
 		$config = $this->processConfiguration(new StoryblokBundleConfiguration(), $configs);
 
-		$container->getDefinition(StoryblokBundleSettings::class)
+		$container->getDefinition(StoryblokBundleConfig::class)
 			->setArgument('$syncDefinitionsOnAppDeployInStaging', $config["sync_definitions_on_app_deploy"]["staging"])
 			->setArgument('$syncDefinitionsOnAppDeployInProduction', $config["sync_definitions_on_app_deploy"]["production"]);
 	}

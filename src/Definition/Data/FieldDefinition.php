@@ -2,6 +2,8 @@
 
 namespace Torr\Storyblok\Definition\Data;
 
+use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
+use Torr\Storyblok\Definition\Exception\InvalidFieldDefinitionException;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Definition\Mapping\Required;
 use Torr\Storyblok\Definition\Mapping\Translatable;
@@ -20,7 +22,16 @@ final readonly class FieldDefinition
 		public mixed $propertyType,
 		public ?Required $required = null,
 		public ?Translatable $translatable = null,
-	) {}
+	)
+	{
+		if ("component" === $this->key)
+		{
+			throw new InvalidFieldDefinitionException(\sprintf(
+				"Can't use field name '%s' as it is a reserved name.",
+				$this->key,
+			));
+		}
+	}
 
 
 	/**
@@ -28,7 +39,7 @@ final readonly class FieldDefinition
 	 */
 	public function createApiData (string $key) : ?array
 	{
-		$apiData = $this->mapping->createManagementApiData($key);
+		$apiData = $this->mapping->createManagementApiData();
 
 		if (null === $apiData)
 		{
