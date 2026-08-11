@@ -20,7 +20,7 @@ readonly class StoryblokBundleConfiguration implements ConfigurationInterface
 
 		$treeBuilder->getRootNode()
 			->children()
-				->arrayNode("automatically_sync_definitions")
+				->arrayNode("sync_definitions_on_app_deploy")
 					->addDefaultsIfNotSet()
 					->beforeNormalization()
 						->ifTrue(\is_bool(...))

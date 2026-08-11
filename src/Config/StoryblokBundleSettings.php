@@ -10,7 +10,7 @@ readonly class StoryblokBundleSettings
 	/**
 	 */
 	public function __construct (
-		public bool $automaticallySyncDefinitionsInStaging,
-		public bool $automaticallySyncDefinitionsInProduction,
+		public bool $syncDefinitionsOnAppDeployInStaging,
+		public bool $syncDefinitionsOnAppDeployInProduction,
 	) {}
 }

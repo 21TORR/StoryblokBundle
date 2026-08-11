@@ -19,7 +19,7 @@ final class StoryblokBundleConfigurationTest extends TestCase
 
 		self::assertSame(
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => false,
 					"production" => false,
 				],
@@ -34,13 +34,13 @@ final class StoryblokBundleConfigurationTest extends TestCase
 	{
 		$result = $this->process([
 			[
-				"automatically_sync_definitions" => true,
+				"sync_definitions_on_app_deploy" => true,
 			],
 		]);
 
 		self::assertSame(
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => true,
 					"production" => true,
 				],
@@ -55,13 +55,13 @@ final class StoryblokBundleConfigurationTest extends TestCase
 	{
 		$result = $this->process([
 			[
-				"automatically_sync_definitions" => false,
+				"sync_definitions_on_app_deploy" => false,
 			],
 		]);
 
 		self::assertSame(
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => false,
 					"production" => false,
 				],
@@ -76,7 +76,7 @@ final class StoryblokBundleConfigurationTest extends TestCase
 	{
 		$result = $this->process([
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => true,
 					"production" => false,
 				],
@@ -85,7 +85,7 @@ final class StoryblokBundleConfigurationTest extends TestCase
 
 		self::assertSame(
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => true,
 					"production" => false,
 				],
@@ -100,7 +100,7 @@ final class StoryblokBundleConfigurationTest extends TestCase
 	{
 		$result = $this->process([
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => true,
 				],
 			],
@@ -108,7 +108,7 @@ final class StoryblokBundleConfigurationTest extends TestCase
 
 		self::assertSame(
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => true,
 					"production" => false,
 				],
@@ -124,10 +124,10 @@ final class StoryblokBundleConfigurationTest extends TestCase
 	{
 		$result = $this->process([
 			[
-				"automatically_sync_definitions" => true,
+				"sync_definitions_on_app_deploy" => true,
 			],
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"production" => false,
 				],
 			],
@@ -135,7 +135,7 @@ final class StoryblokBundleConfigurationTest extends TestCase
 
 		self::assertSame(
 			[
-				"automatically_sync_definitions" => [
+				"sync_definitions_on_app_deploy" => [
 					"staging" => true,
 					"production" => false,
 				],

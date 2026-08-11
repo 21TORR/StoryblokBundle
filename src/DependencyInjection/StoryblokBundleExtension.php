@@ -19,8 +19,8 @@ final class StoryblokBundleExtension extends BundleExtension implements PrependE
 		$config = $this->processConfiguration(new StoryblokBundleConfiguration(), $configs);
 
 		$container->getDefinition(StoryblokBundleSettings::class)
-			->setArgument('$automaticallySyncDefinitionsInStaging', $config["automatically_sync_definitions"]["staging"])
-			->setArgument('$automaticallySyncDefinitionsInProduction', $config["automatically_sync_definitions"]["production"]);
+			->setArgument('$syncDefinitionsOnAppDeployInStaging', $config["sync_definitions_on_app_deploy"]["staging"])
+			->setArgument('$syncDefinitionsOnAppDeployInProduction', $config["sync_definitions_on_app_deploy"]["production"]);
 	}
 
 	/**

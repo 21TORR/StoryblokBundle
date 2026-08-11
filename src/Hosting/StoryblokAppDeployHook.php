@@ -67,7 +67,7 @@ readonly class StoryblokAppDeployHook implements DeployAppHookInterface
 	private function shouldSync () : bool
 	{
 		return
-			($this->environment->isProduction() && $this->settings->automaticallySyncDefinitionsInProduction)
-			|| ($this->environment->isStaging() && $this->settings->automaticallySyncDefinitionsInStaging);
+			($this->environment->isProduction() && $this->settings->syncDefinitionsOnAppDeployInProduction)
+			|| ($this->environment->isStaging() && $this->settings->syncDefinitionsOnAppDeployInStaging);
 	}
 }
