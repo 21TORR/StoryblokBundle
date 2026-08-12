@@ -40,7 +40,7 @@ final class SyncDefinitionsCommand extends Command
 	protected function configure () : void
 	{
 		$this
-			->setDescription("Syncs the local component definitions to storyblok")
+			->setDescription("Syncs the local component definitions to Storyblok")
 			->addArgument("adapterKeys", InputArgument::OPTIONAL | InputArgument::IS_ARRAY, "Storyblok adapter key. If not set, all adapters will be synced.")
 			->addOption("force", null, InputOption::VALUE_NONE, "Whether to force sync");
 	}

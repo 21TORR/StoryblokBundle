@@ -15,6 +15,7 @@ class DefinitionRegistry
 {
 	private array $byStoryClass = [];
 	private array $byKey = [];
+	private array $byTag = [];
 	private array $embeddedRegistry = [];
 
 	/**
@@ -38,6 +39,11 @@ class DefinitionRegistry
 		$definition = $this->definitionLoader->loadDefinition($this, $storyClass);
 		$this->byKey[$definition->key] = $definition;
 		$this->byStoryClass[$definition->storyClass] = $definition;
+
+		foreach ($definition->tags as $tag)
+		{
+			$this->byTag[$tag][] = $definition;
+		}
 
 		return $this;
 	}
@@ -78,5 +84,17 @@ class DefinitionRegistry
 	public function getEmbeddedDefinition (string $embeddedClass) : ?EmbedDefinition
 	{
 		return $this->embeddedRegistry[$embeddedClass] ?? null;
+	}
+
+	/**
+	 *
+	 */
+	public function getAllWithTag (\BackedEnum|string $tag) : array
+	{
+		$tag = $tag instanceof \BackedEnum
+			? $tag->value
+			: $tag;
+
+		return $this->byTag[$tag] ?? [];
 	}
 }
