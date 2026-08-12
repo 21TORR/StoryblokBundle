@@ -6,6 +6,7 @@ use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\Data\EmbedDefinition;
 use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Exception\ComponentDefinitionException;
 use Torr\Storyblok\Definition\Exception\DuplicateFieldDefinitionException;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Mapping\Component;
@@ -24,14 +25,29 @@ readonly class ComponentDefinitionLoader
 	) {}
 
 	/**
-	 *
+	 * @throws ComponentDefinitionException
 	 */
 	public function loadDefinition (
 		DefinitionRegistry $registry,
 		string $storyClass,
 	) : ?ComponentDefinition
 	{
-		$reflectionClass = new \ReflectionClass($storyClass);
+		try
+		{
+			$reflectionClass = new \ReflectionClass($storyClass);
+		}
+		catch (\ReflectionException $exception)
+		{
+			throw new InvalidComponentDefinitionException(
+				message: \sprintf(
+					"Could not load reflection information for class '%s': %s",
+					$storyClass,
+					$exception->getMessage()
+				),
+				previous: $exception,
+			);
+		}
+
 		$component = $this->loadAttribute($reflectionClass, Component::class);
 
 		if (null === $component)
