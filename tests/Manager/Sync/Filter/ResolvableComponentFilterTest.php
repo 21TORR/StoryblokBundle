@@ -16,7 +16,7 @@ final class ResolvableComponentFilterTest extends TestCase
 	 */
 	public function testResolving () : void
 	{
-		$filter = new ComponentFilter(components: ["test"]);
+		$filter = new ComponentFilter(keys: ["test"]);
 		$resolvable = new ResolvableComponentFilter($filter, "field", "enabled");
 
 		$manager = $this->createMock(ComponentManager::class);
@@ -38,7 +38,7 @@ final class ResolvableComponentFilterTest extends TestCase
 	 */
 	public function testResolvingWithoutEnabled () : void
 	{
-		$filter = new ComponentFilter(components: ["test"]);
+		$filter = new ComponentFilter(keys: ["test"]);
 		$resolvable = new ResolvableComponentFilter($filter, "field");
 
 		$manager = $this->createMock(ComponentManager::class);

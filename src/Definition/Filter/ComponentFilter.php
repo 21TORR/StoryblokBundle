@@ -7,38 +7,41 @@ use Torr\Storyblok\Helper\EnumHelper;
 
 final readonly class ComponentFilter
 {
-	/**
-	 */
-	private function __construct (
-		/** @var list<string|\BackedEnum> */
-		public array $tags = [],
-		/** @var list<string|\BackedEnum> */
-		public array $components = [],
-	) {}
+	/** @var list<string> */
+	public array $tags;
+	/** @var list<string> */
+	public array $keys;
 
 	/**
+	 * @param list<string|\BackedEnum> $tags
+	 * @param list<string|\BackedEnum> $keys
 	 */
-	public static function tags (string|\BackedEnum $tag, string|\BackedEnum ...$additionalTags) : self
+	public function __construct (
+		/** @var list<string|\BackedEnum> */
+		array $tags = [],
+		/** @var list<string|\BackedEnum> */
+		array $keys = [],
+	)
 	{
-		return new self(
-			tags: self::transformValues([$tag, ...$additionalTags]),
-		);
-	}
+		if ([] !== $tags && [] !== $keys)
+		{
+			throw new InvalidComponentFilterException("Component filter must only have tags or keys set, not both");
+		}
 
-	/**
-	 */
-	public static function keys (string|\BackedEnum $component, string|\BackedEnum ...$additionalComponents) : self
-	{
-		return new self(
-			components: self::transformValues([$component, ...$additionalComponents]),
-		);
+		if ([] === $tags && [] === $keys)
+		{
+			throw new InvalidComponentFilterException("Component filter must at least have tags or keys set");
+		}
+
+		$this->tags = $this->transformValues($tags);
+		$this->keys = $this->transformValues($keys);
 	}
 
 	/**
 	 * @param non-empty-array<string|\BackedEnum> $values
 	 * @return non-empty-list<string>
 	 */
-	private static function transformValues (array $values) : array
+	private function transformValues (array $values) : array
 	{
 		return \array_values(
 			\array_map(EnumHelper::value(...), $values),
@@ -72,7 +75,7 @@ final readonly class ComponentFilter
 
 		return [
 			...$result,
-			"component_whitelist" => $this->components,
+			"component_whitelist" => $this->keys,
 		];
 	}
 }

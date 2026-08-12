@@ -26,7 +26,7 @@ final class ComponentManagerTest extends TestCase
 		]));
 
 		$components = $componentManager->getComponentKeysForFilter(
-			new ComponentFilter(components: ["a"]),
+			new ComponentFilter(keys: ["a"]),
 		);
 
 		self::assertIsArray($components);
@@ -69,7 +69,7 @@ final class ComponentManagerTest extends TestCase
 	 */
 	public function testGetComponentKeysForTagsNoDuplicates () : void
 	{
-		$filter = new ComponentFilter(tags: ["tag1"], components: ["a"]);
+		$filter = new ComponentFilter(tags: ["tag1"], keys: ["a"]);
 
 		$componentManager = new ComponentManager(new ServiceLocator([
 			"a" => static fn () => new ComponentA(["tag1", "tag2"]),

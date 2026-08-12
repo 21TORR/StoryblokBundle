@@ -135,7 +135,7 @@ class ComponentManager
 	{
 		$result = [];
 
-		foreach ($filter->components as $component)
+		foreach ($filter->keys as $component)
 		{
 			if ($component instanceof \BackedEnum)
 			{

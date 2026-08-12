@@ -4,6 +4,7 @@ namespace Torr\Storyblok\Definition\Registry;
 
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\Exception\UnknownComponentException;
+use Torr\Storyblok\Definition\Mapping\BloksField;
 
 /**
  * @final
@@ -49,5 +50,25 @@ class DefinitionDiscoverer
 		}
 
 		$this->components[$definition->key] = $definition;
+
+		foreach ($definition->fields as $field)
+		{
+			if ($field->mapping instanceof BloksField)
+			{
+				foreach ($field->mapping->allow->keys as $key)
+				{
+					$this->discoverComponent($this->registry->getByKey($key));
+				}
+
+				foreach ($field->mapping->allow->tags as $tag)
+				{
+					foreach ($this->registry->getAllWithTag($tag) as $nested)
+					{
+
+						$this->discoverComponent($nested);
+					}
+				}
+			}
+		}
 	}
 }

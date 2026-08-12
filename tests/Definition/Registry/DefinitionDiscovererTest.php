@@ -4,6 +4,7 @@ namespace Tests\Torr\Storyblok\Definition\Registry;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Tests\Torr\Storyblok\Fixtures\Components\BloksField\ComponentWithBloksByKey;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
 use Tests\Torr\Storyblok\Fixtures\Components\SimpleTranslatable;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
@@ -34,13 +35,14 @@ class DefinitionDiscovererTest extends TestCase
 		yield [
 			[
 				Simple::class,
-				SimpleTranslatable::class,
+				ComponentWithBloksByKey::class,
 			],
 			[
-				Simple::class,
+				ComponentWithBloksByKey::class,
 			],
 			[
 				"simple",
+				"with-bloks-field",
 			]
 		];
 	}
@@ -68,7 +70,7 @@ class DefinitionDiscovererTest extends TestCase
 			$discoverer->discoverReachableComponents($topLevelClasses),
 		);
 
-		self::assertSame($expectedDiscoveredComponents, $actualComponentKeys);
+		self::assertEqualsCanonicalizing($expectedDiscoveredComponents, $actualComponentKeys);
 	}
 
 	/**

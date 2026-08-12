@@ -53,16 +53,12 @@ readonly class BloksField extends MappedField
 	#[\Override]
 	public function createManagementApiData () : ?array
 	{
-		$restriction = [
-			"restrict_components" => true,
-		];
 
-
-		// pass like this, so that null values are explicitly included
 		return \array_replace(
 			$this->mergeManagementData(
 				$this->allow->createManagementApiData(),
 			),
+			// pass like this, so that null values are explicitly included
 			[
 				"minimum" => $this->minimumNumberOfBloks,
 				"maximum" => $this->maximumNumberOfBloks,
