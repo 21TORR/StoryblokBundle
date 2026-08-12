@@ -3,8 +3,8 @@
 namespace Torr\Storyblok\Definition\Exception;
 
 /**
- *
+ * @final
  */
-class InvalidComponentDefinitionException extends ComponentDefinitionException
+class UnknownComponentException extends ComponentDefinitionException
 {
 }

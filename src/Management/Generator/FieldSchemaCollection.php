@@ -3,7 +3,7 @@
 namespace Torr\Storyblok\Management\Generator;
 
 use Torr\Storyblok\Definition\Data\FieldDefinition;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Definition\Mapping\EmbeddedField;
 use Torr\Storyblok\Management\Exception\ComponentManagementDataGenerationFailedException;
 

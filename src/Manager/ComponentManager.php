@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Component\ComponentDiscoverer;
-use Torr\Storyblok\Component\Filter\ComponentFilter;
+use Torr\Storyblok\Definition\Filter\ComponentFilter;
 use Torr\Storyblok\Exception\Component\UnknownComponentKeyException;
 use Torr\Storyblok\Exception\Component\UnknownStoryTypeException;
 use Torr\Storyblok\Story\Story;

@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Field\Choices;
 
-use Torr\Storyblok\Component\Filter\ComponentFilter;
+use Torr\Storyblok\Definition\Filter\ComponentFilter;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Field\Data\Story\StoryReferenceList;
 use Torr\Storyblok\Field\Data\StoryReferenceData;

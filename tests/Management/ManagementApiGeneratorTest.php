@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\Torr\Storyblok\Fixtures\Components\FieldOrder\FieldSortOrder;
 use Tests\Torr\Storyblok\Fixtures\Components\Simple;
 use Tests\Torr\Storyblok\Fixtures\Components\SimpleTranslatable;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Management\ManagementApiGenerator;

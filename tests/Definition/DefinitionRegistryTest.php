@@ -7,7 +7,7 @@ use Tests\Torr\Storyblok\Fixtures\Components\Tags\ComponentWithTagAC;
 use Tests\Torr\Storyblok\Fixtures\Components\Tags\ComponentWithTagBC;
 use Tests\Torr\Storyblok\Fixtures\Components\Tags\FixtureComponentTags;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;

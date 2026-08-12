@@ -14,7 +14,7 @@ use Tests\Torr\Storyblok\Fixtures\Components\Simple;
 use Tests\Torr\Storyblok\Fixtures\Group\ComponentGroupFixture;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;

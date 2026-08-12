@@ -3,7 +3,7 @@
 namespace Torr\Storyblok\Definition\Loader;
 
 use Torr\Storyblok\Definition\Data\FieldDefinition;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\InvalidFieldDefinitionException;
 use Torr\Storyblok\Definition\Field\MappedField;
 use Torr\Storyblok\Definition\Mapping\EmbeddedField;

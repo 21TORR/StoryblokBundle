@@ -2,7 +2,7 @@
 
 namespace Torr\Storyblok\Manager\Sync\Filter;
 
-use Torr\Storyblok\Component\Filter\ComponentFilter;
+use Torr\Storyblok\Definition\Filter\ComponentFilter;
 use Torr\Storyblok\Manager\ComponentManager;
 
 /**

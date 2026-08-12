@@ -12,7 +12,7 @@ use Tests\Torr\Storyblok\Fixtures\Components\WithEmbed;
 use Tests\Torr\Storyblok\Fixtures\Components\WithNestedEmbed;
 use Tests\Torr\Storyblok\Fixtures\NestedBlock\RichTextBlock;
 use Torr\Storyblok\Context\ComponentContext;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;
 use Torr\Storyblok\Story\Hydrator\MetaDataHydrator;

@@ -7,7 +7,7 @@ use Symfony\Component\PropertyAccess\Exception\InvalidTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Definition\Data\FieldDefinition;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Story\Data\Block;
 use Torr\Storyblok\Story\Data\Story;
 use Torr\Storyblok\Story\Exception\BrokenStoryDataException;

@@ -8,7 +8,7 @@ use Tests\Torr\Storyblok\Fixtures\ComponentA;
 use Tests\Torr\Storyblok\Fixtures\ComponentB;
 use Tests\Torr\Storyblok\Fixtures\ComponentC;
 use Tests\Torr\Storyblok\Fixtures\ComponentD;
-use Torr\Storyblok\Component\Filter\ComponentFilter;
+use Torr\Storyblok\Definition\Filter\ComponentFilter;
 use Torr\Storyblok\Manager\ComponentManager;
 
 /**

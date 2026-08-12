@@ -3,7 +3,7 @@
 namespace Torr\Storyblok\Management;
 
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Management\Generator\FieldSchemaCollection;
 
 /**

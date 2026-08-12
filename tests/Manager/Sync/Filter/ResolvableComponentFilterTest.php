@@ -3,7 +3,7 @@
 namespace Tests\Torr\Storyblok\Manager\Sync\Filter;
 
 use PHPUnit\Framework\TestCase;
-use Torr\Storyblok\Component\Filter\ComponentFilter;
+use Torr\Storyblok\Definition\Filter\ComponentFilter;
 use Torr\Storyblok\Manager\ComponentManager;
 use Torr\Storyblok\Manager\Sync\Filter\ResolvableComponentFilter;
 

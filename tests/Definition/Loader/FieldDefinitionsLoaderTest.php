@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\Torr\Storyblok\Fixtures\Components\FieldOrder\FieldSortOrder;
 use Tests\Torr\Storyblok\Fixtures\Components\InvalidFields\DuplicateField;
 use Tests\Torr\Storyblok\Fixtures\Field\ComponentWithTextField;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\InvalidFieldDefinitionException;
 use Torr\Storyblok\Definition\Loader\ComponentDefinitionLoader;
 use Torr\Storyblok\Definition\Loader\FieldDefinitionLoader;

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Torr\Storyblok\Definition;
+namespace Torr\Storyblok\Definition\Registry;
 
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\Data\EmbedDefinition;
@@ -21,7 +21,7 @@ class DefinitionRegistry
 	/**
 	 */
 	public function __construct (
-		private readonly ComponentDefinitionLoader $definitionLoader,
+		private readonly ComponentDefinitionLoader $definitionLoader = new ComponentDefinitionLoader(),
 	) {}
 
 	/**

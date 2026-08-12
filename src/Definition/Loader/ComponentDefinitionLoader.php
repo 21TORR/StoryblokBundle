@@ -5,7 +5,7 @@ namespace Torr\Storyblok\Definition\Loader;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Definition\Data\ComponentDefinition;
 use Torr\Storyblok\Definition\Data\EmbedDefinition;
-use Torr\Storyblok\Definition\DefinitionRegistry;
+use Torr\Storyblok\Definition\Registry\DefinitionRegistry;
 use Torr\Storyblok\Definition\Exception\ComponentDefinitionException;
 use Torr\Storyblok\Definition\Exception\DuplicateFieldDefinitionException;
 use Torr\Storyblok\Definition\Exception\InvalidComponentDefinitionException;
@@ -21,7 +21,7 @@ readonly class ComponentDefinitionLoader
 	/**
 	 */
 	public function __construct (
-		private FieldDefinitionLoader $fieldDefinitionLoader,
+		private FieldDefinitionLoader $fieldDefinitionLoader = new FieldDefinitionLoader(),
 	) {}
 
 	/**
