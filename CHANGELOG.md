@@ -1,3 +1,9 @@
+3.21.5
+======
+
+* (improvement) Explicitly pass the `cv` when fetching single stories to avoid the redirect.
+
+
 3.21.4
 ======
 
