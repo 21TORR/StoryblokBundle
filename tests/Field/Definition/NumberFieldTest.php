@@ -111,7 +111,7 @@ final class NumberFieldTest extends TestCase
 	{
 		yield "default value" => [
 			new NumberField("label", defaultValue: 42),
-			["default_value" => 42],
+			["default_value" => "42"],
 		];
 
 		yield "export translation" => [

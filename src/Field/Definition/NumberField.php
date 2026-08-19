@@ -25,7 +25,13 @@ final class NumberField extends AbstractField
 		private readonly float|int|null $steps = null,
 	)
 	{
-		parent::__construct($label, $defaultValue);
+		parent::__construct(
+			label: $label,
+			defaultValue: null !== $defaultValue
+				// Storyblok needs these values as string, so that they are handled properly
+				? (string) $defaultValue
+				: null,
+		);
 
 		if (null !== $this->maxValue && null !== $this->minValue && null !== $this->steps)
 		{
