@@ -1,3 +1,9 @@
+5.3.1
+=====
+
+* (bug) Normalize default values of number fields.
+
+
 5.3.0
 =====
 
