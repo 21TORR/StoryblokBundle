@@ -574,6 +574,8 @@ final class ContentApi implements ResetInterface
 				if ($link->isFolder)
 				{
 					$result[] = new FolderData(
+						id: $link->id,
+						uuid: $link->uuid,
 						name: $link->name,
 						position: $link->position,
 						slug: $link->slug,

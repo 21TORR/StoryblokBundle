@@ -7,9 +7,11 @@ final readonly class FolderData
 	/**
 	 */
 	public function __construct (
-		private string $name,
-		private int $position,
-		private string $slug,
+		public int $id,
+		public string $uuid,
+		public string $name,
+		public int $position,
+		public string $slug,
 	) {}
 
 	/**

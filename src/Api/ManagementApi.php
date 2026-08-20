@@ -201,6 +201,8 @@ final class ManagementApi
 		foreach ($stories as $entry)
 		{
 			$result[] = new FolderData(
+				id: $entry["id"],
+				uuid: $entry["uuid"],
 				name: $entry["name"],
 				position: $entry["position"],
 				slug: $entry["full_slug"],
