@@ -1,3 +1,9 @@
+5.3.2
+=====
+
+* (bug) Fix floating point rounding issues in `NumberField`'s step validation.
+
+
 5.3.1
 =====
 

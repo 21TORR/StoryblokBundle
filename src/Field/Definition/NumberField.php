@@ -35,9 +35,15 @@ final class NumberField extends AbstractField
 
 		if (null !== $this->maxValue && null !== $this->minValue && null !== $this->steps)
 		{
-			$difference = $this->maxValue - $this->minValue;
+			$difference = (float) ($this->maxValue - $this->minValue);
+			$steps = (float) $this->steps;
+			$stepCount = $difference / $steps;
 
-			if (fmod((float) $difference, (float) $this->steps) > 0)
+			// comparing against fmod() directly is not safe, as it is prone to floating point
+			// rounding issues (e.g. fmod(5, 0.0001) is not exactly 0, even though 5 is a clean
+			// multiple of 0.0001) - so instead we check whether the number of steps is close
+			// enough to a whole number, within a small floating point tolerance
+			if (abs($stepCount - round($stepCount)) > 1e-9)
 			{
 				throw new InvalidFieldConfigurationException(\sprintf(
 					"Invalid number field config: the max value '%s' should be min value '%s' + a multiple of steps '%s'",
