@@ -1,3 +1,9 @@
+5.3.3
+=====
+
+* (improvement) Add `id` and `uuid` to `FolderData`.
+
+
 5.3.2
 =====
 
