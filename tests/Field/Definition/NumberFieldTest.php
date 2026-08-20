@@ -58,6 +58,81 @@ final class NumberFieldTest extends TestCase
 	}
 
 	/**
+	 * fmod() is prone to floating point rounding issues, so this combination
+	 * (which is a clean multiple of steps) must not be rejected.
+	 */
+	public function testMaxValueValidationValidWithFloatingPointStep () : void
+	{
+		new NumberField(
+			label: "label",
+			minValue: 0,
+			maxValue: 5,
+			decimals: 4,
+			steps: 0.0001,
+		);
+
+		self::assertTrue(true, "Should not throw");
+	}
+
+	/**
+	 */
+	public function testMaxValueValidationInvalidWithFractionalStep () : void
+	{
+		$this->expectException(InvalidFieldConfigurationException::class);
+		$this->expectExceptionMessage("Invalid number field config: the max value '1' should be min value '0' + a multiple of steps '0.3'");
+
+		new NumberField(
+			label: "label",
+			minValue: 0,
+			maxValue: 1,
+			steps: 0.3,
+		);
+	}
+
+	/**
+	 */
+	public function testZeroStepsInvalid () : void
+	{
+		$this->expectException(InvalidFieldConfigurationException::class);
+		$this->expectExceptionMessage("Invalid number field config: steps '0' must be greater than 0");
+
+		new NumberField(
+			label: "label",
+			minValue: 0,
+			maxValue: 5,
+			steps: 0,
+		);
+	}
+
+	/**
+	 */
+	public function testNegativeStepsInvalid () : void
+	{
+		$this->expectException(InvalidFieldConfigurationException::class);
+		$this->expectExceptionMessage("Invalid number field config: steps '-1' must be greater than 0");
+
+		new NumberField(
+			label: "label",
+			minValue: 0,
+			maxValue: 5,
+			steps: -1,
+		);
+	}
+
+	/**
+	 */
+	public function testZeroStepsWithoutMinMaxInvalid () : void
+	{
+		$this->expectException(InvalidFieldConfigurationException::class);
+		$this->expectExceptionMessage("Invalid number field config: steps '0' must be greater than 0");
+
+		new NumberField(
+			label: "label",
+			steps: 0,
+		);
+	}
+
+	/**
 	 */
 	public function testZeroMinValueAndDecimals() : void
 	{
