@@ -91,6 +91,49 @@ final class NumberFieldTest extends TestCase
 
 	/**
 	 */
+	public function testZeroStepsInvalid () : void
+	{
+		$this->expectException(InvalidFieldConfigurationException::class);
+		$this->expectExceptionMessage("Invalid number field config: steps '0' must be greater than 0");
+
+		new NumberField(
+			label: "label",
+			minValue: 0,
+			maxValue: 5,
+			steps: 0,
+		);
+	}
+
+	/**
+	 */
+	public function testNegativeStepsInvalid () : void
+	{
+		$this->expectException(InvalidFieldConfigurationException::class);
+		$this->expectExceptionMessage("Invalid number field config: steps '-1' must be greater than 0");
+
+		new NumberField(
+			label: "label",
+			minValue: 0,
+			maxValue: 5,
+			steps: -1,
+		);
+	}
+
+	/**
+	 */
+	public function testZeroStepsWithoutMinMaxInvalid () : void
+	{
+		$this->expectException(InvalidFieldConfigurationException::class);
+		$this->expectExceptionMessage("Invalid number field config: steps '0' must be greater than 0");
+
+		new NumberField(
+			label: "label",
+			steps: 0,
+		);
+	}
+
+	/**
+	 */
 	public function testZeroMinValueAndDecimals() : void
 	{
 		$field = new NumberField(

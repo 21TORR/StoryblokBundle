@@ -13,7 +13,6 @@ use Torr\Storyblok\Visitor\DataVisitorInterface;
 final class NumberField extends AbstractField
 {
 	/**
-	 * @inheritDoc
 	 */
 	public function __construct (
 		string $label,
@@ -32,6 +31,14 @@ final class NumberField extends AbstractField
 				? (string) $defaultValue
 				: null,
 		);
+
+		if (null !== $this->steps && $this->steps <= 0)
+		{
+			throw new InvalidFieldConfigurationException(\sprintf(
+				"Invalid number field config: steps '%s' must be greater than 0",
+				$this->steps,
+			));
+		}
 
 		if (null !== $this->maxValue && null !== $this->minValue && null !== $this->steps)
 		{
