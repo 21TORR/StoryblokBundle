@@ -265,6 +265,21 @@ final class NumberFieldTest extends TestCase
 			"-100.5",
 		];
 
+		yield "value within fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-5",
+		];
+
+		yield "min bound of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-10",
+		];
+
+		yield "max bound of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-1",
+		];
+
 		yield "null is valid when not required" => [
 			new NumberField("label", minValue: -5, maxValue: 5),
 			null,
@@ -298,6 +313,16 @@ final class NumberFieldTest extends TestCase
 		yield "negative value rejected by legacy positive-only range" => [
 			new NumberField("label", minValue: 0, maxValue: 10),
 			"-1.0000",
+		];
+
+		yield "value below min of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-11",
+		];
+
+		yield "value above max of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"0",
 		];
 
 		yield "minus sign followed by whitespace" => [
