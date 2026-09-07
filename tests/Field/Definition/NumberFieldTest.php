@@ -4,9 +4,16 @@ namespace Tests\Torr\Storyblok\Field\Definition;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
+use Torr\Storyblok\Context\ComponentContext;
 use Torr\Storyblok\Exception\InvalidFieldConfigurationException;
+use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Definition\NumberField;
+use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use Torr\Storyblok\Management\ManagementApiData;
+use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Transformer\DataTransformer;
+use Torr\Storyblok\Validator\DataValidator;
 
 /**
  * @internal
@@ -232,5 +239,139 @@ final class NumberFieldTest extends TestCase
 		{
 			self::assertSame($value, $actual[$key] ?? null, "Mismatch for key '{$key}'");
 		}
+	}
+
+	/**
+	 */
+	public static function provideValidateDataValid () : iterable
+	{
+		yield "negative value within negative range" => [
+			new NumberField("label", minValue: -5, maxValue: 5, decimals: 4),
+			"-1.0000",
+		];
+
+		yield "min bound within negative range" => [
+			new NumberField("label", minValue: -5, maxValue: 5, decimals: 4),
+			"-5.0000",
+		];
+
+		yield "max bound within negative range" => [
+			new NumberField("label", minValue: -5, maxValue: 5, decimals: 4),
+			"5.0000",
+		];
+
+		yield "negative value without configured range" => [
+			new NumberField("label"),
+			"-100.5",
+		];
+
+		yield "value within fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-5",
+		];
+
+		yield "min bound of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-10",
+		];
+
+		yield "max bound of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-1",
+		];
+
+		yield "null is valid when not required" => [
+			new NumberField("label", minValue: -5, maxValue: 5),
+			null,
+		];
+	}
+
+	/**
+	 */
+	#[DataProvider("provideValidateDataValid")]
+	public function testValidateDataValid (NumberField $field, mixed $data) : void
+	{
+		$context = self::createComponentContext();
+		$field->validateData($context, [], $data, []);
+		self::assertTrue(true, "should not throw");
+	}
+
+	/**
+	 */
+	public static function provideValidateDataInvalid () : iterable
+	{
+		yield "negative value below min" => [
+			new NumberField("label", minValue: -5, maxValue: 5),
+			"-6.0000",
+		];
+
+		yield "value above max" => [
+			new NumberField("label", minValue: -5, maxValue: 5),
+			"10.0000",
+		];
+
+		yield "negative value rejected by legacy positive-only range" => [
+			new NumberField("label", minValue: 0, maxValue: 10),
+			"-1.0000",
+		];
+
+		yield "value below min of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"-11",
+		];
+
+		yield "value above max of fully negative range" => [
+			new NumberField("label", minValue: -10, maxValue: -1),
+			"0",
+		];
+
+		yield "minus sign followed by whitespace" => [
+			new NumberField("label", minValue: -5, maxValue: 5),
+			"- 1",
+		];
+
+		yield "leading whitespace before minus sign" => [
+			new NumberField("label", minValue: -5, maxValue: 5),
+			" -1",
+		];
+
+		yield "trailing whitespace" => [
+			new NumberField("label", minValue: -5, maxValue: 5),
+			"-1.0000 ",
+		];
+
+		yield "non-numeric string" => [
+			new NumberField("label"),
+			"abc",
+		];
+
+		yield "malformed number" => [
+			new NumberField("label"),
+			"1.2.3",
+		];
+	}
+
+	/**
+	 */
+	#[DataProvider("provideValidateDataInvalid")]
+	public function testValidateDataInvalid (NumberField $field, mixed $data) : void
+	{
+		$this->expectException(InvalidDataException::class);
+
+		$context = self::createComponentContext();
+		$field->validateData($context, [], $data, []);
+	}
+
+	/**
+	 */
+	private static function createComponentContext () : ComponentContext
+	{
+		return new ComponentContext(
+			self::createStub(ComponentManager::class),
+			new DataTransformer(),
+			new NullLogger(),
+			new DataValidator(),
+			new ImageDimensionsExtractor(),
+		);
 	}
 }

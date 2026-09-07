@@ -3,6 +3,7 @@
 namespace Torr\Storyblok\Field\Definition;
 
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 use Torr\Storyblok\Context\ComponentContext;
@@ -110,7 +111,10 @@ final class NumberField extends AbstractField
 				!$this->allowMissingData && $this->required ? new NotNull() : null,
 				// numbers are always passed as strings
 				new Type("string"),
-				new Regex("~^\\d+(\\.\\d+)?$~"),
+				new Regex("~^-?\\d+(\\.\\d+)?$~"),
+				null !== $this->minValue || null !== $this->maxValue
+					? new Range(min: $this->minValue, max: $this->maxValue)
+					: null,
 			],
 		);
 	}

@@ -1,3 +1,9 @@
+5.3.4
+=====
+
+* (bug) Allow negative `minValue` in `NumberField` and validate the configured range at hydration time.
+
+
 5.3.3
 =====
 
