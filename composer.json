@@ -37,7 +37,7 @@
 		"symfony/service-contracts": "^3.5",
 		"symfony/string": "^8.0",
 		"symfony/validator": "^8.0",
-		"ueberdosis/tiptap-php": "^1.4"
+		"ueberdosis/tiptap-php": "^2.2"
 	},
 	"require-dev": {
 		"21torr/janus": "^2.0.3",
