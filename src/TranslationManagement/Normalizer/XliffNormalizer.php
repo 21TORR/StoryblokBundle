@@ -78,12 +78,6 @@ final readonly class XliffNormalizer
 		}
 
 		$unitNodes = $fileNode->getElementsByTagName("unit");
-
-		if (!$unitNodes instanceof \DOMNodeList)
-		{
-			throw new XliffInvalidException("Tags unit missing");
-		}
-
 		$translationDataElements = [];
 
 		foreach ($unitNodes as $unit)

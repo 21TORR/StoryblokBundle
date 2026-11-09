@@ -1,3 +1,9 @@
+5.3.5
+=====
+
+* (bug) Update `ueberdosis/tiptap-php` to v2.2 to fix CVE-2026-47110.
+
+
 5.3.4
 =====
 

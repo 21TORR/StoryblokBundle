@@ -2,6 +2,7 @@
 
 namespace Tests\Torr\Storyblok\RichText;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Torr\Storyblok\RichText\HtmlToRichTextTransformer;
 
@@ -288,5 +289,132 @@ final class HtmlToRichTextTransformerTest extends TestCase
 				],
 			],
 		], $transformer->parseHtmlToRichText($html));
+	}
+
+	/**
+	 */
+	public static function provideListItems () : iterable
+	{
+		yield "inline text is wrapped in a paragraph" => [
+			"<ul><li>Test</li></ul>",
+			self::bulletList(self::listItem(self::paragraph(self::text("Test")))),
+		];
+
+		yield "single paragraph is kept as is" => [
+			"<ul><li><p>Test</p></li></ul>",
+			self::bulletList(self::listItem(self::paragraph(self::text("Test")))),
+		];
+
+		yield "multiple paragraphs are not nested in another paragraph" => [
+			"<ul><li><p>A</p><p>B</p></li></ul>",
+			self::bulletList(self::listItem(
+				self::paragraph(self::text("A")),
+				self::paragraph(self::text("B")),
+			)),
+		];
+
+		yield "consecutive inline nodes with marks and hard breaks are wrapped in a single paragraph" => [
+			"<ul><li><strong>Bold</strong> text<br>next</li></ul>",
+			self::bulletList(self::listItem(self::paragraph(
+				[
+					"type" => "text",
+					"text" => "Bold",
+					"marks" => [
+						["type" => "bold"],
+					],
+				],
+				self::text(" text"),
+				["type" => "hard_break"],
+				self::text("next"),
+			))),
+		];
+
+		yield "nested list is not wrapped in a paragraph" => [
+			"<ul><li>A<ul><li>B</li></ul></li></ul>",
+			self::bulletList(self::listItem(
+				self::paragraph(self::text("A")),
+				self::bulletList(self::listItem(self::paragraph(self::text("B")))),
+			)),
+		];
+
+		yield "inline text next to a paragraph gets its own paragraph" => [
+			"<ul><li>A<p>B</p>C</li></ul>",
+			self::bulletList(self::listItem(
+				self::paragraph(self::text("A")),
+				self::paragraph(self::text("B")),
+				self::paragraph(self::text("C")),
+			)),
+		];
+
+		yield "formatting whitespace around a paragraph is ignored" => [
+			"<ul>\n\t<li>\n\t\t<p>A</p>\n\t</li>\n</ul>",
+			self::bulletList(self::listItem(self::paragraph(self::text("A")))),
+		];
+
+		yield "ordered list" => [
+			"<ol><li>Test</li></ol>",
+			[
+				"type" => "ordered_list",
+				"content" => [
+					self::listItem(self::paragraph(self::text("Test"))),
+				],
+			],
+		];
+	}
+
+	/**
+	 */
+	#[DataProvider("provideListItems")]
+	public function testListItems (string $html, array $expectedNode) : void
+	{
+		$transformer = new HtmlToRichTextTransformer();
+
+		self::assertSame(
+			[
+				"type" => "doc",
+				"content" => [$expectedNode],
+			],
+			$transformer->parseHtmlToRichText($html),
+		);
+	}
+
+	/**
+	 */
+	private static function bulletList (array ...$items) : array
+	{
+		return [
+			"type" => "bullet_list",
+			"content" => $items,
+		];
+	}
+
+	/**
+	 */
+	private static function listItem (array ...$content) : array
+	{
+		return [
+			"type" => "list_item",
+			"content" => $content,
+		];
+	}
+
+	/**
+	 */
+	private static function paragraph (array ...$content) : array
+	{
+		return [
+			"type" => "paragraph",
+			"content" => $content,
+		];
+	}
+
+	/**
+	 */
+	private static function text (string $text) : array
+	{
+		return [
+			"type" => "text",
+			"text" => $text,
+		];
 	}
 }

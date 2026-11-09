@@ -17,7 +17,6 @@ use Tiptap\Nodes\OrderedList;
 use Torr\Storyblok\Tiptap\Helper\FixBrokenLinksMarksHelper;
 use Torr\Storyblok\Tiptap\Marks\CustomCodeBlock;
 use Torr\Storyblok\Tiptap\Marks\CustomLink;
-use Torr\Storyblok\Tiptap\Nodes\CustomListItem;
 use Torr\Storyblok\Tiptap\Nodes\CustomOrderedList;
 
 final readonly class RichTextHtmlTransformer
@@ -83,7 +82,7 @@ final readonly class RichTextHtmlTransformer
 					"orderedList" => false,
 					"listItem" => false,
 				]),
-				new CustomListItem(),
+				new ListItem(),
 				new CustomLink(),
 				new Highlight([
 					"multicolor" => true,
