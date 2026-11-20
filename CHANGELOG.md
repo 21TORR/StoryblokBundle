@@ -1,3 +1,9 @@
+5.3.6
+=====
+
+* (improvement) Make `$locator` and `$logger` accessible in the Storyblok adapter.
+
+
 5.3.5
 =====
 
