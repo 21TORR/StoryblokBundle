@@ -33,8 +33,8 @@
     </unit>
     <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['text']">
       <segment>
-        <source>Text 1</source>
-        <target>TRANSLATED: &lt;p&gt;&lt;strong&gt;Text 1&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Text 2&lt;strong&gt;Text 3&lt;/strong&gt;Text 4&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 5&lt;strong&gt;Text 6&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;strong&gt;Text 7&lt;/strong&gt;Text 8&lt;strong&gt;Text 9&lt;/strong&gt;Text 10&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 11&lt;strong&gt;Text 12&lt;/strong&gt;Text 13&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</target>
+        <source>&lt;p&gt;&lt;strong&gt;Text 1&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Text 2&lt;strong&gt;Text 3&lt;/strong&gt;Text 4&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 5&lt;strong&gt;Text 6&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;strong&gt;Text 7&lt;/strong&gt;Text 8&lt;strong&gt;Text 9&lt;/strong&gt;Text 10&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 11&lt;strong&gt;Text 12&lt;/strong&gt;Text 13&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</source>
+        <target>&lt;p&gt;TRANSLATED: &lt;strong&gt;Text 1&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Text 2&lt;strong&gt;Text 3&lt;/strong&gt;Text 4&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 5&lt;strong&gt;Text 6&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;strong&gt;Text 7&lt;/strong&gt;Text 8&lt;strong&gt;Text 9&lt;/strong&gt;Text 10&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Text 11&lt;strong&gt;Text 12&lt;/strong&gt;Text 13&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</target>
       </segment>
     </unit>
     <unit id="$..[?(@['_uid']=='d2a1a6b7-0a2e-4be5-a95f-e7b57bab07a8')]['anchor-title']">
