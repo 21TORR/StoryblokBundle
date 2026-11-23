@@ -30,13 +30,8 @@
 							"content": [
 								{
 									"type": "text",
-									"text": "TRANSLATED:"
-								}
-							]
-						},
-						{
-							"type": "paragraph",
-							"content": [
+									"text": "TRANSLATED: "
+								},
 								{
 									"type": "text",
 									"text": "Text 1",

@@ -22,10 +22,11 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 	public readonly ManagementApi $managementApi;
 	public readonly StoryblokIdSlugMapper $idSlugMapper;
 	public readonly RequestValidator $requestValidator;
+	protected readonly LoggerInterface $logger;
 	public readonly string $spaceId;
 
 	public function __construct (
-		ContainerInterface $locator,
+		protected ContainerInterface $locator,
 		/** @internal */
 		public readonly StoryblokConfig $config,
 	)
@@ -38,6 +39,7 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 
 		$logger = $locator->get(LoggerInterface::class);
 		\assert($logger instanceof LoggerInterface);
+		$this->logger = $logger;
 
 		$componentManager = $locator->get(ComponentManager::class);
 		\assert($componentManager instanceof ComponentManager);
@@ -50,20 +52,20 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 			$this->config,
 			$storyFactory,
 			$componentManager,
-			$logger,
+			$this->logger,
 		);
 
 		$this->managementApi = new ManagementApi(
 			$this->config,
 			$client,
 			$rateLimiterFactory,
-			$logger,
+			$this->logger,
 		);
 
 		$this->idSlugMapper = new StoryblokIdSlugMapper($this->contentApi);
 		$this->requestValidator = new RequestValidator(
 			$this->config,
-			$logger,
+			$this->logger,
 		);
 		$this->spaceId = $this->config->spaceId;
 	}
