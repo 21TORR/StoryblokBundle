@@ -5,6 +5,7 @@ namespace Torr\Storyblok\Adapter;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -18,6 +19,10 @@ use Torr\Storyblok\Webhook\Request\RequestValidator;
 
 abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, ResetInterface
 {
+	/**
+	 * @internal
+	 */
+	public const string CONTENT_API_CACHE_POOL = "cache.storyblok.content_api";
 	public readonly ContentApi $contentApi;
 	public readonly ManagementApi $managementApi;
 	public readonly StoryblokIdSlugMapper $idSlugMapper;
@@ -47,12 +52,18 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 		$rateLimiterFactory = $locator->get("limiter.storyblok_management");
 		\assert($rateLimiterFactory instanceof RateLimiterFactoryInterface);
 
+		$contentApiCache = $locator->has(self::CONTENT_API_CACHE_POOL)
+			? $locator->get(self::CONTENT_API_CACHE_POOL)
+			: null;
+		\assert(null === $contentApiCache || $contentApiCache instanceof TagAwareCacheInterface);
+
 		$this->contentApi = new ContentApi(
 			$client,
 			$this->config,
 			$storyFactory,
 			$componentManager,
 			$this->logger,
+			$contentApiCache,
 		);
 
 		$this->managementApi = new ManagementApi(
@@ -81,6 +92,7 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 			StoryFactory::class,
 			ComponentManager::class,
 			"limiter.storyblok_management" => RateLimiterFactoryInterface::class,
+			self::CONTENT_API_CACHE_POOL => "?" . TagAwareCacheInterface::class,
 			LoggerInterface::class,
 		];
 	}

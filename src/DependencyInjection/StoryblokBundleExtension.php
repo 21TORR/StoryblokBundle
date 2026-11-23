@@ -5,6 +5,7 @@ namespace Torr\Storyblok\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Torr\BundleHelpers\Bundle\BundleExtension;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Config\StoryblokBundleSettings;
 
 final class StoryblokBundleExtension extends BundleExtension implements PrependExtensionInterface
@@ -33,6 +34,14 @@ final class StoryblokBundleExtension extends BundleExtension implements PrependE
 		 * @see https://www.storyblok.com/docs/technical-limits
 		 */
 		$container->prependExtensionConfig("framework", [
+			"cache" => [
+				"pools" => [
+					AbstractStoryblokAdapter::CONTENT_API_CACHE_POOL => [
+						"adapter" => "cache.app",
+						"tags" => true,
+					],
+				],
+			],
 			"rate_limiter" => [
 				"storyblok_management" => [
 					"policy" => "fixed_window",

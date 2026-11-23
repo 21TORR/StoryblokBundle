@@ -4,8 +4,10 @@ namespace Torr\Storyblok\Api;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Exclude;
+use Symfony\Component\HttpClient\CachingHttpClient;
 use Symfony\Component\HttpClient\HttpOptions;
 use Symfony\Component\HttpClient\RetryableHttpClient;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Service\ResetInterface;
@@ -13,6 +15,7 @@ use Torr\Storyblok\Api\Data\Asset\AssetData;
 use Torr\Storyblok\Api\Data\PaginatedApiResult;
 use Torr\Storyblok\Api\Data\SpaceInfo;
 use Torr\Storyblok\Api\Data\StoryblokLink;
+use Torr\Storyblok\Api\Http\CacheHeadersRewritingHttpClient;
 use Torr\Storyblok\Config\StoryblokConfig;
 use Torr\Storyblok\Datasource\DatasourceEntry;
 use Torr\Storyblok\Exception\Api\ContentRequestFailedException;
@@ -30,6 +33,11 @@ use Torr\Storyblok\Story\StoryFactory;
 final class ContentApi implements ResetInterface
 {
 	private const string API_URL = "https://api.storyblok.com/v2/cdn/";
+
+	/**
+	 * The responses are keyed by the cache version, so this only limits the storage size.
+	 */
+	private const int CACHE_TTL = 604800;
 	private const string STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
 	private readonly HttpClientInterface $client;
 	private ?SpaceInfo $spaceInfo = null;
@@ -42,15 +50,29 @@ final class ContentApi implements ResetInterface
 		private readonly StoryFactory $storyFactory,
 		private readonly ComponentManager $componentManager,
 		private readonly LoggerInterface $logger,
+		?TagAwareCacheInterface $cache = null,
 	)
 	{
-		$this->client = new RetryableHttpClient(
-			$client->withOptions(
-				(new HttpOptions())
-					->setBaseUri(self::API_URL)
-					->toArray(),
-			),
+		$defaultOptions = (new HttpOptions())
+			->setBaseUri(self::API_URL)
+			->toArray();
+
+		$client = new RetryableHttpClient(
+			$client->withOptions($defaultOptions),
 		);
+
+		if (null !== $cache)
+		{
+			$client = new CachingHttpClient(
+				new CacheHeadersRewritingHttpClient($client, self::CACHE_TTL),
+				$cache,
+				$defaultOptions,
+				maxTtl: self::CACHE_TTL,
+			);
+			$client->setLogger($this->logger);
+		}
+
+		$this->client = $client;
 	}
 
 	/**
