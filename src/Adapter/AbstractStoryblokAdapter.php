@@ -52,10 +52,8 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 		$rateLimiterFactory = $locator->get("limiter.storyblok_management");
 		\assert($rateLimiterFactory instanceof RateLimiterFactoryInterface);
 
-		$contentApiCache = $locator->has(self::CONTENT_API_CACHE_POOL)
-			? $locator->get(self::CONTENT_API_CACHE_POOL)
-			: null;
-		\assert(null === $contentApiCache || $contentApiCache instanceof TagAwareCacheInterface);
+		$contentApiCache = $locator->get(self::CONTENT_API_CACHE_POOL);
+		\assert($contentApiCache instanceof TagAwareCacheInterface);
 
 		$this->contentApi = new ContentApi(
 			$client,
@@ -92,7 +90,7 @@ abstract class AbstractStoryblokAdapter implements ServiceSubscriberInterface, R
 			StoryFactory::class,
 			ComponentManager::class,
 			"limiter.storyblok_management" => RateLimiterFactoryInterface::class,
-			self::CONTENT_API_CACHE_POOL => "?" . TagAwareCacheInterface::class,
+			self::CONTENT_API_CACHE_POOL => TagAwareCacheInterface::class,
 			LoggerInterface::class,
 		];
 	}

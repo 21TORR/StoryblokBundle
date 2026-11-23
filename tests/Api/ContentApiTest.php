@@ -9,7 +9,6 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Torr\Storyblok\Api\ContentApi;
 use Torr\Storyblok\Component\AbstractComponent;
@@ -143,7 +142,7 @@ final class ContentApiTest extends TestCase
 			return array_shift($responses) ?? throw new \LogicException("Unexpected request");
 		});
 
-		$api = $this->createApi($httpClient, cache: new TagAwareAdapter(new ArrayAdapter()));
+		$api = $this->createApi($httpClient);
 
 		$api->fetchAllStories("news");
 		$api->fetchAllStories("news");
@@ -489,11 +488,7 @@ final class ContentApiTest extends TestCase
 
 	/**
 	 */
-	private function createApi (
-		HttpClientInterface $httpClient,
-		?string $assetToken = null,
-		?TagAwareCacheInterface $cache = null,
-	) : ContentApi
+	private function createApi (HttpClientInterface $httpClient, ?string $assetToken = null) : ContentApi
 	{
 		$componentManager = $this->createComponentManager();
 		$context = new ComponentContext(
@@ -516,7 +511,7 @@ final class ContentApiTest extends TestCase
 			$storyFactory,
 			$componentManager,
 			new NullLogger(),
-			$cache,
+			new TagAwareAdapter(new ArrayAdapter()),
 		);
 	}
 

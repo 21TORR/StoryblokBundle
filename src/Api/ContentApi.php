@@ -39,7 +39,7 @@ final class ContentApi implements ResetInterface
 	 */
 	private const int CACHE_TTL = 604800;
 	private const string STORYBLOK_UUID_REGEX = '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/';
-	private readonly HttpClientInterface $client;
+	private readonly CachingHttpClient $client;
 	private ?SpaceInfo $spaceInfo = null;
 
 	/**
@@ -50,29 +50,23 @@ final class ContentApi implements ResetInterface
 		private readonly StoryFactory $storyFactory,
 		private readonly ComponentManager $componentManager,
 		private readonly LoggerInterface $logger,
-		?TagAwareCacheInterface $cache = null,
+		TagAwareCacheInterface $cache,
 	)
 	{
 		$defaultOptions = (new HttpOptions())
 			->setBaseUri(self::API_URL)
 			->toArray();
 
-		$client = new RetryableHttpClient(
-			$client->withOptions($defaultOptions),
+		$this->client = new CachingHttpClient(
+			new CacheHeadersRewritingHttpClient(
+				new RetryableHttpClient($client->withOptions($defaultOptions)),
+				self::CACHE_TTL,
+			),
+			$cache,
+			$defaultOptions,
+			maxTtl: self::CACHE_TTL,
 		);
-
-		if (null !== $cache)
-		{
-			$client = new CachingHttpClient(
-				new CacheHeadersRewritingHttpClient($client, self::CACHE_TTL),
-				$cache,
-				$defaultOptions,
-				maxTtl: self::CACHE_TTL,
-			);
-			$client->setLogger($this->logger);
-		}
-
-		$this->client = $client;
+		$this->client->setLogger($this->logger);
 	}
 
 	/**
