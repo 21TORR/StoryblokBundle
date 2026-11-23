@@ -51,6 +51,30 @@ final class CacheHeadersRewritingHttpClientTest extends TestCase
 
 	/**
 	 */
+	public static function provideAllSuccessfulResponsesAreCached () : iterable
+	{
+		yield "created" => [201];
+		yield "non-authoritative" => [203];
+		yield "no content" => [204];
+	}
+
+	/**
+	 */
+	#[DataProvider("provideAllSuccessfulResponsesAreCached")]
+	public function testAllSuccessfulResponsesAreCached (int $statusCode) : void
+	{
+		$inner = new MockHttpClient(static fn () => new MockResponse("", [
+			"http_code" => $statusCode,
+		]));
+		$client = $this->createClient($inner);
+
+		self::assertSame($statusCode, $client->request("GET", "https://example.test/stories", ["query" => self::PUBLISHED])->getStatusCode());
+		self::assertSame($statusCode, $client->request("GET", "https://example.test/stories", ["query" => self::PUBLISHED])->getStatusCode());
+		self::assertSame(1, $inner->getRequestsCount());
+	}
+
+	/**
+	 */
 	public function testDifferentCacheVersionsAreCachedSeparately () : void
 	{
 		$inner = new MockHttpClient([

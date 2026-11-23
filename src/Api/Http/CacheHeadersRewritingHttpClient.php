@@ -15,10 +15,10 @@ use Torr\Storyblok\Release\ReleaseVersion;
  * Rewrites the cache headers of the Storyblok responses, so that the {@see CachingHttpClient} on top
  * only caches what we want it to cache:
  *
- * - successful (200) GET requests for published content with a `cv` (cache version) are hard-cached. As the
+ * - successful (2xx) GET requests for published content with a `cv` (cache version) are hard-cached. As the
  *   cache version changes whenever content is published, these responses are immutable.
  * - everything else is marked as `no-store`: requests without `cv` (like the space info, which provides the `cv`),
- *   draft requests (they still send the `cv`, like the Storyblok UI does) and all non-200 responses.
+ *   draft requests (they still send the `cv`, like the Storyblok UI does) and all non-2xx responses.
  *
  * The latter is important, as Storyblok also sends its regular cache headers with error responses (e.g. when rate
  * limiting with a 429). These must never be cached, otherwise all following requests for this URL would fail
@@ -78,7 +78,8 @@ final class CacheHeadersRewritingHttpClient implements HttpClientInterface
 					return;
 				}
 
-				$cacheControl = $isCacheableRequest && 200 === $context->getStatusCode()
+				$statusCode = $context->getStatusCode();
+				$cacheControl = $isCacheableRequest && $statusCode >= 200 && $statusCode < 300
 					? "public, max-age={$maxTtl}, immutable"
 					: "no-store";
 
