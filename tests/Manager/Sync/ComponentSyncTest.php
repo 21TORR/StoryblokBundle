@@ -7,6 +7,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -16,6 +18,7 @@ use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Tests\Torr\Storyblok\Webhook\Fixtures\TestWebhookAdapter;
 use Torr\Cli\Console\Style\TorrStyle;
+use Torr\Storyblok\Adapter\AbstractStoryblokAdapter;
 use Torr\Storyblok\Component\AbstractComponent;
 use Torr\Storyblok\Component\Config\ComponentType;
 use Torr\Storyblok\Config\StoryblokConfig;
@@ -193,6 +196,7 @@ final class ComponentSyncTest extends TestCase
 			StoryFactory::class => static fn () => $storyFactory,
 			ComponentManager::class => static fn () => $componentManager,
 			"limiter.storyblok_management" => static fn () => $rateLimiterFactory,
+			AbstractStoryblokAdapter::CONTENT_API_CACHE_POOL => static fn () => new TagAwareAdapter(new ArrayAdapter()),
 			LoggerInterface::class => static fn () => $logger,
 		]);
 

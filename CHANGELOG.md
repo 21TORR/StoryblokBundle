@@ -1,3 +1,9 @@
+5.4.0
+=====
+
+* (feature) Cache published Content API responses per cache version in the `cache.storyblok.content_api` cache pool. Draft and error responses are never cached.
+
+
 5.3.6
 =====
 

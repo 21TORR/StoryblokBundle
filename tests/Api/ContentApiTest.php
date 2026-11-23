@@ -4,6 +4,8 @@ namespace Tests\Torr\Storyblok\Api;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -20,6 +22,7 @@ use Torr\Storyblok\Exception\Story\InvalidDataException;
 use Torr\Storyblok\Field\Definition\TextField;
 use Torr\Storyblok\Image\ImageDimensionsExtractor;
 use Torr\Storyblok\Manager\ComponentManager;
+use Torr\Storyblok\Release\ReleaseVersion;
 use Torr\Storyblok\Story\Story;
 use Torr\Storyblok\Story\StoryFactory;
 use Torr\Storyblok\Transformer\DataTransformer;
@@ -98,6 +101,56 @@ final class ContentApiTest extends TestCase
 
 		self::assertCount(3, $stories);
 		self::assertContainsOnlyInstancesOf(TestStory::class, $stories);
+	}
+
+	/**
+	 */
+	public function testPublishedStoriesAreCachedButDraftsAreNot () : void
+	{
+		$storiesResponse = static fn () => new MockResponse((string) json_encode([
+			"stories" => [],
+		], \JSON_THROW_ON_ERROR), [
+			"response_headers" => [
+				"per-page: 100",
+				"total: 0",
+				"cache-control: max-age=0",
+			],
+		]);
+
+		// count via the factory, as the content API clones the given client
+		$counter = new class() {
+			public int $requests = 0;
+		};
+		$responses = [
+			new MockResponse((string) json_encode([
+				"space" => [
+					"id" => 12345,
+					"name" => "Test Space",
+					"version" => 42,
+					"language_codes" => ["en"],
+					"domain" => "example.com",
+				],
+			], \JSON_THROW_ON_ERROR)),
+			$storiesResponse(),
+			$storiesResponse(),
+			$storiesResponse(),
+		];
+		$httpClient = new MockHttpClient(static function () use ($counter, &$responses) : MockResponse
+		{
+			++$counter->requests;
+
+			return array_shift($responses) ?? throw new \LogicException("Unexpected request");
+		});
+
+		$api = $this->createApi($httpClient);
+
+		$api->fetchAllStories("news");
+		$api->fetchAllStories("news");
+		self::assertSame(2, $counter->requests);
+
+		$api->fetchAllStories("news", version: ReleaseVersion::DRAFT);
+		$api->fetchAllStories("news", version: ReleaseVersion::DRAFT);
+		self::assertSame(4, $counter->requests);
 	}
 
 	/**
@@ -458,6 +511,7 @@ final class ContentApiTest extends TestCase
 			$storyFactory,
 			$componentManager,
 			new NullLogger(),
+			new TagAwareAdapter(new ArrayAdapter()),
 		);
 	}
 
